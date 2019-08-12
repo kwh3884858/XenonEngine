@@ -45,20 +45,17 @@ void MacDrawer::SetViewStrcut(const ViewStruct& viewStruct){
 }
 
 void MacDrawer::TestDraw(){
-//    for (int i = 0 ; i < 70; i++) {
-//
-//        DrawPixel(Vector2(i, 20));
-//    }
-//    SetCenterPoint(200, 150);
 
-    DrawLine(Vector2(0,0), Vector2(10,100));
+    DrawLine(Vector2(0,0), Vector2(10000,10000));
     DrawLine(Vector2(0,0), Vector2(-50,100));
     DrawLine(Vector2(0,30), Vector2(10,-100));
     DrawLine(Vector2(0,-50), Vector2(-60,-100));
     SetColor(0, 0, 0, (char)255);
     DrawLine(Vector2(m_min.x,0), Vector2( m_max.x, 0));
     DrawLine(Vector2(0, m_min.y), Vector2(0, m_max.y));
-    
+
+    DrawLine(Vector2(10,10), Vector2(50,60));
+
 }
 
 MacDrawer::~MacDrawer(){
@@ -84,7 +81,7 @@ bool MacDrawer::LineClip(Vector2 *aStart, Vector2 *aEnd){
         }
         if(startCode == 0){
             SwapCode(&startCode, &endCode);
-            Vector2::SwapVector(aStart, aEnd);
+            MathLab::SwapVector(aStart, aEnd);
         }
         k = (float)(aEnd->y - aStart->y)/(aEnd->x - aStart->x);
         if(0 != (startCode & LEFT)){
@@ -196,8 +193,8 @@ void DrawTriangle(const Vector2& p1, const Vector2& p2, const Vector2& p3){
 
     int length = sizeof(points)/sizeof(points[0]);
     for (int i = 0 ; i < length; i++) {
-        for (int j = i; j > 0 && Vector2::LessY(points[j], points[j-1]); j--) {
-            Vector2::Exchange(&points[j], &points[j -1]);
+        for (int j = i; j > 0 && MathLab::LessY(points[j], points[j-1]); j--) {
+            MathLab::Exchange(&points[j], &points[j -1]);
         }
     }
 

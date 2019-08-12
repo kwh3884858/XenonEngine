@@ -27,6 +27,18 @@
     // Insert code here to tear down your application
 }
 
+- (void) initialize{
+
+}
+
+- (void) run{
+
+}
+
+- (void) shutdown{
+
+}
+
 
 @end
 

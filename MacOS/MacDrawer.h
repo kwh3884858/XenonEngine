@@ -10,9 +10,12 @@
 #define MacDrawer_h
 
 #include <stdio.h>
-#include "VectorStruct.h"
-#include "Middleware/ViewStruct.h"
+#include "../MathLab/Vector2.h"
+#include "../MathLab/ViewStruct.h"
 #import "UICanvas.h"
+
+using MathLab::Vector2;
+using MathLab::ViewStruct;
 
 class MacDrawer {
     ViewStruct *m_viewStrcut;

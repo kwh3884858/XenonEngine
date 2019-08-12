@@ -7,7 +7,9 @@
 //
 
 #include "ViewStruct.h"
-ViewStruct::ViewStruct(){
+namespace MathLab{
+
+    ViewStruct::ViewStruct(){
     m_origin = new Vector2();
     m_viewSize = new Vector2();
     fprintf(stdout, "view size need intialize");
@@ -23,4 +25,5 @@ ViewStruct::~ViewStruct(){
     delete m_origin;
     m_viewSize = nullptr;
     m_origin = nullptr;
+}
 }

@@ -8,8 +8,7 @@
 
 #import "ViewController.h"
 
-#include "MacDrawer.h"
-#include "Middleware/ViewStruct.h"
+//using MathLab::ViewStruct;
 
 @implementation ViewController
 - (void)viewDidLoad {
@@ -32,6 +31,21 @@
     macDrawer.SetViewStrcut(*mainView);
     macDrawer.TestDraw();
 
+//    NSDate * now;
+//    NSData* next;
+//    NSData
+//    *now = [NSDate date];
+//
+//    while(1){
+//
+//
+//    }
+//    NSDateFormatter *outputFormatter = [[NSDateFormatter alloc] init];
+//    [outputFormatter setDateFormat:@"HH:mm:ss"];
+//    NSString *newDateString = [outputFormatter stringFromDate:now];
+//    NSLog(@"newDateString %@", newDateString);
+//    [outputFormatter release];
+
     delete mainView;
 }
 
@@ -44,8 +58,6 @@
 
 - (void)viewWillDisappear{
 //    [_canvs releaseGState];
-
-
 }
 
 @end

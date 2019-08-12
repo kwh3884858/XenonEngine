@@ -10,10 +10,12 @@
 #define MathLib_hpp
 
 #include <stdio.h>
+#include "Vector2.h"
+
 class Mathlib{
 
 public:
-
+    
 private:
     
 };

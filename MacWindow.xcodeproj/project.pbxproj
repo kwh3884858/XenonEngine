@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		7619530921DDF97300D792C3 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7619530821DDF97300D792C3 /* liblua.a */; };
-		76200725219464970072005B /* VectorStruct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 76200723219464970072005B /* VectorStruct.cpp */; };
+		76200725219464970072005B /* Vector2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 76200723219464970072005B /* Vector2.cpp */; };
+		764A77F6226AEF1B00C6E846 /* MathLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 764A77F5226AEF1B00C6E846 /* MathLib.cpp */; };
 		76B427D5218F327400D92736 /* UICanvas.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B427D4218F327400D92736 /* UICanvas.m */; };
 		76B427D92192226C00D92736 /* MacDrawer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 76B427D72192226C00D92736 /* MacDrawer.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		76BDB13E218D8E7500BDF889 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 76BDB13D218D8E7500BDF889 /* AppDelegate.m */; };
@@ -17,14 +18,15 @@
 		76BDB146218D8E7500BDF889 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 76BDB145218D8E7500BDF889 /* Assets.xcassets */; };
 		76BDB149218D8E7500BDF889 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 76BDB147218D8E7500BDF889 /* Main.storyboard */; };
 		76E01DA521975EC500DFC322 /* ViewStruct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 76E01DA321975EC500DFC322 /* ViewStruct.cpp */; };
-		76E01DA8219C65A500DFC322 /* MathLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 76E01DA6219C65A500DFC322 /* MathLib.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7619530821DDF97300D792C3 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = liblua.a; sourceTree = "<group>"; };
 		7619530B21DDFBFD00D792C3 /* lua.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lua.h; sourceTree = "<group>"; };
-		76200723219464970072005B /* VectorStruct.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = VectorStruct.cpp; path = Middleware/VectorStruct.cpp; sourceTree = "<group>"; };
-		76200724219464970072005B /* VectorStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = VectorStruct.h; path = Middleware/VectorStruct.h; sourceTree = "<group>"; };
+		76200723219464970072005B /* Vector2.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Vector2.cpp; sourceTree = "<group>"; };
+		76200724219464970072005B /* Vector2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Vector2.h; sourceTree = "<group>"; };
+		764A77F4226AEF1B00C6E846 /* MathLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MathLib.h; sourceTree = "<group>"; };
+		764A77F5226AEF1B00C6E846 /* MathLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MathLib.cpp; sourceTree = "<group>"; };
 		76B427D3218F327400D92736 /* UICanvas.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UICanvas.h; sourceTree = "<group>"; };
 		76B427D4218F327400D92736 /* UICanvas.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = UICanvas.m; path = UI/UICanvas.m; sourceTree = "<group>"; };
 		76B427D72192226C00D92736 /* MacDrawer.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MacDrawer.mm; sourceTree = "<group>"; };
@@ -38,10 +40,8 @@
 		76BDB145218D8E7500BDF889 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		76BDB148218D8E7500BDF889 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		76BDB14A218D8E7500BDF889 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		76E01DA321975EC500DFC322 /* ViewStruct.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ViewStruct.cpp; path = Middleware/ViewStruct.cpp; sourceTree = "<group>"; };
-		76E01DA421975EC500DFC322 /* ViewStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewStruct.h; path = Middleware/ViewStruct.h; sourceTree = "<group>"; };
-		76E01DA6219C65A500DFC322 /* MathLib.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MathLib.cpp; sourceTree = "<group>"; };
-		76E01DA7219C65A500DFC322 /* MathLib.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MathLib.hpp; sourceTree = "<group>"; };
+		76E01DA321975EC500DFC322 /* ViewStruct.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ViewStruct.cpp; sourceTree = "<group>"; };
+		76E01DA421975EC500DFC322 /* ViewStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewStruct.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,45 +56,53 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		7619530A21DDF98300D792C3 /* Dependency */ = {
+		7680294F22D1D773001547BC /* MathLab */ = {
+			isa = PBXGroup;
+			children = (
+				76200723219464970072005B /* Vector2.cpp */,
+				76200724219464970072005B /* Vector2.h */,
+				76E01DA321975EC500DFC322 /* ViewStruct.cpp */,
+				76E01DA421975EC500DFC322 /* ViewStruct.h */,
+				764A77F5226AEF1B00C6E846 /* MathLib.cpp */,
+				764A77F4226AEF1B00C6E846 /* MathLib.h */,
+			);
+			path = MathLab;
+			sourceTree = "<group>";
+		};
+		7680295022D1D780001547BC /* Render */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Render;
+			sourceTree = "<group>";
+		};
+		7680295122D1E5D5001547BC /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				7680295222D1E5FB001547BC /* Lua */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		7680295222D1E5FB001547BC /* Lua */ = {
 			isa = PBXGroup;
 			children = (
 				7619530B21DDFBFD00D792C3 /* lua.h */,
 				7619530821DDF97300D792C3 /* liblua.a */,
 			);
-			name = Dependency;
-			sourceTree = "<group>";
-		};
-		7620072221944AB50072005B /* OCCanvas */ = {
-			isa = PBXGroup;
-			children = (
-				76B427D3218F327400D92736 /* UICanvas.h */,
-				76B427D4218F327400D92736 /* UICanvas.m */,
-				76BDB13C218D8E7500BDF889 /* AppDelegate.h */,
-				76BDB13D218D8E7500BDF889 /* AppDelegate.m */,
-				76BDB142218D8E7500BDF889 /* ViewController.h */,
-				76BDB143218D8E7500BDF889 /* ViewController.mm */,
-			);
-			name = OCCanvas;
-			sourceTree = "<group>";
-		};
-		76B427DD2192D71900D92736 /* Middleware */ = {
-			isa = PBXGroup;
-			children = (
-				76B427D72192226C00D92736 /* MacDrawer.mm */,
-				76B427D82192226C00D92736 /* MacDrawer.h */,
-				76200723219464970072005B /* VectorStruct.cpp */,
-				76200724219464970072005B /* VectorStruct.h */,
-				76E01DA321975EC500DFC322 /* ViewStruct.cpp */,
-				76E01DA421975EC500DFC322 /* ViewStruct.h */,
-			);
-			name = Middleware;
+			path = Lua;
 			sourceTree = "<group>";
 		};
 		76BDB130218D8E7500BDF889 = {
 			isa = PBXGroup;
 			children = (
-				76BDB13B218D8E7500BDF889 /* MacWindow */,
+				7680295122D1E5D5001547BC /* Library */,
+				76BDB145218D8E7500BDF889 /* Assets.xcassets */,
+				76BDB147218D8E7500BDF889 /* Main.storyboard */,
+				76BDB14A218D8E7500BDF889 /* Info.plist */,
+				7680295022D1D780001547BC /* Render */,
+				7680294F22D1D773001547BC /* MathLab */,
+				76BDB13B218D8E7500BDF889 /* MacOS */,
 				76BDB13A218D8E7500BDF889 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,36 +115,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		76BDB13B218D8E7500BDF889 /* MacWindow */ = {
-			isa = PBXGroup;
-			children = (
-				7619530A21DDF98300D792C3 /* Dependency */,
-				76E01DA9219C65AD00DFC322 /* MathLib */,
-				7620072221944AB50072005B /* OCCanvas */,
-				76B427DD2192D71900D92736 /* Middleware */,
-				76BDB145218D8E7500BDF889 /* Assets.xcassets */,
-				76BDB147218D8E7500BDF889 /* Main.storyboard */,
-				76BDB14A218D8E7500BDF889 /* Info.plist */,
-				76BDB13F218D8E7500BDF889 /* Supporting Files */,
-			);
-			path = MacWindow;
-			sourceTree = "<group>";
-		};
-		76BDB13F218D8E7500BDF889 /* Supporting Files */ = {
+		76BDB13B218D8E7500BDF889 /* MacOS */ = {
 			isa = PBXGroup;
 			children = (
 				76BDB140218D8E7500BDF889 /* main.m */,
+				76B427D3218F327400D92736 /* UICanvas.h */,
+				76B427D4218F327400D92736 /* UICanvas.m */,
+				76BDB13C218D8E7500BDF889 /* AppDelegate.h */,
+				76BDB13D218D8E7500BDF889 /* AppDelegate.m */,
+				76BDB142218D8E7500BDF889 /* ViewController.h */,
+				76BDB143218D8E7500BDF889 /* ViewController.mm */,
+				76B427D72192226C00D92736 /* MacDrawer.mm */,
+				76B427D82192226C00D92736 /* MacDrawer.h */,
 			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		76E01DA9219C65AD00DFC322 /* MathLib */ = {
-			isa = PBXGroup;
-			children = (
-				76E01DA6219C65A500DFC322 /* MathLib.cpp */,
-				76E01DA7219C65A500DFC322 /* MathLib.hpp */,
-			);
-			name = MathLib;
+			path = MacOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,6 +171,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -211,10 +204,10 @@
 			files = (
 				76BDB144218D8E7500BDF889 /* ViewController.mm in Sources */,
 				76BDB141218D8E7500BDF889 /* main.m in Sources */,
-				76200725219464970072005B /* VectorStruct.cpp in Sources */,
+				76200725219464970072005B /* Vector2.cpp in Sources */,
 				76B427D92192226C00D92736 /* MacDrawer.mm in Sources */,
 				76BDB13E218D8E7500BDF889 /* AppDelegate.m in Sources */,
-				76E01DA8219C65A500DFC322 /* MathLib.cpp in Sources */,
+				764A77F6226AEF1B00C6E846 /* MathLib.cpp in Sources */,
 				76B427D5218F327400D92736 /* UICanvas.m in Sources */,
 				76E01DA521975EC500DFC322 /* ViewStruct.cpp in Sources */,
 			);
@@ -344,11 +337,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = MacWindow/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MacWindow",
+					"$(PROJECT_DIR)/Library/Lua",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.StarPlatinum.MacWindow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -360,11 +353,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
-				INFOPLIST_FILE = MacWindow/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/MacWindow",
+					"$(PROJECT_DIR)/Library/Lua",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.StarPlatinum.MacWindow;
 				PRODUCT_NAME = "$(TARGET_NAME)";
