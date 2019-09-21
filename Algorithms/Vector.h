@@ -44,40 +44,40 @@ namespace XenonAlgorithm
 
 	};
 
-	template<typename T>
-	T* SaintMathematics::Vector<T>::end()
-	{
-		if (mCount == 0)
-		{
-			return nullptr;
-		}
-		return mContent[mCount - 1];
-	}
+	//template<typename T>
+	//T* SaintMathematics::Vector<T>::end()
+	//{
+	//	if (mCount == 0)
+	//	{
+	//		return nullptr;
+	//	}
+	//	return mContent[mCount - 1];
+	//}
 
-	template<typename T>
-	T* SaintMathematics::Vector<T>::begin()
-	{
-		return mContent[0];
-	}
+	//template<typename T>
+	//T* SaintMathematics::Vector<T>::begin()
+	//{
+	//	return mContent[0];
+	//}
 
-	template<typename T>
-	bool SaintMathematics::Vector<T>::Swap(const int lhs, const int rhs)
-	{
-		if (lhs == rhs)
-		{
-			return true;
-		}
+	//template<typename T>
+	//bool SaintMathematics::Vector<T>::Swap(const int lhs, const int rhs)
+	//{
+	//	if (lhs == rhs)
+	//	{
+	//		return true;
+	//	}
 
-		if (lhs <0 || lhs > mCount || rhs < 0 || rhs > mCount)
-		{
-			return false;
-		}
+	//	if (lhs <0 || lhs > mCount || rhs < 0 || rhs > mCount)
+	//	{
+	//		return false;
+	//	}
 
-		T tmp = mContent[lhs];
-		mContent[lhs] = mContent[rhs];
-		mContent[rhs] = tmp;
-		return true;
-	}
+	//	T tmp = mContent[lhs];
+	//	mContent[lhs] = mContent[rhs];
+	//	mContent[rhs] = tmp;
+	//	return true;
+	//}
 
 	//-------------------define
 	template<typename T>
