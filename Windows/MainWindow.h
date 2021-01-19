@@ -1,13 +1,15 @@
 #pragma once
 
 #include "BaseWindow.h"
-
+namespace DebugTool {
+    class DebugConsole;
+}
 
 class MainWindow : public BaseWindow<MainWindow>
 {
 public:
-	MainWindow();
-	~MainWindow();
+	MainWindow(HINSTANCE hInstance);
+	virtual ~MainWindow() override;
 
 	void Initialize();
 	void Shutdown();
@@ -15,9 +17,10 @@ public:
 
 	virtual LRESULT HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam) override;
 
+protected:
 
-	protected:
+	virtual LPCWSTR ClassName() const override { return L"Main Window Class"; }
 
-	virtual PCWSTR ClassName() const override { return L"Simple Window Class"; }
-
+private:
+    DebugTool::DebugConsole& m_debugConsole;
 };

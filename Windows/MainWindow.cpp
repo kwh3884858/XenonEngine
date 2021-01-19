@@ -1,8 +1,10 @@
 #include "MainWindow.h"
+#include "DebugTool/DebugConsole.h"
+#include <stdio.h>
 
 
-
-MainWindow::MainWindow()
+MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
+, m_debugConsole(DebugTool::DebugConsole())
 {
 }
 
@@ -13,14 +15,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::Initialize()
 {
-	bool result;
+    m_debugConsole.Initialize();
+
+	//bool result;
 	int screenWidth;
 	int screenHight;
 	if (!this->Create(L"Main Windows",
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_POPUP,
 		screenWidth,
 		screenHight
-	)) {
+	))
+    {
+        printf("Error Code: %d", GetLastError());
 		return;
 	}
 
@@ -29,7 +35,8 @@ void MainWindow::Initialize()
 void MainWindow::Shutdown()
 {
 	ShutdownWindows();
-	return;
+    m_debugConsole.Shutdown();
+    return;
 }
 
 void MainWindow::Run()
@@ -38,6 +45,12 @@ void MainWindow::Run()
 	bool done = false, result = false, isKey = false;
 
 	ZeroMemory(&msg, sizeof(MSG));
+    if (mStatusCode == BaseWindow::StatusCode::InitiailizationFailed)
+    {
+        DWORD errCode = GetLastError();
+        printf("Error Code: %d", &errCode);
+        m_debugConsole.RetrieveError(L"BaseWindow::Create");
+    }
 	while (!done)
 	{
 		// Handle the windows messages.
@@ -54,7 +67,6 @@ void MainWindow::Run()
 		}
 		else
 		{
-		
 			if (result)
 			{
 				done = true;
@@ -93,7 +105,14 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 		EndPaint(mWnd, &ps);
 		//std::cout << "Redraw!" << std::endl;
 	}
-	return 0;
+	break;
+
+    case WM_KEYDOWN:
+    {
+        int virtualCode = (int)wParam;
+        int keyState = (int)lParam;
+    }
+        break;
 
 	case WM_CLOSE:
 	{
@@ -101,7 +120,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(mWnd);
 		}
 	}
-	return 0;
+	break;
 
 	case WM_DESTROY:
 		PostQuitMessage(0);

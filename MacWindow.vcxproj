@@ -100,6 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
     <ClCompile Include="mathlab\MathLib.cpp" />
     <ClCompile Include="mathlab\Vector2.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="macos\MacDrawer.h" />
     <ClInclude Include="macos\UICanvas.h" />
     <ClInclude Include="macos\ViewController.h" />
+    <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\MainWindow.h" />
     <ClInclude Include="mathlab\MathLib.h" />
     <ClInclude Include="mathlab\Vector2.h" />
@@ -125,6 +127,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Windows\Resources\scaffolding.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

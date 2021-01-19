@@ -12,7 +12,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 int main(int args, char* argv[])
 #endif
 {
-	MainWindow window;
+	MainWindow window(hInstance);
 	window.Initialize();
 	window.Run();
 	window.Shutdown();
