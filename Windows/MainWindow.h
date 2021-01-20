@@ -23,4 +23,5 @@ protected:
 
 private:
     DebugTool::DebugConsole& m_debugConsole;
+    HDC hdc;
 };

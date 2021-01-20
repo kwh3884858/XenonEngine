@@ -3,6 +3,9 @@
 #ifndef WINDOW
 #define WINDOW
 #include <Windows.h>
+#include <stdio.h>
+
+#include "Resources/resource.h"
 #define WIN32_LEAN_AND_MEAN
 
 
@@ -43,7 +46,7 @@ public:
 		HWND hWndParent = 0,
 		HMENU hMenu = 0
 	);
-	HWND getHwnd()const { return mWnd; }
+	HWND GetHwnd()const { return mWnd; }
 
 protected:
 	void ShutdownWindows();
@@ -99,7 +102,8 @@ bool BaseWindow<T>::Create(
 	wc.hInstance = GetModuleHandle(NULL);
 	wc.lpszClassName = ClassName();
     wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-    //wc.hIcon = LoadIcon(mhInstance, L"ScaffoldLogo");
+    wc.hIcon = LoadIcon(mhInstance, MAKEINTRESOURCE(ID_SCAFFOLD_LOGO));
+    wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
     //wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
     //wc.hIconSm = LoadIcon(mhInstance, L"ScaffoldLogo");
     //wc.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
@@ -115,8 +119,8 @@ bool BaseWindow<T>::Create(
         return false;
     }
 
-	width = GetSystemMetrics(SM_CXSCREEN);
-	height = GetSystemMetrics(SM_CYSCREEN);
+	//width = GetSystemMetrics(SM_CXSCREEN);
+	//height = GetSystemMetrics(SM_CYSCREEN);
 	if (BaseWindow::FULL_SCREEN)
 	{
 		width = GetSystemMetrics(SM_CXSCREEN);
@@ -134,8 +138,15 @@ bool BaseWindow<T>::Create(
 	}
 	else
 	{
-		width = 800;
-		height = 600;
+        if (width <= 0)
+        {
+            width = 800;
+        }
+        if (height <= 0)
+        {
+            height = 600;
+        }
+
 
 		X = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
 		Y = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
@@ -184,7 +195,6 @@ void BaseWindow<T>::ShutdownWindows()
 	mWnd = NULL;
 
 	UnregisterClass(ClassName(), GetModuleHandle(NULL));
-
 }
 
 
