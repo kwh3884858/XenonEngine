@@ -100,6 +100,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CrossPlatform\FrameBuffer.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
     <ClCompile Include="mathlab\MathLib.cpp" />
@@ -113,6 +114,8 @@
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />
     <ClInclude Include="Algorithms\Vector.h" />
+    <ClInclude Include="CrossPlatform\FrameBuffer.h" />
+    <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />
     <ClInclude Include="macos\MacDrawer.h" />
