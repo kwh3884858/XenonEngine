@@ -27,18 +27,25 @@ namespace CrossPlatform
         unsigned char a;
     };
 
-    class SColorRGBA
+    class SColorRGB
     {
     public:
-        SColorRGBA();
-        ~SColorRGBA();
+        SColorRGB(int r, int g, int b);
+        SColorRGB(const SColorRGB& rgb);
+
+        SColorRGB& operation= (const SColorRGB& lvalue);
+
+        ~SColorRGB();
+        float ToRGB();
 
     private:
+        GetR(int rgbr);
+        GetG(int rgbg);
+        GetB(int rgbb);
 
         unsigned char r;
         unsigned char g;
         unsigned char b;
-        unsigned char a;
     };
 
 
@@ -60,7 +67,7 @@ namespace CrossPlatform
         unsigned int m_resolutionX;
         unsigned int m_resolutionY;
 
-        void* m_buffer;
+        SColorRGB* m_buffer;
     };
 
 }
