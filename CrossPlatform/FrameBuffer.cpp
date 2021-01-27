@@ -7,8 +7,54 @@ namespace CrossPlatform
        return ( r | g << 8 | b << 16 );
     }
 
-    float SColorRGBA::ToRGBA(){
+    SColorRGBA::GetG(int rgba)
+    {
+
+    }
+
+    float SColorRGBA::ToRGBA() {
         return (r | g << 8 | b << 16 | a << 24);
+    }
+
+    SColorRGB::SColorRGB(int r, int g, int b)
+    {
+        r = (unsigned char)r;
+        g = (unsigned char)g;
+        b = (unsigned char)b;
+    }
+
+    SColorRGB::SColorRGB(const SColorRGB& rgb)
+    {
+        r = GetR(rgb);
+        g = GetG(rgb);
+        b = GetB(rgb);
+    }
+
+    SColorRGB& SColorRGB::operation = (const SColorRGB& rvalue)
+    {
+        r = rvalue.r;
+        g = rvalue.g;
+        b = rvalue.b;
+    }
+
+    float SColorRGB::ToRGB()
+    {
+        return 0x0 | r | g << 8 | b << 16;
+    }
+
+    SColorRGB::GetR(int rgb)
+    {
+        r = (rgb >> 16) & 0xff;
+    }
+
+    SColorRGB::GetG(int rgb)
+    {
+        g = (rgb >> 8) & 0xff;
+    }
+
+    SColorRGB::GetB(int rgb)
+    {
+        b = rgb & 0xff;
     }
 
     const int FramerBuffer::UNINITIALUZE_VALUE = -1;
@@ -46,6 +92,8 @@ namespace CrossPlatform
         {
             ClearBuffer();
         }
+
+        m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
     }
 
 
@@ -54,7 +102,7 @@ namespace CrossPlatform
         if (!IsBufferValid()) { return; }
         if (!IsResolutionValid()) { return; }
         
-        delete m_buffer;
+        delete[] m_buffer;
     }
 
 

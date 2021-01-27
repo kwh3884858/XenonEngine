@@ -4,6 +4,8 @@ typedef FramerBuffer* FramerBufferHandler;
 
 namespace CrossPlatform
 {
+#define LOWBYTE(w)  ((unsigned char)(((unsigned long)(w)) & 0xff))
+#define HIGHBYTE(w) ((unsigned char)(((unsigned long)(w) >> 8) & 0xff))
 
     class SColorRGBA
     {
@@ -33,9 +35,9 @@ namespace CrossPlatform
         SColorRGB(int r, int g, int b);
         SColorRGB(const SColorRGB& rgb);
 
-        SColorRGB& operation= (const SColorRGB& lvalue);
+        SColorRGB& operation= (const SColorRGB& rvalue);
 
-        ~SColorRGB();
+        ~SColorRGB() = default;
         float ToRGB();
 
     private:
@@ -48,7 +50,7 @@ namespace CrossPlatform
         unsigned char b;
     };
 
-
+    template<int ResolutionX = UNINITIALUZE_VALUE, int ResolutionY = UNINITIALUZE_VALUE>
     class FramerBuffer
     {
     public:
