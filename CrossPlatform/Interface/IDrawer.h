@@ -2,12 +2,16 @@
 
 #include "FrameBuffer.h"
 
+namespace CrossPlatform {
+    class FramerBuffer;
+}
+
+typedef CrossPlatform::FramerBuffer* FramerBufferHandler;
 
 class IDrawer
 {
 public:
-    IDrawer() = default;
     virtual ~IDrawer() = default;
-
-    virtual FramerBufferHandler GetFrameBuffer() = delete;
+    virtual void Draw(FramerBufferHandler frameBufferHandle) = delete;
+    //virtual FramerBufferHandler GetFrameBuffer() = delete;
 };

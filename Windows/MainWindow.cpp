@@ -1,6 +1,8 @@
 #include "MainWindow.h"
 #include "DebugTool/DebugConsole.h"
 
+
+
 #include <cstdio>
 #include <TCHAR.H>
 
@@ -19,8 +21,8 @@ void MainWindow::Initialize()
     m_debugConsole.Initialize();
 
     //bool result;
-    int screenWidth = 0;
-    int screenHight = 0;
+    int screenWidth = 800;
+    int screenHight = 600;
     if (!this->Create(L"Main Windows",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
         WS_OVERLAPPEDWINDOW | WS_POPUP,
@@ -37,6 +39,11 @@ void MainWindow::Initialize()
         //printf("Error Code: %d", GetLastError());
         return;
     }
+
+    FramerBufferHandler const framerBufferHandler = new FramerBuffer();
+    framerBufferHandler->Initilize(screenWidth, screenHight);
+    m_windowDrawer.SetFrameBufeer(framerBufferHandler);
+    m_windowDrawer.SetHDC(hdc);
 
 }
 
@@ -102,6 +109,7 @@ void MainWindow::Run()
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
+        
     }
 
     return;

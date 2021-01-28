@@ -1,6 +1,8 @@
 #pragma once
 
 #include "BaseWindow.h"
+#include "WindowDrawer/WindowDrawer.h"
+
 namespace DebugTool {
     class DebugConsole;
 }
@@ -24,4 +26,5 @@ protected:
 private:
     DebugTool::DebugConsole& m_debugConsole;
     HDC hdc;
+    WindowDrawer& m_windowDrawer;
 };

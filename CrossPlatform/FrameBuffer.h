@@ -1,6 +1,6 @@
 #pragma once
 
-typedef FramerBuffer* FramerBufferHandler;
+
 
 namespace CrossPlatform
 {
@@ -38,31 +38,35 @@ namespace CrossPlatform
         SColorRGB& operation= (const SColorRGB& rvalue);
 
         ~SColorRGB() = default;
-        float ToRGB();
+        unsigned int ToRGBLittleEndian();
 
     private:
-        GetR(int rgbr);
-        GetG(int rgbg);
-        GetB(int rgbb);
+        unsigned char GetR(int rgbr);
+        unsigned char GetG(int rgbg);
+        unsigned char GetB(int rgbb);
 
         unsigned char r;
         unsigned char g;
         unsigned char b;
     };
 
-    template<int ResolutionX = UNINITIALUZE_VALUE, int ResolutionY = UNINITIALUZE_VALUE>
+    //template<int ResolutionX = UNINITIALUZE_VALUE, int ResolutionY = UNINITIALUZE_VALUE>
     class FramerBuffer
     {
     public:
         FramerBuffer();
         virtual ~FramerBuffer() = default;
 
-        bool CreateBuffer();
+        bool Initilize(unsigned int resolutionX, unsigned int resolutionY);
         bool ClearBuffer();
+
+        unsigned int GetResolitionX() { return m_resolutionX; }
+        unsigned int GetResolitionY() { return m_resolutionY; }
+        unsigned int GetColor(unsigned int x, unsigned int y);
 
     private:
         const int UNINITIALUZE_VALUE;
-        void InternalCreateBuffer();
+        bool InternalCreateBuffer();
         bool IsResolutionValid();
         bool IsBufferValid();
 

@@ -37,27 +37,40 @@ namespace CrossPlatform
         b = rvalue.b;
     }
 
-    float SColorRGB::ToRGB()
+    unsigned int SColorRGB::ToRGBLittleEndian()
     {
         return 0x0 | r | g << 8 | b << 16;
     }
 
-    SColorRGB::GetR(int rgb)
+    unsigned char SColorRGB::GetR(int rgb)
     {
         r = (rgb >> 16) & 0xff;
     }
 
-    SColorRGB::GetG(int rgb)
+    unsigned char SColorRGB::GetG(int rgb)
     {
         g = (rgb >> 8) & 0xff;
     }
 
-    SColorRGB::GetB(int rgb)
+    unsigned char SColorRGB::GetB(int rgb)
     {
         b = rgb & 0xff;
     }
 
     const int FramerBuffer::UNINITIALUZE_VALUE = -1;
+
+    bool FramerBuffer::InternalCreateBuffer()
+    {
+        if (!IsResolutionValid()) { return false; }
+
+        if (m_buffer != nullptr)
+        {
+            ClearBuffer();
+        }
+
+        m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
+        return true;
+    }
 
     bool FramerBuffer::IsResolutionValid()
     {
@@ -84,16 +97,11 @@ namespace CrossPlatform
         m_resolutionY = UNINITIALUZE_VALUE;
     }
 
-    bool FramerBuffer::CreateBuffer()
+    bool FramerBuffer::Initilize(unsigned int resolutionX, unsigned int resolutionY)
     {
-        if (!IsResolutionValid()) { return; }
-
-        if (m_buffer != nullptr)
-        {
-            ClearBuffer();
-        }
-
-        m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
+        m_resolutionX = resolutionX;
+        m_resolutionY = resolutionY;
+        InternalCreateBuffer();
     }
 
 
@@ -106,5 +114,11 @@ namespace CrossPlatform
     }
 
 
+
+    unsigned int FramerBuffer::GetColor(unsigned int x, unsigned int y)
+    {
+        const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];
+        return scolor.ToRGBLittleEndian();
+    }
 
 }
