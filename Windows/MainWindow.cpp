@@ -1,13 +1,16 @@
 #include "MainWindow.h"
 #include "DebugTool/DebugConsole.h"
 
+#include "CrossPlatform/FrameBuffer.h"
 
+#include "Windows/WindowDrawer/WindowDrawer.h"
 
 #include <cstdio>
 #include <TCHAR.H>
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(DebugTool::DebugConsole())
+, m_windowDrawer(WindowDrawer::WindowDrawer())
 {
 }
 
@@ -40,7 +43,7 @@ void MainWindow::Initialize()
         return;
     }
 
-    FramerBufferHandler const framerBufferHandler = new FramerBuffer();
+    FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
     framerBufferHandler->Initilize(screenWidth, screenHight);
     m_windowDrawer.SetFrameBufeer(framerBufferHandler);
     m_windowDrawer.SetHDC(hdc);
@@ -52,6 +55,7 @@ void MainWindow::Shutdown()
     ReleaseDC(GetHwnd(), hdc);
     ShutdownWindows();
     m_debugConsole.Shutdown();
+    m_windowDrawer.Shutdown();
     return;
 }
 
@@ -109,7 +113,8 @@ void MainWindow::Run()
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
-        
+        m_windowDrawer.GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
+        m_windowDrawer.Draw();
     }
 
     return;

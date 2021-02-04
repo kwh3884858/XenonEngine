@@ -2,17 +2,12 @@
 
 namespace CrossPlatform
 {
-    float SColorRGBA::ToRGB()
+    unsigned int SColorRGBA::ToRGB()
     {
-       return ( r | g << 8 | b << 16 );
+        return (r | g << 8 | b << 16);
     }
 
-    SColorRGBA::GetG(int rgba)
-    {
-
-    }
-
-    float SColorRGBA::ToRGBA() {
+    unsigned int SColorRGBA::ToRGBA() {
         return (r | g << 8 | b << 16 | a << 24);
     }
 
@@ -25,39 +20,45 @@ namespace CrossPlatform
 
     SColorRGB::SColorRGB(const SColorRGB& rgb)
     {
-        r = GetR(rgb);
-        g = GetG(rgb);
-        b = GetB(rgb);
+        r = rgb.r;
+        g = rgb.g;
+        b = rgb.b;
     }
 
-    SColorRGB& SColorRGB::operation = (const SColorRGB& rvalue)
+    SColorRGB::SColorRGB()
+    {
+        r = 0;
+        g = 0;
+        b = 0;
+    }
+
+    SColorRGB& SColorRGB::operator=(const SColorRGB& rvalue)
     {
         r = rvalue.r;
         g = rvalue.g;
         b = rvalue.b;
+        return *this;
     }
 
-    unsigned int SColorRGB::ToRGBLittleEndian()
+    unsigned int SColorRGB::ToRGBLittleEndian() const
     {
         return 0x0 | r | g << 8 | b << 16;
     }
 
     unsigned char SColorRGB::GetR(int rgb)
     {
-        r = (rgb >> 16) & 0xff;
+        return static_cast<unsigned char>((rgb >> 16) & 0xff);
     }
 
     unsigned char SColorRGB::GetG(int rgb)
     {
-        g = (rgb >> 8) & 0xff;
+        return static_cast<unsigned char>((rgb >> 8) & 0xff);
     }
 
     unsigned char SColorRGB::GetB(int rgb)
     {
-        b = rgb & 0xff;
+        return static_cast<unsigned char>(rgb & 0xff);
     }
-
-    const int FramerBuffer::UNINITIALUZE_VALUE = -1;
 
     bool FramerBuffer::InternalCreateBuffer()
     {
@@ -102,23 +103,27 @@ namespace CrossPlatform
         m_resolutionX = resolutionX;
         m_resolutionY = resolutionY;
         InternalCreateBuffer();
+        return true;
     }
-
 
     bool FramerBuffer::ClearBuffer()
     {
-        if (!IsBufferValid()) { return; }
-        if (!IsResolutionValid()) { return; }
-        
+        if (!IsBufferValid()) { return false; }
+        if (!IsResolutionValid()) { return false; }
+
         delete[] m_buffer;
+        return true;
     }
-
-
 
     unsigned int FramerBuffer::GetColor(unsigned int x, unsigned int y)
     {
         const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];
         return scolor.ToRGBLittleEndian();
+    }
+
+    void FramerBuffer::SetColor(unsigned int x, unsigned int y, const SColorRGB& color)
+    {
+        m_buffer[y * m_resolutionX + x] = color;
     }
 
 }

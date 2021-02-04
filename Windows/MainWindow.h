@@ -1,10 +1,13 @@
 #pragma once
 
 #include "BaseWindow.h"
-#include "WindowDrawer/WindowDrawer.h"
 
 namespace DebugTool {
     class DebugConsole;
+}
+
+namespace WindowDrawer {
+    class WindowDrawer;
 }
 
 class MainWindow : public BaseWindow<MainWindow>
@@ -26,5 +29,5 @@ protected:
 private:
     DebugTool::DebugConsole& m_debugConsole;
     HDC hdc;
-    WindowDrawer& m_windowDrawer;
+    WindowDrawer::WindowDrawer& m_windowDrawer;
 };

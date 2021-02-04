@@ -1,17 +1,16 @@
 #pragma once
 
-#include "FrameBuffer.h"
-
-namespace CrossPlatform {
-    class FramerBuffer;
-}
+#include "CrossPlatform/FrameBuffer.h"
 
 typedef CrossPlatform::FramerBuffer* FramerBufferHandler;
 
-class IDrawer
-{
-public:
-    virtual ~IDrawer() = default;
-    virtual void Draw(FramerBufferHandler frameBufferHandle) = delete;
-    //virtual FramerBufferHandler GetFrameBuffer() = delete;
-};
+namespace CrossPlatform {
+
+    class IDrawer
+    {
+    public:
+        virtual ~IDrawer() = default;
+        virtual void Draw() = 0;
+        //virtual FramerBufferHandler GetFrameBuffer() = delete;
+    };
+}

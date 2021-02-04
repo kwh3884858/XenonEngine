@@ -3,8 +3,6 @@
 
 namespace WindowDrawer {
 
-
-
     WindowDrawer::~WindowDrawer()
     {
         m_frameBuffer = nullptr;
@@ -40,8 +38,6 @@ namespace WindowDrawer {
         m_frameBuffer = frameBufferHandle;
     }
 
-    
-
     void WindowDrawer::SetHDC(HDC hdc)
     {
         m_hdc = hdc;
@@ -51,10 +47,13 @@ namespace WindowDrawer {
     {
         m_frameBuffer = new FramerBuffer();
         m_frameBuffer->Initilize(resolutionX, resolutionY);
+
+        return true;
     }
 
-
-
-
+    bool WindowDrawer::Shutdown()
+    {
+        delete m_frameBuffer;
+    }
 
 }

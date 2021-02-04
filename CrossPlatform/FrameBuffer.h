@@ -7,6 +7,15 @@ namespace CrossPlatform
 #define LOWBYTE(w)  ((unsigned char)(((unsigned long)(w)) & 0xff))
 #define HIGHBYTE(w) ((unsigned char)(((unsigned long)(w) >> 8) & 0xff))
 
+    // Union cast is a safer way to do reinterpret_cast<int &>(myfloat) (according to C++ standard)
+    template < typename TO, typename FROM >
+    inline TO union_cast(FROM value)
+    {
+        union { FROM from; TO to; } convert;
+        convert.from = value;
+        return convert.to;
+    }
+
     class SColorRGBA
     {
     public:
@@ -14,14 +23,14 @@ namespace CrossPlatform
         SColorRGBA(int grb);
         ~SColorRGBA();
 
-        float ToRGBA();
-        float ToRGB();
+        unsigned int ToRGBA();
+        unsigned int ToRGB();
 
     private:
-        GetR(int rgba);
-        GetG(int rgba);
-        GetB(int rgba);
-        GetA(int rgba);
+        //unsigned char GetR(int rgba);
+        //unsigned char GetG(int rgba);
+        //unsigned char GetB(int rgba);
+        //unsigned char GetA(int rgba);
 
         unsigned char r;
         unsigned char g;
@@ -32,13 +41,13 @@ namespace CrossPlatform
     class SColorRGB
     {
     public:
+        SColorRGB();
         SColorRGB(int r, int g, int b);
         SColorRGB(const SColorRGB& rgb);
-
-        SColorRGB& operation= (const SColorRGB& rvalue);
-
         ~SColorRGB() = default;
-        unsigned int ToRGBLittleEndian();
+
+        SColorRGB& operator= (const SColorRGB& rvalue);
+        unsigned int ToRGBLittleEndian() const;
 
     private:
         unsigned char GetR(int rgbr);
@@ -63,9 +72,10 @@ namespace CrossPlatform
         unsigned int GetResolitionX() { return m_resolutionX; }
         unsigned int GetResolitionY() { return m_resolutionY; }
         unsigned int GetColor(unsigned int x, unsigned int y);
+        void SetColor(unsigned int x, unsigned int y, const SColorRGB& color);
 
     private:
-        const int UNINITIALUZE_VALUE;
+        const int UNINITIALUZE_VALUE = -1;
         bool InternalCreateBuffer();
         bool IsResolutionValid();
         bool IsBufferValid();
