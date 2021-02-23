@@ -12,7 +12,10 @@ namespace WindowDrawer {
     class WindowDrawer : public IDrawer
     {
     public:
-        WindowDrawer(): m_frameBuffer(nullptr), m_hdc(nullptr) {};
+        WindowDrawer(): m_frameBuffer(nullptr), m_hdc(nullptr) {
+            int i = 0;
+            i++;
+        };
         virtual ~WindowDrawer() override;
 
         bool Initialize(unsigned int resolutionX, unsigned int resolutionY);

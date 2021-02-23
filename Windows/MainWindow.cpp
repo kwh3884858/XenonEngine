@@ -38,7 +38,7 @@ void MainWindow::Initialize()
         LoadMenu(mhInstance, MAKEINTRESOURCE(IDR_MAIN_MENU))
     ))
     {
-        m_debugConsole.RetrieveError(L"MainWindow::Initialize");
+        m_debugConsole.RetrieveError(_T("MainWindow::Initialize"));
         //printf("Error Code: %d", GetLastError());
         return;
     }
@@ -83,7 +83,7 @@ void MainWindow::Run()
     ZeroMemory(&msg, sizeof(MSG));
     if (mStatusCode == BaseWindow::StatusCode::InitiailizationFailed)
     {
-        m_debugConsole.RetrieveError(L"BaseWindow::Create");
+        m_debugConsole.RetrieveError(_T("BaseWindow::Create"));
     }
     while (!done)
     {
@@ -195,7 +195,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
     case WM_CLOSE:
     {
-        if (MessageBox(mWnd, L"Ready Quit?", L"Application", MB_OKCANCEL) == IDOK) {
+        if (MessageBox(mWnd, _T("Ready Quit?"), _T("Application"), MB_OKCANCEL) == IDOK) {
             DestroyWindow(mWnd);
         }
     }

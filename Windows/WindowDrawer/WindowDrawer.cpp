@@ -54,6 +54,7 @@ namespace WindowDrawer {
     bool WindowDrawer::Shutdown()
     {
         delete m_frameBuffer;
+        return true;
     }
 
 }
