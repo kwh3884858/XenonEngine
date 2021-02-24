@@ -9,8 +9,8 @@
 #include <TCHAR.H>
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
-, m_debugConsole(DebugTool::DebugConsole())
-, m_windowDrawer(WindowDrawer::WindowDrawer())
+, m_debugConsole(new DebugTool::DebugConsole())
+, m_windowDrawer(new WindowDrawer::WindowDrawer())
 {
 }
 
@@ -21,7 +21,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::Initialize()
 {
-    m_debugConsole.Initialize();
+    m_debugConsole->Initialize();
 
     //bool result;
     int screenWidth = 800;
@@ -38,15 +38,17 @@ void MainWindow::Initialize()
         LoadMenu(mhInstance, MAKEINTRESOURCE(IDR_MAIN_MENU))
     ))
     {
-        m_debugConsole.RetrieveError(_T("MainWindow::Initialize"));
+        m_debugConsole->RetrieveError(_T("MainWindow::Initialize"));
         //printf("Error Code: %d", GetLastError());
         return;
     }
 
     FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
     framerBufferHandler->Initilize(screenWidth, screenHight);
-    m_windowDrawer.SetFrameBufeer(framerBufferHandler);
-    m_windowDrawer.SetHDC(hdc);
+    m_windowDrawer->SetFrameBufeer(framerBufferHandler);
+
+    hdc = GetDC(GetHwnd());
+    m_windowDrawer->SetHDC(hdc);
 
 }
 
@@ -54,8 +56,8 @@ void MainWindow::Shutdown()
 {
     ReleaseDC(GetHwnd(), hdc);
     ShutdownWindows();
-    m_debugConsole.Shutdown();
-    m_windowDrawer.Shutdown();
+    m_debugConsole->Shutdown();
+    m_windowDrawer->Shutdown();
     return;
 }
 
@@ -65,7 +67,7 @@ void MainWindow::Run()
     bool done = false, result = false, isKey = false;
     
     unsigned long int frameAmount = 0;
-    hdc = GetDC(GetHwnd());
+
 
     //Color
     COLORREF colorRed = RGB(255, 0, 0);
@@ -83,7 +85,7 @@ void MainWindow::Run()
     ZeroMemory(&msg, sizeof(MSG));
     if (mStatusCode == BaseWindow::StatusCode::InitiailizationFailed)
     {
-        m_debugConsole.RetrieveError(_T("BaseWindow::Create"));
+        m_debugConsole->RetrieveError(_T("BaseWindow::Create"));
     }
     while (!done)
     {
@@ -113,8 +115,8 @@ void MainWindow::Run()
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
-        m_windowDrawer.GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
-        m_windowDrawer.Draw();
+        m_windowDrawer->GetFrameBuffer()->SetColor(100, 100, CrossPlatform::SColorRGB(20, 20, 20));
+        m_windowDrawer->Draw();
     }
 
     return;

@@ -27,7 +27,7 @@ protected:
 	virtual LPCWSTR ClassName() const override { return L"Main Window Class"; }
 
 private:
-    DebugTool::DebugConsole& m_debugConsole;
+    DebugTool::DebugConsole* m_debugConsole;
     HDC hdc;
-    WindowDrawer::WindowDrawer& m_windowDrawer;
+    WindowDrawer::WindowDrawer* m_windowDrawer;
 };
