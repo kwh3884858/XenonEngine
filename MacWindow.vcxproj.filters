@@ -39,6 +39,9 @@
     <ClCompile Include="Windows\WindowDrawer\WindowDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Windows\Timer\StoryTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -99,6 +102,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Windows\WindowDrawer\WindowDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\Timer\StoryTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

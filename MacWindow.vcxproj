@@ -113,6 +113,7 @@
     <ClCompile Include="mathlab\Vector2.cpp" />
     <ClCompile Include="mathlab\ViewStruct.cpp" />
     <ClCompile Include="Windows\main.cpp" />
+    <ClCompile Include="Windows\Timer\StoryTimer.cpp" />
     <ClCompile Include="Windows\WindowDrawer\WindowDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,7 @@
     <ClInclude Include="mathlab\ViewStruct.h" />
     <ClInclude Include="Windows\BaseWindow.h" />
     <ClInclude Include="Windows\Resources\resource.h" />
+    <ClInclude Include="Windows\Timer\StoryTimer.h" />
     <ClInclude Include="Windows\WindowDrawer\WindowDrawer.h" />
   </ItemGroup>
   <ItemGroup>

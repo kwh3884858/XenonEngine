@@ -5,6 +5,8 @@
 
 #include "Windows/WindowDrawer/WindowDrawer.h"
 
+#include "Timer/StoryTimer.h"
+
 #include <cstdio>
 #include <TCHAR.H>
 
@@ -48,6 +50,7 @@ void MainWindow::Initialize()
     m_windowDrawer.SetFrameBufeer(framerBufferHandler);
     m_windowDrawer.SetHDC(hdc);
 
+    m_timer = new StoryTimer();
 }
 
 void MainWindow::Shutdown()
@@ -113,8 +116,15 @@ void MainWindow::Run()
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
-        m_windowDrawer.GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
-        m_windowDrawer.Draw();
+        m_timer.Update();
+        bool isUpdateBuffer = CanUpdateBuffer();
+
+        if (isUpdateBuffer)
+        {
+            m_windowDrawer.GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
+            m_windowDrawer.Draw();
+        }
+
     }
 
     return;
@@ -208,4 +218,16 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
     }
 
     return TRUE;
+}
+
+bool MainWindow::CanUpdateBuffer()
+{
+    time_t currentTime = m_timer.GetTime();
+    double timeInterval = difftime(currentTime, m_lastUpdateTiemstamp);
+    if (timeInterval > m_timeInterval)
+    {
+        m_lastUpdateTiemstamp = currentTime;
+        return true;
+    }
+    return false;
 }
