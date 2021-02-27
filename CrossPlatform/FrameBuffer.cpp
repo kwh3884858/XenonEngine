@@ -123,6 +123,10 @@ namespace CrossPlatform
 
     void FramerBuffer::SetColor(unsigned int x, unsigned int y, const SColorRGB& color)
     {
+        if (x <0 || x >= m_resolutionX || y < 0 || y >= m_resolutionY)
+        {
+            return;
+        }
         m_buffer[y * m_resolutionX + x] = color;
     }
 

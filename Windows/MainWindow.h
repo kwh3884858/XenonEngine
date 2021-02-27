@@ -39,6 +39,6 @@ private:
     WindowDrawer::WindowDrawer* m_windowDrawer;
     
     double m_timeInterval = 0.0333333;  //30fps
-    Timer::StoryTimer m_timer;
+    Timer::StoryTimer* m_timer;
     time_t m_lastUpdateTiemstamp;
 };

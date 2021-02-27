@@ -13,14 +13,15 @@ namespace Timer {
         StoryTimer() = default;
         ~StoryTimer() = default;
 
-        static void Update();
-        static time_t GetTime();
+         void Update();
+         time_t GetTime();
 
         //static void AddCallback(int interval, T* storyEditor, StoryEditorCallback callback);
 
     private:
-        static time_t m_interval;
-        static time_t m_lastTime;
+        time_t m_currentTime;
+        //static time_t m_interval;
+        //static time_t m_lastTime;
 
         //static StoryEditorCallback m_timeCallback;
         //static T* m_this;
@@ -42,19 +43,19 @@ namespace Timer {
     //__declspec(selectany) void (T::*StoryTimer<T>::m_timeCallback) () = nullptr;
 
 
-    template<typename T>
-#ifdef _WIN32
-    __declspec(selectany)
-#endif
-        time_t StoryTimer::m_lastTime = 0;
 
-    template<typename T>
-#ifdef _WIN32
-    __declspec(selectany)
-#endif
-        time_t StoryTimer::m_interval = 0;
+//#ifdef _WIN32
+//    __declspec(selectany)
+//#endif
+//        time_t StoryTimer::m_lastTime = 0;
 
-
+//
+//#ifdef _WIN32
+//    __declspec(selectany)
+//#endif
+//        time_t StoryTimer::m_currentTime = 0;
+//
+//
     //template<typename T>
     //HeavenGateEditor::StoryTimer<T>::StoryTimer()
     //{

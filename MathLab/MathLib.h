@@ -10,12 +10,12 @@
 #define MathLib_hpp
 
 #include <stdio.h>
-#include "Vector2.h"
+#include "Matrix3.h"
 
 class Mathlib{
 
 public:
-    
+    void RotateXAxis(const Vector3& vec, const float degree);
 private:
     
 };

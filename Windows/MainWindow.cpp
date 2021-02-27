@@ -10,9 +10,17 @@
 #include <cstdio>
 #include <TCHAR.H>
 
+#include "MathLab/Vector3.h"
+
+#define PI          3.1415926
+#define TO_RADIAN   0.01745329
+#define TO_DEGREE   57.29578049
+
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(new DebugTool::DebugConsole())
 , m_windowDrawer(new WindowDrawer::WindowDrawer())
+, m_timer(new Timer::StoryTimer())
+, m_lastUpdateTiemstamp(0)
 {
 }
 
@@ -117,18 +125,76 @@ void MainWindow::Run()
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
-        m_timer.Update();
         bool isUpdateBuffer = CanUpdateBuffer();
+
+        static int x = 0;
+        static int y = 0;
 
         if (isUpdateBuffer)
         {
-            m_windowDrawer->GetFrameBuffer()->SetColor(100, 100, CrossPlatform::SColorRGB(20, 20, 20));
+            int donutRadius = 5;
+            int circleRadius = 2;
+            
+            float degree = 0;    //(0 ~ 360)
+
+            int X = 0;
+            int Y = 0;
+            int Z = -2;
+            for (int thetaDegree = 0; thetaDegree < 360; thetaDegree++)
+            {
+                int posX = 0;
+                int posY = 0;
+                int posZ = 0;
+                float theta = thetaDegree * TO_RADIAN;
+                int posX = donutRadius + circleRadius * sin(theta);
+                int posY = circleRadius * cos(theta);
+
+
+                //To donut, rotate with y-axis
+                //(x,y,z) * |cos  , 0 ,sin|
+                //          |0    ,1  ,0  |       
+                //          |-sin ,0  ,cos|
+
+                for (int phiDegree = 0;)
+                {
+                    float phi = phiDegree * TO_RADIAN;
+                    X = posX * cos(phi) - posZ * sin(phi);
+                    Y = posY;
+                    Z = posY * sin(phi) + posZ * cos(phi);
+                }
+            }
+
+
+
+
+            //Center Position
+            int centerX = 0;
+            int centerY = 0;
+            int centerZ = 0;
+
+
+            for (int i = 0 ; i< 800; i++)
+            {
+                for (int j = 0; j < 600; j++)
+                {
+                    m_windowDrawer->GetFrameBuffer()->SetColor(i, j, CrossPlatform::SColorRGB(100,100,100));
+                }
+            }
+            m_windowDrawer->GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
+            m_windowDrawer->GetFrameBuffer()->SetColor(11, 11, CrossPlatform::SColorRGB(20, 20, 20));
+            m_windowDrawer->GetFrameBuffer()->SetColor(12, 12, CrossPlatform::SColorRGB(20, 20, 20));
+            m_windowDrawer->GetFrameBuffer()->SetColor(13, 13, CrossPlatform::SColorRGB(20, 20, 20));
+            m_windowDrawer->GetFrameBuffer()->SetColor(14, 14, CrossPlatform::SColorRGB(20, 20, 20));
+            m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
             m_windowDrawer->Draw();
         }
     }
 
     return;
 }
+
+
+
 LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 {
     static unsigned long int paintAmount = 0;
@@ -222,7 +288,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
 bool MainWindow::CanUpdateBuffer()
 {
-    time_t currentTime = m_timer.GetTime();
+    time_t currentTime = m_timer->GetTime();
     double timeInterval = difftime(currentTime, m_lastUpdateTiemstamp);
     if (timeInterval > m_timeInterval)
     {

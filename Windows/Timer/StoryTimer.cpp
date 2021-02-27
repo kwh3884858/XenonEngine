@@ -2,19 +2,11 @@
 
 
 
-namespace HeavenGateEditor {
+namespace Timer {
 
-
-    template<typename T>
-    void HeavenGateEditor::StoryTimer::Update()
+    void StoryTimer::Update()
     {
-        if (m_this == nullptr)
-        {
-            return;
-        }
-
-        time_t currentTime = GetTime();
-
+        m_currentTime = GetTime();
     }
 
     //void HeavenGateEditor::StoryTimer<T>::AddCallback(int interval,)
@@ -23,7 +15,7 @@ namespace HeavenGateEditor {
     //    m_lastTime = GetTime();
     //}
 
-    time_t HeavenGateEditor::StoryTimer<T>::GetTime()
+    time_t StoryTimer::GetTime()
     {
         return time(nullptr);
     }
