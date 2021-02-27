@@ -34,9 +34,9 @@ protected:
 private:
     bool CanUpdateBuffer();
 
-    DebugTool::DebugConsole& m_debugConsole;
+    DebugTool::DebugConsole* m_debugConsole;
     HDC hdc;
-    WindowDrawer::WindowDrawer& m_windowDrawer;
+    WindowDrawer::WindowDrawer* m_windowDrawer;
     
     double m_timeInterval = 0.0333333;  //30fps
     Timer::StoryTimer m_timer;
