@@ -10,11 +10,9 @@
 #include <cstdio>
 #include <TCHAR.H>
 
-#include "MathLab/Vector3.h"
+#include "MathLab/MathLib.h"
 
-#define PI          3.1415926
-#define TO_RADIAN   0.01745329
-#define TO_DEGREE   57.29578049
+
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(new DebugTool::DebugConsole())
@@ -127,8 +125,7 @@ void MainWindow::Run()
 
         bool isUpdateBuffer = CanUpdateBuffer();
 
-        static int x = 0;
-        static int y = 0;
+
 
         if (isUpdateBuffer)
         {
@@ -139,7 +136,7 @@ void MainWindow::Run()
 
             int X = 0;
             int Y = 0;
-            int Z = -2;
+            int Z = 0;
             for (int thetaDegree = 0; thetaDegree < 360; thetaDegree++)
             {
                 int posX = 0;
@@ -161,9 +158,20 @@ void MainWindow::Run()
                     X = posX * cos(phi) - posZ * sin(phi);
                     Y = posY;
                     Z = posY * sin(phi) + posZ * cos(phi);
+                    
+                    Vector3 donutVertex(X, Y, Z);
+                    donutVertex = MathLab::RotateXAxis(donutVertex, 90);
+                    donutVertex = donutVertex + Vector3(100,-100,0);
+
+                    int screenX = 0;
+                    int screenY = 0;
+                    float reciprocalOfZ = 1 / donutVertex.z;
+                    screenX = (int)donutVertex.x ;
+                    screenY = (int)donutVertex.y ;
+
+                    m_windowDrawer->GetFrameBuffer()->SetColor(screenX, screenY, CrossPlatform::SColorRGB(20, 20, 20));
                 }
             }
-
 
 
 
@@ -173,19 +181,19 @@ void MainWindow::Run()
             int centerZ = 0;
 
 
-            for (int i = 0 ; i< 800; i++)
-            {
-                for (int j = 0; j < 600; j++)
-                {
-                    m_windowDrawer->GetFrameBuffer()->SetColor(i, j, CrossPlatform::SColorRGB(100,100,100));
-                }
-            }
-            m_windowDrawer->GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->GetFrameBuffer()->SetColor(11, 11, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->GetFrameBuffer()->SetColor(12, 12, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->GetFrameBuffer()->SetColor(13, 13, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->GetFrameBuffer()->SetColor(14, 14, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
+            //for (int i = 0 ; i< 800; i++)
+            //{
+            //    for (int j = 0; j < 600; j++)
+            //    {
+            //        m_windowDrawer->GetFrameBuffer()->SetColor(i, j, CrossPlatform::SColorRGB(100,100,100));
+            //    }
+            //}
+            //m_windowDrawer->GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
+            //m_windowDrawer->GetFrameBuffer()->SetColor(11, 11, CrossPlatform::SColorRGB(20, 20, 20));
+            //m_windowDrawer->GetFrameBuffer()->SetColor(12, 12, CrossPlatform::SColorRGB(20, 20, 20));
+            //m_windowDrawer->GetFrameBuffer()->SetColor(13, 13, CrossPlatform::SColorRGB(20, 20, 20));
+            //m_windowDrawer->GetFrameBuffer()->SetColor(14, 14, CrossPlatform::SColorRGB(20, 20, 20));
+            //m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
             m_windowDrawer->Draw();
         }
     }

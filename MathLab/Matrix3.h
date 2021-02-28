@@ -18,6 +18,7 @@ namespace MathLab {
     public:
         Matrix3();
         Matrix3(const Vector3& aV1, const Vector3& aV2, const Vector3& aV3);
+        Matrix3(float v1, float v2, float v3, float v4, float v5, float v6, float v7, float v8, float v9);
         Matrix3(const Matrix3& aMatrix);
         ~Matrix3();
 

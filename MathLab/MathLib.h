@@ -15,7 +15,9 @@
 class Mathlib{
 
 public:
-    void RotateXAxis(const Vector3& vec, const float degree);
+    static void RotateXAxis(const Vector3& vec, const float degree);
+    static void RotateYAxis(const Vector3& vec, const float degree);
+    static void RotateZAxis(const Vector3& vec, const float degree);
 private:
     
 };

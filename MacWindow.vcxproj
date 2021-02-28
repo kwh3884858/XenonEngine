@@ -132,9 +132,9 @@
     <ClInclude Include="macos\MacDrawer.h" />
     <ClInclude Include="macos\UICanvas.h" />
     <ClInclude Include="macos\ViewController.h" />
+    <ClInclude Include="MathLab\MathLabDefinition.h" />
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Vector3.h" />
-    <ClInclude Include="Vector3.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\MainWindow.h" />
     <ClInclude Include="mathlab\MathLib.h" />
