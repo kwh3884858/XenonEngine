@@ -9,16 +9,22 @@
 
 #include <cstdio>
 #include <TCHAR.H>
+#include <cmath> // sin, cos
 
+#include "MathLab/Vector3.h"
 #include "MathLab/MathLib.h"
+#include "MathLab/MathLabDefinition.h"
 
-
+using MathLab::Vector3;
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(new DebugTool::DebugConsole())
 , m_windowDrawer(new WindowDrawer::WindowDrawer())
 , m_timer(new Timer::StoryTimer())
 , m_lastUpdateTiemstamp(0)
+, m_screenWidth(800)
+, m_screenHight(600)
+, m_perspectiveProjection(false)
 {
 }
 
@@ -32,13 +38,13 @@ void MainWindow::Initialize()
     m_debugConsole->Initialize();
 
     //bool result;
-    int screenWidth = 800;
-    int screenHight = 600;
+    //int screenWidth = 800;
+    //int screenHight = 600;
     if (!this->Create(L"Main Windows",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
         WS_OVERLAPPEDWINDOW | WS_POPUP,
-        screenWidth,
-        screenHight,
+        m_screenWidth,
+        m_screenHight,
         0,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
@@ -52,7 +58,7 @@ void MainWindow::Initialize()
     }
 
     FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
-    framerBufferHandler->Initilize(screenWidth, screenHight);
+    framerBufferHandler->Initilize(m_screenWidth, m_screenHight);
     m_windowDrawer->SetFrameBufeer(framerBufferHandler);
 
     hdc = GetDC(GetHwnd());
@@ -124,27 +130,30 @@ void MainWindow::Run()
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
         bool isUpdateBuffer = CanUpdateBuffer();
+        
 
-
+        Vector3 cameraPosition();
 
         if (isUpdateBuffer)
         {
-            int donutRadius = 5;
-            int circleRadius = 2;
+            int donutRadius = 50;
+            int circleRadius = 10;
             
             float degree = 0;    //(0 ~ 360)
 
-            int X = 0;
-            int Y = 0;
-            int Z = 0;
+            float X = 0;
+            float Y = 0;
+            float Z = 0;
             for (int thetaDegree = 0; thetaDegree < 360; thetaDegree++)
             {
-                int posX = 0;
-                int posY = 0;
-                int posZ = 0;
+                Vector3 circle;
+                float posX = 0;
+                float posY = 0;
+                float posZ = 0;
+
                 float theta = thetaDegree * TO_RADIAN;
-                int posX = donutRadius + circleRadius * sin(theta);
-                int posY = circleRadius * cos(theta);
+                circle.x = donutRadius + circleRadius * sin(theta);
+                circle.y = circleRadius * cos(theta);
 
 
                 //To donut, rotate with y-axis
@@ -152,23 +161,41 @@ void MainWindow::Run()
                 //          |0    ,1  ,0  |       
                 //          |-sin ,0  ,cos|
 
-                for (int phiDegree = 0;)
+                for (int phiDegree = 0; phiDegree < 360; phiDegree++)
                 {
-                    float phi = phiDegree * TO_RADIAN;
-                    X = posX * cos(phi) - posZ * sin(phi);
-                    Y = posY;
-                    Z = posY * sin(phi) + posZ * cos(phi);
+                    Vector3 donutVertex = MathLab::RotateYAxis(circle, phiDegree);
+                    //float phi = phiDegree * TO_RADIAN;
+                    //X = posX * cos(phi) - posZ * sin(phi);
+                    //Y = posY;
+                    //Z = posY * sin(phi) + posZ * cos(phi);
                     
-                    Vector3 donutVertex(X, Y, Z);
+                    //local
+                    //Vector3 donutVertex(X, Y, Z);
                     donutVertex = MathLab::RotateXAxis(donutVertex, 90);
-                    donutVertex = donutVertex + Vector3(100,-100,0);
 
+                    //local to world
+                    donutVertex += Vector3(0, 0, -400);
+
+                    //local to view 
+
+
+                    //view to projection
                     int screenX = 0;
                     int screenY = 0;
-                    float reciprocalOfZ = 1 / donutVertex.z;
-                    screenX = (int)donutVertex.x ;
-                    screenY = (int)donutVertex.y ;
+                    
 
+                    if (m_perspectiveProjection)
+                    {
+                        float reciprocalOfZ = 1 / donutVertex.z;
+
+                        screenX = (int)donutVertex.x * reciprocalOfZ + m_screenWidth / 2;
+                        screenY = (int)-(donutVertex.y * reciprocalOfZ) + m_screenHight / 2;
+                    }
+                    else {
+                        screenX = (int)donutVertex.x + m_screenWidth / 2;
+                        screenY = (int)-(donutVertex.y) + m_screenHight / 2;
+                    }
+                
                     m_windowDrawer->GetFrameBuffer()->SetColor(screenX, screenY, CrossPlatform::SColorRGB(20, 20, 20));
                 }
             }
@@ -269,6 +296,11 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
     {
         int virtualCode = (int)wParam;
         int keyState = (int)lParam;
+
+        if (virtualCode == 0x50) //P
+        {
+            m_perspectiveProjection != m_perspectiveProjection;
+        }
     }
     break;
 
