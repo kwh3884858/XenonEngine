@@ -9,9 +9,9 @@
 #include <stdio.h>
 namespace MathLab {
     struct Vector3 final{
-        int x;
-        int y;
-        int z;
+        float x;
+        float y;
+        float z;
 
     public:
         friend void SwapVector(Vector3* vectorA, Vector3* vectorB);
@@ -21,8 +21,11 @@ namespace MathLab {
         friend Vector3 operator+(const Vector3& v1, const Vector3& v2);
         friend Vector3 operator-(const Vector3& v1, const Vector3& v2);
 
+        Vector3& operator+=(const Vector3& rvalue);
+        Vector3& operator-=(const Vector3& rvalue);
+
         Vector3();
-        Vector3(int ax, int ay, int az);
+        Vector3(float ax, float ay, float az);
         Vector3(const Vector3&);
         ~Vector3();
 
@@ -38,4 +41,3 @@ namespace MathLab {
     bool LessY(const Vector3& origin, const Vector3& compare);
     void Exchange(Vector3*const a, Vector3*const b);
 }
-#endif /* VectorStruct_h */

@@ -16,7 +16,7 @@ namespace MathLab {
         z = 0;
     }
 
-    Vector3::Vector3(int ax, int ay, int az) {
+    Vector3::Vector3(float ax, float ay, float az) {
         x = ax;
         y = ay;
         z = az;
@@ -25,7 +25,7 @@ namespace MathLab {
     Vector3::Vector3(const Vector3& para) {
         this->x = para.x;
         this->y = para.y;
-        this->z = para.z
+        this->z = para.z;
     }
 
     Vector3::~Vector3() {
@@ -34,24 +34,34 @@ namespace MathLab {
 
 
     void Vector3::Swap() {
-        int temp = x;
+        float temp = x;
         x = y;
         y = temp;
     }
 
+    Vector3& Vector3::operator+=(const Vector3& rvalue)
+    {
+        this->x += rvalue.x;
+        this->y += rvalue.y;
+        return *this;
+    }
+
+    Vector3& Vector3::operator-=(const Vector3& rvalue)
+    {
+        this->x -= rvalue.x;
+        this->y -= rvalue.y;
+        return *this;
+    }
+
     Vector3 operator+(const Vector3& v1, const Vector3& v2) {
-        Vector3 vector;
-        vector.x = v1.x + v2.x;
-        vector.y = v1.y + v2.y;
-        vector.z = v1.z + v2.z;
+        Vector3 vector(v1);
+        vector += v2;
         return  vector;
     }
 
     Vector3 operator-(const Vector3& v1, const Vector3& v2) {
-        Vector3 vector;
-        vector.x = v1.x - v2.x;
-        vector.y = v1.y - v2.y;
-        vector.z = v1.z - v2.z;
+        Vector3 vector(v1);
+        vector -= v2;
         return  vector;
     }
 
@@ -83,3 +93,5 @@ namespace MathLab {
     }
 
 }
+
+
