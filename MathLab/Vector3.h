@@ -24,6 +24,8 @@ namespace MathLab {
         Vector3& operator+=(const Vector3& rvalue);
         Vector3& operator-=(const Vector3& rvalue);
 
+        float dot(const Vector3& vec)const;
+
         Vector3();
         Vector3(float ax, float ay, float az);
         Vector3(const Vector3&);

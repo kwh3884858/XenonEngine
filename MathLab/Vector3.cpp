@@ -55,6 +55,11 @@ namespace MathLab {
         return *this;
     }
 
+    float Vector3::dot(const Vector3& vec) const
+    {
+        return this->x * vec.x + this->y * vec.y + this->z * vec.z;
+    }
+
     Vector3 operator+(const Vector3& v1, const Vector3& v2) {
         Vector3 vector(v1);
         vector += v2;
