@@ -38,6 +38,13 @@ namespace MathLab {
 
     Vector3 RotateZAxis(const Vector3& vec, const float degree)
     {
-        return Vector3();
+        float radius = degree * TO_RADIAN;
+        Matrix3 rotationMatrix(
+            Vector3(cos(radius), sin(radius), 0),
+            Vector3(-sin(radius), cos(radius), 0),
+            Vector3(0, 0, 1)
+        );
+        Vector3 result = vec * rotationMatrix;
+        return result;
     }
 }
