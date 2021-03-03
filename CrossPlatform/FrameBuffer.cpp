@@ -71,10 +71,11 @@ namespace CrossPlatform
         }
 
         m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
+        m_zBuffer = new float[m_resolutionX * m_resolutionY];
         return true;
     }
 
-    bool FramerBuffer::IsResolutionValid()
+    bool FramerBuffer::IsResolutionValid()const
     {
         if (m_resolutionX == UNINITIALUZE_VALUE || m_resolutionY == UNINITIALUZE_VALUE)
         {
@@ -83,9 +84,22 @@ namespace CrossPlatform
         return true;
     }
 
-    bool FramerBuffer::IsBufferValid()
+    bool FramerBuffer::IsBufferValid()const 
     {
         if (m_buffer == nullptr)
+        {
+            return false;
+        }
+        if (m_zBuffer == nullptr)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    bool FramerBuffer::IsPositionValid(unsigned int x, unsigned int y) const
+{
+        if (x < 0 || x >= m_resolutionX || y < 0 || y >= m_resolutionY)
         {
             return false;
         }
@@ -95,6 +109,7 @@ namespace CrossPlatform
     FramerBuffer::FramerBuffer()
     {
         m_buffer = nullptr;
+        m_zBuffer = nullptr;
         m_resolutionX = UNINITIALUZE_VALUE;
         m_resolutionY = UNINITIALUZE_VALUE;
     }
@@ -113,22 +128,33 @@ namespace CrossPlatform
         if (!IsResolutionValid()) { return false; }
 
         delete[] m_buffer;
+        delete[] m_zBuffer;
         return true;
     }
 
     unsigned int FramerBuffer::GetColor(unsigned int x, unsigned int y)
     {
+        if (!IsPositionValid(x, y)) { return 0; }
         const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];
         return scolor.ToRGBLittleEndian();
     }
 
     void FramerBuffer::SetColor(unsigned int x, unsigned int y, const SColorRGB& color)
     {
-        if (x <0 || x >= m_resolutionX || y < 0 || y >= m_resolutionY)
-        {
-            return;
-        }
+        if (!IsPositionValid(x, y)) { return; }
         m_buffer[y * m_resolutionX + x] = color;
+    }
+
+    float FramerBuffer::GetZBuffer(unsigned int x, unsigned int y)
+    {
+        if (!IsPositionValid(x, y)) { return 0; }
+        return m_zBuffer[y * m_resolutionX + x];
+    }
+
+    void FramerBuffer::SetZBuffer(unsigned int x, unsigned int y, const float zBuffer)
+    {
+        if (!IsPositionValid(x, y)) { return; }
+        m_zBuffer[y * m_resolutionX + x] = zBuffer;
     }
 
     void FramerBuffer::ClearBuffer()
@@ -136,8 +162,9 @@ namespace CrossPlatform
         if (!IsBufferValid()) { return ; }
         if (!IsResolutionValid()) { return ; }
         int size = sizeof(SColorRGB);
+        int zBufferSize = sizeof(float);
         memset(m_buffer, 0, m_resolutionX*m_resolutionY*size);
-
+        memset(m_zBuffer, 0, m_resolutionX*m_resolutionY*zBufferSize);
     }
 
 }

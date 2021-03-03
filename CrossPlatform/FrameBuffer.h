@@ -71,20 +71,27 @@ namespace CrossPlatform
 
         unsigned int GetResolitionX() { return m_resolutionX; }
         unsigned int GetResolitionY() { return m_resolutionY; }
+
         unsigned int GetColor(unsigned int x, unsigned int y);
         void SetColor(unsigned int x, unsigned int y, const SColorRGB& color);
+
+        float GetZBuffer(unsigned int x, unsigned int y);
+        void SetZBuffer(unsigned int x, unsigned int y, const float zBuffer);
+
         void ClearBuffer();
 
     private:
         const int UNINITIALUZE_VALUE = -1;
         bool InternalCreateBuffer();
-        bool IsResolutionValid();
-        bool IsBufferValid();
+        bool IsResolutionValid()const;
+        bool IsBufferValid() const;
+        bool IsPositionValid(unsigned int x, unsigned int y)const;
 
         unsigned int m_resolutionX;
         unsigned int m_resolutionY;
 
         SColorRGB* m_buffer;
+        float* m_zBuffer;
     };
 
 }

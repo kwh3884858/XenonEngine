@@ -134,6 +134,8 @@ void MainWindow::Run()
 
         Vector3 cameraPosition();
         static int tmpdegree = 90;
+
+        Vector3 lightDirection(0, 1, -1);
         
         if (isUpdateBuffer)
         {
@@ -150,6 +152,7 @@ void MainWindow::Run()
             for (int thetaDegree = 0; thetaDegree < 360; thetaDegree++)
             {
                 Vector3 circle;
+                Vector3 circleNormal;
                 float posX = 0;
                 float posY = 0;
                 float posZ = 0;
@@ -157,7 +160,8 @@ void MainWindow::Run()
                 float theta = thetaDegree * TO_RADIAN;
                 circle.x = donutRadius + circleRadius * sin(theta);
                 circle.y = circleRadius * cos(theta);
-
+                circleNormal.x = sin(theta);
+                circleNormal.y = cos(theta);
 
                 //To donut, rotate with y-axis
                 //(x,y,z) * |cos  , 0 ,sin|
@@ -167,6 +171,7 @@ void MainWindow::Run()
                 for (int phiDegree = 0; phiDegree < 360; phiDegree++)
                 {
                     Vector3 donutVertex = MathLab::RotateYAxis(circle, phiDegree);
+                    Vector3 donutVertexNormal = MathLab::RotateYAxis(circleNormal, phiDegree);
                     //float phi = phiDegree * TO_RADIAN;
                     //X = posX * cos(phi) - posZ * sin(phi);
                     //Y = posY;
@@ -176,7 +181,7 @@ void MainWindow::Run()
                     //Vector3 donutVertex(X, Y, Z);
 
                     donutVertex = MathLab::RotateXAxis(donutVertex, tmpdegree);
-                    
+                    donutVertexNormal = MathLab::RotateXAxis(donutVertexNormal, tmpdegree);
                     //local to world
                     //donutVertex = MathLab::RotateZAxis(donutVertex, tmpdegree);
                     donutVertex += Vector3(0, 0, -170);
@@ -188,16 +193,15 @@ void MainWindow::Run()
                     int screenX = 0;
                     int screenY = 0;
                     
+                    if (donutVertex.z >= -1)
+                    {
+                        continue;
+                    }
+                    float reciprocalOfZ = -1 / donutVertex.z;
 
+                    // Rasterized
                     if (m_perspectiveProjection)
                     {
-                        if (donutVertex.z >= -1)
-                        {
-
-                            continue;
-                        }
-                        float reciprocalOfZ = -1 / donutVertex.z;
-
                         screenX = (int) m_screenWidth / 2 + donutVertex.x * reciprocalOfZ*100;
                         screenY = (int) m_screenHight / 2 - donutVertex.y * reciprocalOfZ*100;
                     }
@@ -205,8 +209,21 @@ void MainWindow::Run()
                         screenX = (int)donutVertex.x + m_screenWidth / 2;
                         screenY = (int)-(donutVertex.y) + m_screenHight / 2;
                     }
+
+                    // Z buffer
+                    float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
+                    if (curretZBuffer < reciprocalOfZ)
+                    {
+                        m_windowDrawer->GetFrameBuffer()->SetZBuffer(screenX, screenY, reciprocalOfZ);
+
+                        float L = donutVertexNormal.dot(lightDirection) * 180; //scale up to 255
+                        if (L > 0)
+                        {
+                            m_windowDrawer->GetFrameBuffer()->SetColor(screenX, screenY, CrossPlatform::SColorRGB(L, L, L));
+
+                        }
+                    }
                 
-                    m_windowDrawer->GetFrameBuffer()->SetColor(screenX, screenY, CrossPlatform::SColorRGB(20, 20, 20));
                 }
             }
 
