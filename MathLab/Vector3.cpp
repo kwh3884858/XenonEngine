@@ -43,6 +43,7 @@ namespace MathLab {
     {
         this->x += rvalue.x;
         this->y += rvalue.y;
+        this->z += rvalue.z;
         return *this;
     }
 
@@ -50,6 +51,7 @@ namespace MathLab {
     {
         this->x -= rvalue.x;
         this->y -= rvalue.y;
+        this->z -= rvalue.z;
         return *this;
     }
 
