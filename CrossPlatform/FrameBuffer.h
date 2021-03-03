@@ -67,12 +67,13 @@ namespace CrossPlatform
         virtual ~FramerBuffer() = default;
 
         bool Initilize(unsigned int resolutionX, unsigned int resolutionY);
-        bool ClearBuffer();
+        bool DeleteBuffer();
 
         unsigned int GetResolitionX() { return m_resolutionX; }
         unsigned int GetResolitionY() { return m_resolutionY; }
         unsigned int GetColor(unsigned int x, unsigned int y);
         void SetColor(unsigned int x, unsigned int y, const SColorRGB& color);
+        void ClearBuffer();
 
     private:
         const int UNINITIALUZE_VALUE = -1;

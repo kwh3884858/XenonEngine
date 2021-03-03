@@ -24,7 +24,7 @@ MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_lastUpdateTiemstamp(0)
 , m_screenWidth(800)
 , m_screenHight(600)
-, m_perspectiveProjection(false)
+, m_perspectiveProjection(true)
 {
 }
 
@@ -133,11 +133,14 @@ void MainWindow::Run()
         
 
         Vector3 cameraPosition();
-
+        static int tmpdegree = 90;
+        
         if (isUpdateBuffer)
         {
-            int donutRadius = 50;
-            int circleRadius = 10;
+            m_windowDrawer->GetFrameBuffer()->ClearBuffer();
+            
+            int donutRadius = 120;
+            int circleRadius = 40;
             
             float degree = 0;    //(0 ~ 360)
 
@@ -171,10 +174,12 @@ void MainWindow::Run()
                     
                     //local
                     //Vector3 donutVertex(X, Y, Z);
-                    donutVertex = MathLab::RotateXAxis(donutVertex, 90);
 
+                    donutVertex = MathLab::RotateXAxis(donutVertex, tmpdegree);
+                    
                     //local to world
-                    donutVertex += Vector3(0, 0, -400);
+                    //donutVertex = MathLab::RotateZAxis(donutVertex, tmpdegree);
+                    donutVertex += Vector3(0, 0, -170);
 
                     //local to view 
 
@@ -186,10 +191,15 @@ void MainWindow::Run()
 
                     if (m_perspectiveProjection)
                     {
-                        float reciprocalOfZ = 1 / donutVertex.z;
+                        if (donutVertex.z >= -1)
+                        {
 
-                        screenX = (int)donutVertex.x * reciprocalOfZ + m_screenWidth / 2;
-                        screenY = (int)-(donutVertex.y * reciprocalOfZ) + m_screenHight / 2;
+                            continue;
+                        }
+                        float reciprocalOfZ = -1 / donutVertex.z;
+
+                        screenX = (int) m_screenWidth / 2 + donutVertex.x * reciprocalOfZ*100;
+                        screenY = (int) m_screenHight / 2 - donutVertex.y * reciprocalOfZ*100;
                     }
                     else {
                         screenX = (int)donutVertex.x + m_screenWidth / 2;
@@ -223,6 +233,8 @@ void MainWindow::Run()
             //m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
             m_windowDrawer->Draw();
         }
+
+        tmpdegree += 5;
     }
 
     return;

@@ -1,4 +1,5 @@
 #include "FrameBuffer.h"
+#include <cstring>
 
 namespace CrossPlatform
 {
@@ -66,7 +67,7 @@ namespace CrossPlatform
 
         if (m_buffer != nullptr)
         {
-            ClearBuffer();
+            DeleteBuffer();
         }
 
         m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
@@ -106,7 +107,7 @@ namespace CrossPlatform
         return true;
     }
 
-    bool FramerBuffer::ClearBuffer()
+    bool FramerBuffer::DeleteBuffer()
     {
         if (!IsBufferValid()) { return false; }
         if (!IsResolutionValid()) { return false; }
@@ -128,6 +129,15 @@ namespace CrossPlatform
             return;
         }
         m_buffer[y * m_resolutionX + x] = color;
+    }
+
+    void FramerBuffer::ClearBuffer()
+    {
+        if (!IsBufferValid()) { return ; }
+        if (!IsResolutionValid()) { return ; }
+        int size = sizeof(SColorRGB);
+        memset(m_buffer, 0, m_resolutionX*m_resolutionY*size);
+
     }
 
 }
