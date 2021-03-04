@@ -11,6 +11,7 @@
 #include <TCHAR.H>
 #include <cmath> // sin, cos
 
+
 #include "MathLab/Vector3.h"
 #include "MathLab/MathLib.h"
 #include "MathLab/MathLabDefinition.h"
@@ -135,7 +136,7 @@ void MainWindow::Run()
         Vector3 cameraPosition();
         static int tmpdegree = 90;
 
-        Vector3 lightDirection(0, 1, -1);
+        Vector3 lightDirection(0, 1, 0);
         
         if (isUpdateBuffer)
         {
@@ -149,7 +150,7 @@ void MainWindow::Run()
             float X = 0;
             float Y = 0;
             float Z = 0;
-            for (int thetaDegree = 0; thetaDegree < 360; thetaDegree++)
+            for (int thetaDegree = 0; thetaDegree < 360; thetaDegree+=5)
             {
                 Vector3 circle;
                 Vector3 circleNormal;
@@ -168,10 +169,10 @@ void MainWindow::Run()
                 //          |0    ,1  ,0  |       
                 //          |-sin ,0  ,cos|
 
-                for (int phiDegree = 0; phiDegree < 360; phiDegree++)
+                for (int phiDegree = 0; phiDegree < 360; phiDegree+=5)
                 {
-                    Vector3 donutVertex = MathLab::RotateYAxis(circle, phiDegree);
-                    Vector3 donutVertexNormal = MathLab::RotateYAxis(circleNormal, phiDegree);
+                    Vector3 donutVertex = MathLab::RotateYAxis(circle, (float)phiDegree);
+                    Vector3 donutVertexNormal = MathLab::RotateYAxis(circleNormal, (float)phiDegree);
                     //float phi = phiDegree * TO_RADIAN;
                     //X = posX * cos(phi) - posZ * sin(phi);
                     //Y = posY;
@@ -180,10 +181,11 @@ void MainWindow::Run()
                     //local
                     //Vector3 donutVertex(X, Y, Z);
 
-                    donutVertex = MathLab::RotateXAxis(donutVertex, tmpdegree);
-                    donutVertexNormal = MathLab::RotateXAxis(donutVertexNormal, tmpdegree);
+                    donutVertex = MathLab::RotateXAxis(donutVertex, (float)tmpdegree);
+                    donutVertexNormal = MathLab::RotateXAxis(donutVertexNormal, (float)tmpdegree);
                     //local to world
-                    //donutVertex = MathLab::RotateZAxis(donutVertex, tmpdegree);
+                    donutVertex = MathLab::RotateZAxis(donutVertex, tmpdegree);
+                    donutVertexNormal = MathLab::RotateZAxis(donutVertexNormal, (float)tmpdegree);
                     donutVertex += Vector3(0, 0, -170);
 
                     //local to view 
@@ -214,11 +216,14 @@ void MainWindow::Run()
                     float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
                     if (curretZBuffer < reciprocalOfZ)
                     {
-                        m_windowDrawer->GetFrameBuffer()->SetZBuffer(screenX, screenY, reciprocalOfZ);
-
-                        float L = donutVertexNormal.dot(lightDirection) * 180; //scale up to 255
+                        float L = donutVertexNormal.dot(lightDirection); 
+                        L += 0.5f;
                         if (L > 0)
                         {
+                            L *= 255; //scale up to 255
+                            L += 20;
+                            L = MathLab::clamp(L, 0.0f, 255.0f);
+                            m_windowDrawer->GetFrameBuffer()->SetZBuffer(screenX, screenY, reciprocalOfZ);
                             m_windowDrawer->GetFrameBuffer()->SetColor(screenX, screenY, CrossPlatform::SColorRGB(L, L, L));
 
                         }
@@ -328,7 +333,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
         if (virtualCode == 0x50) //P
         {
-            m_perspectiveProjection != m_perspectiveProjection;
+            m_perspectiveProjection = !m_perspectiveProjection;
         }
     }
     break;
