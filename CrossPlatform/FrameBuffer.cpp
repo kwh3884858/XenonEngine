@@ -1,6 +1,6 @@
 #include "FrameBuffer.h"
 #include <cstring>
-
+#include <Windows.h>
 namespace CrossPlatform
 {
     unsigned int SColorRGBA::ToRGB()
@@ -14,36 +14,37 @@ namespace CrossPlatform
 
     SColorRGB::SColorRGB(int r, int g, int b)
     {
-        r = (unsigned char)r;
-        g = (unsigned char)g;
-        b = (unsigned char)b;
+        this->r = (unsigned char)r;
+        this->g = (unsigned char)g;
+        this->b = (unsigned char)b;
     }
 
     SColorRGB::SColorRGB(const SColorRGB& rgb)
     {
-        r = rgb.r;
-        g = rgb.g;
-        b = rgb.b;
+        this->r = rgb.r;
+        this->g = rgb.g;
+        this->b = rgb.b;
     }
 
     SColorRGB::SColorRGB()
     {
-        r = 0;
-        g = 0;
-        b = 0;
+        this->r = 0;
+        this->g = 0;
+        this->b = 0;
     }
 
     SColorRGB& SColorRGB::operator=(const SColorRGB& rvalue)
     {
-        r = rvalue.r;
-        g = rvalue.g;
-        b = rvalue.b;
+        this->r = rvalue.r;
+        this->g = rvalue.g;
+        this->b = rvalue.b;
         return *this;
     }
 
-    unsigned int SColorRGB::ToRGBLittleEndian() const
+    unsigned long SColorRGB::ToRGBLittleEndian() const
     {
-        return 0x0 | r | g << 8 | b << 16;
+        //return 0x0 | r | g << 8 | b << 16;
+        return RGB(this->r, this->g, this->b);
     }
 
     unsigned char SColorRGB::GetR(int rgb)
@@ -132,7 +133,7 @@ namespace CrossPlatform
         return true;
     }
 
-    unsigned int FramerBuffer::GetColor(unsigned int x, unsigned int y)
+    unsigned long FramerBuffer::GetColor(unsigned int x, unsigned int y)
     {
         if (!IsPositionValid(x, y)) { return 0; }
         const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];

@@ -47,7 +47,8 @@ namespace CrossPlatform
         ~SColorRGB() = default;
 
         SColorRGB& operator= (const SColorRGB& rvalue);
-        unsigned int ToRGBLittleEndian() const;
+        //unsigned int ToRGBLittleEndian() const;
+        unsigned long ToRGBLittleEndian() const;
 
     private:
         unsigned char GetR(int rgbr);
@@ -72,7 +73,7 @@ namespace CrossPlatform
         unsigned int GetResolitionX() { return m_resolutionX; }
         unsigned int GetResolitionY() { return m_resolutionY; }
 
-        unsigned int GetColor(unsigned int x, unsigned int y);
+        unsigned long GetColor(unsigned int x, unsigned int y);
         void SetColor(unsigned int x, unsigned int y, const SColorRGB& color);
 
         float GetZBuffer(unsigned int x, unsigned int y);
