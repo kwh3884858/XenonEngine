@@ -2,6 +2,9 @@
 
 #include "CrossPlatform/FrameBuffer.h"
 
+#include "CrossPlatform/Interface/DrawerType.h"
+#include "CrossPlatform/Interface/IDrawerConfig.h"
+
 typedef CrossPlatform::FramerBuffer* FramerBufferHandler;
 
 namespace CrossPlatform {
@@ -9,8 +12,11 @@ namespace CrossPlatform {
     class IDrawer
     {
     public:
-        virtual ~IDrawer() = default;
+        virtual bool Initialize() = 0;
+        virtual bool Shutdown() = 0;
+
+        virtual DrawerType GetType() const = 0;
+        virtual void SetDrawerConfig(IDrawerConfig* const config) = 0;
         virtual void Draw() = 0;
-        //virtual FramerBufferHandler GetFrameBuffer() = delete;
     };
 }

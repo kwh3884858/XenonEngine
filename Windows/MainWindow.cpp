@@ -3,7 +3,7 @@
 
 #include "CrossPlatform/FrameBuffer.h"
 
-#include "Windows/WindowDrawer/WindowDrawer.h"
+#include "Windows/WindowDrawer/WindowDGIDrawer.h"
 
 #include "Timer/StoryTimer.h"
 
@@ -11,16 +11,18 @@
 #include <TCHAR.H>
 #include <cmath> // sin, cos
 
-
 #include "MathLab/Vector3.h"
 #include "MathLab/MathLib.h"
 #include "MathLab/MathLabDefinition.h"
 
+#include "Gameplay/GameplayMain.h"
+
 using MathLab::Vector3;
+using WindowDrawer::WindowDGIDrawerConfig;
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(new DebugTool::DebugConsole())
-, m_windowDrawer(new WindowDrawer::WindowDrawer())
+, m_windowDrawer(new WindowDrawer::WindowDGIDrawer())
 , m_timer(new Timer::StoryTimer())
 , m_lastUpdateTiemstamp(0)
 , m_screenWidth(800)
@@ -58,12 +60,35 @@ void MainWindow::Initialize()
         return;
     }
 
-    FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
-    framerBufferHandler->Initilize(m_screenWidth, m_screenHight);
-    m_windowDrawer->SetFrameBufeer(framerBufferHandler);
+    switch (m_windowDrawer->GetType())
+    {
+        case CrossPlatform::DrawerType::GDI_Drawer
+        {
 
-    hdc = GetDC(GetHwnd());
-    m_windowDrawer->SetHDC(hdc);
+            WindowDGIDrawerConfig*const config = new WindowDGIDrawerConfig;
+            config->resolutionX = m_screenWidth;
+            config->resolutionY = m_screenHight;
+
+            FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
+            m_windowDrawer->SetDrawerConfig(config);
+            m_windowDrawer->Initialize();
+            //m_windowDrawer->SetFrameBufeer(framerBufferHandler);
+
+            hdc = GetDC(GetHwnd());
+            m_windowDrawer->SetHDC(hdc);
+        }
+        break;
+        
+        case CrossPlatform::DrawerType::DirectX_Draw_Drawer:
+        {
+
+        }
+        break;;
+
+    default:
+        break;
+    }
+
 
 }
 
@@ -124,6 +149,8 @@ void MainWindow::Run()
                 break;
             }
         }
+
+        Gameplay::GameplayMain();
 
         frameAmount++;
         

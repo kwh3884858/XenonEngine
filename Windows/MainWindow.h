@@ -8,7 +8,7 @@ namespace DebugTool {
 }
 
 namespace WindowDrawer {
-    class WindowDrawer;
+    class WindowDGIDrawer;
 }
 
 namespace Timer {
@@ -36,7 +36,7 @@ private:
 
     DebugTool::DebugConsole* m_debugConsole;
     HDC hdc;
-    WindowDrawer::WindowDrawer* m_windowDrawer;
+    WindowDrawer::WindowDGIDrawer* m_windowDrawer;
     
     double m_timeInterval = 0.0333333;  //30fps
     Timer::StoryTimer* m_timer;

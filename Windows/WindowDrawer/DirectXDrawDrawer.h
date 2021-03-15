@@ -1,22 +1,37 @@
+//  DirectXDrawDrawer.h
+//  MacWindow
+//
+//  Created by whkong on 2021-3-15.
+//  Copyright (c) 2018 whkong. All rights reserved.
 
 #pragma once
 
-#include "CrossPlatform/Interface/IDrawer.h"
+#pragma comment(lib, "ddraw.lib")
 
-#include <windows.h>
+#include "CrossPlatform/Interface/IDrawer.h"
+#include <ddraw.h>
 
 namespace WindowDrawer {
     using CrossPlatform::FramerBuffer;
     using CrossPlatform::IDrawer;
+    using CrossPlatform::IDrawerConfig;
+    using CrossPlatform::DrawerType;
 
-    class WindowDrawer : public IDrawer
+    class DirectXDrawDrawerConfig : public IDrawerConfig
     {
     public:
-        WindowDrawer(): m_frameBuffer(nullptr), m_hdc(nullptr) {
+        unsigned int resolutionX;
+        unsigned int resolutionY;
+    };
+
+    class DirectXDrawDrawer : public IDrawer
+    {
+    public:
+        DirectXDrawDrawer() : m_frameBuffer(nullptr), m_hdc(nullptr) {
             int i = 0;
             i++;
         };
-        virtual ~WindowDrawer() override;
+        virtual ~DirectXDrawDrawer() override;
 
         bool Initialize(unsigned int resolutionX, unsigned int resolutionY);
         bool Shutdown();
@@ -27,7 +42,5 @@ namespace WindowDrawer {
         void SetHDC(HDC hdc);
     private:
         FramerBufferHandler m_frameBuffer;
-        HDC m_hdc;
     };
 }
-
