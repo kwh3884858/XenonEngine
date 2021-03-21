@@ -17,6 +17,7 @@ namespace CrossPlatform {
 
         virtual DrawerType GetType() const = 0;
         virtual void SetDrawerConfig(IDrawerConfig* const config) = 0;
-        virtual void Draw() = 0;
+        virtual bool Draw() = 0;
+        virtual const FramerBufferHandler GetFrameBuffer() const = 0;
     };
 }

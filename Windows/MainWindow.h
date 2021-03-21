@@ -3,12 +3,12 @@
 #include "BaseWindow.h"
 #include <time.h>
 
-namespace DebugTool {
-    class DebugConsole;
+namespace CrossPlatform {
+    class IDrawer;
 }
 
-namespace WindowDrawer {
-    class WindowDGIDrawer;
+namespace DebugTool {
+    class DebugConsole;
 }
 
 namespace Timer {
@@ -36,7 +36,7 @@ private:
 
     DebugTool::DebugConsole* m_debugConsole;
     HDC hdc;
-    WindowDrawer::WindowDGIDrawer* m_windowDrawer;
+    CrossPlatform::IDrawer* m_windowDrawer;
     
     double m_timeInterval = 0.0333333;  //30fps
     Timer::StoryTimer* m_timer;

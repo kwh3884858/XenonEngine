@@ -1,6 +1,7 @@
 #include "FrameBuffer.h"
 #include <cstring>
 #include <Windows.h>
+#include <assert.h>     /* assert */
 namespace CrossPlatform
 {
     unsigned int SColorRGBA::ToRGB()
@@ -61,6 +62,7 @@ namespace CrossPlatform
     {
         return static_cast<unsigned char>(rgb & 0xff);
     }
+
 
     bool FramerBuffer::InternalCreateBuffer()
     {
@@ -125,8 +127,8 @@ namespace CrossPlatform
 
     bool FramerBuffer::DeleteBuffer()
     {
-        if (!IsBufferValid()) { return false; }
-        if (!IsResolutionValid()) { return false; }
+        assert(IsBufferValid() == true);
+        assert(IsResolutionValid() == true);
 
         delete[] m_buffer;
         delete[] m_zBuffer;
@@ -135,33 +137,38 @@ namespace CrossPlatform
 
     unsigned long FramerBuffer::GetColor(unsigned int x, unsigned int y)
     {
-        if (!IsPositionValid(x, y)) { return 0; }
+        assert(IsPositionValid(x, y) == true);
+
         const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];
         return scolor.ToRGBLittleEndian();
     }
 
     void FramerBuffer::SetColor(unsigned int x, unsigned int y, const SColorRGB& color)
     {
-        if (!IsPositionValid(x, y)) { return; }
+        assert(IsPositionValid(x, y) == true);
+
         m_buffer[y * m_resolutionX + x] = color;
     }
 
     float FramerBuffer::GetZBuffer(unsigned int x, unsigned int y)
     {
-        if (!IsPositionValid(x, y)) { return 0; }
+        assert(IsPositionValid(x, y) == true);
+
         return m_zBuffer[y * m_resolutionX + x];
     }
 
     void FramerBuffer::SetZBuffer(unsigned int x, unsigned int y, const float zBuffer)
     {
-        if (!IsPositionValid(x, y)) { return; }
+        assert(IsPositionValid(x, y) == true);
+
         m_zBuffer[y * m_resolutionX + x] = zBuffer;
     }
 
     void FramerBuffer::ClearBuffer()
     {
-        if (!IsBufferValid()) { return ; }
-        if (!IsResolutionValid()) { return ; }
+        assert(IsBufferValid() == true);
+        assert(IsResolutionValid() == true);
+
         int size = sizeof(SColorRGB);
         int zBufferSize = sizeof(float);
         memset(m_buffer, 0, m_resolutionX*m_resolutionY*size);

@@ -8,11 +8,11 @@ namespace WindowDrawer {
 
     }
 
-    void WindowDGIDrawer::Draw()
+    bool WindowDGIDrawer::Draw()
     {
         if (!m_frameBuffer)
         {
-            return;
+            return false;
         }
 
         int x = m_frameBuffer->GetResolitionX();
@@ -20,7 +20,7 @@ namespace WindowDrawer {
 
         if (x <=0 || y <= 0)
         {
-            return;
+            return false;
         }
 
         for (int i = 0; i < x; i++)

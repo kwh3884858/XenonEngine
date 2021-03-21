@@ -4,6 +4,7 @@
 #include "CrossPlatform/FrameBuffer.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
+#include "Windows/WindowDrawer/DirectXDrawDrawer.h"
 
 #include "Timer/StoryTimer.h"
 
@@ -18,15 +19,20 @@
 #include "Gameplay/GameplayMain.h"
 
 using MathLab::Vector3;
+
+using WindowDrawer::WindowDGIDrawer;
 using WindowDrawer::WindowDGIDrawerConfig;
+
+using WindowDrawer::DirectXDrawDrawer;
+using WindowDrawer::DirectXDrawDrawerConfig;
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(new DebugTool::DebugConsole())
-, m_windowDrawer(new WindowDrawer::WindowDGIDrawer())
+, m_windowDrawer(new WindowDrawer::DirectXDrawDrawer())
 , m_timer(new Timer::StoryTimer())
 , m_lastUpdateTiemstamp(0)
-, m_screenWidth(800)
-, m_screenHight(600)
+, m_screenWidth(1920)
+, m_screenHight(1080)
 , m_perspectiveProjection(true)
 {
 }
@@ -62,28 +68,39 @@ void MainWindow::Initialize()
 
     switch (m_windowDrawer->GetType())
     {
-        case CrossPlatform::DrawerType::GDI_Drawer
+    case CrossPlatform::DrawerType::GDI_Drawer:
+    {
+        WindowDGIDrawer* drawer = static_cast<WindowDGIDrawer*>(m_windowDrawer);
+
+        WindowDGIDrawerConfig* const config = new WindowDGIDrawerConfig;
+        config->resolutionX = m_screenWidth;
+        config->resolutionY = m_screenHight;
+
+        //FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
+        drawer->SetDrawerConfig(config);
+        drawer->Initialize();
+        //m_windowDrawer->SetFrameBufeer(framerBufferHandler);
+
+        hdc = GetDC(GetHwnd());
+        drawer->SetHDC(hdc);
+    }
+    break;
+
+    case CrossPlatform::DrawerType::DirectX_Draw_Drawer:
+    {
+        DirectXDrawDrawerConfig* const config = new DirectXDrawDrawerConfig;
+        config->resolutionX = m_screenWidth;
+        config->resolutionY = m_screenHight;
+        config->m_hwnd = GetHwnd();
+
+        m_windowDrawer->SetDrawerConfig(config);
+        bool result = m_windowDrawer->Initialize();
+        if (!result)
         {
-
-            WindowDGIDrawerConfig*const config = new WindowDGIDrawerConfig;
-            config->resolutionX = m_screenWidth;
-            config->resolutionY = m_screenHight;
-
-            FramerBufferHandler framerBufferHandler = new CrossPlatform::FramerBuffer();
-            m_windowDrawer->SetDrawerConfig(config);
-            m_windowDrawer->Initialize();
-            //m_windowDrawer->SetFrameBufeer(framerBufferHandler);
-
-            hdc = GetDC(GetHwnd());
-            m_windowDrawer->SetHDC(hdc);
+            return;
         }
-        break;
-        
-        case CrossPlatform::DrawerType::DirectX_Draw_Drawer:
-        {
-
-        }
-        break;;
+    }
+    break;
 
     default:
         break;
@@ -105,7 +122,7 @@ void MainWindow::Run()
 {
     MSG msg = {};
     bool done = false, result = false, isKey = false;
-    
+
     unsigned long int frameAmount = 0;
 
 
@@ -153,31 +170,31 @@ void MainWindow::Run()
         Gameplay::GameplayMain();
 
         frameAmount++;
-        
+
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
         bool isUpdateBuffer = CanUpdateBuffer();
-        
+
 
         Vector3 cameraPosition();
         static int tmpdegree = 90;
 
         Vector3 lightDirection(0, 1, 0);
-        
+
         if (isUpdateBuffer)
         {
             m_windowDrawer->GetFrameBuffer()->ClearBuffer();
-            
+
             int donutRadius = 120;
             int circleRadius = 40;
-            
+
             float degree = 0;    //(0 ~ 360)
 
             float X = 0;
             float Y = 0;
             float Z = 0;
-            for (int thetaDegree = 0; thetaDegree < 360; thetaDegree+=5)
+            for (int thetaDegree = 0; thetaDegree < 360; thetaDegree += 5)
             {
                 Vector3 circle;
                 Vector3 circleNormal;
@@ -196,7 +213,7 @@ void MainWindow::Run()
                 //          |0    ,1  ,0  |       
                 //          |-sin ,0  ,cos|
 
-                for (int phiDegree = 0; phiDegree < 360; phiDegree+=5)
+                for (int phiDegree = 0; phiDegree < 360; phiDegree += 5)
                 {
                     Vector3 donutVertex = MathLab::RotateYAxis(circle, (float)phiDegree);
                     Vector3 donutVertexNormal = MathLab::RotateYAxis(circleNormal, (float)phiDegree);
@@ -204,7 +221,7 @@ void MainWindow::Run()
                     //X = posX * cos(phi) - posZ * sin(phi);
                     //Y = posY;
                     //Z = posY * sin(phi) + posZ * cos(phi);
-                    
+
                     //local
                     //Vector3 donutVertex(X, Y, Z);
 
@@ -221,7 +238,7 @@ void MainWindow::Run()
                     //view to projection
                     int screenX = 0;
                     int screenY = 0;
-                    
+
                     if (donutVertex.z >= -1)
                     {
                         continue;
@@ -231,8 +248,8 @@ void MainWindow::Run()
                     // Rasterized
                     if (m_perspectiveProjection)
                     {
-                        screenX = (int) m_screenWidth / 2 + donutVertex.x * reciprocalOfZ*100;
-                        screenY = (int) m_screenHight / 2 - donutVertex.y * reciprocalOfZ*100;
+                        screenX = (int)m_screenWidth / 2 + donutVertex.x * reciprocalOfZ * 100;
+                        screenY = (int)m_screenHight / 2 - donutVertex.y * reciprocalOfZ * 100;
                     }
                     else {
                         screenX = (int)donutVertex.x + m_screenWidth / 2;
@@ -243,7 +260,7 @@ void MainWindow::Run()
                     float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
                     if (curretZBuffer < reciprocalOfZ)
                     {
-                        float L = donutVertexNormal.dot(lightDirection); 
+                        float L = donutVertexNormal.dot(lightDirection);
                         L += 0.5f;
                         if (L > 0)
                         {
@@ -255,7 +272,7 @@ void MainWindow::Run()
 
                         }
                     }
-                
+
                 }
             }
 
@@ -325,7 +342,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
         {
             PostMessage(GetHwnd(), WM_CLOSE, 0, 0);
         }
-            break;
+        break;
         default:
             break;
         }

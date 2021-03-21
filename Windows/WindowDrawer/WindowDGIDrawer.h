@@ -38,10 +38,10 @@ namespace WindowDrawer {
         virtual bool Shutdown() override;
 
         virtual DrawerType GetType() const override {return DrawerType::GDI_Drawer; }
-        virtual void Draw() override;
+        virtual bool Draw() override;
 
         //void SetFrameBufeer(FramerBufferHandler const frameBufferHandle);
-        const FramerBufferHandler GetFrameBuffer() const { return m_frameBuffer; }
+        virtual const FramerBufferHandler GetFrameBuffer() const override { return m_frameBuffer; }
         void SetHDC(HDC hdc);
     private:
         FramerBufferHandler m_frameBuffer;
