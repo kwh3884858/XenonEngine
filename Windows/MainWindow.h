@@ -37,6 +37,7 @@ private:
     DebugTool::DebugConsole* m_debugConsole;
     HDC hdc;
     CrossPlatform::IDrawer* m_windowDrawer;
+    DirectXDrawSurface* m_directXDrawSurface;
     
     double m_timeInterval = 0.0333333;  //30fps
     Timer::StoryTimer* m_timer;
@@ -44,5 +45,6 @@ private:
 
     int m_screenWidth;
     int m_screenHight;
+    //bool m_isFullScreen;
     bool m_perspectiveProjection;
 };

@@ -16,28 +16,6 @@ namespace CrossPlatform
         return convert.to;
     }
 
-    class SColorRGBA
-    {
-    public:
-        SColorRGBA(int r, int g, int b, int a = 255);
-        SColorRGBA(int grb);
-        ~SColorRGBA();
-
-        unsigned int ToRGBA();
-        unsigned int ToRGB();
-
-    private:
-        //unsigned char GetR(int rgba);
-        //unsigned char GetG(int rgba);
-        //unsigned char GetB(int rgba);
-        //unsigned char GetA(int rgba);
-
-        unsigned char r;
-        unsigned char g;
-        unsigned char b;
-        unsigned char a;
-    };
-
     class SColorRGB
     {
     public:

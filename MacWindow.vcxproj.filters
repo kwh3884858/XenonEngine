@@ -51,6 +51,15 @@
     <ClCompile Include="Windows\WindowDrawer\WindowDGIDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Windows\Surface\DirectXDrawSurface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossPlatform\SColorRGBA.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Windows\Surface\DrawerSurface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -138,6 +147,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Windows\WindowDrawer\WindowDGIDrawer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\Surface\DirectXDrawSurface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\SColorRGBA.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\Surface\DrawerSurface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

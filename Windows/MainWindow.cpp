@@ -5,6 +5,7 @@
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
+#include "Windows/Surface/DirectXDrawSurface.h"
 
 #include "Timer/StoryTimer.h"
 
@@ -26,13 +27,17 @@ using WindowDrawer::WindowDGIDrawerConfig;
 using WindowDrawer::DirectXDrawDrawer;
 using WindowDrawer::DirectXDrawDrawerConfig;
 
+using WindowSurface::DirectXDrawSurface;
+
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
-, m_debugConsole(new DebugTool::DebugConsole())
-, m_windowDrawer(new WindowDrawer::DirectXDrawDrawer())
-, m_timer(new Timer::StoryTimer())
+, m_debugConsole(nullptr)
+, m_windowDrawer(nullptr)
+, m_timer(nullptr)
+, m_directXDrawSurface(nullptr)
 , m_lastUpdateTiemstamp(0)
-, m_screenWidth(1920)
-, m_screenHight(1080)
+, m_screenWidth(800)
+, m_screenHight(600)
+//, m_isFullScreen(false)
 , m_perspectiveProjection(true)
 {
 }
@@ -40,10 +45,17 @@ MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 
 MainWindow::~MainWindow()
 {
+
 }
 
 void MainWindow::Initialize()
 {
+    
+    m_windowDrawer = new WindowDrawer::DirectXDrawDrawer();
+
+    m_timer = new Timer::StoryTimer();
+
+    m_debugConsole = new DebugTool::DebugConsole();
     m_debugConsole->Initialize();
 
     //bool result;
@@ -51,7 +63,7 @@ void MainWindow::Initialize()
     //int screenHight = 600;
     if (!this->Create(L"Main Windows",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
-        WS_OVERLAPPEDWINDOW | WS_POPUP,
+        FULL_SCREEN ? (WS_POPUP) : (WS_OVERLAPPEDWINDOW | WS_POPUP),
         m_screenWidth,
         m_screenHight,
         0,
@@ -92,6 +104,7 @@ void MainWindow::Initialize()
         config->resolutionX = m_screenWidth;
         config->resolutionY = m_screenHight;
         config->m_hwnd = GetHwnd();
+        config->m_isFullScreen = FULL_SCREEN;
 
         m_windowDrawer->SetDrawerConfig(config);
         bool result = m_windowDrawer->Initialize();
@@ -99,6 +112,9 @@ void MainWindow::Initialize()
         {
             return;
         }
+        DirectXDrawDrawer directDrawer = static_cast<DirectXDrawDrawer*> (m_windowDrawer);
+        directDrawer
+        m_directXDrawSurface = new WindowSurface::DirectXDrawSurface(m_screenWidth, m_screenHight);
     }
     break;
 
@@ -111,6 +127,9 @@ void MainWindow::Initialize()
 
 void MainWindow::Shutdown()
 {
+    delete m_directXDrawSurface;
+    m_directXDrawSurface = nullptr;
+
     ReleaseDC(GetHwnd(), hdc);
     ShutdownWindows();
     m_debugConsole->Shutdown();
@@ -184,7 +203,7 @@ void MainWindow::Run()
 
         if (isUpdateBuffer)
         {
-            m_windowDrawer->GetFrameBuffer()->ClearBuffer();
+            //m_windowDrawer->GetFrameBuffer()->ClearBuffer();
 
             int donutRadius = 120;
             int circleRadius = 40;
@@ -272,7 +291,6 @@ void MainWindow::Run()
 
                         }
                     }
-
                 }
             }
 
@@ -408,6 +426,12 @@ bool MainWindow::CanUpdateBuffer()
 {
     time_t currentTime = m_timer->GetTime();
     double timeInterval = difftime(currentTime, m_lastUpdateTiemstamp);
+
+    float fps = 1 / timeInterval;
+    TCHAR debugTextBuffer[80];
+    _stprintf_s(debugTextBuffer, 80, _T("FPS: %d"), fps);
+    TextOut(hdc, 0, 40, debugTextBuffer, _tcslen(debugTextBuffer));
+
     if (timeInterval > m_timeInterval)
     {
         m_lastUpdateTiemstamp = currentTime;

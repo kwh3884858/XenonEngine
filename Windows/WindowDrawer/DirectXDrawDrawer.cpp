@@ -28,44 +28,62 @@ namespace WindowDrawer {
         {
             return false;
         }
+        if (m_config->m_isFullScreen)
+        {   
+            // Set the cooperation level for full screen
+            if (FAILED(lpdd7->SetCooperativeLevel(m_config->m_hwnd, DDSCL_FULLSCREEN |
+                DDSCL_ALLOWMODEX | DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT)))
+            {
+                return false;
+            }
 
-        // Set the cooperation level for full screen
-        if (FAILED(lpdd7->SetCooperativeLevel(m_config->m_hwnd, DDSCL_FULLSCREEN |
-            DDSCL_ALLOWMODEX | DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT)))
-        {
-            return false;
+            HRESULT result = lpdd7->SetDisplayMode(m_config->resolutionX, m_config->resolutionY, 32, 0, 0);
+            if (result != DD_OK)
+            {
+                return false;
+            }
+
+            //DirectDraw surface description
+            DDSURFACEDESC2 ddsd;
+            memset(&ddsd, 0, sizeof(ddsd));
+            ddsd.dwSize = sizeof(ddsd);
+            ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
+            ddsd.dwBackBufferCount = 1;
+            ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_COMPLEX | DDSCAPS_FLIP;
+
+            if (FAILED(lpdd7->CreateSurface(&ddsd, &lpddsprimary, nullptr)))
+            {
+                return false;
+            }
+
+            ddsd.ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
+
+            if (FAILED(lpddsprimary->GetAttachedSurface(&ddsd.ddsCaps, &lpddsback)))
+            {
+                return false;
+            }
         }
-        /*
-        // Set the cooperation level for windowed Direct Draw
-        if (FAILED(lpdd7->SetCooperativeLevel(GetHwnd(),DDSCL_NORMAL)))
+        else 
         {
-            return false;
-        }
-        */
-        HRESULT result = lpdd7->SetDisplayMode(m_config->resolutionX, m_config->resolutionY, 32, 0, 0);
-        if (result != DD_OK)
-        {
-            return false;
-        }
+            // Set the cooperation level for windowed Direct Draw
+            if (FAILED(lpdd7->SetCooperativeLevel(m_config->m_hwnd, DDSCL_NORMAL)))
+            {
+                return false;
+            }
 
-        //DirectDraw surface description
-        DDSURFACEDESC2 ddsd;
-        memset(&ddsd, 0, sizeof(ddsd));
-        ddsd.dwSize = sizeof(ddsd);
-        ddsd.dwFlags = DDSD_CAPS | DDSD_BACKBUFFERCOUNT;
-        ddsd.dwBackBufferCount = 1;
-        ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE | DDSCAPS_COMPLEX | DDSCAPS_FLIP;
+            //Without display mode in windowed
 
-        if (FAILED(lpdd7->CreateSurface(&ddsd, &lpddsprimary, nullptr)))
-        {
-            return false;
-        }
+            //DirectDraw surface description
+            DDSURFACEDESC2 ddsd;
+            memset(&ddsd, 0, sizeof(ddsd));
+            ddsd.dwSize = sizeof(ddsd);
+            ddsd.dwFlags = DDSD_CAPS;
+            ddsd.ddsCaps.dwCaps = DDSCAPS_PRIMARYSURFACE;
 
-        ddsd.ddsCaps.dwCaps = DDSCAPS_BACKBUFFER;
-
-        if (FAILED(lpddsprimary->GetAttachedSurface(&ddsd.ddsCaps, &lpddsback)))
-        {
-            return false;
+            if (FAILED(lpdd7->CreateSurface(&ddsd, &lpddsprimary, nullptr)))
+            {
+                return false;
+            }
         }
 
         if (!m_config)
@@ -122,7 +140,7 @@ namespace WindowDrawer {
         memset(&ddsd, 0, sizeof(ddsd));
         ddsd.dwSize = sizeof(ddsd);
 
-        if (FAILED(lpddsback->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT,nullptr)))
+        if (FAILED(lpddsback->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, nullptr)))
         {
             return false;
         }

@@ -110,6 +110,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CrossPlatform\FrameBuffer.cpp" />
+    <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
@@ -118,6 +119,8 @@
     <ClCompile Include="mathlab\Vector2.cpp" />
     <ClCompile Include="mathlab\ViewStruct.cpp" />
     <ClCompile Include="Windows\main.cpp" />
+    <ClCompile Include="Windows\Surface\DirectXDrawSurface.cpp" />
+    <ClCompile Include="Windows\Surface\DrawerSurface.cpp" />
     <ClCompile Include="Windows\Timer\StoryTimer.cpp" />
     <ClCompile Include="Windows\WindowDrawer\DirectXDrawDrawer.cpp" />
     <ClCompile Include="Windows\WindowDrawer\WindowDGIDrawer.cpp" />
@@ -128,6 +131,8 @@
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />
     <ClInclude Include="Algorithms\Vector.h" />
+    <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
+    <ClInclude Include="CrossPlatform\SColorRGBA.h" />
     <ClInclude Include="CrossPlatform\FrameBuffer.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerConfig.h" />
@@ -148,6 +153,8 @@
     <ClInclude Include="mathlab\ViewStruct.h" />
     <ClInclude Include="Windows\BaseWindow.h" />
     <ClInclude Include="Windows\Resources\resource.h" />
+    <ClInclude Include="Windows\Surface\DirectXDrawSurface.h" />
+    <ClInclude Include="Windows\Surface\DrawerSurface.h" />
     <ClInclude Include="Windows\Timer\StoryTimer.h" />
     <ClInclude Include="Windows\WindowDrawer\DirectXDrawDrawer.h" />
     <ClInclude Include="Windows\WindowDrawer\WindowDGIDrawer.h" />

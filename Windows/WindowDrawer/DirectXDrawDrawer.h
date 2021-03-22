@@ -26,6 +26,7 @@ namespace WindowDrawer {
         unsigned int resolutionX;
         unsigned int resolutionY;
         HWND m_hwnd;
+        bool m_isFullScreen;
     };
 
     class DirectXDrawDrawer : public IDrawer
