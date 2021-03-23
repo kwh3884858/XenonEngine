@@ -64,115 +64,115 @@ namespace CrossPlatform
     }
 
 
-    bool FramerBuffer::InternalCreateBuffer()
-    {
-        if (!IsResolutionValid()) { return false; }
-
-        if (m_buffer != nullptr)
-        {
-            DeleteBuffer();
-        }
-
-        m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
-        m_zBuffer = new float[m_resolutionX * m_resolutionY];
-        return true;
-    }
-
-    bool FramerBuffer::IsResolutionValid()const
-    {
-        if (m_resolutionX == UNINITIALUZE_VALUE || m_resolutionY == UNINITIALUZE_VALUE)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    bool FramerBuffer::IsBufferValid()const 
-    {
-        if (m_buffer == nullptr)
-        {
-            return false;
-        }
-        if (m_zBuffer == nullptr)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    bool FramerBuffer::IsPositionValid(unsigned int x, unsigned int y) const
-{
-        if (x < 0 || x >= m_resolutionX || y < 0 || y >= m_resolutionY)
-        {
-            return false;
-        }
-        return true;
-    }
-
-    FramerBuffer::FramerBuffer()
-    {
-        m_buffer = nullptr;
-        m_zBuffer = nullptr;
-        m_resolutionX = UNINITIALUZE_VALUE;
-        m_resolutionY = UNINITIALUZE_VALUE;
-    }
-
-    bool FramerBuffer::Initilize(unsigned int resolutionX, unsigned int resolutionY)
-    {
-        m_resolutionX = resolutionX;
-        m_resolutionY = resolutionY;
-        InternalCreateBuffer();
-        return true;
-    }
-
-    bool FramerBuffer::DeleteBuffer()
-    {
-        assert(IsBufferValid() == true);
-        assert(IsResolutionValid() == true);
-
-        delete[] m_buffer;
-        delete[] m_zBuffer;
-        return true;
-    }
-
-    unsigned long FramerBuffer::GetColor(unsigned int x, unsigned int y)
-    {
-        assert(IsPositionValid(x, y) == true);
-
-        const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];
-        return scolor.ToRGBLittleEndian();
-    }
-
-    void FramerBuffer::SetColor(unsigned int x, unsigned int y, const SColorRGB& color)
-    {
-        assert(IsPositionValid(x, y) == true);
-
-        m_buffer[y * m_resolutionX + x] = color;
-    }
-
-    float FramerBuffer::GetZBuffer(unsigned int x, unsigned int y)
-    {
-        assert(IsPositionValid(x, y) == true);
-
-        return m_zBuffer[y * m_resolutionX + x];
-    }
-
-    void FramerBuffer::SetZBuffer(unsigned int x, unsigned int y, const float zBuffer)
-    {
-        assert(IsPositionValid(x, y) == true);
-
-        m_zBuffer[y * m_resolutionX + x] = zBuffer;
-    }
-
-    void FramerBuffer::ClearBuffer()
-    {
-        assert(IsBufferValid() == true);
-        assert(IsResolutionValid() == true);
-
-        int size = sizeof(SColorRGB);
-        int zBufferSize = sizeof(float);
-        memset(m_buffer, 0, m_resolutionX*m_resolutionY*size);
-        memset(m_zBuffer, 0, m_resolutionX*m_resolutionY*zBufferSize);
-    }
-
+//    bool FramerBuffer::InternalCreateBuffer()
+//    {
+//        if (!IsResolutionValid()) { return false; }
+//
+//        if (m_buffer != nullptr)
+//        {
+//            DeleteBuffer();
+//        }
+//
+//        m_buffer = new SColorRGB[m_resolutionX * m_resolutionY];
+//        m_zBuffer = new float[m_resolutionX * m_resolutionY];
+//        return true;
+//    }
+//
+//    bool FramerBuffer::IsResolutionValid()const
+//    {
+//        if (m_resolutionX == UNINITIALUZE_VALUE || m_resolutionY == UNINITIALUZE_VALUE)
+//        {
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//    bool FramerBuffer::IsBufferValid()const
+//    {
+//        if (m_buffer == nullptr)
+//        {
+//            return false;
+//        }
+//        if (m_zBuffer == nullptr)
+//        {
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//    bool FramerBuffer::IsPositionValid(unsigned int x, unsigned int y) const
+//    {
+//        if (x < 0 || x >= m_resolutionX || y < 0 || y >= m_resolutionY)
+//        {
+//            return false;
+//        }
+//        return true;
+//    }
+//
+//    FramerBuffer::FramerBuffer()
+//    {
+//        m_buffer = nullptr;
+//        m_zBuffer = nullptr;
+//        m_resolutionX = UNINITIALUZE_VALUE;
+//        m_resolutionY = UNINITIALUZE_VALUE;
+//    }
+//
+//    bool FramerBuffer::Initilize(unsigned int resolutionX, unsigned int resolutionY)
+//    {
+//        m_resolutionX = resolutionX;
+//        m_resolutionY = resolutionY;
+//        InternalCreateBuffer();
+//        return true;
+//    }
+//
+//    bool FramerBuffer::DeleteBuffer()
+//    {
+//        assert(IsBufferValid() == true);
+//        assert(IsResolutionValid() == true);
+//
+//        delete[] m_buffer;
+//        delete[] m_zBuffer;
+//        return true;
+//    }
+//
+//    unsigned long FramerBuffer::GetColor(unsigned int x, unsigned int y)
+//    {
+//        assert(IsPositionValid(x, y) == true);
+//
+//        const SColorRGB& scolor = m_buffer[y * m_resolutionX + x];
+//        return scolor.ToRGBLittleEndian();
+//    }
+//
+//    void FramerBuffer::SetColor(unsigned int x, unsigned int y, const SColorRGB& color)
+//    {
+//        assert(IsPositionValid(x, y) == true);
+//
+//        m_buffer[y * m_resolutionX + x] = color;
+//    }
+//
+//    float FramerBuffer::GetZBuffer(unsigned int x, unsigned int y)
+//    {
+//        assert(IsPositionValid(x, y) == true);
+//
+//        return m_zBuffer[y * m_resolutionX + x];
+//    }
+//
+//    void FramerBuffer::SetZBuffer(unsigned int x, unsigned int y, const float zBuffer)
+//    {
+//        assert(IsPositionValid(x, y) == true);
+//
+//        m_zBuffer[y * m_resolutionX + x] = zBuffer;
+//    }
+//
+//    void FramerBuffer::ClearBuffer()
+//    {
+//        assert(IsBufferValid() == true);
+//        assert(IsResolutionValid() == true);
+//
+//        int size = sizeof(SColorRGB);
+//        int zBufferSize = sizeof(float);
+//        memset(m_buffer, 0, m_resolutionX*m_resolutionY*size);
+//        memset(m_zBuffer, 0, m_resolutionX*m_resolutionY*zBufferSize);
+//    }
+//
 }

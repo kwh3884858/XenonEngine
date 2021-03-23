@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 namespace CrossPlatform
 {
 #define LOWBYTE(w)  ((unsigned char)(((unsigned long)(w)) & 0xff))
@@ -39,38 +37,38 @@ namespace CrossPlatform
     };
 
     //template<int ResolutionX = UNINITIALUZE_VALUE, int ResolutionY = UNINITIALUZE_VALUE>
-    class FramerBuffer
-    {
-    public:
-        FramerBuffer();
-        virtual ~FramerBuffer() = default;
+    //class FramerBuffer
+    //{
+    //public:
+    //    FramerBuffer();
+    //    virtual ~FramerBuffer() = default;
 
-        bool Initilize(unsigned int resolutionX, unsigned int resolutionY);
-        bool DeleteBuffer();
+    //    bool Initilize(unsigned int resolutionX, unsigned int resolutionY);
+    //    bool DeleteBuffer();
 
-        unsigned int GetResolitionX() { return m_resolutionX; }
-        unsigned int GetResolitionY() { return m_resolutionY; }
+    //    unsigned int GetResolitionX() { return m_resolutionX; }
+    //    unsigned int GetResolitionY() { return m_resolutionY; }
 
-        unsigned long GetColor(unsigned int x, unsigned int y);
-        void SetColor(unsigned int x, unsigned int y, const SColorRGB& color);
+    //    unsigned long GetColor(unsigned int x, unsigned int y);
+    //    void SetColor(unsigned int x, unsigned int y, const SColorRGB& color);
 
-        float GetZBuffer(unsigned int x, unsigned int y);
-        void SetZBuffer(unsigned int x, unsigned int y, const float zBuffer);
+    //    float GetZBuffer(unsigned int x, unsigned int y);
+    //    void SetZBuffer(unsigned int x, unsigned int y, const float zBuffer);
 
-        void ClearBuffer();
+    //    void ClearBuffer();
 
-    private:
-        const int UNINITIALUZE_VALUE = -1;
-        bool InternalCreateBuffer();
-        bool IsResolutionValid()const;
-        bool IsBufferValid() const;
-        bool IsPositionValid(unsigned int x, unsigned int y)const;
+    //private:
+    //    const int UNINITIALUZE_VALUE = -1;
+    //    bool InternalCreateBuffer();
+    //    bool IsResolutionValid()const;
+    //    bool IsBufferValid() const;
+    //    bool IsPositionValid(unsigned int x, unsigned int y)const;
 
-        unsigned int m_resolutionX;
-        unsigned int m_resolutionY;
+    //    unsigned int m_resolutionX;
+    //    unsigned int m_resolutionY;
 
-        SColorRGB* m_buffer;
-        float* m_zBuffer;
-    };
+    //    SColorRGB* m_buffer;
+    //    float* m_zBuffer;
+    //};
 
 }

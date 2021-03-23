@@ -91,8 +91,6 @@ namespace WindowDrawer {
             return false;
         }
 
-        m_frameBuffer = new FramerBuffer();
-        m_frameBuffer->Initilize(m_config->resolutionX, m_config->resolutionY);
         return true;
 
     }
@@ -109,9 +107,6 @@ namespace WindowDrawer {
             lpdd7->Release();
             lpdd7 = nullptr;
         }
-
-        delete m_frameBuffer;
-        m_frameBuffer = nullptr;
 
         delete m_config;
         m_config = nullptr;

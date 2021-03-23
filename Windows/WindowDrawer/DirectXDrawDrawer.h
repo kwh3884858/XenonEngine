@@ -20,6 +20,10 @@ namespace WindowDrawer {
     using CrossPlatform::IDrawerConfig;
     using CrossPlatform::DrawerType;
 
+    namespace CrossPlatform {
+        class IDrawerSurface;
+    }
+
     class DirectXDrawDrawerConfig : public IDrawerConfig
     {
     public:
@@ -32,10 +36,7 @@ namespace WindowDrawer {
     class DirectXDrawDrawer : public IDrawer
     {
     public:
-        DirectXDrawDrawer() : m_frameBuffer(nullptr){
-            int i = 0;
-            i++;
-        };
+        DirectXDrawDrawer() {}
         virtual ~DirectXDrawDrawer();
 
         virtual void SetDrawerConfig(IDrawerConfig* const config) override;
@@ -43,13 +44,13 @@ namespace WindowDrawer {
         virtual bool Shutdown() override;
 
         virtual DrawerType GetType() const override { return DrawerType::DirectX_Draw_Drawer; }
-        virtual bool Draw() override;
+        virtual bool Draw(IDrawerSurface* const drawerSurface) override;
 
         //void SetFrameBufeer(FramerBufferHandler const frameBufferHandle);
-        virtual const FramerBufferHandler GetFrameBuffer() const override{ return m_frameBuffer; }
+        //virtual const FramerBufferHandler GetFrameBuffer() const override{ return m_frameBuffer; }
         void SetHDC(HDC hdc);
     private:
-        FramerBufferHandler m_frameBuffer;
+        //FramerBufferHandler m_frameBuffer;
         bool m_windowClosed = false;
 
         LPDIRECTDRAW7 lpdd7;

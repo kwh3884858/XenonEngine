@@ -10,13 +10,13 @@ namespace WindowDrawer {
 
     bool WindowDGIDrawer::Draw()
     {
-        if (!m_frameBuffer)
-        {
-            return false;
-        }
+        //if (!m_frameBuffer)
+        //{
+        //    return false;
+        //}
 
-        int x = m_frameBuffer->GetResolitionX();
-        int y = m_frameBuffer->GetResolitionY();
+        //int x = m_frameBuffer->GetResolitionX();
+        //int y = m_frameBuffer->GetResolitionY();
 
         if (x <=0 || y <= 0)
         {

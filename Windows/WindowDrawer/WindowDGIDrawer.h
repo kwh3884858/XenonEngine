@@ -41,10 +41,10 @@ namespace WindowDrawer {
         virtual bool Draw() override;
 
         //void SetFrameBufeer(FramerBufferHandler const frameBufferHandle);
-        virtual const FramerBufferHandler GetFrameBuffer() const override { return m_frameBuffer; }
+        /*virtual const FramerBufferHandler GetFrameBuffer() const override { return m_frameBuffer; }*/
         void SetHDC(HDC hdc);
     private:
-        FramerBufferHandler m_frameBuffer;
+        /*FramerBufferHandler m_frameBuffer;*/
         HDC m_hdc;
         WindowDGIDrawerConfig* m_config;
     };
