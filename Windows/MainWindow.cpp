@@ -113,8 +113,9 @@ void MainWindow::Initialize()
             return;
         }
         DirectXDrawDrawer directDrawer = static_cast<DirectXDrawDrawer*> (m_windowDrawer);
-        directDrawer
+        
         m_directXDrawSurface = new WindowSurface::DirectXDrawSurface(m_screenWidth, m_screenHight);
+        m_zBuffer = new WindowSurface::DirectXDrawSurface(m_screenWidth, m_screenHight);
     }
     break;
 
@@ -276,7 +277,9 @@ void MainWindow::Run()
                     }
 
                     // Z buffer
-                    float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
+                    //float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
+                    float curretZBuffer = static_cast<float>( m_zBuffer->GetPixel(screenX, screenY).ToRGBALittleEndian());
+
                     if (curretZBuffer < reciprocalOfZ)
                     {
                         float L = donutVertexNormal.dot(lightDirection);
@@ -286,8 +289,8 @@ void MainWindow::Run()
                             L *= 255; //scale up to 255
                             L += 20;
                             L = MathLab::clamp(L, 0.0f, 255.0f);
-                            m_windowDrawer->GetFrameBuffer()->SetZBuffer(screenX, screenY, reciprocalOfZ);
-                            m_windowDrawer->GetFrameBuffer()->SetColor(screenX, screenY, CrossPlatform::SColorRGB(L, L, L));
+                            m_directXDrawSurface->DrawPixel(screenX, screenY, static_cast<unsigned int>(reciprocalOfZ));
+                            m_zBuffer->DrawPixel(screenX, screenY, CrossPlatform::SColorRGB(L, L, L));
 
                         }
                     }
@@ -315,7 +318,7 @@ void MainWindow::Run()
             //m_windowDrawer->GetFrameBuffer()->SetColor(13, 13, CrossPlatform::SColorRGB(20, 20, 20));
             //m_windowDrawer->GetFrameBuffer()->SetColor(14, 14, CrossPlatform::SColorRGB(20, 20, 20));
             //m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->Draw();
+            m_windowDrawer->Draw(m_directXDrawSurface);
         }
 
         tmpdegree += 5;

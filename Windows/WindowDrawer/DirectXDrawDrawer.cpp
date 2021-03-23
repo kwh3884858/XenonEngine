@@ -116,7 +116,7 @@ namespace WindowDrawer {
         return true;
     }
 
-    bool DirectXDrawDrawer::Draw()
+    bool DirectXDrawDrawer::Draw(IDrawerSurface* const drawerSurface)
     {
         //Make sure this is not executed again
         if (m_windowClosed)

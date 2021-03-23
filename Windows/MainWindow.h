@@ -38,6 +38,7 @@ private:
     HDC hdc;
     CrossPlatform::IDrawer* m_windowDrawer;
     DirectXDrawSurface* m_directXDrawSurface;
+    DirectXDrawSurface* m_zBuffer;
     
     double m_timeInterval = 0.0333333;  //30fps
     Timer::StoryTimer* m_timer;

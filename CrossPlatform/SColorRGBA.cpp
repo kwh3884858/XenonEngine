@@ -30,5 +30,4 @@ namespace CrossPlatform
     {
         return value & 0xffffff;
     }
-
 }

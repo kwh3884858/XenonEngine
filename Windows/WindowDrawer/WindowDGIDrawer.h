@@ -38,7 +38,7 @@ namespace WindowDrawer {
         virtual bool Shutdown() override;
 
         virtual DrawerType GetType() const override {return DrawerType::GDI_Drawer; }
-        virtual bool Draw() override;
+        virtual bool Draw(IDrawerSurface* const drawerSurface) override;
 
         //void SetFrameBufeer(FramerBufferHandler const frameBufferHandle);
         /*virtual const FramerBufferHandler GetFrameBuffer() const override { return m_frameBuffer; }*/
