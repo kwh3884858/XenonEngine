@@ -62,6 +62,11 @@ void MainWindow::Initialize()
     m_debugConsole = new DebugTool::DebugConsole();
     m_debugConsole->Initialize();
 
+    if (BaseWindow::FULL_SCREEN)
+    {
+        m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        m_screenHight = GetSystemMetrics(SM_CYSCREEN);
+    }
     //bool result;
     //int screenWidth = 800;
     //int screenHight = 600;
