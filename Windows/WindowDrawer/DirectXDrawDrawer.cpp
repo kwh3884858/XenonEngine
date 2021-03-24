@@ -1,8 +1,9 @@
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
-
+#include "Windows/Surface/DirectXDrawSurface.h"
 //#include <windows.h>
 
 namespace WindowDrawer {
+
 #define DDRAW_INIT_STRUCT(dxstruct)  memset(&dxstruct, 0, sizeof(dxstruct)); dxstruct.dwSize = sizeof(dxstruct);// that should all be one line
 #define KEYDOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1:0)
     DirectXDrawDrawer::~DirectXDrawDrawer()
@@ -124,54 +125,60 @@ namespace WindowDrawer {
             return false;
         }
 
+        if (drawerSurface == nullptr)
+        {
+            return false;
+        }
+
         if (KEYDOWN(VK_ESCAPE))
         {
             PostMessage(m_config->m_hwnd, WM_CLOSE, 0, 0);
             m_windowClosed = true;
         }
 
+        WindowSurface::DirectXDrawSurface* const directXDrawSurface = static_cast<WindowSurface::DirectXDrawSurface* const>(drawerSurface);
+
         DDSURFACEDESC2 ddsd;
         //Lock the back buffer
         memset(&ddsd, 0, sizeof(ddsd));
         ddsd.dwSize = sizeof(ddsd);
 
-        if (FAILED(lpddsback->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, nullptr)))
+        //if (FAILED(lpddsback->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, nullptr)))
+        //{
+        //    return false;
+        //}
+
+        //UINT* backBuffer = (UINT*)ddsd.lpSurface;
+
+        ////Clean the back buffer buffer 
+        //if (ddsd.lPitch == m_config->resolutionX * sizeof(UINT))
+        //{
+        //    //linear memory
+        //    memset(backBuffer, 0, m_config->resolutionX * m_config->resolutionY * sizeof(UINT));
+        //}
+        //else
+        //{
+        //    //non-linear memory
+        //    UINT* destPtr = backBuffer;
+        //    for (int i = 0; i < m_config->resolutionY; i++)
+        //    {
+        //        memset(destPtr, 0, m_config->resolutionX * sizeof(UINT));
+        //        destPtr += ddsd.lPitch;
+        //    }
+        //}
+
+        HRESULT result;
+        result = lpddsback->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
+        if (result != DD_OK)
         {
             return false;
         }
 
-        UINT* backBuffer = (UINT*)ddsd.lpSurface;
-
-        //Clean the back buffer buffer 
-        if (ddsd.lPitch == m_config->resolutionX * sizeof(UINT))
-        {
-            //linear memory
-            memset(backBuffer, 0, m_config->resolutionX * m_config->resolutionY * sizeof(UINT));
-        }
-        else
-        {
-            //non-linear memory
-            UINT* destPtr = backBuffer;
-            for (int i = 0; i < m_config->resolutionY; i++)
-            {
-                memset(destPtr, 0, m_config->resolutionX * sizeof(UINT));
-                destPtr += ddsd.lPitch;
-            }
-        }
-
-        for (int i = 0; i < m_config->resolutionY; i++)
-        {
-            for (int j = 0; j < m_config->resolutionX; j++)
-            {
-                long color = m_frameBuffer->GetColor(j, i);
-                backBuffer[i * m_config->resolutionX + j] = color;
-            }
-        }
-
-        if (FAILED(lpddsback->Unlock(nullptr)))
-        {
-            return false;
-        }
+        //result = lpddsback->Unlock(nullptr);
+        //if (result != DD_OK)
+        //{
+        //    return false;
+        //}
 
         while (FAILED(lpddsprimary->Flip(nullptr, DDFLIP_WAIT)));
 

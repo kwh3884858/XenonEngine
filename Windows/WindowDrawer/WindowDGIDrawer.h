@@ -1,6 +1,4 @@
-
 #pragma once
-
 
 #include "CrossPlatform/Interface/IDrawer.h"
 
@@ -8,14 +6,16 @@
 
 namespace WindowDrawer {
 
-    using CrossPlatform::FramerBuffer;
     using CrossPlatform::IDrawer;
     using CrossPlatform::IDrawerConfig;
+    using CrossPlatform::IDrawerSurface;
     using CrossPlatform::DrawerType;
 
     class WindowDGIDrawerConfig : public IDrawerConfig
     {
     public:
+        virtual ~WindowDGIDrawerConfig()override{}
+
         unsigned int resolutionX;
         unsigned int resolutionY;
     };
@@ -24,14 +24,11 @@ namespace WindowDrawer {
     {
     public:
         WindowDGIDrawer():
-            m_frameBuffer(nullptr),
             m_hdc(nullptr) ,
             m_config(nullptr)
         {
-            int i = 0;
-            i++;
         };
-        virtual ~WindowDGIDrawer();
+        virtual ~WindowDGIDrawer()override;
 
         virtual void SetDrawerConfig(IDrawerConfig* const config) override;
         virtual bool Initialize() override;

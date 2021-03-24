@@ -5,6 +5,7 @@
 
 namespace CrossPlatform {
     class IDrawer;
+    class IDrawerSurface;
 }
 
 namespace DebugTool {
@@ -37,8 +38,8 @@ private:
     DebugTool::DebugConsole* m_debugConsole;
     HDC hdc;
     CrossPlatform::IDrawer* m_windowDrawer;
-    DirectXDrawSurface* m_directXDrawSurface;
-    DirectXDrawSurface* m_zBuffer;
+    CrossPlatform::IDrawerSurface* m_directXDrawSurface;
+    CrossPlatform::IDrawerSurface* m_zBuffer;
     
     double m_timeInterval = 0.0333333;  //30fps
     Timer::StoryTimer* m_timer;

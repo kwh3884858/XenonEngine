@@ -1,17 +1,19 @@
 #include "MainWindow.h"
 #include "DebugTool/DebugConsole.h"
 
-#include "CrossPlatform/FrameBuffer.h"
+#include "CrossPlatform/SColorRGBA.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
 #include "Windows/Surface/DirectXDrawSurface.h"
+#include "Windows/Surface/DrawerSurface.h"
 
 #include "Timer/StoryTimer.h"
 
 #include <cstdio>
 #include <TCHAR.H>
 #include <cmath> // sin, cos
+#include <assert.h>
 
 #include "MathLab/Vector3.h"
 #include "MathLab/MathLib.h"
@@ -27,6 +29,8 @@ using WindowDrawer::WindowDGIDrawerConfig;
 using WindowDrawer::DirectXDrawDrawer;
 using WindowDrawer::DirectXDrawDrawerConfig;
 
+using CrossPlatform::IDrawerSurface;
+using WindowSurface::DrawerSurface;
 using WindowSurface::DirectXDrawSurface;
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
@@ -95,6 +99,9 @@ void MainWindow::Initialize()
 
         hdc = GetDC(GetHwnd());
         drawer->SetHDC(hdc);
+
+        m_directXDrawSurface = new WindowSurface::DrawerSurface(m_screenWidth, m_screenHight);
+        m_zBuffer = new WindowSurface::DrawerSurface(m_screenWidth, m_screenHight);
     }
     break;
 
@@ -112,10 +119,11 @@ void MainWindow::Initialize()
         {
             return;
         }
-        DirectXDrawDrawer directDrawer = static_cast<DirectXDrawDrawer*> (m_windowDrawer);
-        
-        m_directXDrawSurface = new WindowSurface::DirectXDrawSurface(m_screenWidth, m_screenHight);
-        m_zBuffer = new WindowSurface::DirectXDrawSurface(m_screenWidth, m_screenHight);
+
+        DirectXDrawDrawer* const directDrawer = static_cast<DirectXDrawDrawer*> (m_windowDrawer);
+        LPDIRECTDRAW7 lpdd = directDrawer->GetDirectRaw();
+        m_directXDrawSurface = new WindowSurface::DirectXDrawSurface(lpdd, m_screenWidth, m_screenHight, DDLOCK_SURFACEMEMORYPTR);
+        m_zBuffer = new WindowSurface::DirectXDrawSurface(lpdd, m_screenWidth, m_screenHight, DDLOCK_SURFACEMEMORYPTR);
     }
     break;
 
@@ -130,6 +138,9 @@ void MainWindow::Shutdown()
 {
     delete m_directXDrawSurface;
     m_directXDrawSurface = nullptr;
+    
+    delete m_zBuffer;
+    m_zBuffer = nullptr;
 
     ReleaseDC(GetHwnd(), hdc);
     ShutdownWindows();
@@ -158,6 +169,7 @@ void MainWindow::Run()
 
     //Debug text
     TCHAR debugTextBuffer[80];
+
 
     ZeroMemory(&msg, sizeof(MSG));
     if (mStatusCode == BaseWindow::StatusCode::InitiailizationFailed)
@@ -214,6 +226,11 @@ void MainWindow::Run()
             float X = 0;
             float Y = 0;
             float Z = 0;
+
+            m_directXDrawSurface->lock();
+            m_zBuffer->lock();
+
+
             for (int thetaDegree = 0; thetaDegree < 360; thetaDegree += 5)
             {
                 Vector3 circle;
@@ -290,14 +307,15 @@ void MainWindow::Run()
                             L += 20;
                             L = MathLab::clamp(L, 0.0f, 255.0f);
                             m_directXDrawSurface->DrawPixel(screenX, screenY, static_cast<unsigned int>(reciprocalOfZ));
-                            m_zBuffer->DrawPixel(screenX, screenY, CrossPlatform::SColorRGB(L, L, L));
+                            m_zBuffer->DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
 
                         }
                     }
                 }
             }
-
-
+            m_directXDrawSurface->Unlock();
+            m_zBuffer->Unlock();
+            
 
             //Center Position
             int centerX = 0;
@@ -318,7 +336,10 @@ void MainWindow::Run()
             //m_windowDrawer->GetFrameBuffer()->SetColor(13, 13, CrossPlatform::SColorRGB(20, 20, 20));
             //m_windowDrawer->GetFrameBuffer()->SetColor(14, 14, CrossPlatform::SColorRGB(20, 20, 20));
             //m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
-            m_windowDrawer->Draw(m_directXDrawSurface);
+            
+           bool result = m_windowDrawer->Draw(m_directXDrawSurface);
+           assert(result == true);
+
         }
 
         tmpdegree += 5;

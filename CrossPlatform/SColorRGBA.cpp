@@ -11,6 +11,11 @@ namespace CrossPlatform
     //    return (r | g << 8 | b << 16 | a << 24);
     //}
 
+    SColorRGBA::SColorRGBA()
+    {
+        value = 0;
+    }
+
     SColorRGBA::SColorRGBA(int r, int g, int b, int a /*= 255*/)
     {
         value = (r | g << 8 | b << 16 | a << 24);
@@ -19,6 +24,22 @@ namespace CrossPlatform
     SColorRGBA::SColorRGBA(int rgba)
     {
         value = rgba;
+    }
+
+    SColorRGBA::SColorRGBA(const SColorRGBA& rhs)
+    {
+        this->value = rhs.value;
+    }
+
+    SColorRGBA::~SColorRGBA()
+    {
+
+    }
+
+    SColorRGBA& SColorRGBA::operator=(const SColorRGBA& rhs)
+    {
+        this->value = rhs.value;
+        return *this;
     }
 
     unsigned int SColorRGBA::ToRGBALittleEndian()

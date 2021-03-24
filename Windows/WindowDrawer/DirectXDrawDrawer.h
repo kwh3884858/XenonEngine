@@ -15,18 +15,17 @@
 #include <ddraw.h>
 
 namespace WindowDrawer {
-    using CrossPlatform::FramerBuffer;
+
     using CrossPlatform::IDrawer;
     using CrossPlatform::IDrawerConfig;
     using CrossPlatform::DrawerType;
-
-    namespace CrossPlatform {
-        class IDrawerSurface;
-    }
+    using CrossPlatform::IDrawerSurface;
 
     class DirectXDrawDrawerConfig : public IDrawerConfig
     {
     public:
+        virtual ~DirectXDrawDrawerConfig()override{}
+
         unsigned int resolutionX;
         unsigned int resolutionY;
         HWND m_hwnd;
@@ -37,7 +36,7 @@ namespace WindowDrawer {
     {
     public:
         DirectXDrawDrawer() {}
-        virtual ~DirectXDrawDrawer();
+        virtual ~DirectXDrawDrawer()override;
 
         virtual void SetDrawerConfig(IDrawerConfig* const config) override;
         virtual bool Initialize() override;
@@ -49,6 +48,8 @@ namespace WindowDrawer {
         //void SetFrameBufeer(FramerBufferHandler const frameBufferHandle);
         //virtual const FramerBufferHandler GetFrameBuffer() const override{ return m_frameBuffer; }
         void SetHDC(HDC hdc);
+
+        LPDIRECTDRAW7 GetDirectRaw() { return lpdd7; }
     private:
         //FramerBufferHandler m_frameBuffer;
         bool m_windowClosed = false;

@@ -8,6 +8,8 @@
 namespace CrossPlatform {
     class IDrawerConfig
     {
+    public:
+        virtual ~IDrawerConfig() {};
     };
 
 

@@ -1,3 +1,5 @@
+#include "Windows/Surface/DrawerSurface.h"
+
 namespace WindowSurface 
 {
 
@@ -6,9 +8,9 @@ namespace WindowSurface
         m_width = width;
         m_height = height;
 
-        if (!IsResolutionValid()) { return false; }
+        if (!IsResolutionValid()) { return; }
 
-        m_buffer = new SColorRGB[m_width * m_height];
+        m_buffer = new SColorRGBA[m_width * m_height];
     }
 
     DrawerSurface::~DrawerSurface()
@@ -29,12 +31,12 @@ namespace WindowSurface
             return;
         }
 
-        *(m_buffer[y *m_width + x]) = rgba;
+        m_buffer[y *m_width + x] = rgba;
     }
 
     CrossPlatform::SColorRGBA DrawerSurface::GetPixel(unsigned int x, unsigned int y)
     {
-        return *(m_buffer[y *m_width + x]);
+        return m_buffer[y *m_width + x];
     }
 
     void DrawerSurface::Unlock()

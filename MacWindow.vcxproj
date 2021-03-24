@@ -109,7 +109,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CrossPlatform\FrameBuffer.cpp" />
+    <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3.cpp" />
@@ -133,7 +133,7 @@
     <ClInclude Include="Algorithms\Vector.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\SColorRGBA.h" />
-    <ClInclude Include="CrossPlatform\FrameBuffer.h" />
+    <ClInclude Include="CrossPlatform\SColorRGB.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerConfig.h" />
     <ClInclude Include="Gameplay\GameObject.h" />

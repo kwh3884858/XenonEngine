@@ -1,11 +1,10 @@
 #include "Windows/Surface/DirectXDrawSurface.h"
-
-
+//#include "CrossPlatform/SColorRGBA.h"
+#include <assert.h>
 
 namespace WindowSurface {
 
-
-    DirectXDrawSurface::DirectXDrawSurface(LPDIRECTDRAW7 lpdd7, int width, int height, int mem0ry_flags)
+    DirectXDrawSurface::DirectXDrawSurface(LPDIRECTDRAW7 lpdd7,unsigned int width,unsigned int height, int mem0ry_flags)
     {
         m_width = width;
         m_height = height;
@@ -20,10 +19,9 @@ namespace WindowSurface {
         ddsd.ddsCaps.dwCaps = DDSCAPS_OFFSCREENPLAIN | mem0ry_flags;
 
         //Create surface
-        if (FAILED(lpdd7->CreateSurface(&ddsd, &surface, nullptr)))
-        {
-            return;
-        }
+        HRESULT result;
+        result = lpdd7->CreateSurface(&ddsd, &surface, nullptr);
+        assert(result == DD_OK);
 
         DDCOLORKEY colorKey;
         colorKey.dwColorSpaceLowValue = 0;
@@ -43,19 +41,30 @@ namespace WindowSurface {
 
     void DirectXDrawSurface::lock()
     {
-        surface->Lock(nullptr, &m_directDrawSurfaceDescription, DDLOCK_WAIT | DDLOCK_SURFACEMEMORYPTR, nullptr);
+        memset(&m_directDrawSurfaceDescription, 0, sizeof(m_directDrawSurfaceDescription));
+        m_directDrawSurfaceDescription.dwSize = sizeof(m_directDrawSurfaceDescription);
+
+        HRESULT result = surface->Lock(nullptr, &m_directDrawSurfaceDescription, DDLOCK_WAIT | DDLOCK_SURFACEMEMORYPTR, nullptr);
+        assert(result == DD_OK);
     }
 
-    void DirectXDrawSurface::DrawPixel(int x, int y, SColorRGBA rgba)
+    void DirectXDrawSurface::DrawPixel(unsigned int x, unsigned int y, SColorRGBA rgba)
     {
-        UINT* buffer = m_directDrawSurfaceDescription.lpSurface;
-        buffer[i * m_width + j] = color;
+        UINT* buffer =static_cast<UINT*>( m_directDrawSurfaceDescription.lpSurface);
+        buffer[y * m_width + x] = rgba.ToRGBALittleEndian();
 
+    }
+
+    CrossPlatform::SColorRGBA DirectXDrawSurface::GetPixel(unsigned int x, unsigned int y)
+    {
+        UINT* buffer = static_cast<UINT*>(m_directDrawSurfaceDescription.lpSurface);
+        return buffer[y * m_width + x];
     }
 
     void DirectXDrawSurface::Unlock()
     {
         surface->Unlock(nullptr);
     }
+
 
 }

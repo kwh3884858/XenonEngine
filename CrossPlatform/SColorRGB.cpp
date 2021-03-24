@@ -1,18 +1,10 @@
-#include "FrameBuffer.h"
+#include "CrossPlatform/SColorRGB.h"
+
 #include <cstring>
 #include <Windows.h>
 #include <assert.h>     /* assert */
 namespace CrossPlatform
 {
-    unsigned int SColorRGBA::ToRGB()
-    {
-        return (r | g << 8 | b << 16);
-    }
-
-    unsigned int SColorRGBA::ToRGBA() {
-        return (r | g << 8 | b << 16 | a << 24);
-    }
-
     SColorRGB::SColorRGB(int r, int g, int b)
     {
         this->r = (unsigned char)r;

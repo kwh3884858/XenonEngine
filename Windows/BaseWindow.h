@@ -64,7 +64,7 @@ private:
 #endif // !WINDOW
 
 template<class T>
-const bool BaseWindow<T>::FULL_SCREEN = false;
+const bool BaseWindow<T>::FULL_SCREEN = true;
 
 template<class T>
 const bool BaseWindow<T>::VSYNC_ENABLED = true;
@@ -123,8 +123,8 @@ bool BaseWindow<T>::Create(
 	//height = GetSystemMetrics(SM_CYSCREEN);
 	if (BaseWindow::FULL_SCREEN)
 	{
-		width = GetSystemMetrics(SM_CXSCREEN);
-		height = GetSystemMetrics(SM_CYSCREEN);
+		//width = GetSystemMetrics(SM_CXSCREEN);
+		//height = GetSystemMetrics(SM_CYSCREEN);
 
 		memset(&dmScreenSetting, 0, sizeof(dmScreenSetting));
 		dmScreenSetting.dmSize = sizeof(dmScreenSetting);
