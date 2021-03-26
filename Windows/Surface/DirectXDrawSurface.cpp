@@ -46,6 +46,25 @@ namespace WindowSurface {
 
         HRESULT result = surface->Lock(nullptr, &m_directDrawSurfaceDescription, DDLOCK_WAIT | DDLOCK_SURFACEMEMORYPTR, nullptr);
         assert(result == DD_OK);
+
+        UINT* backBuffer = (UINT*)m_directDrawSurfaceDescription.lpSurface;
+
+        //Clean the back buffer buffer 
+        if (m_directDrawSurfaceDescription.lPitch == m_width * sizeof(UINT))
+        {
+            //linear memory
+            memset(backBuffer, 0, m_width * m_height * sizeof(UINT));
+        }
+        else
+        {
+            //non-linear memory
+            UINT* destPtr = backBuffer;
+            for (int i = 0; i < m_height; i++)
+            {
+                memset(destPtr, 0, m_width * sizeof(UINT));
+                destPtr += m_directDrawSurfaceDescription.lPitch;
+            }
+        }
     }
 
     void DirectXDrawSurface::DrawPixel(unsigned int x, unsigned int y, SColorRGBA rgba)
@@ -63,8 +82,8 @@ namespace WindowSurface {
 
     void DirectXDrawSurface::Unlock()
     {
-        surface->Unlock(nullptr);
+        HRESULT result = surface->Unlock(nullptr);
+        assert(result == DD_OK);
     }
-
 
 }

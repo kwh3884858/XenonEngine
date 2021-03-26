@@ -15,9 +15,14 @@ namespace Timer {
     //    m_lastTime = GetTime();
     //}
 
-    time_t StoryTimer::GetTime()
+    DWORD StoryTimer::GetTime()
     {
-        return time(nullptr);
+        return GetTickCount();
+    }
+
+    StoryTimer::StoryTimer()
+    {
+        Update();
     }
 
 }

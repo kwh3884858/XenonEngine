@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BaseWindow.h"
-#include <time.h>
 
 namespace CrossPlatform {
     class IDrawer;
@@ -41,9 +40,9 @@ private:
     CrossPlatform::IDrawerSurface* m_directXDrawSurface;
     CrossPlatform::IDrawerSurface* m_zBuffer;
     
-    double m_timeInterval = 0.0333333;  //30fps
+    double m_timeInterval = 33.3333;  //30fps
     Timer::StoryTimer* m_timer;
-    time_t m_lastUpdateTiemstamp;
+    DWORD m_lastUpdateTiemstamp;
 
     int m_screenWidth;
     int m_screenHight;

@@ -2,8 +2,12 @@
 #include "Windows/Surface/DirectXDrawSurface.h"
 //#include <windows.h>
 
-namespace WindowDrawer {
+//Test
+#include "CrossPlatform/SColorRGBA.h"
+#include <cstdio>
 
+namespace WindowDrawer {
+    using WindowSurface::DirectXDrawSurface;
 #define DDRAW_INIT_STRUCT(dxstruct)  memset(&dxstruct, 0, sizeof(dxstruct)); dxstruct.dwSize = sizeof(dxstruct);// that should all be one line
 #define KEYDOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1:0)
     DirectXDrawDrawer::~DirectXDrawDrawer()
@@ -30,7 +34,7 @@ namespace WindowDrawer {
             return false;
         }
         if (m_config->m_isFullScreen)
-        {   
+        {
             // Set the cooperation level for full screen
             if (FAILED(lpdd7->SetCooperativeLevel(m_config->m_hwnd, DDSCL_FULLSCREEN |
                 DDSCL_ALLOWMODEX | DDSCL_EXCLUSIVE | DDSCL_ALLOWREBOOT)))
@@ -64,11 +68,12 @@ namespace WindowDrawer {
                 return false;
             }
         }
-        else 
+        else
         {
             // Set the cooperation level for windowed Direct Draw
             if (FAILED(lpdd7->SetCooperativeLevel(m_config->m_hwnd, DDSCL_NORMAL)))
             {
+
                 return false;
             }
 
@@ -137,50 +142,110 @@ namespace WindowDrawer {
         }
 
         WindowSurface::DirectXDrawSurface* const directXDrawSurface = static_cast<WindowSurface::DirectXDrawSurface* const>(drawerSurface);
-
+        
+        HRESULT result;
+        /*
         DDSURFACEDESC2 ddsd;
         //Lock the back buffer
         memset(&ddsd, 0, sizeof(ddsd));
         ddsd.dwSize = sizeof(ddsd);
 
-        //if (FAILED(lpddsback->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, nullptr)))
+        if (FAILED(lpddsback->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, nullptr)))
+        {
+            return false;
+        }
+
+        UINT* backBuffer = (UINT*)ddsd.lpSurface;
+
+        //Clean the back buffer buffer 
+        if (ddsd.lPitch == m_config->resolutionX * sizeof(UINT))
+        {
+            //linear memory
+            memset(backBuffer, 0, m_config->resolutionX * m_config->resolutionY * sizeof(UINT));
+        }
+        else
+        {
+            //non-linear memory
+            UINT* destPtr = backBuffer;
+            for (int i = 0; i < m_config->resolutionY; i++)
+            {
+                memset(destPtr, 0, m_config->resolutionX * sizeof(UINT));
+                destPtr += ddsd.lPitch;
+            }
+        }
+
+        result = lpddsback->Unlock(nullptr);
+        if (result != DD_OK)
+        {
+            return false;
+        }
+        */
+      
+        //result = lpddsback->Blt(nullptr, nullptr, nullptr, DDBLT_COLORFILL, &ddbltfx);
+        //if (result != DD_OK)
         //{
         //    return false;
         //}
 
-        //UINT* backBuffer = (UINT*)ddsd.lpSurface;
-
-        ////Clean the back buffer buffer 
-        //if (ddsd.lPitch == m_config->resolutionX * sizeof(UINT))
-        //{
-        //    //linear memory
-        //    memset(backBuffer, 0, m_config->resolutionX * m_config->resolutionY * sizeof(UINT));
-        //}
-        //else
-        //{
-        //    //non-linear memory
-        //    UINT* destPtr = backBuffer;
-        //    for (int i = 0; i < m_config->resolutionY; i++)
-        //    {
-        //        memset(destPtr, 0, m_config->resolutionX * sizeof(UINT));
-        //        destPtr += ddsd.lPitch;
-        //    }
-        //}
-
-        HRESULT result;
         result = lpddsback->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
         if (result != DD_OK)
         {
             return false;
         }
 
-        //result = lpddsback->Unlock(nullptr);
+        //result = lpddsprimary->BltFast(0, 0, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLTFAST_WAIT);
         //if (result != DD_OK)
         //{
         //    return false;
         //}
 
+
+
         while (FAILED(lpddsprimary->Flip(nullptr, DDFLIP_WAIT)));
+
+        ///////////////////TEST////////////////////////
+        //DDBLTFX ddbltfx;
+        //memset(&ddbltfx, 0, sizeof(ddbltfx));
+        //ddbltfx.dwSize = sizeof(ddbltfx);
+        //ddbltfx.dwFillColor = CrossPlatform::SColorRGBA(100, 20, 60).ToRGBALittleEndian();
+
+        //RECT dest_rect;
+        //dest_rect.left = 0;
+        //dest_rect.top = 0;
+
+        //dest_rect.right = directXDrawSurface->GetWidth() /2;
+        //dest_rect.bottom = directXDrawSurface->GetHeight() /2;
+        //
+        //RECT src_rect;
+        //src_rect.left = 0;
+        //src_rect.top = 0;
+
+        //src_rect.right = 100;
+        //src_rect.bottom = 100;
+
+        //HRESULT result;
+
+        //DirectXDrawSurface surface(lpdd7,100,100, DDLOCK_SURFACEMEMORYPTR);
+        //surface.lock();
+        //surface.DrawPixel(50, 50, CrossPlatform::SColorRGBA(100, 20, 60));
+        //surface.DrawPixel(51, 50, CrossPlatform::SColorRGBA(100, 20, 60));
+        //surface.DrawPixel(52, 50, CrossPlatform::SColorRGBA(100, 20, 60));
+
+        //printf("%d , ", surface.GetPixel(49, 50).ToRGBALittleEndian());
+        //printf("%d , ", surface.GetPixel(50, 50).ToRGBALittleEndian());
+        //printf("%d\n", surface.GetPixel(51, 50).ToRGBALittleEndian());
+        //surface.Unlock();
+        //LPDIRECTDRAWSURFACE7 surface7 = surface.GetDirectRawSurface();
+
+        //result = lpddsback->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
+        //if (result != DD_OK)
+        //{
+        //    return false;
+        //}
+
+        //while (FAILED(lpddsprimary->Flip(nullptr, DDFLIP_WAIT)));
+
+
 
         return true;
     }

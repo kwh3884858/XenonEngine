@@ -25,7 +25,11 @@ namespace WindowSurface {
         virtual SColorRGBA GetPixel(unsigned int x, unsigned int y)override;
         virtual void Unlock()override;
 
+
         LPDIRECTDRAWSURFACE7 GetDirectRawSurface() { return surface; }
+        unsigned int GetWidth()const { return m_width; }
+        unsigned int GetHeight()const { return m_height; }
+
 
     private:
         LPDIRECTDRAWSURFACE7 surface;

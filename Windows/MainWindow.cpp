@@ -58,6 +58,7 @@ void MainWindow::Initialize()
     m_windowDrawer = new WindowDrawer::DirectXDrawDrawer();
 
     m_timer = new Timer::StoryTimer();
+    m_lastUpdateTiemstamp = m_timer->GetTime();
 
     m_debugConsole = new DebugTool::DebugConsole();
     m_debugConsole->Initialize();
@@ -311,8 +312,8 @@ void MainWindow::Run()
                             L *= 255; //scale up to 255
                             L += 20;
                             L = MathLab::clamp(L, 0.0f, 255.0f);
-                            m_directXDrawSurface->DrawPixel(screenX, screenY, static_cast<unsigned int>(reciprocalOfZ));
-                            m_zBuffer->DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
+                            m_zBuffer->DrawPixel(screenX, screenY, static_cast<unsigned int>(reciprocalOfZ));
+                            m_directXDrawSurface->DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
 
                         }
                     }
@@ -345,9 +346,8 @@ void MainWindow::Run()
            bool result = m_windowDrawer->Draw(m_directXDrawSurface);
            assert(result == true);
 
+           tmpdegree += 1;
         }
-
-        tmpdegree += 5;
     }
 
     return;
@@ -453,16 +453,17 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
 bool MainWindow::CanUpdateBuffer()
 {
-    time_t currentTime = m_timer->GetTime();
-    double timeInterval = difftime(currentTime, m_lastUpdateTiemstamp);
-
-    float fps = 1 / timeInterval;
-    TCHAR debugTextBuffer[80];
-    _stprintf_s(debugTextBuffer, 80, _T("FPS: %d"), fps);
-    TextOut(hdc, 0, 40, debugTextBuffer, _tcslen(debugTextBuffer));
+    DWORD currentTime = m_timer->GetTime();
+    DWORD timeInterval = currentTime-m_lastUpdateTiemstamp;
 
     if (timeInterval > m_timeInterval)
     {
+        float fps = 1 / timeInterval;
+        TCHAR debugTextBuffer[80];
+        _stprintf_s(debugTextBuffer, 80, _T("FPS: %d"), (int)fps);
+        TextOut(hdc, 0, 40, debugTextBuffer, _tcslen(debugTextBuffer));
+        printf("%lc", debugTextBuffer);
+
         m_lastUpdateTiemstamp = currentTime;
         return true;
     }
