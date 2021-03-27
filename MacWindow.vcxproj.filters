@@ -60,6 +60,9 @@
     <ClCompile Include="CrossPlatform\SColorRGB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CrossPlatform\Primitive\Primitive2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrossPlatform\SColorRGB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\Primitive\Primitive2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

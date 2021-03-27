@@ -109,6 +109,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CrossPlatform\Primitive\Primitive2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
@@ -132,6 +133,7 @@
     <ClInclude Include="Algorithms\Stack.h" />
     <ClInclude Include="Algorithms\Vector.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
+    <ClInclude Include="CrossPlatform\Primitive\Primitive2D.h" />
     <ClInclude Include="CrossPlatform\SColorRGBA.h" />
     <ClInclude Include="CrossPlatform\SColorRGB.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />
