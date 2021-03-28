@@ -3,10 +3,10 @@
 //
 //  Created by whkong on 2021-2-28.
 //  Copyright © 2018 whkong. All rights reserved.
-#include "Vector3.h"
+#include "Vector3f.h"
 
 namespace MathLab {
-    Vector3::Vector3():
+    Vector3f::Vector3f():
         x(0),
         y(0),
         z(0)
@@ -16,30 +16,30 @@ namespace MathLab {
         z = 0;
     }
 
-    Vector3::Vector3(float ax, float ay, float az) {
+    Vector3f::Vector3f(float ax, float ay, float az) {
         x = ax;
         y = ay;
         z = az;
     }
 
-    Vector3::Vector3(const Vector3& para) {
+    Vector3f::Vector3f(const Vector3f& para) {
         this->x = para.x;
         this->y = para.y;
         this->z = para.z;
     }
 
-    Vector3::~Vector3() {
+    Vector3f::~Vector3f() {
 
     }
 
 
-    void Vector3::Swap() {
+    void Vector3f::Swap() {
         float temp = x;
         x = y;
         y = temp;
     }
 
-    Vector3& Vector3::operator+=(const Vector3& rvalue)
+    Vector3f& Vector3f::operator+=(const Vector3f& rvalue)
     {
         this->x += rvalue.x;
         this->y += rvalue.y;
@@ -47,7 +47,7 @@ namespace MathLab {
         return *this;
     }
 
-    Vector3& Vector3::operator-=(const Vector3& rvalue)
+    Vector3f& Vector3f::operator-=(const Vector3f& rvalue)
     {
         this->x -= rvalue.x;
         this->y -= rvalue.y;
@@ -55,25 +55,25 @@ namespace MathLab {
         return *this;
     }
 
-    float Vector3::dot(const Vector3& vec) const
+    float Vector3f::dot(const Vector3f& vec) const
     {
         return this->x * vec.x + this->y * vec.y + this->z * vec.z;
     }
 
-    Vector3 operator+(const Vector3& v1, const Vector3& v2) {
-        Vector3 vector(v1);
+    Vector3f operator+(const Vector3f& v1, const Vector3f& v2) {
+        Vector3f vector(v1);
         vector += v2;
         return  vector;
     }
 
-    Vector3 operator-(const Vector3& v1, const Vector3& v2) {
-        Vector3 vector(v1);
+    Vector3f operator-(const Vector3f& v1, const Vector3f& v2) {
+        Vector3f vector(v1);
         vector -= v2;
         return  vector;
     }
 
-    void SwapVector(Vector3* vectorA, Vector3* vectorB) {
-        Vector3 temp = *vectorA;
+    void SwapVector(Vector3f* vectorA, Vector3f* vectorB) {
+        Vector3f temp = *vectorA;
         vectorA->x = vectorB->x;
         vectorA->y = vectorB->y;
         vectorA->z = vectorB->z;
@@ -85,12 +85,12 @@ namespace MathLab {
     }
 
 
-    bool LessY(const Vector3& origin, const Vector3& compare) {
+    bool LessY(const Vector3f& origin, const Vector3f& compare) {
         return origin.y < compare.y;
     }
 
-    void Exchange(Vector3*const a, Vector3*const b) {
-        Vector3 temp = *a;
+    void Exchange(Vector3f*const a, Vector3f*const b) {
+        Vector3f temp = *a;
         a->x = b->x;
         a->y = b->y;
         a->z = b->z;

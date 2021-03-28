@@ -10,14 +10,14 @@
 namespace MathLab{
 
     ViewStruct::ViewStruct(){
-    m_origin = new Vector2();
-    m_viewSize = new Vector2();
+    m_origin = new Vector2i();
+    m_viewSize = new Vector2i();
     fprintf(stdout, "view size need intialize");
 }
 
-ViewStruct::ViewStruct(const Vector2& viewSize,const Vector2& origin){
-    m_viewSize =new Vector2(viewSize.x, viewSize.y);
-    m_origin = new Vector2(origin.x, origin.y);
+ViewStruct::ViewStruct(const Vector2i& viewSize,const Vector2i& origin){
+    m_viewSize =new Vector2i(viewSize.x, viewSize.y);
+    m_origin = new Vector2i(origin.x, origin.y);
 }
 
 ViewStruct::~ViewStruct(){

@@ -11,18 +11,18 @@
 #define ViewStruct_h
 
 #include <stdio.h>
-#include "Vector2.h"
+#include "Vector2i.h"
 namespace MathLab{
 
 class ViewStruct {
 
 public:
-    Vector2* m_viewSize;
-    Vector2* m_origin;
+    Vector2i* m_viewSize;
+    Vector2i* m_origin;
 
 public:
     ViewStruct();
-    ViewStruct(const Vector2& viewSize,const Vector2& origin);
+    ViewStruct(const Vector2i& viewSize,const Vector2i& origin);
     ~ViewStruct();
 };
 }

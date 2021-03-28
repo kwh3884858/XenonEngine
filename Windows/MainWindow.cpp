@@ -15,13 +15,13 @@
 #include <cmath> // sin, cos
 #include <assert.h>
 
-#include "MathLab/Vector3.h"
+#include "MathLab/Vector3f.h"
 #include "MathLab/MathLib.h"
 #include "MathLab/MathLabDefinition.h"
 
 #include "Gameplay/GameplayMain.h"
 
-using MathLab::Vector3;
+using MathLab::Vector3f;
 
 using WindowDrawer::WindowDGIDrawer;
 using WindowDrawer::WindowDGIDrawerConfig;
@@ -212,10 +212,10 @@ void MainWindow::Run()
         bool isUpdateBuffer = CanUpdateBuffer();
 
 
-        Vector3 cameraPosition();
+        Vector3f cameraPosition();
         static int tmpdegree = 90;
 
-        Vector3 lightDirection(0, 1, 0);
+        Vector3f lightDirection(0, 1, 0);
 
         if (isUpdateBuffer)
         {
@@ -236,8 +236,8 @@ void MainWindow::Run()
 
             for (int thetaDegree = 0; thetaDegree < 360; thetaDegree += 5)
             {
-                Vector3 circle;
-                Vector3 circleNormal;
+                Vector3f circle;
+                Vector3f circleNormal;
                 float posX = 0;
                 float posY = 0;
                 float posZ = 0;
@@ -255,8 +255,8 @@ void MainWindow::Run()
 
                 for (int phiDegree = 0; phiDegree < 360; phiDegree += 5)
                 {
-                    Vector3 donutVertex = MathLab::RotateYAxis(circle, (float)phiDegree);
-                    Vector3 donutVertexNormal = MathLab::RotateYAxis(circleNormal, (float)phiDegree);
+                    Vector3f donutVertex = MathLab::RotateYAxis(circle, (float)phiDegree);
+                    Vector3f donutVertexNormal = MathLab::RotateYAxis(circleNormal, (float)phiDegree);
                     //float phi = phiDegree * TO_RADIAN;
                     //X = posX * cos(phi) - posZ * sin(phi);
                     //Y = posY;
@@ -270,7 +270,7 @@ void MainWindow::Run()
                     //local to world
                     donutVertex = MathLab::RotateZAxis(donutVertex, tmpdegree);
                     donutVertexNormal = MathLab::RotateZAxis(donutVertexNormal, (float)tmpdegree);
-                    donutVertex += Vector3(0, 0, -170);
+                    donutVertex += Vector3f(0, 0, -170);
 
                     //local to view 
 

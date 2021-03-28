@@ -5,7 +5,7 @@ namespace MathLab {
     {
     }
 
-    Matrix3::Matrix3(const Vector3& aV1, const Vector3& aV2, const Vector3& aV3)
+    Matrix3::Matrix3(const Vector3f& aV1, const Vector3f& aV2, const Vector3f& aV3)
     {
         v1 = aV1;
         v2 = aV2;
@@ -24,9 +24,9 @@ namespace MathLab {
 
     }
 
-    MathLab::Vector3 operator*(const Vector3& lValue, const Matrix3& rValue)
+    MathLab::Vector3f operator*(const Vector3f& lValue, const Matrix3& rValue)
     {
-        Vector3 result;
+        Vector3f result;
         result.x = lValue.x * rValue.v1.x + lValue.y * rValue.v2.x + lValue.z * rValue.v3.x;
         result.y = lValue.x * rValue.v1.y + lValue.y * rValue.v2.y + lValue.z * rValue.v3.y;
         result.z = lValue.x * rValue.v1.z + lValue.y * rValue.v2.z + lValue.z * rValue.v3.z;

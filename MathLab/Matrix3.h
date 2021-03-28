@@ -6,18 +6,18 @@
 
 #pragma once
 
-#include "Vector3.h"
+#include "Vector3f.h"
 
 namespace MathLab {
     struct Matrix3 final{
-        Vector3 v1;
-        Vector3 v2;
-        Vector3 v3;
+        Vector3f v1;
+        Vector3f v2;
+        Vector3f v3;
 
 
     public:
         Matrix3();
-        Matrix3(const Vector3& aV1, const Vector3& aV2, const Vector3& aV3);
+        Matrix3(const Vector3f& aV1, const Vector3f& aV2, const Vector3f& aV3);
         Matrix3(float v1, float v2, float v3, float v4, float v5, float v6, float v7, float v8, float v9);
         Matrix3(const Matrix3& aMatrix);
         ~Matrix3();
@@ -27,5 +27,5 @@ namespace MathLab {
 
     };
 
-    Vector3 operator*(const Vector3& lValue, const Matrix3& rValue);
+    Vector3f operator*(const Vector3f& lValue, const Matrix3& rValue);
 }

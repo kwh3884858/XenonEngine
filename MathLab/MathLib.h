@@ -11,11 +11,11 @@
 
 namespace MathLab{
 
-    struct Vector3;
+    struct Vector3f;
 
-     Vector3 RotateXAxis(const Vector3& vec, const float degree);
-     Vector3 RotateYAxis(const Vector3& vec, const float degree);
-     Vector3 RotateZAxis(const Vector3& vec, const float degree);
+     Vector3f RotateXAxis(const Vector3f& vec, const float degree);
+     Vector3f RotateYAxis(const Vector3f& vec, const float degree);
+     Vector3f RotateZAxis(const Vector3f& vec, const float degree);
 
      template <typename T>
      const T& clamp(const T& value, const T& min, const T& max) {
@@ -30,6 +30,11 @@ namespace MathLab{
          return value;
      }
 
+     template <typename T>
+     T abs(const T& value)
+     {
+         return value < 0 ? -value : value;
+     }
 
 };
 #endif /* MathLib_hpp */
