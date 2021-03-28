@@ -73,7 +73,7 @@ void MainWindow::Initialize()
     //int screenHight = 600;
     if (!this->Create(L"Main Windows",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
-        FULL_SCREEN ? (WS_POPUP) : (WS_OVERLAPPEDWINDOW | WS_POPUP),
+        FULL_SCREEN ? (WS_POPUP) : (WS_OVERLAPPED | WS_POPUP),
         m_screenWidth,
         m_screenHight,
         0,
@@ -121,10 +121,7 @@ void MainWindow::Initialize()
 
         m_windowDrawer->SetDrawerConfig(config);
         bool result = m_windowDrawer->Initialize();
-        if (!result)
-        {
-            return;
-        }
+        assert(result == true);
 
         DirectXDrawDrawer* const directDrawer = static_cast<DirectXDrawDrawer*> (m_windowDrawer);
         LPDIRECTDRAW7 lpdd = directDrawer->GetDirectRaw();

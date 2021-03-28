@@ -2,9 +2,12 @@
 #include "Windows/Surface/DirectXDrawSurface.h"
 //#include <windows.h>
 
+#include <assert.h>
+
 //Test
-#include "CrossPlatform/SColorRGBA.h"
-#include <cstdio>
+//#include "CrossPlatform/SColorRGBA.h"
+//#include <cstdio>
+
 
 namespace WindowDrawer {
     using WindowSurface::DirectXDrawSurface;
@@ -33,6 +36,7 @@ namespace WindowDrawer {
         {
             return false;
         }
+
         if (m_config->m_isFullScreen)
         {
             // Set the cooperation level for full screen
@@ -67,9 +71,12 @@ namespace WindowDrawer {
             {
                 return false;
             }
+
+            //TODO Clipper
         }
         else
         {
+            HRESULT result;
             // Set the cooperation level for windowed Direct Draw
             if (FAILED(lpdd7->SetCooperativeLevel(m_config->m_hwnd, DDSCL_NORMAL)))
             {
@@ -90,6 +97,42 @@ namespace WindowDrawer {
             {
                 return false;
             }
+
+            // Pixel color format
+            DDPIXELFORMAT ddPixelFormat;
+            memset(&ddPixelFormat, 0, sizeof(ddPixelFormat));
+            ddPixelFormat.dwSize = sizeof(ddPixelFormat);
+
+            lpddsprimary->GetPixelFormat(&ddPixelFormat);
+            int pixelFormat = ddPixelFormat.dwRGBBitCount;
+
+            assert(pixelFormat == 32);
+            
+            // Window size
+            RECT windowsRect = { 0,0,m_config->resolutionX, m_config->resolutionY };
+            AdjustWindowRectEx(&windowsRect, (DWORD)GetWindowLong(m_config->m_hwnd, GWL_STYLE), GetMenu(m_config->m_hwnd) != nullptr, (DWORD)GetWindowLong(m_config->m_hwnd, GWL_EXSTYLE));
+            
+           int X = (GetSystemMetrics(SM_CXSCREEN) - m_config->resolutionX) / 2;
+           int Y = (GetSystemMetrics(SM_CYSCREEN) - m_config->resolutionY) / 2;
+            MoveWindow(m_config->m_hwnd, X, Y, windowsRect.right - windowsRect.left, windowsRect.bottom - windowsRect.top, false);
+
+            result = lpdd7->CreateClipper(0, &lpddClipper, nullptr);
+            if (result != DD_OK)
+            {
+                return false;
+            }
+
+            result = lpddClipper->SetHWnd(0, m_config->m_hwnd);
+            if (result != DD_OK)
+            {
+                return false;
+            }
+
+            result = lpddsprimary->SetClipper(lpddClipper);
+            if (result != DD_OK)
+            {
+                return false;
+            }
         }
 
         if (!m_config)
@@ -106,6 +149,21 @@ namespace WindowDrawer {
         if (lpddsprimary)
         {
             lpddsprimary->Release();
+        }
+
+        if (m_config->m_isFullScreen)
+        {
+            if (lpddsback)
+            {
+                lpddsback->Release();
+            }
+        }
+        else 
+        {
+            if (lpddClipper)
+            {
+                lpddClipper->Release();
+            }
         }
 
         if (lpdd7)
@@ -144,6 +202,25 @@ namespace WindowDrawer {
         WindowSurface::DirectXDrawSurface* const directXDrawSurface = static_cast<WindowSurface::DirectXDrawSurface* const>(drawerSurface);
         
         HRESULT result;
+
+        if (m_config->m_isFullScreen)
+        {
+            result = lpddsback->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
+            if (result != DD_OK)
+            {
+                return false;
+            }
+
+            while (FAILED(lpddsprimary->Flip(nullptr, DDFLIP_WAIT)));
+        }
+        else
+        {
+            result = lpddsprimary->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
+            if (result != DD_OK)
+            {
+                return false;
+            }
+        }
         /*
         DDSURFACEDESC2 ddsd;
         //Lock the back buffer
@@ -187,12 +264,6 @@ namespace WindowDrawer {
         //    return false;
         //}
 
-        result = lpddsback->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
-        if (result != DD_OK)
-        {
-            return false;
-        }
-
         //result = lpddsprimary->BltFast(0, 0, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLTFAST_WAIT);
         //if (result != DD_OK)
         //{
@@ -201,7 +272,6 @@ namespace WindowDrawer {
 
 
 
-        while (FAILED(lpddsprimary->Flip(nullptr, DDFLIP_WAIT)));
 
         ///////////////////TEST////////////////////////
         //DDBLTFX ddbltfx;

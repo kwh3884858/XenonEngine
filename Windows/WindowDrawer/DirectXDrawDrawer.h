@@ -58,6 +58,7 @@ namespace WindowDrawer {
         //Interface pointer to hold primary surface
         LPDIRECTDRAWSURFACE7 lpddsprimary = nullptr;
         LPDIRECTDRAWSURFACE7 lpddsback = nullptr;
+        LPDIRECTDRAWCLIPPER lpddClipper = nullptr;
 
         DirectXDrawDrawerConfig* m_config;
     };
