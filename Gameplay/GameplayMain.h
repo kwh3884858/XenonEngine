@@ -7,7 +7,5 @@
 
 
 namespace Gameplay {
-    void GameplayMain() {
-
-    }
+    void GameplayMain();
 }

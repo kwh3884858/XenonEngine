@@ -112,6 +112,7 @@
     <ClCompile Include="CrossPlatform\Primitive\Primitive2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
+    <ClCompile Include="Gameplay\GameplayMain.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Primitive\Primitive2D.h" />
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h" />
+    <ClInclude Include="CrossPlatform\ScaffoldSingleton.h" />
     <ClInclude Include="CrossPlatform\SColorRGBA.h" />
     <ClInclude Include="CrossPlatform\SColorRGB.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />

@@ -2,6 +2,7 @@
 #include "DebugTool/DebugConsole.h"
 
 #include "CrossPlatform/SColorRGBA.h"
+#include "CrossPlatform/Primitive/Primitive2D.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
@@ -134,11 +135,14 @@ void MainWindow::Initialize()
         break;
     }
 
+    Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface);
 
 }
 
 void MainWindow::Shutdown()
 {
+    Primitive::Primitive2D::get().shutdown();
+
     delete m_directXDrawSurface;
     m_directXDrawSurface = nullptr;
     
@@ -202,7 +206,7 @@ void MainWindow::Run()
             }
         }
 
-        Gameplay::GameplayMain();
+
 
         frameAmount++;
 
@@ -233,7 +237,7 @@ void MainWindow::Run()
             m_directXDrawSurface->lock();
             m_zBuffer->lock();
 
-
+            Gameplay::GameplayMain();
             for (int thetaDegree = 0; thetaDegree < 360; thetaDegree += 5)
             {
                 Vector3f circle;

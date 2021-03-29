@@ -64,7 +64,7 @@ private:
 #endif // !WINDOW
 
 template<class T>
-const bool BaseWindow<T>::FULL_SCREEN = false;
+const bool BaseWindow<T>::FULL_SCREEN = true;
 
 template<class T>
 const bool BaseWindow<T>::VSYNC_ENABLED = true;

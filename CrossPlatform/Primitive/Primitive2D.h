@@ -6,21 +6,30 @@
 #pragma once
 
 #include "MathLab/Vector2i.h"
+#include "CrossPlatform/ScaffoldSingleton.h"
 
-#endif // 
+namespace CrossPlatform {
+    class IDrawerSurface;
+}
+
+using MathLab::Vector2i;
 namespace Primitive {
 
-    class Primitive2D
+    class Primitive2D:public CrossPlatform::ScaffoldSingleton<Primitive2D>
     {
     public:
-        Primitive2D(IDrawerSurface* drawerSurface);
 
-        void DrawPixel(const Vector2i& pos);
-        void DrawPixel(int x, int y);
-        void DrawLine(const Vector2i& lhs, const Vector2i& rhs);
+        virtual bool initialize() override { return true; }
+        void SetConfig(CrossPlatform::IDrawerSurface*const drawerSurface);
+
+        virtual bool shutdown() override ;
+
+        void DrawPixel(const Vector2i& pos)const;
+        void DrawPixel(unsigned int x, unsigned int y) const;
+        void DrawLine(const Vector2i& lhs, const Vector2i& rhs)const;
 
     private:
-        IDrawerSurface* m_drawerSurface;
+        CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
 
     };
 

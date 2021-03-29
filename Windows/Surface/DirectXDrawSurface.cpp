@@ -69,6 +69,7 @@ namespace WindowSurface {
 
     void DirectXDrawSurface::DrawPixel(unsigned int x, unsigned int y, SColorRGBA rgba)
     {
+        assert(x < m_width  && y < m_height);
         UINT* buffer =static_cast<UINT*>( m_directDrawSurfaceDescription.lpSurface);
         buffer[y * m_width + x] = rgba.ToRGBALittleEndian();
 
@@ -76,6 +77,7 @@ namespace WindowSurface {
 
     CrossPlatform::SColorRGBA DirectXDrawSurface::GetPixel(unsigned int x, unsigned int y)
     {
+        assert(x < m_width  && y < m_height);
         UINT* buffer = static_cast<UINT*>(m_directDrawSurfaceDescription.lpSurface);
         return buffer[y * m_width + x];
     }

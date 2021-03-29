@@ -1,47 +1,67 @@
+#include "CrossPlatform/Primitive/Primitive2D.h"
 #include "CrossPlatform/Interface/IDrawerSurface.h"
-namespace Primitive {
+#include "CrossPlatform/SColorRGBA.h"
+#include "MathLab/MathLib.h"
 
-    Primitive2D::Primitive2D(IDrawerSurface* drawerSurface)
+using CrossPlatform::IDrawerSurface;
+using CrossPlatform::SColorRGBA;
+namespace Primitive
+{
+
+    void Primitive2D::SetConfig(IDrawerSurface*const drawerSurface)
     {
         m_drawerSurface = drawerSurface;
+
     }
 
-
-
-    void Primitive2D::DrawPixel(int x, int y)
+    bool Primitive2D::shutdown()
     {
-        m_drawerSurface->DrawPixel(x, y);
+        m_drawerSurface = nullptr;
+        return true;
     }
 
-    void DrawPixel(const Vector2i& pos)
+    void Primitive2D::DrawPixel(unsigned int x, unsigned int y)const
     {
-        m_drawerSurface->DrawPixel(pos.x, pos.y);
+        m_drawerSurface->DrawPixel(x, y, SColorRGBA(50,50,0));
     }
 
-    void DrawLine(const Vector2i& lhs, const Vector2i& rhs)
+    void Primitive2D::DrawPixel(const Vector2i& pos)const
+    {
+        DrawPixel(pos.x, pos.y);
+    }
+
+    void Primitive2D::DrawLine(const Vector2i& lhs, const Vector2i& rhs)const
     {
         Vector2i startPos(lhs);
         Vector2i endPos(rhs);
 
 
-        int deltaX = MathLab.abs(rhs.x - lhs.x);
-        int deltaY = MathLab.abs(rhs.y - lhs.y);
-        bool isFlip = deltaY < deltaX? true: false;
+        int deltaX = MathLab::abs(rhs.x - lhs.x);
+        int deltaY = MathLab::abs(rhs.y - lhs.y);
+        bool isFlip = deltaY > deltaX? true: false;
         if (isFlip)
         {
             startPos.Swap();
             endPos.Swap();
+            int tmp = deltaX;
+            deltaX = deltaY;
+            deltaY = tmp;
         }
 
         int increasementX = 1;
         int increasementY = 1;
-        if (startPos.y > startPos.y)
+
+        if (startPos.y > endPos.y)
         {
-            increasementX = -1;
+
+            increasementY = -1;
+
         }
         if (startPos.x > endPos.x)
         {
-            increasementY = -1;
+
+                increasementX = -1;
+
         }
 
         float errorY = 0;
@@ -59,10 +79,11 @@ namespace Primitive {
             startPos.x += increasementX;
 
             //errorY = 2 * errorY + 2 * deltaY/ deltaX > 1
-            errorY = 2 * deltaX * errorY + 2 * deltaY;
+            errorY += 2 * deltaY;
             if (errorY > deltaX)
             {
                 startPos.y += increasementY;
+                errorY -= deltaX;
             }
         }
     }
