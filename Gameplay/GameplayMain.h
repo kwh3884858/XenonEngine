@@ -7,5 +7,9 @@
 
 
 namespace Gameplay {
+
     void GameplayMain();
+
+    void Donut();
+
 }

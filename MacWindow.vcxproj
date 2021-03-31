@@ -133,6 +133,7 @@
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />
     <ClInclude Include="Algorithms\Vector.h" />
+    <ClInclude Include="CrossPlatform\Database.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Primitive\Primitive2D.h" />
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="CrossPlatform\SColorRGB.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerConfig.h" />
+    <ClInclude Include="CrossPlatform\EngineConfig.h" />
     <ClInclude Include="Gameplay\GameObject.h" />
     <ClInclude Include="Gameplay\GameplayMain.h" />
     <ClInclude Include="library\lua\lua.h" />

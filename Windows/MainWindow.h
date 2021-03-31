@@ -47,5 +47,5 @@ private:
     int m_screenWidth;
     int m_screenHight;
     //bool m_isFullScreen;
-    bool m_perspectiveProjection;
+
 };

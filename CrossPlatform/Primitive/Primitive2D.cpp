@@ -3,15 +3,17 @@
 #include "CrossPlatform/SColorRGBA.h"
 #include "MathLab/MathLib.h"
 
+#include <cstdio>
+
 using CrossPlatform::IDrawerSurface;
 using CrossPlatform::SColorRGBA;
 namespace Primitive
 {
 
-    void Primitive2D::SetConfig(IDrawerSurface*const drawerSurface)
+    void Primitive2D::SetConfig(IDrawerSurface*const drawerSurface, IDrawerSurface*const zBuffer)
     {
         m_drawerSurface = drawerSurface;
-
+        m_zBuffer = zBuffer;
     }
 
     bool Primitive2D::shutdown()
@@ -23,11 +25,22 @@ namespace Primitive
     void Primitive2D::DrawPixel(unsigned int x, unsigned int y)const
     {
         m_drawerSurface->DrawPixel(x, y, SColorRGBA(50,50,0));
+        printf("(%u, %u)\n", x, y);
     }
 
     void Primitive2D::DrawPixel(const Vector2i& pos)const
     {
         DrawPixel(pos.x, pos.y);
+    }
+
+    unsigned int Primitive2D::GetZbuffer(const Vector2i& pos) const
+    {
+        m_zBuffer->GetPixel(pos.x, pos.y).ToRGBALittleEndian();
+    }
+
+    void Primitive2D::SetZBuffer(const Vector2i& pos, unsigned int value)
+    {
+        m_zBuffer->DrawPixel(pos.x, pos.y, value);
     }
 
     void Primitive2D::DrawLine(const Vector2i& lhs, const Vector2i& rhs)const
@@ -64,8 +77,8 @@ namespace Primitive
 
         }
 
-        float errorY = 0;
-        while (startPos.y != endPos.y)
+        float errorY = 1;
+        while (startPos.y <= endPos.y)
         {
             if (isFlip)
             {
@@ -80,10 +93,10 @@ namespace Primitive
 
             //errorY = 2 * errorY + 2 * deltaY/ deltaX > 1
             errorY += 2 * deltaY;
-            if (errorY > deltaX)
+            if (errorY > 2* deltaX)
             {
                 startPos.y += increasementY;
-                errorY -= deltaX;
+                errorY -= 2 * deltaX;
             }
         }
     }

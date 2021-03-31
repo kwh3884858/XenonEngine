@@ -20,16 +20,20 @@ namespace Primitive {
     public:
 
         virtual bool initialize() override { return true; }
-        void SetConfig(CrossPlatform::IDrawerSurface*const drawerSurface);
+        void SetConfig(CrossPlatform::IDrawerSurface*const drawerSurface,
+            CrossPlatform::IDrawerSurface*const zBuffer);
 
         virtual bool shutdown() override ;
 
         void DrawPixel(const Vector2i& pos)const;
         void DrawPixel(unsigned int x, unsigned int y) const;
+        unsigned int GetZbuffer(const Vector2i& pos)const;
+        void SetZBuffer(const Vector2i& pos, unsigned int value);
         void DrawLine(const Vector2i& lhs, const Vector2i& rhs)const;
 
     private:
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
+        CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
 
     };
 

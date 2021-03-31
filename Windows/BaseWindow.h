@@ -24,7 +24,7 @@ public:
     };
 
 	static LRESULT CALLBACK sWindowProc(HWND, UINT, WPARAM, LPARAM);
-	static const bool FULL_SCREEN;
+
 	static const bool VSYNC_ENABLED;
 	static const float SCREEN_DEPTH;
 	static const float SCREEN_NEAR;
@@ -63,8 +63,7 @@ private:
 
 #endif // !WINDOW
 
-template<class T>
-const bool BaseWindow<T>::FULL_SCREEN = true;
+
 
 template<class T>
 const bool BaseWindow<T>::VSYNC_ENABLED = true;
@@ -186,7 +185,7 @@ void BaseWindow<T>::ShutdownWindows()
 	ShowCursor(false);
 	
 	//TODO: add graphic setting
-	if (BaseWindow::FULL_SCREEN)
+	if (Database::get().engineConfig.m_isFullScreen)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}

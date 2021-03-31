@@ -176,6 +176,12 @@
     <ClInclude Include="CrossPlatform\ScaffoldSingleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CrossPlatform\EngineConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\Database.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

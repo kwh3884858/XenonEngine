@@ -1,8 +1,9 @@
 #include "MainWindow.h"
 #include "DebugTool/DebugConsole.h"
 
-#include "CrossPlatform/SColorRGBA.h"
-#include "CrossPlatform/Primitive/Primitive2D.h"
+//#include "CrossPlatform/SColorRGBA.h"
+//#include "CrossPlatform/Primitive/Primitive2D.h"
+#include "CrossPlatform/Database.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
@@ -13,12 +14,8 @@
 
 #include <cstdio>
 #include <TCHAR.H>
-#include <cmath> // sin, cos
 #include <assert.h>
 
-#include "MathLab/Vector3f.h"
-#include "MathLab/MathLib.h"
-#include "MathLab/MathLabDefinition.h"
 
 #include "Gameplay/GameplayMain.h"
 
@@ -34,14 +31,16 @@ using CrossPlatform::IDrawerSurface;
 using WindowSurface::DrawerSurface;
 using WindowSurface::DirectXDrawSurface;
 
+using CrossPlatform::Database;
+
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(nullptr)
 , m_windowDrawer(nullptr)
 , m_timer(nullptr)
 , m_directXDrawSurface(nullptr)
 , m_lastUpdateTiemstamp(0)
-, m_screenWidth(800)
-, m_screenHight(600)
+, m_screenWidth(Database::get().engineConfig.m_width)
+, m_screenHight(Database::get().engineConfig.m_height)
 //, m_isFullScreen(false)
 , m_perspectiveProjection(true)
 {
@@ -64,7 +63,7 @@ void MainWindow::Initialize()
     m_debugConsole = new DebugTool::DebugConsole();
     m_debugConsole->Initialize();
 
-    if (BaseWindow::FULL_SCREEN)
+    if (Database::get().engineConfig.m_isFullScreen)
     {
         m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
         m_screenHight = GetSystemMetrics(SM_CYSCREEN);
@@ -74,7 +73,7 @@ void MainWindow::Initialize()
     //int screenHight = 600;
     if (!this->Create(L"Main Windows",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
-        FULL_SCREEN ? (WS_POPUP) : (WS_OVERLAPPED | WS_POPUP),
+        Database::get().engineConfig.m_isFullScreen ? (WS_POPUP) : (WS_OVERLAPPED | WS_POPUP),
         m_screenWidth,
         m_screenHight,
         0,
@@ -118,7 +117,7 @@ void MainWindow::Initialize()
         config->resolutionX = m_screenWidth;
         config->resolutionY = m_screenHight;
         config->m_hwnd = GetHwnd();
-        config->m_isFullScreen = FULL_SCREEN;
+        config->m_isFullScreen = Database::get().engineConfig.m_isFullScreen;
 
         m_windowDrawer->SetDrawerConfig(config);
         bool result = m_windowDrawer->Initialize();
@@ -135,7 +134,7 @@ void MainWindow::Initialize()
         break;
     }
 
-    Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface);
+    Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface, m_zBuffer);
 
 }
 
@@ -215,139 +214,15 @@ void MainWindow::Run()
 
         bool isUpdateBuffer = CanUpdateBuffer();
 
-
-        Vector3f cameraPosition();
-        static int tmpdegree = 90;
-
-        Vector3f lightDirection(0, 1, 0);
-
         if (isUpdateBuffer)
         {
-            //m_windowDrawer->GetFrameBuffer()->ClearBuffer();
-
-            int donutRadius = 120;
-            int circleRadius = 40;
-
-            float degree = 0;    //(0 ~ 360)
-
-            float X = 0;
-            float Y = 0;
-            float Z = 0;
-
             m_directXDrawSurface->lock();
             m_zBuffer->lock();
-
             Gameplay::GameplayMain();
-            for (int thetaDegree = 0; thetaDegree < 360; thetaDegree += 5)
-            {
-                Vector3f circle;
-                Vector3f circleNormal;
-                float posX = 0;
-                float posY = 0;
-                float posZ = 0;
-
-                float theta = thetaDegree * TO_RADIAN;
-                circle.x = donutRadius + circleRadius * sin(theta);
-                circle.y = circleRadius * cos(theta);
-                circleNormal.x = sin(theta);
-                circleNormal.y = cos(theta);
-
-                //To donut, rotate with y-axis
-                //(x,y,z) * |cos  , 0 ,sin|
-                //          |0    ,1  ,0  |       
-                //          |-sin ,0  ,cos|
-
-                for (int phiDegree = 0; phiDegree < 360; phiDegree += 5)
-                {
-                    Vector3f donutVertex = MathLab::RotateYAxis(circle, (float)phiDegree);
-                    Vector3f donutVertexNormal = MathLab::RotateYAxis(circleNormal, (float)phiDegree);
-                    //float phi = phiDegree * TO_RADIAN;
-                    //X = posX * cos(phi) - posZ * sin(phi);
-                    //Y = posY;
-                    //Z = posY * sin(phi) + posZ * cos(phi);
-
-                    //local
-                    //Vector3 donutVertex(X, Y, Z);
-
-                    donutVertex = MathLab::RotateXAxis(donutVertex, (float)tmpdegree);
-                    donutVertexNormal = MathLab::RotateXAxis(donutVertexNormal, (float)tmpdegree);
-                    //local to world
-                    donutVertex = MathLab::RotateZAxis(donutVertex, tmpdegree);
-                    donutVertexNormal = MathLab::RotateZAxis(donutVertexNormal, (float)tmpdegree);
-                    donutVertex += Vector3f(0, 0, -170);
-
-                    //local to view 
-
-
-                    //view to projection
-                    int screenX = 0;
-                    int screenY = 0;
-
-                    if (donutVertex.z >= -1)
-                    {
-                        continue;
-                    }
-                    float reciprocalOfZ = -1 / donutVertex.z;
-
-                    // Rasterized
-                    if (m_perspectiveProjection)
-                    {
-                        screenX = (int)m_screenWidth / 2 + donutVertex.x * reciprocalOfZ * 100;
-                        screenY = (int)m_screenHight / 2 - donutVertex.y * reciprocalOfZ * 100;
-                    }
-                    else {
-                        screenX = (int)donutVertex.x + m_screenWidth / 2;
-                        screenY = (int)-(donutVertex.y) + m_screenHight / 2;
-                    }
-
-                    // Z buffer
-                    //float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
-                    float curretZBuffer = static_cast<float>( m_zBuffer->GetPixel(screenX, screenY).ToRGBALittleEndian());
-
-                    if (curretZBuffer < reciprocalOfZ)
-                    {
-                        float L = donutVertexNormal.dot(lightDirection);
-                        L += 0.5f;
-                        if (L > 0)
-                        {
-                            L *= 255; //scale up to 255
-                            L += 20;
-                            L = MathLab::clamp(L, 0.0f, 255.0f);
-                            m_zBuffer->DrawPixel(screenX, screenY, static_cast<unsigned int>(reciprocalOfZ));
-                            m_directXDrawSurface->DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
-
-                        }
-                    }
-                }
-            }
             m_directXDrawSurface->Unlock();
-            m_zBuffer->Unlock();
-            
-
-            //Center Position
-            int centerX = 0;
-            int centerY = 0;
-            int centerZ = 0;
-
-
-            //for (int i = 0 ; i< 800; i++)
-            //{
-            //    for (int j = 0; j < 600; j++)
-            //    {
-            //        m_windowDrawer->GetFrameBuffer()->SetColor(i, j, CrossPlatform::SColorRGB(100,100,100));
-            //    }
-            //}
-            //m_windowDrawer->GetFrameBuffer()->SetColor(10, 10, CrossPlatform::SColorRGB(20, 20, 20));
-            //m_windowDrawer->GetFrameBuffer()->SetColor(11, 11, CrossPlatform::SColorRGB(20, 20, 20));
-            //m_windowDrawer->GetFrameBuffer()->SetColor(12, 12, CrossPlatform::SColorRGB(20, 20, 20));
-            //m_windowDrawer->GetFrameBuffer()->SetColor(13, 13, CrossPlatform::SColorRGB(20, 20, 20));
-            //m_windowDrawer->GetFrameBuffer()->SetColor(14, 14, CrossPlatform::SColorRGB(20, 20, 20));
-            //m_windowDrawer->GetFrameBuffer()->SetColor(15, 15, CrossPlatform::SColorRGB(20, 20, 20));
-            
+            m_zBuffer->Unlock();           
            bool result = m_windowDrawer->Draw(m_directXDrawSurface);
            assert(result == true);
-
-           tmpdegree += 1;
         }
     }
 
