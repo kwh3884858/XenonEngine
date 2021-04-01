@@ -223,7 +223,7 @@ void MainWindow::Run()
             m_directXDrawSurface->Unlock();
             m_zBuffer->Unlock();           
            bool result = m_windowDrawer->Draw(m_directXDrawSurface);
-           assert(result == true);
+           
         }
     }
 

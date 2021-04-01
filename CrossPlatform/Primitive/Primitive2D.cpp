@@ -30,7 +30,7 @@ namespace Primitive
 
     void Primitive2D::DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba) const
     {
-        m_drawerSurface->DrawPixel(x, y, rgba);
+        m_drawerSurface->DrawPixel(x, m_drawerSurface->GetHeight() -1 - y, rgba);
         printf("(%u, %u) color: (%u, %u, %u, %u)\n", x, y, rgba.GetR(), rgba.GetG(), rgba.GetB(), rgba.GetA());
     }
 
@@ -44,7 +44,7 @@ namespace Primitive
         m_zBuffer->DrawPixel(pos.x, pos.y, value);
     }
 
-    void Primitive2D::DrawLine(const Vector2i& lhs, const Vector2i& rhs)const
+    void Primitive2D::DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/)const
     {
         Vector2i startPos(lhs);
         Vector2i endPos(rhs);
@@ -78,29 +78,30 @@ namespace Primitive
 
         }
 
-        float errorY = 1;
-        while (startPos.y <= endPos.y)
+        //error = k - 0.5
+        //2error = 2k - 1
+        float errorY = 2 * deltaY - deltaX;
+        while (startPos.y != endPos.y)
         {
             if (isFlip)
             {
-                DrawPixel(startPos.y, startPos.x);
+                DrawPixel(startPos.y, startPos.x, rgba);
             }
             else
             {
-                DrawPixel(startPos.x, startPos.y);
+                DrawPixel(startPos.x, startPos.y, rgba);
             }
 
             startPos.x += increasementX;
 
-            //errorY = 2 * errorY + 2 * deltaY/ deltaX > 1
+            //error +=k
+            //2error += 2k
             errorY += 2 * deltaY;
-            if (errorY > 2* deltaX)
+            if (errorY >= 0)
             {
                 startPos.y += increasementY;
                 errorY -= 2 * deltaX;
             }
         }
     }
-
-
 }

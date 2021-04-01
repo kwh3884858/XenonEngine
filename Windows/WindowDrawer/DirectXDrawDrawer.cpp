@@ -1,6 +1,7 @@
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
 #include "Windows/Surface/DirectXDrawSurface.h"
 //#include <windows.h>
+#include "MathLab/MathLib.h"
 
 #include <assert.h>
 
@@ -11,6 +12,7 @@
 
 namespace WindowDrawer {
     using WindowSurface::DirectXDrawSurface;
+    
 #define DDRAW_INIT_STRUCT(dxstruct)  memset(&dxstruct, 0, sizeof(dxstruct)); dxstruct.dwSize = sizeof(dxstruct);// that should all be one line
 #define KEYDOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1:0)
     DirectXDrawDrawer::~DirectXDrawDrawer()
@@ -108,13 +110,17 @@ namespace WindowDrawer {
 
             assert(pixelFormat == 32);
             
-            // Window size
-            RECT windowsRect = { 0,0,m_config->resolutionX, m_config->resolutionY };
-            AdjustWindowRectEx(&windowsRect, (DWORD)GetWindowLong(m_config->m_hwnd, GWL_STYLE), GetMenu(m_config->m_hwnd) != nullptr, (DWORD)GetWindowLong(m_config->m_hwnd, GWL_EXSTYLE));
-            
+            // Window size, realwindowsRect will bigger than drawerRect
+            RECT drawerRect = { 0, 0, (long)m_config->resolutionX, (long)m_config->resolutionY };
+            RECT realwindowsRect = { 0, 0, (long)m_config->resolutionX, (long)m_config->resolutionY };
+            AdjustWindowRectEx(&realwindowsRect, (DWORD)GetWindowLong(m_config->m_hwnd, GWL_STYLE), GetMenu(m_config->m_hwnd) != nullptr, (DWORD)GetWindowLong(m_config->m_hwnd, GWL_EXSTYLE));
+            //(T=51,L=8,R=-8,B=-8)
+            windowsOffsetRect = RectMinus(drawerRect, realwindowsRect);
+
            int X = (GetSystemMetrics(SM_CXSCREEN) - m_config->resolutionX) / 2;
            int Y = (GetSystemMetrics(SM_CYSCREEN) - m_config->resolutionY) / 2;
-            MoveWindow(m_config->m_hwnd, X, Y, windowsRect.right - windowsRect.left, windowsRect.bottom - windowsRect.top, false);
+            MoveWindow(m_config->m_hwnd, X, Y, realwindowsRect.right - realwindowsRect.left, realwindowsRect.bottom - realwindowsRect.top, false);
+
 
             result = lpdd7->CreateClipper(0, &lpddClipper, nullptr);
             if (result != DD_OK)
@@ -188,10 +194,7 @@ namespace WindowDrawer {
             return false;
         }
 
-        if (drawerSurface == nullptr)
-        {
-            return false;
-        }
+        assert(drawerSurface != nullptr);
 
         if (KEYDOWN(VK_ESCAPE))
         {
@@ -201,25 +204,50 @@ namespace WindowDrawer {
 
         WindowSurface::DirectXDrawSurface* const directXDrawSurface = static_cast<WindowSurface::DirectXDrawSurface* const>(drawerSurface);
         
+        RECT dest_rect;
+        dest_rect.left = 0;
+        dest_rect.top = 0;
+        dest_rect.right = directXDrawSurface->GetWidth() ;
+        dest_rect.bottom = directXDrawSurface->GetHeight();
+
         HRESULT result;
 
         if (m_config->m_isFullScreen)
         {
             result = lpddsback->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
-            if (result != DD_OK)
-            {
-                return false;
-            }
+            assert(result == DD_OK);
 
             while (FAILED(lpddsprimary->Flip(nullptr, DDFLIP_WAIT)));
         }
         else
         {
-            result = lpddsprimary->Blt(nullptr, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
+            RECT windowInScreen;
+            GetWindowRect(m_config->m_hwnd, &windowInScreen);
+            //windowInScreen.top += MathLab::abs(windowsOffsetRect.top);
+            //windowInScreen.left += MathLab::abs(windowsOffsetRect.left);
+            //windowInScreen.bottom -= MathLab::abs(windowsOffsetRect.top);
+            //windowInScreen.right -= MathLab::abs(windowsOffsetRect.left);
+            windowInScreen = RectAdd(windowInScreen, windowsOffsetRect);
+
+            result = lpddsprimary->Blt(&windowInScreen, directXDrawSurface->GetDirectRawSurface(), nullptr, DDBLT_WAIT, nullptr);
+            assert(result == DD_OK);
+
+            DDSURFACEDESC2 ddsd;
+            //Lock the back buffer
+            memset(&ddsd, 0, sizeof(ddsd));
+            ddsd.dwSize = sizeof(ddsd);
+
+            if (FAILED(lpddsprimary->Lock(nullptr, &ddsd, DDLOCK_SURFACEMEMORYPTR | DDLOCK_WAIT, nullptr)))
+            {
+                return false;
+            }
+
+            result = lpddsprimary->Unlock(nullptr);
             if (result != DD_OK)
             {
                 return false;
             }
+           
         }
         /*
         DDSURFACEDESC2 ddsd;
@@ -318,6 +346,26 @@ namespace WindowDrawer {
 
 
         return true;
+    }
+
+    RECT RectAdd(const RECT& lhs, const RECT& rhs)
+    {
+        RECT result;
+        result.top = lhs.top + rhs.top;
+        result.left = lhs.left + rhs.left;
+        result.right = lhs.right + rhs.right;
+        result.bottom = lhs.bottom + rhs.bottom;
+        return result;
+    }
+
+    RECT RectMinus(const RECT& lhs, const RECT& rhs)
+    {
+        RECT result;
+        result.top = lhs.top - rhs.top;
+        result.left = lhs.left - rhs.left;
+        result.right = lhs.right - rhs.right;
+        result.bottom = lhs.bottom - rhs.bottom;
+        return result;
     }
 
 }

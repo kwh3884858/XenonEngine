@@ -31,7 +31,7 @@ namespace Primitive {
         void DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba = CrossPlatform::WHITE) const;
         unsigned int GetZbuffer(const Vector2i& pos)const;
         void SetZBuffer(const Vector2i& pos, unsigned int value);
-        void DrawLine(const Vector2i& lhs, const Vector2i& rhs)const;
+        void DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
 
     private:
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;

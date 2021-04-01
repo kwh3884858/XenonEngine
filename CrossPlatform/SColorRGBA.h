@@ -12,7 +12,7 @@ namespace CrossPlatform
 	{
 	public:
         SColorRGBA();
-		SColorRGBA(int r, int g, int b, int a = 255);
+		SColorRGBA(int b, int g, int r, int a = 255);
 		SColorRGBA(int rgba);
         SColorRGBA(const SColorRGBA& rhs);
 		~SColorRGBA();
@@ -32,5 +32,8 @@ namespace CrossPlatform
 		unsigned int value;
 	};
     const SColorRGBA WHITE(255, 255, 255, 255);
+    const SColorRGBA BLUE(255, 0, 0, 255);
+    const SColorRGBA GREEN(0, 255, 0, 255);
+    const SColorRGBA RED(0, 0, 255, 255);
 
 }

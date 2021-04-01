@@ -61,5 +61,9 @@ namespace WindowDrawer {
         LPDIRECTDRAWCLIPPER lpddClipper = nullptr;
 
         DirectXDrawDrawerConfig* m_config;
+        RECT windowsOffsetRect = { 0 };
     };
+
+    RECT RectAdd(const RECT& lhs, const RECT& rhs);
+    RECT RectMinus(const RECT& lhs, const RECT& rhs);
 }

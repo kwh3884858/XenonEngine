@@ -27,8 +27,8 @@ namespace WindowSurface {
 
 
         LPDIRECTDRAWSURFACE7 GetDirectRawSurface() { return surface; }
-        unsigned int GetWidth()const { return m_width; }
-        unsigned int GetHeight()const { return m_height; }
+        unsigned int GetWidth()const override { return m_width; }
+        unsigned int GetHeight()const override { return m_height; }
 
 
     private:

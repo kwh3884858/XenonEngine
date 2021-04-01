@@ -25,8 +25,8 @@ namespace WindowSurface {
         virtual void Unlock()override;
 
         SColorRGBA* GetBuffer() { return m_buffer; }
-        unsigned int GetWidth() { return m_width; }
-        unsigned int GetHeight() { return m_height; }
+        unsigned int GetWidth()const override { return m_width; }
+        unsigned int GetHeight()const override { return m_height; }
 
     private:
         const int UNINITIALUZE_VALUE = -1;
