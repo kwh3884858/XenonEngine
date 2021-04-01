@@ -6,6 +6,8 @@
 #pragma once
 namespace CrossPlatform
 {
+
+
 	class SColorRGBA
 	{
 	public:
@@ -20,13 +22,15 @@ namespace CrossPlatform
 		unsigned int ToRGBALittleEndian();
 		unsigned int ToRGBLittleEndian();
 
-        unsigned char GetR() { return static_cast<unsigned char>(0xff & value); }
-        unsigned char GetG() { return static_cast<unsigned char>(0xff & (value >> 8)); }
-        unsigned char GetB() { return static_cast<unsigned char>(0xff & (value >> 16)); }
-        unsigned char GetA() { return static_cast<unsigned char>(0xff & (value >> 24)); }
+        unsigned char GetR()const { return static_cast<unsigned char>(0xff & value); }
+        unsigned char GetG()const { return static_cast<unsigned char>(0xff & (value >> 8)); }
+        unsigned char GetB()const { return static_cast<unsigned char>(0xff & (value >> 16)); }
+        unsigned char GetA()const { return static_cast<unsigned char>(0xff & (value >> 24)); }
 
 	private:
 
 		unsigned int value;
 	};
+    const SColorRGBA WHITE(255, 255, 255, 255);
+
 }

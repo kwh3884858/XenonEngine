@@ -2,6 +2,7 @@
 
 #include "CrossPlatform/Primitive/Primitive2D.h"
 #include "CrossPlatform/Database.h"
+#include "CrossPlatform/SColorRGBA.h"
 
 #include "MathLab/Vector3f.h"
 #include "MathLab/MathLib.h"
@@ -10,16 +11,28 @@
 
 
 using MathLab::Vector3f;
+using CrossPlatform::Database;
 
 namespace Gameplay {
     using Primitive::Primitive2D;
 
     void GameplayMain()
     {
+        printf("/////////////Line///////////////");
         Primitive2D::get().DrawLine(Vector2i(10, 10), Vector2i(200, 500));
+        unsigned int width = Database::get().engineConfig.m_width;
+        unsigned int height = Database::get().engineConfig.m_height;
+        for (int i = 0 ;i < height; i++)
+        {
+            Primitive2D::get().DrawPixel(0, i);
+        }
+
         //Primitive2D::get().DrawLine(Vector2i(10, 10), Vector2i(500, 200));
         //Primitive2D::get().DrawLine(Vector2i(10, 50), Vector2i(500, 200));
         //Primitive2D::get().DrawLine(Vector2i(90, 90), Vector2i(700, 600));
+        
+        //printf("/////////////////Donut////////////////////");
+        //Donut();
     }
 
     void Donut()
@@ -88,21 +101,22 @@ namespace Gameplay {
                 }
                 float reciprocalOfZ = -1 / donutVertex.z;
 
-
+                unsigned int screenWidth = Database::get().engineConfig.m_width;
+                unsigned int screenHight = Database::get().engineConfig.m_height;
                 // Rasterized
                 if (Database::get().engineConfig.m_isPerspectiveProjection)
                 {
-                    screenX = (int)m_screenWidth / 2 + donutVertex.x * reciprocalOfZ * 100;
-                    screenY = (int)m_screenHight / 2 - donutVertex.y * reciprocalOfZ * 100;
+                    screenX = (int)screenWidth / 2 + donutVertex.x * reciprocalOfZ * 100;
+                    screenY = (int)screenHight / 2 - donutVertex.y * reciprocalOfZ * 100;
                 }
                 else {
-                    screenX = (int)donutVertex.x + m_screenWidth / 2;
-                    screenY = (int)-(donutVertex.y) + m_screenHight / 2;
+                    screenX = (int)donutVertex.x + screenWidth / 2;
+                    screenY = (int)-(donutVertex.y) + screenHight / 2;
                 }
 
                 // Z buffer
                 //float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
-                float curretZBuffer = static_cast<float>(Primitive2D::get().GetZbuffer(screenX, screenY));
+                float curretZBuffer = static_cast<float>(Primitive2D::get().GetZbuffer(Vector2i( screenX, screenY)));
 
                 if (curretZBuffer < reciprocalOfZ)
                 {
@@ -113,9 +127,8 @@ namespace Gameplay {
                         L *= 255; //scale up to 255
                         L += 20;
                         L = MathLab::clamp(L, 0.0f, 255.0f);
-                        Primitive2D::get().SetZBuffer( screenX, screenY, static_cast<unsigned int>(reciprocalOfZ));
+                        Primitive2D::get().SetZBuffer(Vector2i( screenX, screenY), static_cast<unsigned int>(reciprocalOfZ));
                         Primitive2D::get().DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
-
                     }
                 }
             }

@@ -7,12 +7,14 @@
 
 #include "MathLab/Vector2i.h"
 #include "CrossPlatform/ScaffoldSingleton.h"
+#include "CrossPlatform/SColorRGBA.h"
 
 namespace CrossPlatform {
     class IDrawerSurface;
 }
-
+using CrossPlatform::SColorRGBA;
 using MathLab::Vector2i;
+
 namespace Primitive {
 
     class Primitive2D:public CrossPlatform::ScaffoldSingleton<Primitive2D>
@@ -25,8 +27,8 @@ namespace Primitive {
 
         virtual bool shutdown() override ;
 
-        void DrawPixel(const Vector2i& pos)const;
-        void DrawPixel(unsigned int x, unsigned int y) const;
+        void DrawPixel(const Vector2i& pos,const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba = CrossPlatform::WHITE) const;
         unsigned int GetZbuffer(const Vector2i& pos)const;
         void SetZBuffer(const Vector2i& pos, unsigned int value);
         void DrawLine(const Vector2i& lhs, const Vector2i& rhs)const;

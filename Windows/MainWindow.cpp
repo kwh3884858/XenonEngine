@@ -2,7 +2,7 @@
 #include "DebugTool/DebugConsole.h"
 
 //#include "CrossPlatform/SColorRGBA.h"
-//#include "CrossPlatform/Primitive/Primitive2D.h"
+#include "CrossPlatform/Primitive/Primitive2D.h"
 #include "CrossPlatform/Database.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
@@ -18,8 +18,8 @@
 
 
 #include "Gameplay/GameplayMain.h"
-
-using MathLab::Vector3f;
+//
+//using MathLab::Vector3f;
 
 using WindowDrawer::WindowDGIDrawer;
 using WindowDrawer::WindowDGIDrawerConfig;
@@ -42,7 +42,7 @@ MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_screenWidth(Database::get().engineConfig.m_width)
 , m_screenHight(Database::get().engineConfig.m_height)
 //, m_isFullScreen(false)
-, m_perspectiveProjection(true)
+//, m_perspectiveProjection(true)
 {
 }
 
@@ -73,15 +73,16 @@ void MainWindow::Initialize()
     //int screenHight = 600;
     if (!this->Create(L"Main Windows",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
-        Database::get().engineConfig.m_isFullScreen ? (WS_POPUP) : (WS_OVERLAPPED | WS_POPUP),
+        Database::get().engineConfig.m_isFullScreen ? (WS_POPUP) : (/*WS_OVERLAPPED | WS_POPUP*/ WS_OVERLAPPEDWINDOW),
         m_screenWidth,
         m_screenHight,
         0,
         CW_USEDEFAULT,
         CW_USEDEFAULT,
         nullptr,
-        LoadMenu(mhInstance, MAKEINTRESOURCE(IDR_MAIN_MENU))
-    ))
+        LoadMenu(mhInstance, MAKEINTRESOURCE(IDR_MAIN_MENU)),
+        Database::get().engineConfig.m_isFullScreen)
+    )
     {
         m_debugConsole->RetrieveError(_T("MainWindow::Initialize"));
         //printf("Error Code: %d", GetLastError());
@@ -300,7 +301,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
         if (virtualCode == 0x50) //P
         {
-            m_perspectiveProjection = !m_perspectiveProjection;
+            Database::get().engineConfig.m_isPerspectiveProjection = !Database::get().engineConfig.m_isPerspectiveProjection;
         }
     }
     break;

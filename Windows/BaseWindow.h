@@ -44,7 +44,8 @@ public:
 		int X = CW_USEDEFAULT,
 		int Y = CW_USEDEFAULT,
 		HWND hWndParent = 0,
-		HMENU hMenu = 0
+		HMENU hMenu = 0,
+        bool isFullScreen = false
 	);
 	HWND GetHwnd()const { return mWnd; }
 
@@ -84,7 +85,8 @@ bool BaseWindow<T>::Create(
 	int X /*= CW_USEDEFAULT*/,
 	int Y /*= CW_USEDEFAULT*/,
 	HWND hWndParent /*= 0*/,
-	HMENU hMenu /*= 0*/)
+	HMENU hMenu, /*= 0*/
+    bool isFullScreen /*= false*/)
 {
     mStatusCode = Initializing;
 	DEVMODE dmScreenSetting;
@@ -120,7 +122,7 @@ bool BaseWindow<T>::Create(
 
 	//width = GetSystemMetrics(SM_CXSCREEN);
 	//height = GetSystemMetrics(SM_CYSCREEN);
-	if (BaseWindow::FULL_SCREEN)
+	if (isFullScreen)
 	{
 		//width = GetSystemMetrics(SM_CXSCREEN);
 		//height = GetSystemMetrics(SM_CYSCREEN);

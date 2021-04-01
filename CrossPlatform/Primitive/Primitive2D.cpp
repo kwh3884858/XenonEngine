@@ -1,12 +1,13 @@
-#include "CrossPlatform/Primitive/Primitive2D.h"
+﻿#include "CrossPlatform/Primitive/Primitive2D.h"
 #include "CrossPlatform/Interface/IDrawerSurface.h"
-#include "CrossPlatform/SColorRGBA.h"
+
 #include "MathLab/MathLib.h"
 
 #include <cstdio>
 
 using CrossPlatform::IDrawerSurface;
-using CrossPlatform::SColorRGBA;
+
+
 namespace Primitive
 {
 
@@ -22,20 +23,20 @@ namespace Primitive
         return true;
     }
 
-    void Primitive2D::DrawPixel(unsigned int x, unsigned int y)const
+    void Primitive2D::DrawPixel(const Vector2i& pos, const SColorRGBA& rgba) const
     {
-        m_drawerSurface->DrawPixel(x, y, SColorRGBA(50,50,0));
-        printf("(%u, %u)\n", x, y);
+        DrawPixel(pos.x, pos.y, rgba);
     }
 
-    void Primitive2D::DrawPixel(const Vector2i& pos)const
+    void Primitive2D::DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba) const
     {
-        DrawPixel(pos.x, pos.y);
+        m_drawerSurface->DrawPixel(x, y, rgba);
+        printf("(%u, %u) color: (%u, %u, %u, %u)\n", x, y, rgba.GetR(), rgba.GetG(), rgba.GetB(), rgba.GetA());
     }
 
     unsigned int Primitive2D::GetZbuffer(const Vector2i& pos) const
     {
-        m_zBuffer->GetPixel(pos.x, pos.y).ToRGBALittleEndian();
+        return m_zBuffer->GetPixel(pos.x, pos.y).ToRGBALittleEndian();
     }
 
     void Primitive2D::SetZBuffer(const Vector2i& pos, unsigned int value)

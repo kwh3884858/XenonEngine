@@ -8,12 +8,13 @@
 #include "CrossPlatform/ScaffoldSingleton.h"
 namespace CrossPlatform
 {
-    class Database :ScaffoldSingleton<Database>{
+    class Database :public ScaffoldSingleton<Database>{
     public:
         Database() {
             engineConfig.m_isFullScreen = false;
             engineConfig.m_width = 800;
             engineConfig.m_height = 600;
+            engineConfig.m_isPerspectiveProjection = true;
         }
 
         virtual bool initialize() override { return true; }
