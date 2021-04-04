@@ -2,7 +2,7 @@
 #include "DebugTool/DebugConsole.h"
 
 //#include "CrossPlatform/SColorRGBA.h"
-#include "CrossPlatform/Primitive/Primitive2D.h"
+
 #include "CrossPlatform/Database.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
@@ -16,8 +16,10 @@
 #include <TCHAR.H>
 #include <assert.h>
 
+#include "Engine/Primitive/Primitive2D.h"
+#include "Engine/GameplayMain.h"
 
-#include "Gameplay/GameplayMain.h"
+#include "Windows/File/FileReader.h"
 //
 //using MathLab::Vector3f;
 
@@ -136,7 +138,7 @@ void MainWindow::Initialize()
     }
 
     Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface, m_zBuffer);
-
+    FileReader fileReader = new FileReader;
 }
 
 void MainWindow::Shutdown()

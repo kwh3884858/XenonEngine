@@ -54,19 +54,22 @@
     <ClCompile Include="CrossPlatform\SColorRGB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CrossPlatform\Primitive\Primitive2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MathLab\Vector3f.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MathLab\Vector2i.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Gameplay\GameplayMain.cpp">
+    <ClCompile Include="Windows\File\FileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Windows\File\FileReader.cpp">
+    <ClCompile Include="Engine\GameplayMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Primitive\Primitive2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -131,13 +134,7 @@
     <ClInclude Include="MathLab\MathLabDefinition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Gameplay\GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Windows\WindowDrawer\DirectXDrawDrawer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Gameplay\GameplayMain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrossPlatform\Interface\DrawerType.h">
@@ -164,9 +161,6 @@
     <ClInclude Include="CrossPlatform\SColorRGB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CrossPlatform\Primitive\Primitive2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -186,6 +180,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrossPlatform\XenonSingleton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameplayMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\VirtualMachine\XenonCompiler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\VirtualMachine\XenonVirtualMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Primitive\Primitive2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\XenonManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\Interface\IFileReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
