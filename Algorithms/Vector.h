@@ -3,7 +3,7 @@
 
 //class Iterator;
 
-namespace XenonAlgorithm
+namespace Algorithm
 {
 	template<typename T>
 	class Vector
@@ -28,7 +28,9 @@ namespace XenonAlgorithm
 		//For Algorithm
 		bool Swap(const int lhs, const int rhs);
 		T* begin();
-		T* end();
+        const T* begin()const;
+        T* end();
+        const T* end()const;
 	private:
 		bool Initialize(int size);
 
@@ -44,21 +46,34 @@ namespace XenonAlgorithm
 
 	};
 
-	//template<typename T>
-	//T* SaintMathematics::Vector<T>::end()
-	//{
-	//	if (mCount == 0)
-	//	{
-	//		return nullptr;
-	//	}
-	//	return mContent[mCount - 1];
-	//}
 
-	//template<typename T>
-	//T* SaintMathematics::Vector<T>::begin()
-	//{
-	//	return mContent[0];
-	//}
+    template<typename T>
+    const T* Vector<T>::end()const
+    {
+        if (mCount == 0)
+        {
+            return nullptr;
+        }
+        return mContent[mCount - 1];
+    }
+
+    template<typename T>
+    T* Vector<T>::end()
+    {
+        return const_cast<T*>(static_cast<const Vector<T>&>(*this).end());
+    }
+
+    template<typename T>
+    const T* Vector<T>::begin()const
+    {
+        return mContent[0];
+    }
+
+    template<typename T>
+    T*  Vector<T>::begin()
+    {
+        return const_cast<T*>(static_cast<const Vector<T>&>(*this).begin());
+    }
 
 	//template<typename T>
 	//bool SaintMathematics::Vector<T>::Swap(const int lhs, const int rhs)

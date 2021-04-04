@@ -5,10 +5,10 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/EngineConfig.h"
-#include "CrossPlatform/ScaffoldSingleton.h"
+#include "CrossPlatform/XenonSingleton.h"
 namespace CrossPlatform
 {
-    class Database :public ScaffoldSingleton<Database>{
+    class Database :public XenonSingleton<Database>{
     public:
         Database() {
             engineConfig.m_isFullScreen = false;

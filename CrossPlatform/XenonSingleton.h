@@ -6,14 +6,14 @@ namespace CrossPlatform {
 
 
 	template<typename T>
-	class ScaffoldSingleton
+	class XenonSingleton
 	{
 	public:
 		//ScaffoldSingleton() 
-		ScaffoldSingleton(const ScaffoldSingleton&) = delete;
-		void operator=(const ScaffoldSingleton&) = delete;
+		XenonSingleton(const XenonSingleton&) = delete;
+		void operator=(const XenonSingleton&) = delete;
 
-		virtual ~ScaffoldSingleton() = default;
+		virtual ~XenonSingleton() = default;
 
 		//initilize function, take the place of constructor
 		virtual bool initialize() = 0;
@@ -36,7 +36,7 @@ namespace CrossPlatform {
 			return *gpSingleton;
 		}
 	protected:
-		ScaffoldSingleton() = default;
+		XenonSingleton() = default;
 	};
 
 }

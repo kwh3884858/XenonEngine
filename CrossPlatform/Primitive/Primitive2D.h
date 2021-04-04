@@ -6,7 +6,7 @@
 #pragma once
 
 #include "MathLab/Vector2i.h"
-#include "CrossPlatform/ScaffoldSingleton.h"
+#include "CrossPlatform/XenonSingleton.h"
 #include "CrossPlatform/SColorRGBA.h"
 
 namespace CrossPlatform {
@@ -17,7 +17,7 @@ using MathLab::Vector2i;
 
 namespace Primitive {
 
-    class Primitive2D:public CrossPlatform::ScaffoldSingleton<Primitive2D>
+    class Primitive2D:public CrossPlatform::XenonSingleton<Primitive2D>
     {
     public:
 

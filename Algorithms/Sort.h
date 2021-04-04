@@ -3,7 +3,7 @@
 #include <vector>
 
 
-namespace XenonAlgorithm
+namespace Algorithm
 {
 
 	template<typename T>
@@ -29,13 +29,13 @@ namespace XenonAlgorithm
 	};
 
 	template<typename T>
-	bool XenonAlgorithm::Sort<T>::Less(const T* lhs, const T* rhs) const
+	bool Algorithm::Sort<T>::Less(const T* lhs, const T* rhs) const
 	{
 		return *lhs < *rhs;
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Partition(const T* begin, int low, int high)const
+	void Algorithm::Sort<T>::Partition(const T* begin, int low, int high)const
 	{
 		int i = low;
 		int j = high + 1;
@@ -60,13 +60,13 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Quick()const
+	void Algorithm::Sort<T>::Quick()const
 	{
 
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::DownSortion(const T* begin, int low, int high)const
+	void Algorithm::Sort<T>::DownSortion(const T* begin, int low, int high)const
 	{
 		if (low >= high)
 		{
@@ -81,7 +81,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	int XenonAlgorithm::Sort<T>::Length(const T* begin, const T* end)const
+	int Algorithm::Sort<T>::Length(const T* begin, const T* end)const
 	{
 		int length = 0;
 		while (begin != end)
@@ -92,7 +92,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::DownUpSortion(const T* begin, const T* end)const
+	void Algorithm::Sort<T>::DownUpSortion(const T* begin, const T* end)const
 	{
 		int length = Length(begin, end);
 		for (int i = 1; i < length; i += i)
@@ -113,7 +113,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::UpDownSortion(const T* begin, const T* end)const
+	void Algorithm::Sort<T>::UpDownSortion(const T* begin, const T* end)const
 	{
 		int length = Length(begin, end);
 
@@ -121,7 +121,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Merge(const T* begin, int low, int middle, int high)const
+	void Algorithm::Sort<T>::Merge(const T* begin, int low, int middle, int high)const
 	{
 		vector<T*> tmp;
 		int i = low;
@@ -159,7 +159,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Shell(const T* begin, const T* end) const
+	void Algorithm::Sort<T>::Shell(const T* begin, const T* end) const
 	{
 		int length = 0;
 		int height = 0;
@@ -193,7 +193,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Insertion(const T* begin, const T* end) const
+	void Algorithm::Sort<T>::Insertion(const T* begin, const T* end) const
 	{
 		const T* iter = begin;
 		for (int i = 0; iter != end; iter++, i++)
@@ -214,7 +214,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Swap(const T* lhs, const T* rhs) const
+	void Algorithm::Sort<T>::Swap(const T* lhs, const T* rhs) const
 	{
 		T tmp = *lhs;
 		*lhs = *rhs;
@@ -222,7 +222,7 @@ namespace XenonAlgorithm
 	}
 
 	template<typename T>
-	void XenonAlgorithm::Sort<T>::Selection(const T* begin, const T* end) const
+	void Algorithm::Sort<T>::Selection(const T* begin, const T* end) const
 	{
 		for (; begin != end; begin++)
 		{

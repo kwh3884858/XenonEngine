@@ -1,6 +1,6 @@
 #pragma once
 
-namespace XenonAlgorithm
+namespace Algorithm
 {
 	class Iterator
 	{

@@ -3,7 +3,7 @@
 
 #include "Stack.h"
 
-namespace XenonAlgorithm
+namespace Algorithm
 {
 	template<typename Key, typename Value>
 	class Dictionary

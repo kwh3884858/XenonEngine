@@ -1,7 +1,7 @@
 #ifndef SAINTMATHEMATICS_STACK_H
 #define SAINTMATHEMATICS_STACK_H
 
-namespace XenonAlgorithm {
+namespace Algorithm {
 	template<typename T>
 	class Stack
 	{

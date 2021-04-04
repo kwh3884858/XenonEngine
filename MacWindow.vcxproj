@@ -23,6 +23,7 @@
     <ProjectGuid>{B897A81D-7AD4-490F-9148-8A184A42D8D3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <ProjectName>XenonEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -116,6 +117,7 @@
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
+    <ClCompile Include="Windows\File\FileReader.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
     <ClCompile Include="mathlab\MathLib.cpp" />
     <ClCompile Include="MathLab\Vector2i.cpp" />
@@ -137,7 +139,7 @@
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Primitive\Primitive2D.h" />
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h" />
-    <ClInclude Include="CrossPlatform\ScaffoldSingleton.h" />
+    <ClInclude Include="CrossPlatform\XenonSingleton.h" />
     <ClInclude Include="CrossPlatform\SColorRGBA.h" />
     <ClInclude Include="CrossPlatform\SColorRGB.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawer.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Vector3f.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
+    <ClInclude Include="Windows\File\FileReader.h" />
     <ClInclude Include="Windows\MainWindow.h" />
     <ClInclude Include="mathlab\MathLib.h" />
     <ClInclude Include="MathLab\Vector2i.h" />
