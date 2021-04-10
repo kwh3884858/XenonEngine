@@ -17,7 +17,7 @@ namespace Primitive
         m_zBuffer = zBuffer;
     }
 
-    bool Primitive2D::shutdown()
+    bool Primitive2D::Shutdown()
     {
         m_drawerSurface = nullptr;
         return true;

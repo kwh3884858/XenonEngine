@@ -5,7 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/XenonManager.h"
-namespace VirtualMachine
+namespace XenonEnigne
 {
 
     class XenonVirtualMachine:public CrossPlatform::XenonManager<XenonVirtualMachine>

@@ -5,6 +5,7 @@
 namespace CrossPlatform {
     class IDrawer;
     class IDrawerSurface;
+    class IFileReader;
 }
 
 namespace DebugTool {
@@ -39,7 +40,8 @@ private:
     CrossPlatform::IDrawer* m_windowDrawer;
     CrossPlatform::IDrawerSurface* m_directXDrawSurface;
     CrossPlatform::IDrawerSurface* m_zBuffer;
-    
+    CrossPlatform::IFileReader* m_fileReader;
+
     double m_timeInterval = 33.3333;  //30fps
     Timer::StoryTimer* m_timer;
     DWORD m_lastUpdateTiemstamp;

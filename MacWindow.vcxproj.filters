@@ -72,6 +72,15 @@
     <ClCompile Include="Engine\Primitive\Primitive2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\FileManager\FileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CrossPlatform\Polygon2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MathLab\Vertex3i.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -201,6 +210,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\FileManager\FileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\Polygon2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLab\Vertex3i.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

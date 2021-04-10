@@ -19,6 +19,7 @@
 #include "Engine/Primitive/Primitive2D.h"
 #include "Engine/GameplayMain.h"
 
+#include "Engine/FileManager/FileManager.h"
 #include "Windows/File/FileReader.h"
 //
 //using MathLab::Vector3f;
@@ -138,12 +139,18 @@ void MainWindow::Initialize()
     }
 
     Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface, m_zBuffer);
-    FileReader fileReader = new FileReader;
+
+    m_fileReader = new FileReader;
+    XenonEnigne::FileManager::get().SetFileReader(m_fileReader);
 }
 
 void MainWindow::Shutdown()
 {
-    Primitive::Primitive2D::get().shutdown();
+    XenonEnigne::FileManager::get().Shutdown();
+    Primitive::Primitive2D::get().Shutdown();
+
+    delete m_fileReader;
+    m_fileReader = nullptr;
 
     delete m_directXDrawSurface;
     m_directXDrawSurface = nullptr;

@@ -25,7 +25,7 @@ namespace Primitive {
         void SetConfig(CrossPlatform::IDrawerSurface*const drawerSurface,
             CrossPlatform::IDrawerSurface*const zBuffer);
 
-        virtual bool shutdown() override ;
+        virtual bool Shutdown() override ;
 
         void DrawPixel(const Vector2i& pos,const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba = CrossPlatform::WHITE) const;

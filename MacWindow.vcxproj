@@ -110,6 +110,8 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
+    <ClCompile Include="Engine\FileManager\FileManager.cpp" />
     <ClCompile Include="Engine\Primitive\Primitive2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
@@ -117,6 +119,7 @@
     <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
+    <ClCompile Include="MathLab\Vertex3i.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
@@ -139,7 +142,9 @@
     <ClInclude Include="CrossPlatform\Database.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
+    <ClInclude Include="CrossPlatform\Polygon2D.h" />
     <ClInclude Include="CrossPlatform\XenonManager.h" />
+    <ClInclude Include="Engine\FileManager\FileManager.h" />
     <ClInclude Include="Engine\Primitive\Primitive2D.h" />
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h" />
     <ClInclude Include="CrossPlatform\XenonSingleton.h" />
@@ -160,6 +165,7 @@
     <ClInclude Include="MathLab\MathLabDefinition.h" />
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Vector3f.h" />
+    <ClInclude Include="MathLab\Vertex3i.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
     <ClInclude Include="Windows\MainWindow.h" />

@@ -15,10 +15,10 @@ namespace CrossPlatform {
         virtual ~XenonManager() override = default;
 
         //initilize function, take the place of constructor
-        virtual bool initialize() = 0;
+        virtual bool Initialize() = 0;
 
         //destroy function, take the  place of deconstructor
-        virtual bool shutdown() = 0;
+        virtual bool Shutdown() = 0;
 
         protected:
             XenonManager() = default;

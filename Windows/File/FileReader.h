@@ -4,13 +4,13 @@
 //  Created by whkong on 2021-4-4.
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
-
+#include "CrossPlatform/Interface/IFileReader.h"
 
 namespace File
 {
-    class FileReader 
+    class FileReader : public CrossPlatform::IFileReader
     {
     public:
-        void ReadFile(const char* const fileName, char** file);
+        virtual void ReadFile override(const char* const fileName, char** file);
     };
 }
