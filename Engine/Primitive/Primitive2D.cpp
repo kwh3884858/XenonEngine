@@ -104,4 +104,22 @@ namespace Primitive
             }
         }
     }
+
+    void Primitive2D::Drawline(const Vertex2Di& lhs, const Vertex2Di&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    {
+        DrawLine(Vector2i(lhs.x, lhs.y), Vector2i(rhs.x, rhs.y), rgba);
+    }
+
+    void Primitive2D::DrawPolygon(const Polygon2D& polygon2D) const
+    {
+        if (polygon2D.m_state == Polygon2D::EState::Enable)
+        {
+            int index;
+            for (index = 0; index < polygon2D.m_numberOfVertex -1; index ++)
+            {
+                DrawLine(polygon2D)
+            }
+        }
+    }
+
 }

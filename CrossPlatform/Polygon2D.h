@@ -1,6 +1,11 @@
+//  Polygon2D.h
+//  XenonEngine
+//
+//  Created by whkong on 2021-4-11.
+//  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 
-#include "MathLab/Vector3f.h"
+#include "MathLab/Vector2i.h"
 #include "CrossPlatform/SColorRGBA.h"
 namespace CrossPlatform {
     class Vertex2Df
@@ -17,7 +22,7 @@ namespace CrossPlatform {
         int y = 0;
     };
 
-    class Polygon2D
+    class Polygon2D 
     {
 
     public:
@@ -30,8 +35,8 @@ namespace CrossPlatform {
         ~Polygon2D();
 
         EState m_state = EState::Enable;
-        Vertex2Df m_position;
-        Vertex2Df m_velocity;
+        Vector2i m_position;
+        Vector2i m_velocity;
         SColorRGBA m_color;
         int m_numberOfVertex;
         Vertex2Df* m_vertexList;

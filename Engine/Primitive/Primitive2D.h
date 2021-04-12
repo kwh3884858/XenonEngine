@@ -8,12 +8,14 @@
 #include "MathLab/Vector2i.h"
 #include "CrossPlatform/XenonManager.h"
 #include "CrossPlatform/SColorRGBA.h"
+#include "CrossPlatform/Polygon2D.h"
 
 namespace CrossPlatform {
     class IDrawerSurface;
 }
 using CrossPlatform::SColorRGBA;
 using MathLab::Vector2i;
+using CrossPlatform::Polygon2D;
 
 namespace Primitive {
 
@@ -32,6 +34,8 @@ namespace Primitive {
         unsigned int GetZbuffer(const Vector2i& pos)const;
         void SetZBuffer(const Vector2i& pos, unsigned int value);
         void DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void Drawline(const Vertex2Di& lhs, const Vertex2Di&rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawPolygon(const Polygon2D& polygon2D)const;
 
     private:
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
