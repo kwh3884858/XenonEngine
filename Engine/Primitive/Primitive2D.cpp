@@ -2,11 +2,11 @@
 #include "CrossPlatform/Interface/IDrawerSurface.h"
 
 #include "MathLab/MathLib.h"
-
+#include "MathLab/Vector2f.h"
 #include <cstdio>
 
 using CrossPlatform::IDrawerSurface;
-
+using MathLab::Vector2f;
 
 namespace Primitive
 {
@@ -105,9 +105,14 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::Drawline(const Vertex2Di& lhs, const Vertex2Di&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    //void Primitive2D::Drawline(const Vertex2Di& lhs, const Vertex2Di&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    //{
+    //    DrawLine(Vector2i(lhs.x, lhs.y), Vector2i(rhs.x, rhs.y), rgba);
+    //}
+
+    void Primitive2D::Drawline(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
-        DrawLine(Vector2i(lhs.x, lhs.y), Vector2i(rhs.x, rhs.y), rgba);
+        DrawLine(Vector2i((int)lhs.x, (int)lhs.y), Vector2i((int)rhs.x, (int)rhs.y), rgba);
     }
 
     void Primitive2D::DrawPolygon(const Polygon2D& polygon2D) const
@@ -117,8 +122,25 @@ namespace Primitive
             int index;
             for (index = 0; index < polygon2D.m_numberOfVertex -1; index ++)
             {
-                DrawLine(polygon2D)
+                DrawLine(polygon2D.m_position + polygon2D.m_numberOfVertex[i],
+                    polygon2D.m_position + polygon2D.m_numberOfVertex[i + !],
+                    polygon2D.m_color);
             }
+            DrawLine(polygon2D.m_position + polygon2D.m_numberOfVertex[polygon2D.m_numberOfVertex - 1],
+                polygon2D.m_position + polygon2D.m_numberOfVertex[0],
+                polygon2D.m_color);
+        }
+    }
+
+    void Primitive2D::DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2) const
+    {
+        if (p0.y == p1.y) 
+        {
+
+        }
+        if (p0.y == p2.y)
+        {
+
         }
     }
 

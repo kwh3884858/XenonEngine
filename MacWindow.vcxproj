@@ -163,6 +163,7 @@
     <ClInclude Include="macos\ViewController.h" />
     <ClInclude Include="MathLab\MathLabDefinition.h" />
     <ClInclude Include="MathLab\Matrix3.h" />
+    <ClInclude Include="MathLab\Vector2f.h" />
     <ClInclude Include="MathLab\Vector3f.h" />
     <ClInclude Include="MathLab\Vertex3i.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />

@@ -218,6 +218,9 @@
     <ClInclude Include="MathLab\Vertex3i.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MathLab\Vector2f.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
