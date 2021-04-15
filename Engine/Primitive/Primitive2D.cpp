@@ -5,6 +5,8 @@
 #include "MathLab/Vector2f.h"
 #include <cstdio>
 
+#include <assert.h>
+
 using CrossPlatform::IDrawerSurface;
 using MathLab::Vector2f;
 
@@ -134,14 +136,47 @@ namespace Primitive
 
     void Primitive2D::DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2) const
     {
-        if (p0.y == p1.y) 
+        if ((p0.x == p1.x && p1.x == p2.x) || (p0.y == p1.y && p1.y==p2.y))
+        {
+            return;
+        }
+
+        if (p0.y>p1.y)
+        {
+            SwapVector(p0, p1);
+        }
+
+        if (p0.y > p2.y)
+        {
+            SwapVector(p0, p2);
+        }
+
+        if (p1.y>p2.y)
+        {
+            SwapVector(p1, p2);
+        }
+
+        if (p0.y ==p1.y)
         {
 
         }
-        if (p0.y == p2.y)
+        else if (p1.y==p2.y)
+        {
+        }
+        else
         {
 
         }
+    }
+
+    void Primitive2D::DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2) const
+    {
+
+    }
+
+    void Primitive2D::DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2) const
+    {
+
     }
 
 }

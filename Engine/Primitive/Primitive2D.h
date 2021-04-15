@@ -41,7 +41,8 @@ namespace Primitive {
         void DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2)const;
 
     private:
-        void DrawFlatTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2)const;
+        void DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2)const;
+        void DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2)const;
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
