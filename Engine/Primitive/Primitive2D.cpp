@@ -156,12 +156,28 @@ namespace Primitive
             SwapVector(p1, p2);
         }
 
-        if (p0.y ==p1.y)
+        if (p0.y == p1.y)
         {
-
+            //verse clockwise
+            if (p0.x > p1.x)
+            {
+                DrawTopTriangle(p2, p0, p1);
+            }
+            else
+            {
+                DrawTopTriangle(p2, p1, p0);
+            }
         }
-        else if (p1.y==p2.y)
+        else if (p1.y == p2.y)
         {
+            if (p1.x > p2.x)
+            {
+                DrawTopTriangle(p0, p2, p1);
+            }
+            else
+            {
+                DrawTopTriangle(p0, p1, p2);
+            }
         }
         else
         {
