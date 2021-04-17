@@ -190,7 +190,24 @@ namespace Primitive
 
     void Primitive2D::DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
+        Vector2f rightDelta = buttom - p2;
+        Vector2f rightIndex = buttom;
+        Vector2f rightStep;
+        rightStep.x = rightDelta.x > 0 ? 1 : -1;
+        rightStep.y = rightStep.x * (rightDelta.y / rightDelta.x);
 
+        Vector2f leftDelta = buttom - p1;
+        Vector2f leftIndex = buttom;
+        Vector2f leftStep;
+        leftStep.x = leftDelta.x > 0 ? 1 : -1;
+        leftStep.y = leftStep.x * (leftDelta.y / leftDelta.x);
+
+        while (leftIndex.y < p1.y)
+        {
+            DrawLine(leftIndex, rightIndex, rgba);
+            leftIndex += rightStep;
+            rightIndex += rightStep;
+        }
     }
 
     void Primitive2D::DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
@@ -210,7 +227,7 @@ namespace Primitive
         while (leftIndex.y > p1.y)
         {
             DrawLine(leftIndex, rightIndex, rgba);
-            leftDelta += rightStep;
+            leftIndex += rightStep;
             rightIndex += rightStep;
         }
     }
