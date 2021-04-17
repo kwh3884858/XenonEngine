@@ -36,13 +36,13 @@ namespace Primitive {
         unsigned int GetZbuffer(const Vector2i& pos)const;
         void SetZBuffer(const Vector2i& pos, unsigned int value);
         void DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void Drawline(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPolygon(const Polygon2D& polygon2D)const;
-        void DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2)const;
+        void DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
 
     private:
-        void DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2)const;
-        void DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2)const;
+        void DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;

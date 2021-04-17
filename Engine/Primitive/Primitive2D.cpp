@@ -112,7 +112,7 @@ namespace Primitive
     //    DrawLine(Vector2i(lhs.x, lhs.y), Vector2i(rhs.x, rhs.y), rgba);
     //}
 
-    void Primitive2D::Drawline(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Primitive2D::DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         DrawLine(Vector2i((int)lhs.x, (int)lhs.y), Vector2i((int)rhs.x, (int)rhs.y), rgba);
     }
@@ -134,13 +134,13 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2) const
+    void Primitive2D::DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         if ((p0.x == p1.x && p1.x == p2.x) || (p0.y == p1.y && p1.y==p2.y))
         {
             return;
         }
-
+        // p0 < p1 < p2 (y-axis)
         if (p0.y>p1.y)
         {
             SwapVector(p0, p1);
@@ -161,38 +161,58 @@ namespace Primitive
             //verse clockwise
             if (p0.x > p1.x)
             {
-                DrawTopTriangle(p2, p0, p1);
+                DrawTopTriangle(p2, p0, p1, rgba);
             }
             else
             {
-                DrawTopTriangle(p2, p1, p0);
+                DrawTopTriangle(p2, p1, p0, rgba);
             }
         }
         else if (p1.y == p2.y)
         {
             if (p1.x > p2.x)
             {
-                DrawTopTriangle(p0, p2, p1);
+                DrawButtomTriangle(p0, p2, p1, rgba);
             }
             else
             {
-                DrawTopTriangle(p0, p1, p2);
+                DrawButtomTriangle(p0, p1, p2, rgba);
             }
         }
         else
         {
-
+            Vector2f middlePoint = p1;
+            middlePoint.y = (p1.y - p2.y) / (p0.y - p2.y) * p0.x - p2.x + p2.x;
+            DrawTopTriangle(p2, middlePoint, p1);
+            DrawButtomTriangle(p0, middlePoint, p1);
         }
     }
 
-    void Primitive2D::DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2) const
+    void Primitive2D::DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
 
     }
 
-    void Primitive2D::DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2) const
+    void Primitive2D::DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
+        Vector2f rightDelta = p1 - top;
+        Vector2f rightIndex = top;
+        Vector2f rightStep;
+        rightStep.x = rightDelta.x > 0 ? 1 : -1;
+        rightStep.y = rightStep.x * ( rightDelta.y / rightDelta.x );
+ 
+        Vector2f leftDelta = p2 - top;
+        Vector2f leftIndex = top;
+        Vector2f leftStep;
+        leftStep.x = leftDelta.x > 0 ? 1 : -1;
+        leftStep.y = leftStep.x * (leftDelta.y / leftDelta.x);
 
+        while (leftIndex.y > p1.y)
+        {
+            DrawLine(leftIndex, rightIndex, rgba);
+            leftDelta += rightStep;
+            rightIndex += rightStep;
+        }
     }
 
 }
