@@ -1,6 +1,6 @@
 #include "Engine/GameplayMain.h"
 
-#include "CrossPlatform/Primitive/Primitive2D.h"
+#include "Engine/Primitive/Primitive2D.h"
 #include "CrossPlatform/Database.h"
 #include "CrossPlatform/SColorRGBA.h"
 

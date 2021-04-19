@@ -11,7 +11,7 @@ namespace XenonEnigne {
     class FileManager : public CrossPlatform::XenonManager<FileManager>
     {
     public:
-        virtual bool initialize() override { return true; }
+        virtual bool Initialize() override { return true; }
         void SetFileReader(CrossPlatform::IFileReader*const fileReader);
 
         virtual bool Shutdown() override;

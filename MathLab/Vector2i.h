@@ -5,9 +5,7 @@
 //  Created by 威化饼干 on 8/11/2018.
 //  Copyright © 2018 威化饼干. All rights reserved.
 //
-
-#ifndef VectorStruct_h
-#define VectorStruct_h
+#pragma once
 
 #include <stdio.h>
 namespace MathLab{
@@ -41,4 +39,3 @@ void SwapVector(Vector2i* vectorA, Vector2i* vectorB);
 bool LessY(const Vector2i& origin, const Vector2i& compare);
 void Exchange(Vector2i*const a, Vector2i*const b);
 }
-#endif /* VectorStruct_h */

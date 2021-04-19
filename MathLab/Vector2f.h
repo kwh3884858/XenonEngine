@@ -1,4 +1,4 @@
-//  Vector2f.h
+//  Vector2.h
 //  XenonEngine
 //
 //  Created by whkong on 2021-4-14.
@@ -10,7 +10,23 @@
 
 //#include <stdio.h>
 namespace MathLab {
-    typedef Vector2<float> Vector2f;
+
+    template<typename T>
+    struct Vector2;
+
+    template<typename T>
+    Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2);
+    template<typename T>
+    Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2);
+
+    template<typename T>
+    void SwapVector(Vector2<T>* vectorA, Vector2<T>* vectorB);
+    template<typename T>
+    void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB);
+    template<typename T>
+    bool LessY(const Vector2<T>& origin, const Vector2<T>& compare);
+    template<typename T>
+    void Exchange(Vector2<T>*const a, Vector2<T>*const b);
 
     template<typename T>
     struct Vector2 final {
@@ -18,12 +34,14 @@ namespace MathLab {
         T y;
 
     public:
-        friend void SwapVector(Vector2* vectorA, Vector2* vectorB);
-        friend bool LessY(const Vector2& origin, const Vector2& compare);
-        friend void Exchange(Vector2*const a, Vector2*const b);
+        friend void SwapVector<T>(Vector2<T>* vectorA, Vector2<T>* vectorB);
+        friend void SwapVector<T>(Vector2<T>& vectorA, Vector2<T>& vectorB);
+        friend bool LessY<T>(const Vector2<T>& origin, const Vector2<T>& compare);
+        friend void Exchange<T>(Vector2<T>*const a, Vector2<T>*const b);
+        friend Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2);
+        friend Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2);
 
-        friend Vector2 operator+(const Vector2& v1, const Vector2& v2);
-        friend Vector2 operator-(const Vector2& v1, const Vector2& v2);
+        Vector2& operator=(const Vector2& value);
 
         Vector2();
         Vector2(T ax, T ay);
@@ -33,19 +51,6 @@ namespace MathLab {
         void Swap();
     };
 
-
-    template<typename T>
-    Vector2 operator+(const Vector2& v1, const Vector2& v2);
-    template<typename T>
-    Vector2 operator-(const Vector2& v1, const Vector2& v2);
-
-    template<typename T>
-    void SwapVector(Vector2* vectorA, Vector2* vectorB);
-    template<typename T>
-    bool LessY(const Vector2& origin, const Vector2& compare);
-    template<typename T>
-    void Exchange(Vector2*const a, Vector2*const b);
-
     template<typename T>
     Vector2<T>::Vector2() {
         x = 0;
@@ -53,7 +58,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector2<T>::Vector2(int ax, int ay) {
+    Vector2<T>::Vector2(T ax, T ay) {
         x = ax;
         y = ay;
     }
@@ -70,14 +75,26 @@ namespace MathLab {
     }
 
     template<typename T>
+    Vector2<T>& Vector2<T>::operator=(const Vector2& value)
+    {
+        if (this == &value)
+        {
+            return *this;
+        }
+        this->x = value.x;
+        this->y = value.y;
+        return *this;
+    }
+
+    template<typename T>
     void Vector2<T>::Swap() {
-        int temp = x;
+        T temp = x;
         x = y;
         y = temp;
     }
 
     template<typename T>
-    Vector2 operator+(const Vector2& v1, const Vector2& v2) {
+    Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2) {
         Vector2 vector;
         vector.x = v1.x + v2.x;
         vector.y = v1.y + v2.y;
@@ -85,16 +102,16 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector2 operator-(const Vector2& v1, const Vector2& v2) {
-        Vector2 vector;
+    Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2) {
+        Vector2<T> vector;
         vector.x = v1.x - v2.x;
         vector.y = v1.y - v2.y;
         return  vector;
     }
 
     template<typename T>
-    void SwapVector(Vector2* vectorA, Vector2* vectorB) {
-        Vector2 temp = *vectorA;
+    void SwapVector(Vector2<T>* vectorA, Vector2<T>* vectorB) {
+        Vector2<T> temp = *vectorA;
         vectorA->x = vectorB->x;
         vectorA->y = vectorB->y;
 
@@ -103,18 +120,33 @@ namespace MathLab {
     }
 
     template<typename T>
-    bool LessY(const Vector2& origin, const Vector2& compare) {
+    void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB)
+    {
+        Vector2<T> temp (vectorA);
+        vectorA->x = vectorB->x;
+        vectorA->y = vectorB->y;
+
+        vectorB->x = temp.x;
+        vectorB->y = temp.y;
+    }
+
+    template<typename T>
+    bool LessY(const Vector2<T>& origin, const Vector2<T>& compare) {
         return origin.y < compare.y;
     }
 
     template<typename T>
-    void Exchange(Vector2*const a, Vector2*const b) {
-        Vector2 temp = *a;
+    void Exchange(Vector2<T>*const a, Vector2<T>*const b) {
+        Vector2<T> temp = *a;
         a->x = b->x;
         a->y = b->y;
         b->x = temp.x;
         b->y = temp.y;
     }
+
+    typedef Vector2<float> Vector2f;
+
+    MathLab::Vector2f m_position;
 
 }
 #endif /* VectorStruct_h */

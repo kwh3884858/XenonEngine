@@ -12,7 +12,7 @@ namespace XenonEnigne
     {
     public:
         virtual bool Initialize()override;
-        virtual bool shutdown()override;
+        virtual bool Shutdown()override;
     private:
 
     };

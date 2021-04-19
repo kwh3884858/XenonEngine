@@ -6,6 +6,7 @@
 //  Created by 威化饼干 on 11/11/2018.
 //  Copyright © 2018 威化饼干. All rights reserved.
 //
+#pragma once
 
 #ifndef ViewStruct_h
 #define ViewStruct_h

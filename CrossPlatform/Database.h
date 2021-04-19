@@ -17,10 +17,10 @@ namespace CrossPlatform
             engineConfig.m_isPerspectiveProjection = true;
         }
 
-        virtual bool initialize() override { return true; }
+        virtual bool Initialize() override { return true; }
 
         //destroy function, take the  place of deconstructor
-        virtual bool shutdown() override { return true; }
+        virtual bool Shutdown() override { return true; }
 
         EngineConfig engineConfig;
     };

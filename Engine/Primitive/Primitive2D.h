@@ -25,7 +25,7 @@ namespace Primitive {
     {
     public:
 
-        virtual bool initialize() override { return true; }
+        virtual bool Initialize() override { return true; }
         void SetConfig(CrossPlatform::IDrawerSurface*const drawerSurface,
             CrossPlatform::IDrawerSurface*const zBuffer);
 
@@ -37,6 +37,7 @@ namespace Primitive {
         void SetZBuffer(const Vector2i& pos, unsigned int value);
         void DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        //void DrawLine(const Vector2f* lhs, const Vector2f*rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPolygon(const Polygon2D& polygon2D)const;
         void DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
 

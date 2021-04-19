@@ -4,12 +4,12 @@
 namespace XenonEnigne
 {
 
-    VirtualMachine::XenonVirtualMachine()
+    XenonVirtualMachine::XenonVirtualMachine()
     {
 
     }
 
-    VirtualMachine::~XenonVirtualMachine()
+    XenonVirtualMachine::~XenonVirtualMachine()
     {
 
     }
@@ -19,7 +19,7 @@ namespace XenonEnigne
 
     }
 
-    bool XenonVirtualMachine::shutdown()
+    bool XenonVirtualMachine::Shutdown()
     {
 
     }
