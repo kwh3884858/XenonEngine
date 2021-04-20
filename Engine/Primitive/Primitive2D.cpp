@@ -9,6 +9,8 @@
 
 using CrossPlatform::IDrawerSurface;
 using MathLab::Vector2f;
+//using MathLab::operator+;
+//using MathLab::operator-;
 
 namespace Primitive
 {
@@ -129,17 +131,17 @@ namespace Primitive
             int index;
             for (index = 0; index < polygon2D.m_numberOfVertex -1; index ++)
             {
-                DrawLine(polygon2D.m_position + *(polygon2D.m_numberOfVertex[index]),
-                    polygon2D.m_position + *(polygon2D.m_numberOfVertex[index + 1]),
+                DrawLine(polygon2D.m_position + polygon2D.m_vertexList[index],
+                    polygon2D.m_position + polygon2D.m_vertexList[index + 1],
                     polygon2D.m_color);
             }
-            DrawLine(polygon2D.m_position + *(polygon2D.m_numberOfVertex[polygon2D.m_numberOfVertex - 1]),
-                polygon2D.m_position + *(polygon2D.m_numberOfVertex[0]),
+            DrawLine(polygon2D.m_position + polygon2D.m_vertexList[polygon2D.m_numberOfVertex - 1],
+                polygon2D.m_position + polygon2D.m_vertexList[0],
                 polygon2D.m_color);
         }
     }
 
-    void Primitive2D::DrawTriangle(const Vector2f& p0, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Primitive2D::DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         if ((p0.x == p1.x && p1.x == p2.x) || (p0.y == p1.y && p1.y==p2.y))
         {
@@ -148,17 +150,17 @@ namespace Primitive
         // p0 < p1 < p2 (y-axis)
         if (p0.y>p1.y)
         {
-            SwapVector<float>(p0, p1);
+            MathLab::SwapVector(p0, p1);
         }
 
         if (p0.y > p2.y)
         {
-            SwapVector<float>(p0, p2);
+            MathLab::SwapVector(p0, p2);
         }
 
         if (p1.y>p2.y)
         {
-            SwapVector<float>(p1, p2);
+            MathLab::SwapVector(p1, p2);
         }
 
         if (p0.y == p1.y)
@@ -193,7 +195,7 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::DrawButtomTriangle(const Vector2f& buttom, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Primitive2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         Vector2f rightDelta = buttom - p2;
         Vector2f rightIndex = buttom;
@@ -215,7 +217,7 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::DrawTopTriangle(const Vector2f& top, const Vector2f& p1, const Vector2f& p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Primitive2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
@@ -236,5 +238,4 @@ namespace Primitive
             rightIndex += rightStep;
         }
     }
-
 }

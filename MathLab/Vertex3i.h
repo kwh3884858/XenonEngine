@@ -19,7 +19,7 @@ namespace MathLab {
     public:
         friend void SwapVector(Vector3* vectorA, Vector3* vectorB);
         friend bool LessY(const Vector3& origin, const Vector3& compare);
-        friend void Exchange(Vector3*const a, Vector3*const b);
+        //friend void Exchange(Vector3*const a, Vector3*const b);
 
         friend Vector3 operator+(const Vector3& v1, const Vector3& v2);
         friend Vector3 operator-(const Vector3& v1, const Vector3& v2);
@@ -47,8 +47,8 @@ namespace MathLab {
     void SwapVector(Vector3* vectorA, Vector3* vectorB);
     template<typename T>
     bool LessY(const Vector3& origin, const Vector3& compare);
-    template<typename T>
-    void Exchange(Vector3*const a, Vector3*const b);
+    //template<typename T>
+    //void Exchange(Vector3*const a, Vector3*const b);
 
     template<typename T>
     Vector3<T>::Vector3() :
@@ -143,15 +143,15 @@ namespace MathLab {
         return origin.y < compare.y;
     }
 
-    template<typename T>
-    void Exchange(Vector3*const a, Vector3*const b) {
-        Vector3 temp = *a;
-        a->x = b->x;
-        a->y = b->y;
-        a->z = b->z;
-        b->x = temp.x;
-        b->y = temp.y;
-        b->z = temp.z;
-    }
+    //template<typename T>
+    //void Exchange(Vector3*const a, Vector3*const b) {
+    //    Vector3 temp = *a;
+    //    a->x = b->x;
+    //    a->y = b->y;
+    //    a->z = b->z;
+    //    b->x = temp.x;
+    //    b->y = temp.y;
+    //    b->z = temp.z;
+    //}
 
 }

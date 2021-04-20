@@ -2,13 +2,14 @@
 #include "Algorithms/Vector.h"
 
 #include <fstream>
+#include <iostream> // For std::cerr
 #include <assert.h>
 
 namespace File
 {
     using Algorithm::Vector;
 
-    void FileReader::ReadFile(const char* const fileName, char** file)
+    bool FileReader::ReadFile(const char* const fileName, char** file)const
     {
         std::ifstream fins;
 
@@ -23,11 +24,11 @@ namespace File
         assert(*file != nullptr);
 
         fins.open(fileName);
+        assert(fins.peek() != EOF);
         if (fins.peek() == EOF) {
 
             std::cerr << "Error: File is empty.";
             return false;
-
         }
         // If it could not open the file then exit.
         if (!fins.fail())
@@ -37,7 +38,7 @@ namespace File
             {
                 //fins >> tcontent[i++];
                 fins >> charBuffer;
-                contentBuffer.add(charBuffer);
+                contentBuffer.Add(charBuffer);
             }
             fins.close();
         }
@@ -48,13 +49,13 @@ namespace File
         }
         fins.close();
 
-        char* content = new char[contentBuffer.size()];
-        memcpy_s(content, contentBuffer.size(), contentBuffer.begin(), contentBuffer.size());
+        char* content = new char[contentBuffer.Count()];
+        memcpy_s(content, contentBuffer.Count(), contentBuffer.begin(), contentBuffer.Count());
 
         // The last character will push twish, because EOF will not make different with
         //original character, so we should set the last one to terminal character to
         //finish the sentense
-        content[contentBuffer.size() - 1] = '\0';
+        content[contentBuffer.Count() - 1] = '\0';
 
         *file = content;
 
@@ -62,3 +63,4 @@ namespace File
     }
 
 }
+

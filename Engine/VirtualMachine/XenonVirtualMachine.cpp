@@ -4,24 +4,5 @@
 namespace XenonEnigne
 {
 
-    XenonVirtualMachine::XenonVirtualMachine()
-    {
-
-    }
-
-    XenonVirtualMachine::~XenonVirtualMachine()
-    {
-
-    }
-
-    bool XenonVirtualMachine::Initialize()
-    {
-
-    }
-
-    bool XenonVirtualMachine::Shutdown()
-    {
-
-    }
 
 }

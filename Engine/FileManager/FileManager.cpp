@@ -9,6 +9,7 @@ namespace XenonEnigne {
     bool FileManager::Shutdown()
     {
         m_fileReader = nullptr;
+        return true;
     }
 
     void FileManager::ReadFile(const char* const fileName, char** file)

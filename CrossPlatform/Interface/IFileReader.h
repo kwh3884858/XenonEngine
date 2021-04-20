@@ -11,6 +11,6 @@ namespace CrossPlatform {
     public:
         virtual ~IFileReader() {}
 
-        virtual void ReadFile(const char* const fileName, char** file) = 0;
+        virtual bool ReadFile(const char* const fileName, char** file)const = 0;
     };
 }

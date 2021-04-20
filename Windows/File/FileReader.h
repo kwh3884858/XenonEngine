@@ -11,6 +11,6 @@ namespace File
     class FileReader : public CrossPlatform::IFileReader
     {
     public:
-        virtual void ReadFile override(const char* const fileName, char** file);
+        virtual bool ReadFile (const char* const fileName, char** file)const override;
     };
 }

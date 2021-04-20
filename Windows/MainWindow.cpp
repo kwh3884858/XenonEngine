@@ -140,7 +140,7 @@ void MainWindow::Initialize()
 
     Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface, m_zBuffer);
 
-    m_fileReader = new FileReader;
+    m_fileReader = new File::FileReader;
     XenonEnigne::FileManager::get().SetFileReader(m_fileReader);
 }
 

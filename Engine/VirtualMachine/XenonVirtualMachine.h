@@ -11,8 +11,8 @@ namespace XenonEnigne
     class XenonVirtualMachine:public CrossPlatform::XenonManager<XenonVirtualMachine>
     {
     public:
-        virtual bool Initialize()override;
-        virtual bool Shutdown()override;
+        virtual bool Initialize()override { return true; }
+        virtual bool Shutdown()override { return true; }
     private:
 
     };

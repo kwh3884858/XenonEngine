@@ -54,7 +54,7 @@ namespace Algorithm
         {
             return nullptr;
         }
-        return mContent[mCount - 1];
+        return &(mContent[mCount - 1]);
     }
 
     template<typename T>
@@ -66,7 +66,7 @@ namespace Algorithm
     template<typename T>
     const T* Vector<T>::begin()const
     {
-        return mContent[0];
+        return mContent;
     }
 
     template<typename T>
@@ -141,7 +141,7 @@ namespace Algorithm
 		{
 			for (int i = 0; i < mCount; i++)
 			{
-				mContent[i] = nullptr;
+				mContent[i] = 0;
 			}
 			delete[] mContent;
 
