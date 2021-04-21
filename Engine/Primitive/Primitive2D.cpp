@@ -189,7 +189,7 @@ namespace Primitive
         else
         {
             Vector2f middlePoint = p1;
-            middlePoint.y = (p1.y - p2.y) / (p0.y - p2.y) * p0.x - p2.x + p2.x;
+            middlePoint.y = (p1.y - p2.y) / (p0.y - p2.y) * (p0.x - p2.x) + p2.x;
             DrawTopTriangle(p2, middlePoint, p1);
             DrawButtomTriangle(p0, middlePoint, p1);
         }
