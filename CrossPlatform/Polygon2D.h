@@ -32,6 +32,7 @@ namespace CrossPlatform {
         };
 
         Polygon2D();
+        Polygon2D(EState state, MathLab::Vector2f position, MathLab::Vector2f velocity, SColorRGBA color, int numberOfVertex, MathLab::Vector2f* vertexList);
         ~Polygon2D();
 
         EState m_state = EState::Enable;

@@ -35,7 +35,7 @@ namespace Primitive
     void Primitive2D::DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba) const
     {
         m_drawerSurface->DrawPixel(x, m_drawerSurface->GetHeight() -1 - y, rgba);
-        printf("(%u, %u) color: (%u, %u, %u, %u)\n", x, y, rgba.GetR(), rgba.GetG(), rgba.GetB(), rgba.GetA());
+        //printf("(%u, %u) color: (%u, %u, %u, %u)\n", x, y, rgba.GetR(), rgba.GetG(), rgba.GetB(), rgba.GetA());
     }
 
     unsigned int Primitive2D::GetZbuffer(const Vector2i& pos) const
@@ -190,8 +190,8 @@ namespace Primitive
         {
             Vector2f middlePoint = p1;
             middlePoint.x = (p1.y - p2.y) / (p0.y - p2.y) * (p0.x - p2.x) + p2.x;
-            DrawTopTriangle(p2, middlePoint, p1);
-            DrawButtomTriangle(p0, middlePoint, p1);
+            DrawTopTriangle(p2, middlePoint, p1, rgba);
+            DrawButtomTriangle(p0, middlePoint, p1, rgba);
         }
     }
 

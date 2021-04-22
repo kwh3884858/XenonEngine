@@ -74,7 +74,7 @@ void MainWindow::Initialize()
     //bool result;
     //int screenWidth = 800;
     //int screenHight = 600;
-    if (!this->Create(L"Main Windows",
+    if (!this->Create(L"Xenon Engine",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
         Database::get().engineConfig.m_isFullScreen ? (WS_POPUP) : (/*WS_OVERLAPPED | WS_POPUP*/ WS_OVERLAPPEDWINDOW),
         m_screenWidth,
@@ -186,6 +186,8 @@ void MainWindow::Run()
     //Debug text
     TCHAR debugTextBuffer[80];
 
+    //Game Init
+    Gameplay::GameplayInitialize();
 
     ZeroMemory(&msg, sizeof(MSG));
     if (mStatusCode == BaseWindow::StatusCode::InitiailizationFailed)
@@ -235,7 +237,7 @@ void MainWindow::Run()
            
         }
     }
-
+    Gameplay::GameplayShutdown();
     return;
 }
 

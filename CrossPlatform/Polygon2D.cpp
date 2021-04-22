@@ -13,6 +13,17 @@ namespace CrossPlatform {
         
     }
 
+    Polygon2D::Polygon2D(EState state, MathLab::Vector2f position, MathLab::Vector2f velocity, SColorRGBA color, int numberOfVertex, MathLab::Vector2f* vertexList) :
+        m_state(state),
+        m_position(position),
+        m_velocity(velocity),
+        m_color(color),
+        m_numberOfVertex(numberOfVertex),
+        m_vertexList(vertexList)
+    {
+
+    }
+
     Polygon2D::~Polygon2D()
     {
         delete m_vertexList;
