@@ -85,7 +85,7 @@ namespace Primitive
         //error = k - 0.5
         //2error = 2k - 1
         float errorY = 2 * deltaY - deltaX;
-        while (startPos.y != endPos.y)
+        while ( startPos.x != endPos.x)
         {
             if (isFlip)
             {
@@ -189,7 +189,7 @@ namespace Primitive
         else
         {
             Vector2f middlePoint = p1;
-            middlePoint.y = (p1.y - p2.y) / (p0.y - p2.y) * (p0.x - p2.x) + p2.x;
+            middlePoint.x = (p1.y - p2.y) / (p0.y - p2.y) * (p0.x - p2.x) + p2.x;
             DrawTopTriangle(p2, middlePoint, p1);
             DrawButtomTriangle(p0, middlePoint, p1);
         }
@@ -197,22 +197,20 @@ namespace Primitive
 
     void Primitive2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
-        Vector2f rightDelta = buttom - p2;
+        Vector2f rightDelta = p2 - buttom ;
         Vector2f rightIndex = buttom;
-        Vector2f rightStep;
-        rightStep.x = rightDelta.x > 0 ? 1 : -1;
-        rightStep.y = rightStep.x * (rightDelta.y / rightDelta.x);
+        Vector2f rightStep(0, Y_AXIS_STEP);
+        rightStep.x = (float)(rightDelta.x > 0 ? 1 : -1) * MathLab::abs(rightDelta.x / rightDelta.y);
 
-        Vector2f leftDelta = buttom - p1;
+        Vector2f leftDelta = p1 - buttom ;
         Vector2f leftIndex = buttom;
-        Vector2f leftStep;
-        leftStep.x = leftDelta.x > 0 ? 1 : -1;
-        leftStep.y = leftStep.x * (leftDelta.y / leftDelta.x);
+        Vector2f leftStep(0, Y_AXIS_STEP);
+        leftStep.x = (float)(leftDelta.x > 0 ? 1 : -1) * MathLab::abs(leftDelta.x / leftDelta.y);
 
-        while (leftIndex.y < p1.y)
+        while (leftIndex.y <= p1.y)
         {
             DrawLine(leftIndex, rightIndex, rgba);
-            leftIndex += rightStep;
+            leftIndex += leftStep;
             rightIndex += rightStep;
         }
     }
@@ -221,20 +219,18 @@ namespace Primitive
     {
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
-        Vector2f rightStep;
-        rightStep.x = rightDelta.x > 0 ? 1 : -1;
-        rightStep.y = rightStep.x * ( rightDelta.y / rightDelta.x );
+        Vector2f rightStep(0, -Y_AXIS_STEP);
+        rightStep.x = rightDelta.x > 0 ? 1 : -1 * MathLab::abs( rightDelta.x / rightDelta.y );
  
         Vector2f leftDelta = p2 - top;
         Vector2f leftIndex = top;
-        Vector2f leftStep;
-        leftStep.x = leftDelta.x > 0 ? 1 : -1;
-        leftStep.y = leftStep.x * (leftDelta.y / leftDelta.x);
+        Vector2f leftStep(0, -Y_AXIS_STEP);
+        leftStep.x = leftDelta.x > 0 ? 1 : -1 * MathLab::abs(leftDelta.x / leftDelta.y);
 
-        while (leftIndex.y > p1.y)
+        while (leftIndex.y >= p1.y)
         {
             DrawLine(leftIndex, rightIndex, rgba);
-            leftIndex += rightStep;
+            leftIndex += leftStep;
             rightIndex += rightStep;
         }
     }

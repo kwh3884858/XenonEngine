@@ -19,7 +19,7 @@ namespace Gameplay {
     void GameplayMain()
     {
         printf("/////////////Line///////////////");
-        Primitive2D::get().DrawLine(Vector2i(10, 10), Vector2i(200, 500),CrossPlatform::WHITE);
+        Primitive2D::get().DrawLine(Vector2i(10, 10), Vector2i(200, 10),CrossPlatform::WHITE);
         unsigned int width = Database::get().engineConfig.m_width;
         unsigned int height = Database::get().engineConfig.m_height;
         //for (int i = 0 ;i < height; i++)
@@ -27,10 +27,10 @@ namespace Gameplay {
         //    Primitive2D::get().DrawPixel(i, i);
         //}
 
-        Primitive2D::get().DrawLine(Vector2i(500, 200),Vector2i(10, 10) ,CrossPlatform::BLUE);
-        Primitive2D::get().DrawLine(Vector2i(10, 50), Vector2i(500, 200), CrossPlatform::GREEN);
-        Primitive2D::get().DrawLine(Vector2i(90, 90), Vector2i(700, 599), CrossPlatform::RED);
-
+        //Primitive2D::get().DrawLine(Vector2i(500, 200),Vector2i(10, 10) ,CrossPlatform::BLUE);
+        //Primitive2D::get().DrawLine(Vector2i(10, 50), Vector2i(500, 200), CrossPlatform::GREEN);
+        //Primitive2D::get().DrawLine(Vector2i(90, 90), Vector2i(700, 599), CrossPlatform::RED);
+        
         Primitive2D::get().DrawTriangle(Vector2f(10, 50), Vector2f(100, 200), Vector2f(500, 400));
         
         //printf("/////////////////Donut////////////////////");
