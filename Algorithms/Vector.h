@@ -13,11 +13,12 @@ namespace Algorithm
 
 	public:
 		Vector();
-		Vector(const Vector&) = delete;
+		Vector(const Vector& that);
 		~Vector();
 
 		bool Add(const T& element);
 		bool Remove(const T& element);
+        bool Replace(const T*const content,unsigned int size);
 		bool Clear();
 		int IndexOf(T element);
 		int Count();
@@ -31,84 +32,37 @@ namespace Algorithm
         const T* begin()const;
         T* end();
         const T* end()const;
+
 	private:
 		bool Initialize(int size);
-
 		bool IsCapacityEnough();
-
 		bool Reallocation();
+        bool InternalReplace(const T*const content, unsigned int size);
 
-		T* mContent;
-
-		int mCount;
-
-		int mCapacity;
+		T* m_content;
+		int m_count;
+		int m_capacity;
 
 	};
 
-
-    template<typename T>
-    const T* Vector<T>::end()const
-    {
-        if (mCount == 0)
-        {
-            return nullptr;
-        }
-        return &(mContent[mCount - 1]);
-    }
-
-    template<typename T>
-    T* Vector<T>::end()
-    {
-        return const_cast<T*>(static_cast<const Vector<T>&>(*this).end());
-    }
-
-    template<typename T>
-    const T* Vector<T>::begin()const
-    {
-        return mContent;
-    }
-
-    template<typename T>
-    T*  Vector<T>::begin()
-    {
-        return const_cast<T*>(static_cast<const Vector<T>&>(*this).begin());
-    }
-
-	//template<typename T>
-	//bool SaintMathematics::Vector<T>::Swap(const int lhs, const int rhs)
-	//{
-	//	if (lhs == rhs)
-	//	{
-	//		return true;
-	//	}
-
-	//	if (lhs <0 || lhs > mCount || rhs < 0 || rhs > mCount)
-	//	{
-	//		return false;
-	//	}
-
-	//	T tmp = mContent[lhs];
-	//	mContent[lhs] = mContent[rhs];
-	//	mContent[rhs] = tmp;
-	//	return true;
-	//}
-
-	//-------------------define
 	template<typename T>
 	const int Vector<T>::DEFAULTCAPACITY = 1;
 
 	template<typename T>
 	Vector<T>::Vector()
 	{
-		mContent = nullptr;
-
-		mCount = 0;
-
-		mCapacity = 0;
-
+		m_content = nullptr;
+		m_count = 0;
+		m_capacity = 0;
 		Initialize(DEFAULTCAPACITY);
 	}
+
+    template<typename T>
+    Vector<T>::Vector(const Vector& that)
+    {
+        Initialize(that.Capacity());
+        InternalReplace(that.m_content, that.m_count);
+    }
 
 	template<typename T>
 	Vector<T>::~Vector()
@@ -123,160 +77,162 @@ namespace Algorithm
 		{
 			return false;
 		}
-
-		mCapacity = size;
-
-		mCount = 0;
-
-		mContent = new T[mCapacity];
-
+		m_capacity = size;
+		m_count = 0;
+		m_content = new T[m_capacity];
 		return true;
 	}
-
 
 	template<typename T>
 	bool Vector<T>::Clear()
 	{
-		if (mContent)
+		if (m_content)
 		{
-			for (int i = 0; i < mCount; i++)
+			for (int i = 0; i < m_count; i++)
 			{
-				mContent[i] = 0;
+				m_content[i] = 0;
 			}
-			delete[] mContent;
-
-			mContent = nullptr;
-
-			mCount = 0;
+			delete[] m_content;
+			m_content = nullptr;
+			m_count = 0;
 		}
-
 		return true;
-
 	}
-
-
-
-
 
 	template<typename T>
 	bool Vector<T>::Add(const T & element)
 	{
-
-
 		if (IsCapacityEnough() == false) {
 			Reallocation();
 
 		}
-
-		mContent[mCount] = element;
-
-		mCount++;
-
+		m_content[m_count] = element;
+		m_count++;
 		return true;
-
-
 	}
 
 	template<typename T>
 	bool Vector<T>::Remove(const T & element)
 	{
-
-		for (int i = mCount - 1; i >= 0; i--)
+		for (int i = m_count - 1; i >= 0; i--)
 		{
-
-			if (mContent[i] == element) {
-				mContent[i] = nullptr;
-
-				for (int j = i; j < mCount - 1; j++)
+			if (m_content[i] == element) 
+            {
+				m_content[i] = nullptr;
+				for (int j = i; j < m_count - 1; j++)
 				{
-					mContent[j] = mContent[j + 1];
+					m_content[j] = m_content[j + 1];
 				}
-
-				mContent[mCount - 1] = nullptr;
-
-				mCount--;
+				m_content[m_count - 1] = nullptr;
+				m_count--;
 			}
-
 		}
-
 		return true;
-
 	}
 
-
+    template<typename T>
+    bool Algorithm::Vector<T>::Replace(const T*const content, unsigned int size)
+    {
+        if (m_capacity <= size)
+        {
+            Clear();
+            Initialize(size);
+        }
+        InternalReplace(content, size);
+    }
 	template<typename T>
 	int Vector<T>::IndexOf(T element)
 	{
-		if (mCount == 0) return -1;
-
-		for (int i = mCount - 1; i >= 0; i++)
+		if (m_count == 0) return -1;
+		for (int i = m_count - 1; i >= 0; i++)
 		{
-
-			if (mContent[i] == element) {
+			if (m_content[i] == element) {
 				return i;
 			}
-
 		}
-
 		return -1;
 	}
 
 	template<typename T>
 	inline int Vector<T>::Count()
 	{
-		return mCount;
+		return m_count;
 	}
 
 	template<typename T>
 	inline int Vector<T>::Capacity()
 	{
-		return mCapacity;
+		return m_capacity;
 	}
 
 	template<typename T>
 	inline T Vector<T>::operator[](int index)
 	{
-		if (index <0 || index >= mCount)
+		if (index <0 || index >= m_count)
 		{
 			return nullptr;
 		}
-		
-		return mContent[index];
+		return m_content[index];
 	}
+    
+    template<typename T>
+    const T* Vector<T>::begin()const
+    {
+        return m_content;
+    }
 
+    template<typename T>
+    T*  Vector<T>::begin()
+    {
+        return const_cast<T*>(static_cast<const Vector<T>&>(*this).begin());
+    }
+    
+    template<typename T>
+    const T* Vector<T>::end()const
+    {
+        if (m_count == 0)
+        {
+            return nullptr;
+        }
+        return &(m_content[m_count - 1]);
+    }
 
-
+    template<typename T>
+    T* Vector<T>::end()
+    {
+        return const_cast<T*>(static_cast<const Vector<T>&>(*this).end());
+    }
 
 	template<typename T>
 	bool Vector<T>::IsCapacityEnough()
 	{
-		return mCount < mCapacity;
+		return m_count < m_capacity;
 	}
 
 	template<typename T>
 	bool Vector<T>::Reallocation()
 	{
-		if (mCapacity == 0)
+		if (m_capacity == 0)
 		{
 			return false;
 		}
-
-		mCapacity = 2 * mCapacity;
-
-		T* newContent = new T[mCapacity];
-
-		for (int i = 0; i < mCount; i++)
+		m_capacity = 2 * m_capacity;
+		T* newContent = new T[m_capacity];
+		for (int i = 0; i < m_count; i++)
 		{
-			newContent[i] = mContent[i];
+			newContent[i] = m_content[i];
 		}
-
-		delete[] mContent;
-
-		mContent = newContent;
-
+		delete[] m_content;
+		m_content = newContent;
 		return true;
 	}
 
+    template<typename T>
+    bool Algorithm::Vector<T>::InternalReplace(const T*const content, unsigned int size)
+    {
+        memcpy(m_content, content, size);
+        m_count = size;
+    }
 
 }
 
