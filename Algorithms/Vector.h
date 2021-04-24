@@ -140,6 +140,7 @@ namespace Algorithm
         }
         InternalReplace(content, size);
     }
+
 	template<typename T>
 	int Vector<T>::IndexOf(T element)
 	{

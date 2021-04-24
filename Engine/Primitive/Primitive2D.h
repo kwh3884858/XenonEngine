@@ -20,18 +20,32 @@ using MathLab::Vector2f;
 using CrossPlatform::Polygon2D;
 
 namespace Primitive {
+    struct Primitive2DConfig {
+        CrossPlatform::IDrawerSurface*const m_drawerSurface = nullptr;
+        CrossPlatform::IDrawerSurface*const m_zBuffer = nullptr;
+        Vector2f m_MinDrawPosition;
+        Vector2f m_MaxDrawPosition;
+    };
 
-    class Primitive2D:public CrossPlatform::XenonManager<Primitive2D>
+    class Primitive2D :public CrossPlatform::XenonManager<Primitive2D>
     {
     public:
+        const char Clip_Code_Cneter = 0x0000;
+        const char Clip_Code_North = 0x0008;  // 1000
+        const char Clip_Code_West = 0x0001;  // 0001
+        const char Clip_Code_South = 0x0004;  // 0100
+        const char Clip_Code_East = 0x0002;  // 0010
+        const char Clip_Code_North_West = 0x0009;  // 1001
+        const char Clip_Code_North_East = 0x000a;  // 1010
+        const char Clip_Code_South_West = 0x0005;  // 0101
+        const char Clip_Code_South_East = 0x0006;  // 0110
 
         virtual bool Initialize() override { return true; }
-        void SetConfig(CrossPlatform::IDrawerSurface*const drawerSurface,
-            CrossPlatform::IDrawerSurface*const zBuffer);
+        void SetConfig(const Primitive2DConfig& config);
 
-        virtual bool Shutdown() override ;
+        virtual bool Shutdown() override;
 
-        void DrawPixel(const Vector2i& pos,const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawPixel(const Vector2i& pos, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba = CrossPlatform::WHITE) const;
         unsigned int GetZbuffer(const Vector2i& pos)const;
         void SetZBuffer(const Vector2i& pos, unsigned int value);
@@ -40,16 +54,22 @@ namespace Primitive {
         //void DrawLine(const Vector2f* lhs, const Vector2f*rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPolygon(const Polygon2D& polygon2D)const;
         void DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void ClipLine(Vector2f& p0, Vector2f& p1)const;
 
     private:
         const int Y_AXIS_STEP = 1;
 
         void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        char InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
+        bool InternalClipPoint(char clipCode,Vector2f& point, const Vector2f& anotherPoint)const;
+        Vector2f InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX)const;
+        Vector2f InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY)const;
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
-
+        Vector2f m_minDrawPosition;
+        Vector2f m_maxDrawPosition;
     };
 
 

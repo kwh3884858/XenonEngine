@@ -5,15 +5,57 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/XenonManager.h"
+#include "Algorithms/String.h"
+
 namespace XenonEnigne
 {
+    using Algorithm::String;
+    enum TokenType {
+        None,
+        Name,
+        Comma,
+        LBreacket,
+        RBracket,
+    };
+    struct Token {
+        TokenType m_tokenType = TokenType.None;
+        String m_value;
+        Token(){}
+        Token(TokenType type, String value):
+            m_tokenType(type),
+            m_value(string)
+        {
+        }
+    };
+    const char Op_Char_Left_Bracket = '(';
+    const char Op_Char_Right_Bracket = ')';
+    const char Op_Char_Slash = '/';
+    const char Op_Char_Equal = '=';
+    const char Op_Char_Double_Quote = '"';
+    const char Op_Char_Single_Quote = '\'';
 
-    class XenonVirtualMachine:public CrossPlatform::XenonManager<XenonVirtualMachine>
+    enum CompilerState {
+        Error,
+        StateString,
+
+        StateInstructor,        //key word
+        StateIdentity,          //variable
+
+        StateStartBracket,      // <
+        StateStopBracket,       // >
+        StateSlash,             // /
+        StateOp,                // :
+        StateDoubleQuote,       // "
+        State
+    };
+    class XenonVirtualMachine : public CrossPlatform::XenonManager<XenonVirtualMachine>
     {
+ 
     public:
-        virtual bool Initialize()override { return true; }
+        virtual bool Initialize()override;
         virtual bool Shutdown()override { return true; }
     private:
+        bool Laxer(const char* const content, Token** const tokens);
 
     };
 

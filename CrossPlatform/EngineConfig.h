@@ -11,5 +11,11 @@ namespace CrossPlatform
         unsigned int m_width = 800;
         unsigned int m_height = 600;
         bool m_isPerspectiveProjection = true;
+
+        // For draw something in the a rectangle of window
+        int m_minX = 0;
+        int m_mixY = 0;
+        int m_maxX = m_width;
+        int m_maxY = m_height;
     };
 }

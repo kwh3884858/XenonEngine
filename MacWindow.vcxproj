@@ -137,6 +137,7 @@
     <ClInclude Include="Algorithms\Iterator.h" />
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />
+    <ClInclude Include="Algorithms\String.h" />
     <ClInclude Include="Algorithms\Vector.h" />
     <ClInclude Include="CrossPlatform\Database.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
