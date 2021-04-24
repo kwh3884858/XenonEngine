@@ -17,7 +17,7 @@ namespace Primitive
     void Primitive2D::SetConfig(const Primitive2DConfig& config)
     {
         m_drawerSurface = config.m_drawerSurface;
-        m_zBuffer = config.zBuffer;
+        m_zBuffer = config.m_zBuffer;
         m_minDrawPosition = config.m_MinDrawPosition;
         m_maxDrawPosition = config.m_MaxDrawPosition;
     }
