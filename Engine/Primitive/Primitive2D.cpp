@@ -14,12 +14,12 @@ using MathLab::Vector2f;
 
 namespace Primitive
 {
-    void Primitive2D::SetConfig(const Primitive2DConfig& config)
+    void Primitive2D::SetConfig(const Primitive2DConfig*const config)
     {
-        m_drawerSurface = config.m_drawerSurface;
-        m_zBuffer = config.m_zBuffer;
-        m_minDrawPosition = config.m_MinDrawPosition;
-        m_maxDrawPosition = config.m_MaxDrawPosition;
+        m_drawerSurface = config->m_drawerSurface;
+        m_zBuffer = config->m_zBuffer;
+        m_minDrawPosition = config->m_MinDrawPosition;
+        m_maxDrawPosition = config->m_MaxDrawPosition;
     }
 
     bool Primitive2D::Shutdown()
@@ -192,6 +192,12 @@ namespace Primitive
 
     void Primitive2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
+        //verse-clock: buttom->p1->p2
+        if (p1.x >p2.x)
+        {
+            SwapVector(p1, p2);
+        }
+
         Vector2f rightDelta = p2 - buttom;
         Vector2f rightIndex = buttom;
         Vector2f rightStep(0, Y_AXIS_STEP);
@@ -202,16 +208,66 @@ namespace Primitive
         Vector2f leftStep(0, Y_AXIS_STEP);
         leftStep.x = (float)(leftDelta.x > 0 ? 1 : -1) * MathLab::abs(leftDelta.x / leftDelta.y);
 
-        while (leftIndex.y <= p1.y)
+        if (buttom.y < m_minDrawPosition.y)
         {
-            DrawLine(leftIndex, rightIndex, rgba);
-            leftIndex += leftStep;
-            rightIndex += rightStep;
+            leftIndex = InternalClipYPoint(buttom, p1, m_minDrawPosition.y);
+            rightIndex = InternalClipYPoint(buttom, p2, m_minDrawPosition.y);
+        }
+        if (p1.y > m_maxDrawPosition.y)
+        {
+            p1.y = m_maxDrawPosition.y;
+        }
+        if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
+            p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
+            buttom.x >= m_minDrawPosition.x && buttom.y <= m_maxDrawPosition.x)
+        {
+            while (leftIndex.y <= p1.y)
+            {
+                DrawLine(leftIndex, rightIndex, rgba);
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+            }
+        }
+        else
+        {
+            Vector2f left;
+            Vector2f right;
+            while (leftIndex.y <= p1.y)
+            {
+                left = leftIndex;
+                right = rightIndex;
+
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+
+                if (leftIndex.x < m_minDrawPosition.x)
+                {
+                    left.x = m_minDrawPosition.x;
+                    if (rightIndex.x < m_minDrawPosition.x)
+                    {
+                        continue;
+                    }
+                }
+                if (rightIndex.x > m_maxDrawPosition.x)
+                {
+                    right.x = m_maxDrawPosition.x;
+                    if (leftIndex.x > m_maxDrawPosition.x)
+                    {
+                        continue;
+                    }
+                }
+                DrawLine(left, right, rgba);
+            }
         }
     }
 
     void Primitive2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
+        //verse-clock: buttom->p1->p2
+        if (p1.x < p2.x)
+        {
+            SwapVector(p1, p2);
+        }
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
         Vector2f rightStep(0, -Y_AXIS_STEP);
@@ -233,8 +289,8 @@ namespace Primitive
             p1.y = m_minDrawPosition.y;
         }
 
-        if (leftIndex.x >= m_minDrawPosition.x && leftIndex.x <= m_maxDrawPosition.x &&
-            rightIndex.x >= m_minDrawPosition.x && rightIndex.x <= m_maxDrawPosition.x &&
+        if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
+            p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
             top.x >= m_minDrawPosition.x && top.x <=m_maxDrawPosition.x)
         {
             while (leftIndex.y >= p1.y)
@@ -250,6 +306,9 @@ namespace Primitive
             Vector2f right;
             while (leftIndex.y >= p1.y)
             {
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+
                 left = leftIndex;
                 right = rightIndex;
                 if (leftIndex.x < m_minDrawPosition.x)
@@ -269,8 +328,6 @@ namespace Primitive
                     }
                 }
                 DrawLine(left, right, rgba);
-                leftIndex += leftStep;
-                rightIndex += rightStep;
             }
         }
     }
@@ -280,21 +337,22 @@ namespace Primitive
         char clipCode = 0;
         if (point.x < minPosition.x)
         {
-            point |= Clip_Code_West;
+            clipCode |= Clip_Code_West;
         }
         else if (point.x > maxPosition.x)
         {
-            point |= Clip_Code_East;
+            clipCode |= Clip_Code_East;
         }
 
         if (point.y < minPosition.y)
         {
-            point |= Clip_Code_South;
+            clipCode |= Clip_Code_South;
         }
         else if (point.y > maxPosition.y)
         {
-            point |= Clip_Code_North;
+            clipCode |= Clip_Code_North;
         }
+
         return clipCode;
     }
 

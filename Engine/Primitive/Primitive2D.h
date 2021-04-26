@@ -21,8 +21,8 @@ using CrossPlatform::Polygon2D;
 
 namespace Primitive {
     struct Primitive2DConfig {
-        CrossPlatform::IDrawerSurface*const m_drawerSurface = nullptr;
-        CrossPlatform::IDrawerSurface*const m_zBuffer = nullptr;
+        CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
+        CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
         Vector2f m_MinDrawPosition;
         Vector2f m_MaxDrawPosition;
     };
@@ -30,18 +30,18 @@ namespace Primitive {
     class Primitive2D :public CrossPlatform::XenonManager<Primitive2D>
     {
     public:
-        const char Clip_Code_Cneter = 0x0000;
-        const char Clip_Code_North = 0x0008;  // 1000
-        const char Clip_Code_West = 0x0001;  // 0001
-        const char Clip_Code_South = 0x0004;  // 0100
-        const char Clip_Code_East = 0x0002;  // 0010
-        const char Clip_Code_North_West = 0x0009;  // 1001
-        const char Clip_Code_North_East = 0x000a;  // 1010
-        const char Clip_Code_South_West = 0x0005;  // 0101
-        const char Clip_Code_South_East = 0x0006;  // 0110
+        static constexpr char Clip_Code_Cneter = 0x0000;
+        static constexpr char Clip_Code_North = 0x0008;  // 1000
+        static constexpr char Clip_Code_West = 0x0001;  // 0001
+        static constexpr char Clip_Code_South = 0x0004;  // 0100
+        static constexpr char Clip_Code_East = 0x0002;  // 0010
+        static constexpr char Clip_Code_North_West = 0x0009;  // 1001
+        static constexpr char Clip_Code_North_East = 0x000a;  // 1010
+        static constexpr char Clip_Code_South_West = 0x0005;  // 0101
+        static constexpr char Clip_Code_South_East = 0x0006;  // 0110
 
         virtual bool Initialize() override { return true; }
-        void SetConfig(const Primitive2DConfig& config);
+        void SetConfig(const Primitive2DConfig*const config);
 
         virtual bool Shutdown() override;
 

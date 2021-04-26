@@ -7,7 +7,6 @@
 #include "Algorithms/Vector.h"
 namespace Algorithm
 {
-
     template<typename T>
     class StringBase
     {
@@ -35,9 +34,9 @@ namespace Algorithm
     }
 
     template<typename T>
-    StringBase<T>::StringBase(const StringBase& value)
+    StringBase<T>::StringBase(const StringBase& value):
+        m_string(value.m_string)
     {
-        m_string(value);
     }
 
     template<typename T>

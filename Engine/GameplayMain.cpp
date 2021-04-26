@@ -62,7 +62,7 @@ namespace Gameplay {
         
         //printf("/////////////////Donut////////////////////");
         //Donut();
-        static int i = 150;
+        static int i = 50;
         static int j = 400;
         tmpPolygon->m_position = Vector2f(i,i);
         tmpRectangle->m_position = Vector2f(j,j);
@@ -76,7 +76,7 @@ namespace Gameplay {
             i = 150;
         }
         j--;
-        if (j ==200)
+        if (j ==100)
         {
             j = 400;
         }

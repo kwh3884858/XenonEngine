@@ -18,12 +18,12 @@ namespace XenonEnigne
         RBracket,
     };
     struct Token {
-        TokenType m_tokenType = TokenType.None;
+        TokenType m_tokenType = TokenType::None;
         String m_value;
         Token(){}
         Token(TokenType type, String value):
             m_tokenType(type),
-            m_value(string)
+            m_value(value)
         {
         }
     };

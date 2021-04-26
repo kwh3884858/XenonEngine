@@ -2,6 +2,7 @@
 #define SAINTMATHEMATICS_VECOTR_H
 
 //class Iterator;
+#include <cstring>
 
 namespace Algorithm
 {
@@ -20,9 +21,9 @@ namespace Algorithm
 		bool Remove(const T& element);
         bool Replace(const T*const content,unsigned int size);
 		bool Clear();
-		int IndexOf(T element);
-		int Count();
-		int Capacity();
+		int IndexOf(T element)const;
+		int Count()const;
+		int Capacity()const;
 
 		T operator[](int index);
 
@@ -142,7 +143,7 @@ namespace Algorithm
     }
 
 	template<typename T>
-	int Vector<T>::IndexOf(T element)
+	int Vector<T>::IndexOf(T element)const
 	{
 		if (m_count == 0) return -1;
 		for (int i = m_count - 1; i >= 0; i++)
@@ -155,13 +156,13 @@ namespace Algorithm
 	}
 
 	template<typename T>
-	inline int Vector<T>::Count()
+	inline int Vector<T>::Count()const
 	{
 		return m_count;
 	}
 
 	template<typename T>
-	inline int Vector<T>::Capacity()
+	inline int Vector<T>::Capacity()const
 	{
 		return m_capacity;
 	}

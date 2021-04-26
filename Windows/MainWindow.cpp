@@ -137,8 +137,12 @@ void MainWindow::Initialize()
     default:
         break;
     }
-
-    Primitive::Primitive2D::get().SetConfig(m_directXDrawSurface, m_zBuffer);
+    Primitive::Primitive2DConfig config;
+    config.m_drawerSurface = m_directXDrawSurface;
+    config.m_zBuffer = m_zBuffer;
+    config.m_MinDrawPosition = Vector2f(Database::get().engineConfig.m_minX, Database::get().engineConfig.m_minY);
+    config.m_MaxDrawPosition = Vector2f(Database::get().engineConfig.m_maxX, Database::get().engineConfig.m_maxY);
+    Primitive::Primitive2D::get().SetConfig(&config);
 
     m_fileReader = new File::FileReader;
     XenonEnigne::FileManager::get().SetFileReader(m_fileReader);
