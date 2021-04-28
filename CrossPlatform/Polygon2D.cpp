@@ -18,7 +18,7 @@ namespace CrossPlatform {
         m_position(position),
         m_velocity(velocity),
         m_color(color),
-        m_numberOfVertex(numberOf   Vertex),
+        m_numberOfVertex(numberOfVertex),
         m_vertexList(vertexList)
     {
 

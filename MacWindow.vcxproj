@@ -121,6 +121,7 @@
     <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
+    <ClCompile Include="Windows\Input\DirectXInput.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
     <ClCompile Include="mathlab\MathLib.cpp" />
     <ClCompile Include="MathLab\Vector2i.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="MathLab\Vertex3i.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
+    <ClInclude Include="Windows\Input\DirectXInput.h" />
     <ClInclude Include="Windows\MainWindow.h" />
     <ClInclude Include="mathlab\MathLib.h" />
     <ClInclude Include="MathLab\Vector2i.h" />
