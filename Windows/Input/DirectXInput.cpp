@@ -32,17 +32,38 @@ namespace WindowInput {
         result = lpdikey->SetDataFormat(&c_dfDIKeyboard);
         assert(result == DI_OK);
 
+        result = lpdi->CreateDevice(GUID_SysMouse, &lpdiMouse, nullptr);
+        assert(result == DI_OK);
+
+        result = lpdiMouse->SetCooperativeLevel(m_hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+        assert(result == DI_OK);
+
+        result = lpdiMouse->SetDataFormat(&c_dfDIMouse);
+        assert(result == DI_OK);
+
     }
 
     void DirectXInput::Update()
     {
         HRESULT result;
         result = lpdikey->GetDeviceData(sizeof(m_keyState), (LPVOID)m_keyState);
-        assert(result == DI_OK);
+        //assert(result == DI_OK);
+        while(result == DIERR_INPUTLOST)
+        {
+            HRESULT state = lpdi->Acquire();
+            if (state != DI_OK)
+            {
+                break;
+            }
+        }
     }
 
     void DirectXInput::ShutDown()
     {
+        if (lpdikey)
+        {
+            lpdikey->Unacquire();
+        }
         if (lpdikey)
         {
             lpdikey->Release();
@@ -51,6 +72,11 @@ namespace WindowInput {
         {
             lpdi->Release();
         }
+    }
+
+    bool DirectXInput::IsKeyDown(unsigned char keyCode) const
+    {
+        return m_keyState[keyCode] & 0x80;
     }
 
 }

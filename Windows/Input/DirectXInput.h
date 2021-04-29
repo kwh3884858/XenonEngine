@@ -24,11 +24,15 @@ namespace WindowInput {
         void Initialize();
         void Update();
         void ShutDown();
+
+        bool IsKeyDown(unsigned char keyCode)const;
     private:
         LPDIRECTINPUT8 lpdi = nullptr;
         IDirectInputDevice8 lpdikey = nullptr;
+        LPDIRECTINPUTDEVICE8 lpdiMouse = nullptr;
         HWND m_hwnd;
         unsigned char m_keyState[256];
+        DIMOUSESTATE m_mouseState;
     };
 
 
