@@ -81,6 +81,9 @@
     <ClCompile Include="Windows\Input\DirectXInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Windows\Sound\DirectXSound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -228,6 +231,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Windows\Input\DirectXInput.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Windows\Sound\DirectXSound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -98,7 +98,7 @@ namespace WindowInput {
         {
             lpdiJoystick->Release();
         }
-        if (lpdimouse)
+        if (lpdiMouse)
         {
             lpdiMouse->Unacquire();
         }

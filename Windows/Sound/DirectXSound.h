@@ -21,9 +21,8 @@ namespace WindowSound {
 	private:
 		HWND m_hwnd;
 		LPDIRECTSOUND lpds;
-
-
+        LPDIRECTSOUNDBUFFER lpdsBuffer;
+        DSBUFFERDESC dsbd;
+        WAVEFORMAT pcmwf;
 	};
-
-
 }

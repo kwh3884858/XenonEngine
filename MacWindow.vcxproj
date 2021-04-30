@@ -127,6 +127,7 @@
     <ClCompile Include="MathLab\Vector2i.cpp" />
     <ClCompile Include="mathlab\ViewStruct.cpp" />
     <ClCompile Include="Windows\main.cpp" />
+    <ClCompile Include="Windows\Sound\DirectXSound.cpp" />
     <ClCompile Include="Windows\Surface\DirectXDrawSurface.cpp" />
     <ClCompile Include="Windows\Surface\DrawerSurface.cpp" />
     <ClCompile Include="Windows\Timer\StoryTimer.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="mathlab\ViewStruct.h" />
     <ClInclude Include="Windows\BaseWindow.h" />
     <ClInclude Include="Windows\Resources\resource.h" />
+    <ClInclude Include="Windows\Sound\DirectXSound.h" />
     <ClInclude Include="Windows\Surface\DirectXDrawSurface.h" />
     <ClInclude Include="Windows\Surface\DrawerSurface.h" />
     <ClInclude Include="Windows\Timer\StoryTimer.h" />
