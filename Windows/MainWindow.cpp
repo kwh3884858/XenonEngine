@@ -21,6 +21,7 @@
 
 #include "Engine/FileManager/FileManager.h"
 #include "Windows/File/FileReader.h"
+#include "Windows/Input/DirectXInput.h"
 //
 //using MathLab::Vector3f;
 
@@ -44,6 +45,7 @@ MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_lastUpdateTiemstamp(0)
 , m_screenWidth(Database::get().engineConfig.m_width)
 , m_screenHight(Database::get().engineConfig.m_height)
+, m_directInput(nullptr)
 //, m_isFullScreen(false)
 //, m_perspectiveProjection(true)
 {
@@ -137,19 +139,28 @@ void MainWindow::Initialize()
     default:
         break;
     }
-    Primitive::Primitive2DConfig config;
-    config.m_drawerSurface = m_directXDrawSurface;
-    config.m_zBuffer = m_zBuffer;
-    config.m_MinDrawPosition = Vector2f(Database::get().engineConfig.m_minX, Database::get().engineConfig.m_minY);
-    config.m_MaxDrawPosition = Vector2f(Database::get().engineConfig.m_maxX, Database::get().engineConfig.m_maxY);
-    Primitive::Primitive2D::get().SetConfig(&config);
+    Primitive::Primitive2DConfig primitive2DConfig;
+    primitive2DConfig.m_drawerSurface = m_directXDrawSurface;
+    primitive2DConfig.m_zBuffer = m_zBuffer;
+    primitive2DConfig.m_MinDrawPosition = Vector2f(Database::get().engineConfig.m_minX, Database::get().engineConfig.m_minY);
+    primitive2DConfig.m_MaxDrawPosition = Vector2f(Database::get().engineConfig.m_maxX, Database::get().engineConfig.m_maxY);
+    Primitive::Primitive2D::get().SetConfig(&primitive2DConfig);
 
     m_fileReader = new File::FileReader;
     XenonEnigne::FileManager::get().SetFileReader(m_fileReader);
+
+    WindowInput::DirectXInputConfig* inputConfig = new WindowInput::DirectXInputConfig();
+    inputConfig->m_hwnd = GetHwnd();
+    inputConfig->m_mainInstance = mhInstance;
+    m_directInput = new WindowInput::DirectXInput;
+    m_directInput->SetConfig(inputConfig);
+    m_directInput->Initialize();
 }
 
 void MainWindow::Shutdown()
 {
+    m_directInput->ShutDown();
+
     XenonEnigne::FileManager::get().Shutdown();
     Primitive::Primitive2D::get().Shutdown();
 
@@ -173,9 +184,7 @@ void MainWindow::Run()
 {
     MSG msg = {};
     bool done = false, result = false, isKey = false;
-
     unsigned long int frameAmount = 0;
-
 
     //Color
     COLORREF colorRed = RGB(255, 0, 0);
@@ -220,11 +229,7 @@ void MainWindow::Run()
                 break;
             }
         }
-
-
-
         frameAmount++;
-
         _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
         TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
@@ -234,11 +239,11 @@ void MainWindow::Run()
         {
             m_directXDrawSurface->lock();
             m_zBuffer->lock();
+            m_directInput->Update();
             Gameplay::GameplayMain();
             m_directXDrawSurface->Unlock();
             m_zBuffer->Unlock();           
            bool result = m_windowDrawer->Draw(m_directXDrawSurface);
-           
         }
     }
     Gameplay::GameplayShutdown();
@@ -258,22 +263,6 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
     switch (uMSG)
     {
-        //case WM_KEYDOWN:
-        //{
-        //	mInputDx->setKeyDown((unsigned int)wParam);
-        //	return 0;
-        //}
-        //case WM_KEYUP:
-        //{
-        //	mInputDx->setKeyUp((unsigned int)wParam);
-        //	return 0;
-        //}
-        //case WM_MOUSEMOVE:
-        //{
-        //	mInputDx->setMousePos(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-        //	return 0;
-        //}
-
     case WM_COMMAND:
         switch (LOWORD(wParam))
         {
@@ -293,17 +282,12 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
         InvalidateRect(GetHwnd(), nullptr, false);
         HDC hdc = BeginPaint(mWnd, &ps);
 
-        //SetTextColor(hdc, colorBlue);
-        //SetBkColor(hdc, colorRed);
-        //SetBkMode(hdc, OPAQUE);
-
         paintAmount++;
 
         _stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
         TextOut(hdc, 0, 10, debugTextBuffer2, _tcslen(debugTextBuffer2));
 
 
-        //FillRect(hdc, &ps.rcPaint, (HBRUSH)(COLOR_WINDOW + 1));
         EndPaint(mWnd, &ps);
         //std::cout << "Redraw!" << std::endl;
     }

@@ -1,4 +1,6 @@
 #include "DirectXSound.h"
+
+#include "cassert"
 namespace WindowSound {
 	DirectXSound::DirectXSound()
 	{
@@ -15,16 +17,16 @@ namespace WindowSound {
 	{
 		HRESULT result;
 		result = DirectSoundCreate(nullptr, &lpds, nullptr);
-		assert(result == DI_OK);
+		assert(result == DS_OK);
 
         result = lpds->SetCooperativeLevel(m_hwnd, DSSCL_NORMAL);
-        assert(result == DI_OK);
+        assert(result == DS_OK);
 
         memset(&pcmwf, 0, sizeof(pcmwf));
         pcmwf.wFormatTag = WAVE_FORMAT_PCM;
         pcmwf.nChannels = 1;
         pcmwf.nSamplesPerSec = 11025; //sample rate 11khz
-        pcmwf.nBlockAlign = 1;
+        pcmwf.nBlockAlign = 1; 
         pcmwf.nAvgBytesPerSec = pcmwf.nSamplesPerSec*pcmwf.nBlockAlign;
         pcmwf.wBitsPerSample = 8;
         pcmwf.cbSize = 0;

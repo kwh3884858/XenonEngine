@@ -14,13 +14,14 @@ namespace WindowInput {
 
     void DirectXInput::SetConfig(const DirectXInputConfig* const config)
     {
-        m_hwnd = config;
+        m_hwnd = config->m_hwnd;
+        m_mainInstance = config->m_mainInstance;
     }
 
     void DirectXInput::Initialize()
     {
         HRESULT result;
-        result = DirectInput8Create(m_hwnd, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&lpdi, nullptr);
+        result = DirectInput8Create(m_mainInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&lpdi, nullptr);
         assert(result == DI_OK);
        
         //Keybroad
@@ -47,7 +48,7 @@ namespace WindowInput {
         assert(result == DI_OK);
 
         //Joystick
-        result = lpdi->EnumDevices(DI8DEVTYPE_JOYSTICK, DirectInputEnumJoystick, &m_joyStickGUID, DIEDFL_ATTACHEDONLY);
+        result = lpdi->EnumDevices(DIDEVTYPE_JOYSTICK, DirectInputEnumJoystick, &m_joyStickGUID, DIEDFL_ATTACHEDONLY);
         assert(result == DI_OK);
 
         result = lpdi->CreateDevice(m_joyStickGUID, &lpdiJoystick,nullptr);
@@ -66,11 +67,11 @@ namespace WindowInput {
     void DirectXInput::Update()
     {
         HRESULT result;
-        result = lpdikey->GetDeviceData(sizeof(m_keyState), (LPVOID)m_keyState);
+        result = lpdikey->GetDeviceState(sizeof(m_keyState), (LPVOID)m_keyState);
         //assert(result == DI_OK);
         while(result == DIERR_INPUTLOST)
         {
-            HRESULT state = lpdi->Acquire();
+            HRESULT state = lpdikey->Acquire();
             if (state != DI_OK)
             {
                 break;
@@ -83,7 +84,7 @@ namespace WindowInput {
         result = lpdiJoystick->Poll();
         assert(result == DI_OK);
 
-        lpdiJoystick->GetDeviceData(sizeof(m_joystickState), &m_joystickState);
+        lpdiJoystick->GetDeviceState(sizeof(m_joystickState), &m_joystickState);
         assert(result == DI_OK);
 
     }

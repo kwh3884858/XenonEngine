@@ -1,3 +1,8 @@
+//  DirectXSound.h
+//  XenonEngine
+//
+//  Created by whkong on 2021-5-2.
+//  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 
 #pragma comment(lib, "dsound.lib")
@@ -5,6 +10,7 @@
 
 namespace WindowSound {
 	class DirectXSoundConfig {
+    public:
 		HWND m_hwnd;
 	};
 

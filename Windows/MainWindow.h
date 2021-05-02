@@ -16,6 +16,10 @@ namespace Timer {
     class StoryTimer;
 }
 
+namespace WindowInput {
+    class DirectXInput;
+}
+
 class MainWindow : public BaseWindow<MainWindow>
 {
 public:
@@ -41,6 +45,7 @@ private:
     CrossPlatform::IDrawerSurface* m_directXDrawSurface;
     CrossPlatform::IDrawerSurface* m_zBuffer;
     CrossPlatform::IFileReader* m_fileReader;
+    WindowInput::DirectXInput* m_directInput;
 
     double m_timeInterval = 33.3333;  //30fps
     Timer::StoryTimer* m_timer;

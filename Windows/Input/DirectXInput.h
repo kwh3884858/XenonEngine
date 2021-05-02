@@ -6,6 +6,8 @@
 #pragma once
 
 #pragma comment(lib, "dinput.lib")
+#define INITGUID
+#include <objbase.h> //need this one for GUIDS
 #include <dinput.h>
 #include "Mathlab/Vector2f.h"
 
@@ -13,10 +15,12 @@ namespace WindowInput {
     using MathLab::Vector2f;
 
     class DirectXInputConfig {
+    public:
         HWND m_hwnd;
+        HINSTANCE m_mainInstance;
     };
-    const unsigned char RightButton = MOUSE_RIGHT_BUTTON;
-    const unsigned char LeftButton = MOUSE_LEFT_BUTTON;
+    const unsigned char RightButton = 0;
+    const unsigned char LeftButton = 1;
 
     class DirectXInput
     {
@@ -37,10 +41,11 @@ namespace WindowInput {
 
     private:
         LPDIRECTINPUT8 lpdi = nullptr;
-        IDirectInputDevice8 lpdikey = nullptr;
+        LPDIRECTINPUTDEVICE8 lpdikey = nullptr;
         LPDIRECTINPUTDEVICE8 lpdiMouse = nullptr;
         LPDIRECTINPUTDEVICE8 lpdiJoystick = nullptr;
         HWND m_hwnd;
+        HINSTANCE m_mainInstance;
         unsigned char m_keyState[256];
         DIMOUSESTATE m_mouseState;
         DIJOYSTATE m_joystickState;
