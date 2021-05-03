@@ -113,12 +113,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
+    <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
+    <ClCompile Include="Engine\Component\Transform2D.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
     <ClCompile Include="Engine\Primitive\Primitive2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
     <ClCompile Include="Engine\GameplayMain.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp" />
+    <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
@@ -148,6 +151,8 @@
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
     <ClInclude Include="CrossPlatform\Polygon2D.h" />
     <ClInclude Include="CrossPlatform\XenonManager.h" />
+    <ClInclude Include="Engine\Component\Rigidbody2D.h" />
+    <ClInclude Include="Engine\Component\Transform2D.h" />
     <ClInclude Include="Engine\FileManager\FileManager.h" />
     <ClInclude Include="Engine\Primitive\Primitive2D.h" />
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h" />
@@ -161,6 +166,7 @@
     <ClInclude Include="Engine\GameplayMain.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonVirtualMachine.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonCompiler.h" />
+    <ClInclude Include="Engine\Component\IComponent.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />
     <ClInclude Include="macos\MacDrawer.h" />
