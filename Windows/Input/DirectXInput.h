@@ -5,9 +5,9 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 
-#pragma comment(lib, "dinput.lib")
-#define INITGUID
-#include <objbase.h> //need this one for GUIDS
+#pragma comment(lib, "dinput8.lib")
+//#define INITGUID
+//#include <objbase.h> //need this one for GUIDS
 #include <dinput.h>
 #include "Mathlab/Vector2f.h"
 
@@ -37,8 +37,6 @@ namespace WindowInput {
         Vector2f GetMouseMove()const;
         bool GetMouseButton(unsigned char mouseCode)const;
 
-        bool CALLBACK DirectInputEnumJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID guidPointer);
-
     private:
         LPDIRECTINPUT8 lpdi = nullptr;
         LPDIRECTINPUTDEVICE8 lpdikey = nullptr;
@@ -49,10 +47,10 @@ namespace WindowInput {
         unsigned char m_keyState[256];
         DIMOUSESTATE m_mouseState;
         DIJOYSTATE m_joystickState;
-        char m_joyStickName[80];
         GUID m_joyStickGUID;
 
     };
 
-
+    extern char joystickName[80];
+    BOOL CALLBACK DirectInputEnumJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID guidPointer);
 }

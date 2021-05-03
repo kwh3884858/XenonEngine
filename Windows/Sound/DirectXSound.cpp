@@ -33,7 +33,7 @@ namespace WindowSound {
 
         memset(&dsbd, 0, sizeof(DSBUFFERDESC));
         dsbd.dwSize = sizeof(DSBUFFERDESC);
-        dsbd.dwFlags = DSBCAPS_CTRLDEFAULT | DSBCAPS_STATIC | DSBCAPS_LOCSOFTWARE;
+        dsbd.dwFlags = DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY | DSBCAPS_STATIC | DSBCAPS_LOCSOFTWARE;
         dsbd.dwBufferBytes = 22050; // 2 seconds 
         dsbd.lpwfxFormat = &pcmwf;
         result = lpds->CreateSoundBuffer(&dsbd, &lpdsBuffer, nullptr);

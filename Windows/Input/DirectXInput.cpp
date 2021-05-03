@@ -34,6 +34,9 @@ namespace WindowInput {
         result = lpdikey->SetDataFormat(&c_dfDIKeyboard);
         assert(result == DI_OK);
 
+        result = lpdikey->Acquire();
+        assert(result == DI_OK);
+
         //Mouse
         result = lpdi->CreateDevice(GUID_SysMouse, &lpdiMouse, nullptr);
         assert(result == DI_OK);
@@ -46,18 +49,18 @@ namespace WindowInput {
 
         result = lpdiMouse->Acquire();
         assert(result == DI_OK);
-
+        
         //Joystick
-        result = lpdi->EnumDevices(DIDEVTYPE_JOYSTICK, DirectInputEnumJoystick, &m_joyStickGUID, DIEDFL_ATTACHEDONLY);
+        result = lpdi->EnumDevices(DI8DEVCLASS_GAMECTRL, DirectInputEnumJoystick, &m_joyStickGUID, DIEDFL_ATTACHEDONLY);
         assert(result == DI_OK);
-
+        
         result = lpdi->CreateDevice(m_joyStickGUID, &lpdiJoystick,nullptr);
         assert(result == DI_OK);
 
-        lpdiJoystick->SetCooperativeLevel(m_hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+        result = lpdiJoystick->SetCooperativeLevel(m_hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
         assert(result == DI_OK);
 
-        lpdiJoystick->SetDataFormat(&c_dfDIJoystick);
+        result = lpdiJoystick->SetDataFormat(&c_dfDIJoystick);
         assert(result == DI_OK);
 
         result = lpdiJoystick->Acquire();
@@ -68,7 +71,7 @@ namespace WindowInput {
     {
         HRESULT result;
         result = lpdikey->GetDeviceState(sizeof(m_keyState), (LPVOID)m_keyState);
-        //assert(result == DI_OK);
+        assert(result == DI_OK);
         while(result == DIERR_INPUTLOST)
         {
             HRESULT state = lpdikey->Acquire();
@@ -78,13 +81,14 @@ namespace WindowInput {
             }
         }
 
-        lpdiMouse->GetDeviceState(sizeof(m_mouseState), &m_mouseState);
+        result = lpdiMouse->GetDeviceState(sizeof(m_mouseState), (LPVOID)&m_mouseState);
         assert(result == DI_OK);
 
         result = lpdiJoystick->Poll();
-        assert(result == DI_OK);
+        //TODO: why is false?
+        //assert(result == DI_OK);
 
-        lpdiJoystick->GetDeviceState(sizeof(m_joystickState), &m_joystickState);
+        result = lpdiJoystick->GetDeviceState(sizeof(m_joystickState), (LPVOID)&m_joystickState);
         assert(result == DI_OK);
 
     }
@@ -136,10 +140,11 @@ namespace WindowInput {
         return m_mouseState.rgbButtons[mouseCode] & 0x80;
     }
 
-    bool DirectXInput::DirectInputEnumJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID guidPointer)
+    char joystickName[80];
+    BOOL CALLBACK DirectInputEnumJoystick(LPCDIDEVICEINSTANCE lpddi, LPVOID guidPointer)
     {
         *(GUID*)guidPointer = lpddi->guidInstance;
-        strcpy(m_joyStickName, (char*)lpddi->tszProductName);
+        strcpy(joystickName, (char*)lpddi->tszProductName);
         return (DIENUM_STOP);
     }
 

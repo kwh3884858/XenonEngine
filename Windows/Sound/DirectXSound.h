@@ -29,6 +29,6 @@ namespace WindowSound {
 		LPDIRECTSOUND lpds;
         LPDIRECTSOUNDBUFFER lpdsBuffer;
         DSBUFFERDESC dsbd;
-        WAVEFORMAT pcmwf;
+        WAVEFORMATEX pcmwf;
 	};
 }
