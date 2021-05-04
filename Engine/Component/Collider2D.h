@@ -11,13 +11,23 @@ namespace XenonEngine
     class Collider2D :public IComponent
     {
     public:
-        Collider2D(GameObject* gameobject) :
-            IComponent(ComponentType::Collider2D, gameobject) {}
-        virtual ~Collider2D()override;
+        enum ColliderType {
+            None,
+            Circle,
+            Box
+        };
 
-        bool IsTrigger();
+        Collider2D(GameObject* gameobject, m_colliderType) :
+            IComponent(ComponentType::Collider2D, gameobject), 
+            m_colliderType(ColliderType::None)
+        {}
+        virtual ~Collider2D()override = 0;
+
+        bool IsTrigger() { return mIsTrigger; }
     protected:
-        bool mIsTrigger;
+        bool mIsModified = false;
+        bool mIsTrigger = false;
+        ColliderType m_colliderType = ColliderType::None;
     private:
 
     };

@@ -3,11 +3,4 @@
 namespace XenonEngine
 {
 
-    Collider2D::Collider2D()
-    {
-    }
-
-    Collider2D::~Collider2D()
-    {
-    }
 }

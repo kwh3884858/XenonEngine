@@ -113,6 +113,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
+    <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
+    <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
@@ -151,6 +153,8 @@
     <ClInclude Include="CrossPlatform\Database.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
+    <ClInclude Include="Engine\Component\BoxCollider2D.h" />
+    <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />
     <ClInclude Include="Engine\Physics\Force2D.h" />
     <ClInclude Include="Engine\Physics\Physics2D.h" />
