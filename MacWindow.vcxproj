@@ -113,9 +113,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
+    <ClCompile Include="Engine\Component\Collider2D.cpp" />
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
+    <ClCompile Include="Engine\Physics\Physics2D.cpp" />
     <ClCompile Include="Engine\Primitive\Primitive2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
@@ -149,6 +151,9 @@
     <ClInclude Include="CrossPlatform\Database.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
+    <ClInclude Include="Engine\Component\Collider2D.h" />
+    <ClInclude Include="Engine\Physics\Force2D.h" />
+    <ClInclude Include="Engine\Physics\Physics2D.h" />
     <ClInclude Include="CrossPlatform\Polygon2D.h" />
     <ClInclude Include="CrossPlatform\XenonManager.h" />
     <ClInclude Include="Engine\Component\Rigidbody2D.h" />
