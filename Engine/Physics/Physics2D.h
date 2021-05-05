@@ -11,6 +11,13 @@ namespace XenonPhysics
     class Physics2D
     {
     public:
+        enum CollisionType
+        {
+            NoCollision,
+            IsCollision,
+            Penetrating
+        };
+
         Physics2D();
         ~Physics2D();
 
@@ -20,8 +27,8 @@ namespace XenonPhysics
         bool RemoveRigidbody2D(const Rigidbody2D* const rigidbody);
 
     private:
-        static const float TIMESTEP;
-
+        static const float TIMESTEP = 0.1f;
+        static const float EPSILON = 0.01f;
         Vector<Rigidbody2D*> mDynamicRigidbodys;
         Vector<Rigidbody2D*> mStaticRigidbodys;
     };

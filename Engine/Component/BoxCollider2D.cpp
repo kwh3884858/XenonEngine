@@ -9,4 +9,9 @@ namespace XenonEngine
         m_size = config->m_size;
     }
 
+    float BoxCollider2D::GetArea() const
+    {
+        return m_size.x * m_size.y;
+    }
+
 }

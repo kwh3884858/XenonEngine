@@ -8,21 +8,23 @@
 #include "MathLab/Vector2f.h"
 namespace XenonEngine
 {
+    class Rigidbody2D;
     using MathLab::Vector2f
     class Transform2D final: public IComponent
     {
     public:
+        friend class Rigidbody2D;
+
         Transform2D(GameObject* gameobject) :
             IComponent(ComponentType::Transform, gameobject){}
         virtual ~Transform2D()override;
 
         void SetPosition(Vector2f position) { m_position = position; }
-        void SetRotation(Vector2f rotation) { m_rotation = rotation; }
+        void SetRotation(float rotation) { m_orientation = rotation; }
 
     private:
         bool m_isModified = false;
         Vector2f m_position;
-        Vector2f m_rotation;
-        
+        float m_orientation;
     };
 }

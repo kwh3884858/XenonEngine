@@ -5,7 +5,6 @@
 //  Copyright © 2018 whkong. All rights reserved.
 #pragma once
 
-#include <stdio.h>
 namespace MathLab {
 
     typedef     Vector3<int>    Vector3i;

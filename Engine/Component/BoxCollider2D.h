@@ -26,7 +26,7 @@ namespace XenonEngine
         virtual ~BoxCollider2D()override;
 
         void SetConfig(const BoxCollider2DConfig*const config);
-
+        virtual float GetArea()const override;
     private:
         Vector2f m_size;
 

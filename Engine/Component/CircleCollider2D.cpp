@@ -8,4 +8,9 @@ namespace XenonEngine
         m_radius = config->m_radius;
     }
 
+    float CircleCollider2D::GetArea() const
+    {
+        return m_radius * m_radius * PI;
+    }
+
 }

@@ -15,11 +15,14 @@ namespace XenonEngine
     class CircleCollider2D final :public Collider2D
     {
     public:
+        static const float PI = 3.1415926f;
+
         CircleCollider2D(GameObject* gameobject) :
             Collider2D(gameobject, ColliderType::Circle) {}
         virtual ~CircleCollider2D()override;
 
         void SetConfig(const CircleCollider2DConfig*const config);
+        virtual float GetArea()const override;
     private:
         float m_radius;
     };

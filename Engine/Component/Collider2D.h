@@ -18,12 +18,15 @@ namespace XenonEngine
         };
 
         Collider2D(GameObject* gameobject, m_colliderType) :
-            IComponent(ComponentType::Collider2D, gameobject), 
+            IComponent(ComponentType::Collider2D, gameobject),
             m_colliderType(ColliderType::None)
         {}
         virtual ~Collider2D()override = 0;
 
-        bool IsTrigger() { return mIsTrigger; }
+        bool IsTrigger() const { return mIsTrigger; }
+        ColliderType GetColliderType() const { return m_colliderType; }
+
+        virtual float GetArea()const = 0;
     protected:
         bool mIsModified = false;
         bool mIsTrigger = false;

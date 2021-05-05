@@ -7,9 +7,11 @@
 //
 #include <cmath>
 
-#include "Matrix3.h"
-#include "MathLib.h"
 #include "MathLabDefinition.h"
+
+#include "MathLib.h"
+#include "Matrix3.h"
+#include "Matrix2.h"
 
 namespace MathLab {
     Vector3f RotateXAxis(const Vector3f& vec, const float degree)
@@ -47,4 +49,16 @@ namespace MathLab {
         Vector3f result = vec * rotationMatrix;
         return result;
     }
+
+    Vector2f Rotate(const Vector2& vec, const float degree)
+    {
+        float radius = degree * TO_RADIAN;
+        Matrix2X2 rotationMatrix(
+            Vector2f(cos(radius), sin(radius)),
+            Vector2f(-sin(radius), cos(radius))
+        );
+        Vector2f result = vec * rotationMatrix;
+        return result;
+    }
+
 }

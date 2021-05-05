@@ -8,6 +8,7 @@
 #ifndef VectorStruct_h
 #define VectorStruct_h
 
+#include <math.h> // For sqrt
 //#include <stdio.h>
 namespace MathLab {
 
@@ -21,14 +22,10 @@ namespace MathLab {
     template<typename T>
     Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2);
 
-    //template<typename T>
-    //void SwapVector(Vector2<T>* vectorA, Vector2<T>* vectorB);
     template<typename T>
     void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB);
     template<typename T>
     bool LessY(const Vector2<T>& origin, const Vector2<T>& compare);
-    //template<typename T>
-    //void Exchange(Vector2<T>*const a, Vector2<T>*const b);
 
     template<typename T>
     struct Vector2 final {
@@ -36,10 +33,11 @@ namespace MathLab {
         T y;
 
     public:
-        //friend void SwapVector<T>(Vector2<T>* vectorA, Vector2<T>* vectorB);
+        static Vector2 Zero;
+
         friend void SwapVector<T>(Vector2<T>& vectorA, Vector2<T>& vectorB);
         friend bool LessY<T>(const Vector2<T>& origin, const Vector2<T>& compare);
-        //friend void Exchange<T>(Vector2<T>*const a, Vector2<T>*const b);
+
         friend Vector2<T> operator+ <>(const Vector2<T>& v1, const Vector2<T>& v2);
         friend Vector2<T> operator- <>(const Vector2<T>& v1, const Vector2<T>& v2);
 
@@ -47,29 +45,23 @@ namespace MathLab {
         Vector2& operator+=(const Vector2& value);
         Vector2& operator-=(const Vector2& value);
 
+        T dot(const Vector2& vec)const;
+        T cross(const Vector2& vec)const;
+
         Vector2();
         Vector2(T ax, T ay);
         Vector2(const Vector2&);
         ~Vector2();
 
         void Swap();
+        Vector2 Normalize()const;
+        T Magnitude()const;
+        T DoubleMagnitude()const;
     };
 
     template<typename T>
-    Vector2<T>& Vector2<T>::operator+=(const Vector2& value)
-    {
-        this->x += value.x;
-        this->y += value.y;
-        return *this;
-    }
+    __declspec(selectany) Vector2 Vector2<T>::Zero = Vector2f(0, 0);
 
-    template<typename T>
-    Vector2<T>& Vector2<T>::operator-=(const Vector2& value)
-    {
-        this->x -= value.x;
-        this->y -= value.y;
-        return *this;
-    }
 
     template<typename T>
     Vector2<T>::Vector2() {
@@ -107,6 +99,34 @@ namespace MathLab {
     }
 
     template<typename T>
+    Vector2<T>& Vector2<T>::operator+=(const Vector2& value)
+    {
+        this->x += value.x;
+        this->y += value.y;
+        return *this;
+    }
+
+    template<typename T>
+    Vector2<T>& Vector2<T>::operator-=(const Vector2& value)
+    {
+        this->x -= value.x;
+        this->y -= value.y;
+        return *this;
+    }
+
+    template<typename T>
+    T MathLab::Vector2<T>::dot(const Vector2& vec) const
+    {
+        return this->x * vec.x + this->y * vec.y;
+    }
+
+    template<typename T>
+    T MathLab::Vector2<T>::cross(const Vector2& vec) const
+    {
+        return this->x * vec.y - vec.x * this->y;
+    }
+
+    template<typename T>
     void Vector2<T>::Swap() {
         T temp = x;
         x = y;
@@ -127,16 +147,6 @@ namespace MathLab {
         return  vector;
     }
 
-    //template<typename T>
-    //void SwapVector(Vector2<T>* vectorA, Vector2<T>* vectorB) {
-    //    Vector2<T> temp = *vectorA;
-    //    vectorA->x = vectorB->x;
-    //    vectorA->y = vectorB->y;
-
-    //    vectorB->x = temp.x;
-    //    vectorB->y = temp.y;
-    //}
-
     template<typename T>
     void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB)
     {
@@ -150,14 +160,26 @@ namespace MathLab {
         return origin.y < compare.y;
     }
 
-    //template<typename T>
-    //void Exchange(Vector2<T>*const a, Vector2<T>*const b) {
-    //    Vector2<T> temp = *a;
-    //    a->x = b->x;
-    //    a->y = b->y;
-    //    b->x = temp.x;
-    //    b->y = temp.y;
-    //}
-    
+    template<typename T>
+    Vector2<T> MathLab::Vector2<T>::Normalize() const
+    {
+        T magnitide = Magnitude();
+        Vector2<T> temp;
+        temp->x = this->x / magnitide;
+        temp->y = this->y / magnitide;
+        return temp;
+    }
+
+    template<typename T>
+    T MathLab::Vector2<T>::Magnitude() const
+    {
+        return sqrt(DoubleMagnitude());
+    }
+
+    template<typename T>
+    T MathLab::Vector2<T>::DoubleMagnitude() const
+    {
+        return this->dot(*this);
+    }
 }
 #endif /* VectorStruct_h */
