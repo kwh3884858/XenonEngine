@@ -187,7 +187,7 @@
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Vector2f.h" />
     <ClInclude Include="MathLab\Vector3f.h" />
-    <ClInclude Include="MathLab\Vertex3i.h" />
+    <ClInclude Include="MathLab\Vector3.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
     <ClInclude Include="Windows\Input\DirectXInput.h" />

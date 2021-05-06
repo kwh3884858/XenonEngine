@@ -1,13 +1,12 @@
 #include "GameObject.h"
 
 #include "IComponent.h"
-namespace Gameplay
+namespace XenonEngine
 {
 
     GameObject::GameObject(const char* name /*= "XenonGameObject"*/):
         m_name(name),
     {
-        AddComponent(new SaintTransform(this));
     }
 
     GameObject::~GameObject()
@@ -41,7 +40,11 @@ namespace Gameplay
         for (size_t i = 0; i < m_components.count(); i++)
         {
             m_components[i]->Destroy();
+
+            delete m_components[i];
+            m_components[i] = nullptr;
         }
+        m_components.Clear();
     }
 
 }

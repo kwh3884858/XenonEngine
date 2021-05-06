@@ -13,4 +13,9 @@ namespace XenonEngine
         return m_radius * m_radius * PI;
     }
 
+    float CircleCollider2D::GetRadius() const
+    {
+        return m_radius;
+    }
+
 }

@@ -14,9 +14,15 @@
 #include "Matrix2.h"
 
 namespace MathLab {
+
+    float DegreeToRadians(float degree)
+    {
+        return degree * TO_RADIAN;
+    }
+
     Vector3f RotateXAxis(const Vector3f& vec, const float degree)
     {
-        float radian = degree * TO_RADIAN;
+        float radian = DegreeToRadians(degree );
         Matrix3 rotationMatrix(
             Vector3f(1, 0, 0),
             Vector3f(0, cos(radian), sin(radian)),
@@ -28,7 +34,7 @@ namespace MathLab {
 
     Vector3f RotateYAxis(const Vector3f& vec, const float degree)
     {
-        float radius = degree * TO_RADIAN;
+        float radian = DegreeToRadians(degree);
         Matrix3 rotationMatrix(
             Vector3f(cos(radius), 0, sin(radius)),
             Vector3f(0, 1, 0),
@@ -40,7 +46,7 @@ namespace MathLab {
 
     Vector3f RotateZAxis(const Vector3f& vec, const float degree)
     {
-        float radius = degree * TO_RADIAN;
+        float radian = DegreeToRadians(degree);
         Matrix3 rotationMatrix(
             Vector3f(cos(radius), sin(radius), 0),
             Vector3f(-sin(radius), cos(radius), 0),
@@ -52,7 +58,7 @@ namespace MathLab {
 
     Vector2f Rotate(const Vector2& vec, const float degree)
     {
-        float radius = degree * TO_RADIAN;
+        float radian = DegreeToRadians(degree);
         Matrix2X2 rotationMatrix(
             Vector2f(cos(radius), sin(radius)),
             Vector2f(-sin(radius), cos(radius))

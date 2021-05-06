@@ -36,20 +36,20 @@ namespace XenonEngine
         bool mIsStatic = false;
         bool mIsModified = false;
 
-        float mMass;
-        float mInertia;
-        float mInertiaInverse;
+        float m_mass;
+        float m_inertia;
+        float m_inertiaInverse;
 
-        Vector2f mVelocity; //velocity in world space
-        Vector2f mLocalVelocity; //velocity in model space 
-        Vector2f mLocalAngularVelocity; //angular velocity in model space
+        Vector2f m_velocity;             //velocity in world space
+        Vector2f m_localVelocity;        //velocity in model space 
+        float m_localAngularVelocity; //angular velocity in model space
 
-        float mSpeed;
+        float m_speed;
 
         Vector2f m_gravity; // Simulation gravity, default value is (0, mass * gravity acceleration)
         
         Vector2f m_forces;
-        Vector2f m_moment;
+        Vector2f m_moments;
     }
 
 }

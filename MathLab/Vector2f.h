@@ -45,6 +45,9 @@ namespace MathLab {
         Vector2& operator+=(const Vector2& value);
         Vector2& operator-=(const Vector2& value);
 
+        Vector2 operator*(float value);
+        Vector2 operator/(float value);
+
         T dot(const Vector2& vec)const;
         T cross(const Vector2& vec)const;
 
@@ -112,6 +115,24 @@ namespace MathLab {
         this->x -= value.x;
         this->y -= value.y;
         return *this;
+    }
+
+    template<typename T>
+    Vector2 MathLab::Vector2<T>::operator*(float value)
+    {
+        Vector2<T> vector(*this);
+        vector *= value;
+        vector *= value;
+        return vector;
+    }
+
+    template<typename T>
+    Vector2 MathLab::Vector2<T>::operator/(float value)
+    {
+        Vector2<T> vector(*this);
+        vector /= value;
+        vector /= value;
+        return vector;
     }
 
     template<typename T>

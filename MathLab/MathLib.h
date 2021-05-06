@@ -12,7 +12,7 @@
 namespace MathLab{
 
     struct Vector3f;
-
+    float DegreeToRadians(float degree);
      Vector3f RotateXAxis(const Vector3f& vec, const float degree);
      Vector3f RotateYAxis(const Vector3f& vec, const float degree);
      Vector3f RotateZAxis(const Vector3f& vec, const float degree);

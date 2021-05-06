@@ -6,7 +6,7 @@
 
 #pragma once
 #include <cassert>
-namespace Gameplay
+namespace XenonEngine
 {
     class IComponent;
     enum ComponentType;
@@ -44,9 +44,9 @@ namespace Gameplay
     template<typename T>
     T * GameObject::GetComponent(ComponentType type)
     {
-        for (size_t i = 0; i < m_components.count(); i++)
+        for (size_t i = 0; i < m_components.Count(); i++)
         {
-            if (m_components[i]->getComponentType() == type)
+            if (m_components[i]->GetComponentType() == type)
             {
                 return static_cast<T*>(m_components[i]);
             }
@@ -57,7 +57,7 @@ namespace Gameplay
     template<typename T>
     bool GameObject::RemoveComponent(T* type)
     {
-        for (size_t i = 0; i < m_components.count(); i++)
+        for (size_t i = 0; i < m_components.Count(); i++)
         {
             if (m_components[i] == type)
             {

@@ -14,4 +14,9 @@ namespace XenonEngine
         return m_size.x * m_size.y;
     }
 
+    float BoxCollider2D::GetRadius() const
+    {
+        return m_size.Magnitude();
+    }
+
 }

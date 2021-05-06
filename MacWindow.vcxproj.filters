@@ -239,9 +239,6 @@
     <ClInclude Include="CrossPlatform\Polygon2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MathLab\Vertex3i.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MathLab\Vector2f.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -285,6 +282,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MathLab\Matrix2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLab\Vector3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

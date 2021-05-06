@@ -4,7 +4,7 @@
 #include "CrossPlatform/Database.h"
 #include "CrossPlatform/SColorRGBA.h"
 
-#include "MathLab/Vector3f.h"
+#include "MathLab/Vector3.h"
 #include "MathLab/MathLib.h"
 #include "MathLab/MathLabDefinition.h"
 #include <cmath> // sin, cos

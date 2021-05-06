@@ -23,6 +23,7 @@ namespace XenonEngine
 
         void SetConfig(const CircleCollider2DConfig*const config);
         virtual float GetArea()const override;
+        virtual float GetRadius()const override;
     private:
         float m_radius;
     };

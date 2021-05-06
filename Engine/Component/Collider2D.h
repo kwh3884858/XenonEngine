@@ -27,6 +27,7 @@ namespace XenonEngine
         ColliderType GetColliderType() const { return m_colliderType; }
 
         virtual float GetArea()const = 0;
+        virtual float GetRadius()const = 0;
     protected:
         bool mIsModified = false;
         bool mIsTrigger = false;

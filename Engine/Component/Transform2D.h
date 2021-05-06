@@ -19,9 +19,12 @@ namespace XenonEngine
             IComponent(ComponentType::Transform, gameobject){}
         virtual ~Transform2D()override;
 
-        void SetPosition(Vector2f position) { m_position = position; }
-        void SetRotation(float rotation) { m_orientation = rotation; }
+        //void SetPosition(Vector2f position) { m_position = position; }
+        //void SetRotation(float rotation) { m_orientation = rotation; }
+        void AddPosition(const Vector2f& position) { m_position += position; }
 
+        float GetOrientation()const { return m_orientation; }
+        void AddRotation(float rotation) { m_orientation += rotation; }
     private:
         bool m_isModified = false;
         Vector2f m_position;

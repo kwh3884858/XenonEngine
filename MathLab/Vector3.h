@@ -4,10 +4,11 @@
 //  Created by whkong on 2021-2-28.
 //  Copyright © 2018 whkong. All rights reserved.
 #pragma once
-
+#include "MathLab/Vector2f.h"
 namespace MathLab {
 
-    typedef     Vector3<int>    Vector3i;
+    typedef     Vector3<int>        Vector3i;
+    typedef     Vector3<float>      Vector3f;
 
     template<typename T>
     struct Vector3 final {
@@ -27,14 +28,18 @@ namespace MathLab {
         Vector3& operator-=(const Vector3& rvalue);
 
         T dot(const Vector3& vec)const;
+        Vector3 Cross(const Vector3& vec)const;
 
         Vector3();
         Vector3(T ax, T ay, T az);
-        Vector3(const Vector3&);
+        Vector3(const Vector3& vec);
+        Vector3(const Vector2<T>& vec);
         ~Vector3();
 
         void Swap();
-
+        Vector3 Normalize()const;
+        T Magnitude()const;
+        T DoubleMagnitude()const;
     };
 
     template<typename T>
@@ -55,16 +60,14 @@ namespace MathLab {
         y(0),
         z(0)
     {
-        x = 0;
-        y = 0;
-        z = 0;
     }
 
     template<typename T>
-    Vector3<T>::Vector3(T ax, T ay, T az) {
-        x = ax;
-        y = ay;
-        z = az;
+    Vector3<T>::Vector3(T ax, T ay, T az) :
+        x(ax),
+        y(ay),
+        z(az)
+    {
     }
 
     template<typename T>
@@ -75,15 +78,16 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector3<T>::~Vector3() {
-
+    Vector3<T>::Vector3(const Vector2<T>& vec)
+    {
+        this->x = vec.x;
+        this->y = vec.y;
+        this->z = 0;
     }
 
     template<typename T>
-    void Vector3<T>::Swap() {
-        T temp = x;
-        x = y;
-        y = temp;
+    Vector3<T>::~Vector3() {
+
     }
 
     template<typename T>
@@ -108,6 +112,45 @@ namespace MathLab {
     T Vector3<T>::dot(const Vector3& vec) const
     {
         return this->x * vec.x + this->y * vec.y + this->z * vec.z;
+    }
+
+    template<typename T>
+    Vector3<T> Vector3<T>::Cross(const Vector3& vec) const
+    {
+        Vector3 result(this->y * vec.z - this->z * vec.z,
+            this->z*vec.x - this->x*vec.z,
+            this->x*vec.y - this->y*vec.x);
+        return result;
+    }
+
+    template<typename T>
+    void Vector3<T>::Swap() {
+        T temp = x;
+        x = y;
+        y = temp;
+    }
+
+    template<typename T>
+    Vector3<T> Vector3<T>::Normalize() const
+    {
+        T magnitide = Magnitude();
+        Vector3<T> temp;
+        temp->x = this->x / magnitide;
+        temp->y = this->y / magnitide;
+        temp->z = this->z / magnitide;
+        return temp;
+    }
+
+    template<typename T>
+    T Vector3<T>::Magnitude() const
+    {
+        return sqrt(DoubleMagnitude());
+    }
+
+    template<typename T>
+    T Vector3<T>::DoubleMagnitude() const
+    {
+        return this->dot(*this);
     }
 
     template<typename T>
@@ -141,16 +184,5 @@ namespace MathLab {
     bool LessY(const Vector3& origin, const Vector3& compare) {
         return origin.y < compare.y;
     }
-
-    //template<typename T>
-    //void Exchange(Vector3*const a, Vector3*const b) {
-    //    Vector3 temp = *a;
-    //    a->x = b->x;
-    //    a->y = b->y;
-    //    a->z = b->z;
-    //    b->x = temp.x;
-    //    b->y = temp.y;
-    //    b->z = temp.z;
-    //}
 
 }
