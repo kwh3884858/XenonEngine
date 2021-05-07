@@ -7,19 +7,19 @@
 namespace XenonEngine
 {
     class GameObject;
+public enum ComponentType
+    {
+        None,
+        Transform,
+        Polygon2D,
+        Shader,
+        Collider2D,
+        Rigidbody2D,
+        Script,
+        Input
+    };
     class IComponent
     {
-        enum ComponentType
-        {
-            None,
-            Transform,
-            Polygon2D,
-            Shader,
-            Collider2D,
-            Rigidbody2D,
-            Script,
-            Input
-        };
         IComponent(ComponentType type, GameObject* gameobject) :
             m_type(type),
             m_gameobject(gameobject)
@@ -33,6 +33,10 @@ namespace XenonEngine
         virtual bool Start() { return true; }
         virtual bool Update() { return true; }
         virtual bool Destroy() { return true; }
+
+        virtual void OnTrigger(GameObject* gameobject) { return; }
+
+        GameObject* GetGameObject() { return m_gameobject; }
 
     protected:
         ComponentType m_type = ComponentType::None;

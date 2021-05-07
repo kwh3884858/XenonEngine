@@ -26,8 +26,10 @@ namespace XenonEngine
         virtual ~BoxCollider2D()override;
 
         void SetConfig(const BoxCollider2DConfig*const config);
+        Vector2f GetSize()const { return m_size; }
         virtual float GetArea()const override;
         virtual float GetRadius()const override;
+        
     private:
         Vector2f m_size;
 
