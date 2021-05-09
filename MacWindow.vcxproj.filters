@@ -105,6 +105,9 @@
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -285,6 +288,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MathLab\Vector3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\XenonFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

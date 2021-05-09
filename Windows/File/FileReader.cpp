@@ -8,37 +8,35 @@
 namespace File
 {
     using Algorithm::Vector;
+    using CrossPlatform::XenonFile;
 
-    bool FileReader::ReadFile(const char* const fileName, char** file)const
+    CrossPlatform::XenonFile* FileReader::ReadFile(const char* const fileName) const
     {
-        std::ifstream fins;
-
-        char charBuffer = '\0';
-        Vector<char> contentBuffer;
-
-        int i = 0;
-
-        //memset(content, 0, sizeof(content));
         assert(fileName != nullptr);
-        assert(file != nullptr);
-        assert(*file != nullptr);
+
+        std::ifstream fins;
+        XenonFile* xenonFile = new XenonFile;
 
         fins.open(fileName);
-        assert(fins.peek() != EOF);
-        if (fins.peek() == EOF) {
 
-            std::cerr << "Error: File is empty.";
-            return false;
-        }
         // If it could not open the file then exit.
         if (!fins.fail())
         {
             fins >> std::noskipws;
+            char charBuffer = '\0';
+
             while (!fins.eof())
             {
-                //fins >> tcontent[i++];
                 fins >> charBuffer;
-                contentBuffer.Add(charBuffer);
+                if (charBuffer == CrossPlatform::CL) // CL, carriage return
+                {
+                    xenonFile->m_lineSize++;
+                }
+                if (charBuffer == CrossPlatform::LF) //LF, line feed
+                {
+                    continue;
+                }
+                xenonFile->m_content.Add(charBuffer);
             }
             fins.close();
         }
@@ -49,17 +47,7 @@ namespace File
         }
         fins.close();
 
-        char* content = new char[contentBuffer.Count()];
-        memcpy_s(content, contentBuffer.Count(), contentBuffer.begin(), contentBuffer.Count());
-
-        // The last character will push twish, because EOF will not make different with
-        //original character, so we should set the last one to terminal character to
-        //finish the sentense
-        content[contentBuffer.Count() - 1] = '\0';
-
-        *file = content;
-
-        return true;
+        return xenonFile;
     }
 
 }

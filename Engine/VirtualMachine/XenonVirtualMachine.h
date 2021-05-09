@@ -10,13 +10,7 @@
 namespace XenonEnigne
 {
     using Algorithm::String;
-    enum TokenType {
-        None,
-        Name,
-        Comma,
-        LBreacket,
-        RBracket,
-    };
+
     struct Token {
         TokenType m_tokenType = TokenType::None;
         String m_value;

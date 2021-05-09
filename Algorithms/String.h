@@ -7,6 +7,7 @@
 #include "Algorithms/Vector.h"
 namespace Algorithm
 {
+
     template<typename T>
     class StringBase
     {
@@ -16,17 +17,14 @@ namespace Algorithm
         StringBase(const T* value, unsigned int size);
         ~StringBase();
 
+        T operator[](int index);
+
         void Add(T value);
+        void Count()const;
 
     private:
         Vector<T> m_string;
     };
-
-    template<typename T>
-    void Algorithm::StringBase<T>::Add(T value)
-    {
-        m_string.Add(value);
-    }
 
     template<typename T>
     StringBase<T>::StringBase()
@@ -45,5 +43,29 @@ namespace Algorithm
         m_string.Replace(value, size);
     }
 
+    template<typename T>
+    Algorithm::StringBase<T>::~StringBase()
+    {
+    }
+
+    template<typename T>
+    T Algorithm::StringBase<T>::operator[](int index)
+    {
+        return m_string[index];
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::Add(T value)
+    {
+        m_string.Add(value);
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::Count() const
+    {
+        return m_string.Count();
+    }
+
     typedef StringBase<char> String;
+
 }
