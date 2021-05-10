@@ -1,5 +1,6 @@
 #include "Windows/File/FileReader.h"
 #include "Algorithms/Vector.h"
+#include "CrossPlatform/XenonFile.h"
 
 #include <fstream>
 #include <iostream> // For std::cerr
@@ -10,8 +11,8 @@ namespace File
     using Algorithm::Vector;
     using CrossPlatform::XenonFile;
 
-    CrossPlatform::XenonFile* FileReader::ReadFile(const char* const fileName) const
-    {
+    XenonFile*const FileReader::ReadFile(const char* const fileName) const
+{
         assert(fileName != nullptr);
 
         std::ifstream fins;
@@ -43,7 +44,7 @@ namespace File
         else
         {
             std::cerr << "Error: " << strerror(errno);
-            return false;
+            return nullptr;
         }
         fins.close();
 

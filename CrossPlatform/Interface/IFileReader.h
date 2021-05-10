@@ -6,11 +6,14 @@
 
 #pragma once
 namespace CrossPlatform {
+
+    class XenonFile;
+
     class IFileReader
     {
     public:
         virtual ~IFileReader() {}
 
-        virtual bool ReadFile(const char* const fileName, char** file)const = 0;
+        virtual XenonFile* const ReadFile(const char* const fileName)const = 0;
     };
 }

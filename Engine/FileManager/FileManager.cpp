@@ -12,8 +12,8 @@ namespace XenonEnigne {
         return true;
     }
 
-    void FileManager::ReadFile(const char* const fileName, char** file)
+    XenonFile* FileManager::ReadFile(const char* const fileName, char** file)
     {
-        m_fileReader->ReadFile(fileName, file);
+        m_fileReader->ReadFile(fileName);
     }
 }

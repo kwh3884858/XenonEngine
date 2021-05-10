@@ -124,6 +124,7 @@
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
     <ClCompile Include="Engine\GameplayMain.cpp" />
+    <ClCompile Include="Engine\VirtualMachine\XenonCompiler.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />

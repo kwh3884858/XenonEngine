@@ -20,7 +20,8 @@ namespace Algorithm
 		bool Add(const T& element);
 		bool Remove(const T& element);
         bool Replace(const T*const content,unsigned int size);
-		bool Clear();
+        bool Clear();
+
 		int IndexOf(T element)const;
 		int Count()const;
 		int Capacity()const;
@@ -39,6 +40,7 @@ namespace Algorithm
 		bool IsCapacityEnough();
 		bool Reallocation();
         bool InternalReplace(const T*const content, unsigned int size);
+        bool Destory();
 
 		T* m_content;
 		int m_count;
@@ -68,7 +70,7 @@ namespace Algorithm
 	template<typename T>
 	Vector<T>::~Vector()
 	{
-		Clear();
+		Destory();
 	}
 
 	template<typename T>
@@ -84,21 +86,16 @@ namespace Algorithm
 		return true;
 	}
 
-	template<typename T>
-	bool Vector<T>::Clear()
-	{
-		if (m_content)
-		{
-			for (int i = 0; i < m_count; i++)
-			{
-				m_content[i] = 0;
-			}
-			delete[] m_content;
-			m_content = nullptr;
-			m_count = 0;
-		}
-		return true;
-	}
+    template<typename T>
+    bool Algorithm::Vector<T>::Clear()
+    {
+        for (int i = 0; i < m_count; i++)
+        {
+            m_content[i] = 0;
+        }
+        m_count = 0;
+        return true;
+    }
 
 	template<typename T>
 	bool Vector<T>::Add(const T & element)
@@ -236,6 +233,17 @@ namespace Algorithm
         m_count = size;
     }
 
+    template<typename T>
+    bool Vector<T>::Destory()
+    {
+        if (m_content)
+        {
+            Clear();
+            delete[] m_content;
+            m_content = nullptr;
+        }
+        return true;
+    }
 }
 
 

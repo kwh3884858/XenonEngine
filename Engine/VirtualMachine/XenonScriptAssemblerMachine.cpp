@@ -11,9 +11,109 @@ namespace XenonEnigne
     {
     }
 
-    void XenonScriptAssemblerMachine::InitializeStateTransformList()
+    void XenonScriptAssemblerMachine::InitializeInstructionList(const XenonFile* xenonFile) const
     {
-        m_stateTransformList.Add(StateChain());
+        unsigned int index = 0;
+        bool isDone = false;
+        bool isShouldAdd = true;
+        InstructionState currentState = InstructionState::Mnomonic;
+        String tmpString;
+
+        int tokenOpAmount = 0;
+        int currentTokenOpCount = 0;
+
+        Instruction* instrction;
+
+        while (index < xenonFile->m_content.Count())
+        {
+            char currentChar = xenonFile->m_content[index];
+            if (IsNewLine(currentChar))
+            {
+                isShouldAdd = false;
+                isDone = true;
+            }
+            if (IsCharWhitespace(currentChar))
+            {
+                isShouldAdd = false;
+                isDone = false;
+            }
+            else if (currentChar == ',')
+            {
+                isShouldAdd = false;
+                isDone = true;
+            }
+            else
+            {
+                isShouldAdd = true;
+            }
+
+            if (isShouldAdd)
+            {
+                tmpString.Add(currentChar);
+            }
+            if (isDone)
+            {             
+                switch (currentState)
+                {
+
+                case Mnomonic:
+                {
+                    instrction = new Instruction;
+                    instrction->m_mnemonic = tmpString;
+                    currentState = InstructionState::OpType;
+                }
+                break;
+                case OpType:
+                {
+                    instrction->m_opType = tmpString.ToInt();
+                    currentState = InstructionState::OpCount;
+                }
+                break;
+                case OpCount:
+                {
+                    instrction->m_opCount = tmpString.ToInt();
+                    tokenOpAmount = instrction->m_opCount;
+                    if (tokenOpAmount > 0)
+                    {
+                        currentTokenOpCount = 0;
+                        currentState = InstructionState::OpTypeList;
+                    }
+                    else
+                    {
+                        instrction->op = OP_FLAG_TYPE_NONE;
+                        m_instructionList->Add(instrction);
+                        currentState = InstructionState::Mnomonic;
+                    }
+                }
+                    break;
+                case OpTypeList:
+                {
+                    if (currentTokenOpCount < tokenOpAmount)
+                    {
+                        int bitOffset = tmpString.ToInt();
+                        instrction->op &= (1 << bitOffset);
+                        currentTokenOpCount++;
+                    }
+                    else
+                    {
+                        m_instructionList->Add(instrction);
+                        currentState = InstructionState::Mnomonic;
+                    }
+                }
+
+                break;
+                default:
+                    break;
+
+
+                }
+                isDone = false;
+                tmpString.Clear();
+            }
+
+            index++;
+            isShouldAdd = true;
+        }
     }
 
     void XenonScriptAssemblerMachine::StripComment(XenonFile*const raw, char commentChar) const
@@ -157,17 +257,25 @@ namespace XenonEnigne
                     return TokenError(currentCharacter, currentLexerState, currentIndex);
                 }
             }
-                break;
+            break;
             case LexerStateString:
                 break;
             case LexerStateEscape:
+                break;
+            case LexerStateDelimiter:
+            {
+
+            }
                 break;
             default:
                 printf("Undefined State\n");
                 return nullptr;
                 break;
 
+
             }
+
+            currentIndex++;
 
             if (isShouldAddCharacter)
             {
@@ -179,8 +287,6 @@ namespace XenonEnigne
                 DetermineTokenType(token, currentLexerState);
                 return currentLexerState;
             }
-
-            currentIndex++;
         }
 
         return currentLexerState;
@@ -205,7 +311,15 @@ namespace XenonEnigne
         case LexerStateStart:
             break;
         case LexerStateIdentifier:
-
+            token->m_tokenType = TokenType::Identifier;
+            for (int i = 0 ; i < m_instructionList.Count(); i ++)
+            {
+                if (token->m_character == m_instructionList[i]->m_mnemonic)
+                {
+                    token->m_tokenType = m_instructionList[i]->m_opType;
+                    break;
+                }
+            }
             break;
         case LexerStateString:
             break;
@@ -243,6 +357,14 @@ namespace XenonEnigne
     XenonScriptAssemblerMachine::TokenVector* XenonScriptAssemblerMachine::Parsing(XenonFile*const xenonFile) const
     {
 
+    }
+
+    bool XenonScriptAssemblerMachine::IsNewLine(char character) const
+    {
+        if (character == '\t' || character == '\r')
+            return true;
+        else
+            return false;
     }
 
     bool XenonScriptAssemblerMachine::IsCharWhitespace(char character) const

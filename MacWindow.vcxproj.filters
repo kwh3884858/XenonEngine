@@ -108,6 +108,9 @@
     <ClCompile Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\VirtualMachine\XenonCompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">

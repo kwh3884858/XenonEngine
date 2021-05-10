@@ -10,17 +10,17 @@ namespace XenonEnigne
 {
     using Algorithm::Vector;
     using CrossPlatform::XenonFile;
+    using Algorithm::String;
+
     class XenonScriptAssemblerMachine
     {
         typedef Vector<Token*> TokenVector;
     public:
         XenonScriptAssemblerMachine();
         ~XenonScriptAssemblerMachine();
-
-
+        void InitializeInstructionList(const XenonFile* xenonFile)const;
 
     private:
-        void InitializeStateTransformList();
         void DetermineCharacterType(char c)const;
         void StripComment(XenonFile*const xenonFile, char commentChar)const;
         LexerState GetNextToken(XenonFile*const xenonFile, unsigned int& currentIndex, Token*const token)const;
@@ -29,6 +29,7 @@ namespace XenonEnigne
         TokenVector* Lexer(XenonFile*const xenonFile)const;
         TokenVector* Parsing(XenonFile*const xenonFile)const;
 
+        bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
         bool IsCharNumeric(char character)const;
         bool IsCharIdent(char character)const;
@@ -80,53 +81,56 @@ namespace XenonEnigne
             LexerStateEscape,
             LexerStateIntegral,
             LexerStateFloat,
+            LexerStateDelimiter,
 
         };
         enum TokenType {
             Intergal,
             Float,
             Identifier,
-            InstrcutionMOV,
-            InstrcutionADD,
-            InstrcutionSUB,
-            InstrcutionMUL,
-            InstrcutionDIV,
-            InstrcutionMOD,
-            InstrcutionEXP,
-            InstrcutionNEG,
-            InstrcutionINC,
-            InstrcutionDEC,
+            MOV,
+            ADD,
+            SUB,
+            MUL,
+            DIV,
+            MOD,
+            EXP,
+            NEG,
+            INC,
+            DEC,
 
-            InstrcutionAND    ,
-            InstrcutionOR     ,
-            InstrcutionXOR    ,
-            InstrcutionNOT    ,
-            InstrcutionSHL    ,
-            InstrcutionSHR    ,
+            AND    ,
+            OR     ,
+            XOR    ,
+            NOT    ,
+            SHL    ,
+            SHR    ,
 
-            InstrcutionCONCAT ,
-            InstrcutionGETCHAR,
-            InstrcutionSETCHAR,
+            CONCAT ,
+            GETCHAR,
+            SETCHAR,
             
-            InstrcutionJMP    ,
-            InstrcutionJE     ,
-            InstrcutionJNE    ,
-            InstrcutionJG     ,
-            InstrcutionJL     ,
-            InstrcutionJGE    ,
-            InstrcutionJLE    ,
+            JMP    ,
+            JE     ,
+            JNE    ,
+            JG     ,
+            JL     ,
+            JGE    ,
+            JLE    ,
             
-            InstrcutionPUSH   ,
-            InstrcutionPOP    ,
+            PUSH   ,
+            POP    ,
             
-            InstrcutionCALL   ,
-            InstrcutionRET    ,
-            InstrcutionCALLHOS,
+            CALL   ,
+            RET    ,
+            CALLHOS,
             
-            InstrcutionPAUSE  ,
-            InstrcutionEXIT   
+            PAUSE  ,
+            EXIT   ,
+
+            TokenTypeCount
         };
-        struct 
+        
 
         struct StateChain {
             char m_symbol;
@@ -144,54 +148,14 @@ namespace XenonEnigne
         const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string
         
 
-        enum InstrctionOpCode{
-            INSTR_MOV             =  0,
 
-            INSTR_ADD            =   1,
-            INSTR_SUB            =   2,
-            INSTR_MUL            =   3,
-            INSTR_DIV            =   4,
-            INSTR_MOD            =   5,
-            INSTR_EXP            =   6,
-            INSTR_NEG            =   7,
-            INSTR_INC            =   8,
-            INSTR_DEC             =  9,
-
-            INSTR_AND             =  10,
-            INSTR_OR              =  11,
-            INSTR_XOR             =  12,
-            INSTR_NOT             =  13,
-            INSTR_SHL             =  14,
-            INSTR_SHR              = 15,
-
-            INSTR_CONCAT          =  16,
-            INSTR_GETCHAR         =  17,
-            INSTR_SETCHAR          = 18,
-
-            INSTR_JMP             =  19,
-            INSTR_JE              =  20,
-            INSTR_JNE             =  21,
-            INSTR_JG              =  22,
-            INSTR_JL              =  23,
-            INSTR_JGE             =  24,
-            INSTR_JLE              = 25,
-
-            INSTR_PUSH            =  26,
-            INSTR_POP              = 27,
-
-            INSTR_CALL            =  28,
-            INSTR_RET             =  29,
-            INSTR_CALLHOST         = 30,
-
-            INSTR_PAUSE           =  31,
-            INSTR_EXIT            =  32
-        };
 
         // ---- Operand Type Bitfield Flags ---------------------------------------------------
 
     // The following constants are used as flags into an operand type bit field, hence
     // their values being increasing powers of 2.
         typedef int OpBitfiledFlag;
+        const OpBitfiledFlag OP_FLAG_TYPE_NONE       = 0     ;
         const OpBitfiledFlag OP_FLAG_TYPE_INT        =1      ;      // Integer literal value
         const OpBitfiledFlag OP_FLAG_TYPE_FLOAT      =2      ;      // Floating-point literal value
         const OpBitfiledFlag OP_FLAG_TYPE_STRING     =4      ;      // Integer literal value
@@ -204,14 +168,100 @@ namespace XenonEnigne
  
         struct Instruction
         {
-            char m_mnemonic[MaxInstructionMnemonicSize];
-            InstrctionOpCode m_opCode;
-            int m_opCount;
-            OpBitfiledFlag* op;
+            String m_mnemonic;
+            TokenType m_opType ;
+            int m_opCount = 0;
+            OpBitfiledFlag op = OP_FLAG_TYPE_NONE;
         };
 
+        enum InstructionState
+        {
+            Mnomonic,
+            OpType,
+            OpCount,
+            OpTypeList
+        };
 
+        Vector<Instruction*> m_instructionList;
         Vector<StateChain> m_stateTransformList;
-    };
+
+        // Ready for deletion
+        enum InstrctionOpCode {
+            INSTR_MOV = 0,
+
+            INSTR_ADD = 1,
+            INSTR_SUB = 2,
+            INSTR_MUL = 3,
+            INSTR_DIV = 4,
+            INSTR_MOD = 5,
+            INSTR_EXP = 6,
+            INSTR_NEG = 7,
+            INSTR_INC = 8,
+            INSTR_DEC = 9,
+
+            INSTR_AND = 10,
+            INSTR_OR = 11,
+            INSTR_XOR = 12,
+            INSTR_NOT = 13,
+            INSTR_SHL = 14,
+            INSTR_SHR = 15,
+
+            INSTR_CONCAT = 16,
+            INSTR_GETCHAR = 17,
+            INSTR_SETCHAR = 18,
+
+            INSTR_JMP = 19,
+            INSTR_JE = 20,
+            INSTR_JNE = 21,
+            INSTR_JG = 22,
+            INSTR_JL = 23,
+            INSTR_JGE = 24,
+            INSTR_JLE = 25,
+
+            INSTR_PUSH = 26,
+            INSTR_POP = 27,
+
+            INSTR_CALL = 28,
+            INSTR_RET = 29,
+            INSTR_CALLHOST = 30,
+
+            INSTR_PAUSE = 31,
+            INSTR_EXIT = 32
+        };
+
+        const char InstrcutionMOV[] = "MOV";
+        const char InstrcutionADD[] = "ADD";
+        const char InstrcutionSUB[] = "SUB";
+        const char InstrcutionMUL[] = "MUL";
+        const char InstrcutionDIV[] = "DIV";
+        const char InstrcutionMOD[] = "MOD";
+        const char InstrcutionEXP[] = "EXP";
+        const char InstrcutionNEG[] = "NEG";
+        const char InstrcutionINC[] = "INC";
+        const char InstrcutionDEC[] = "DEC";
+        const char InstrcutionAND[] = "AND";
+        const char InstrcutionOR[] = "OR ";
+        const char InstrcutionXOR[] = "XOR";
+        const char InstrcutionNOT[] = "NOT";
+        const char InstrcutionSHL[] = "SHL";
+        const char InstrcutionSHR[] = "SHR";
+        const char InstrcutionCONCAT[] = "CONAT";
+        const char InstrcutionGETCHAR[] = "GETHAR";
+        const char InstrcutionSETCHAR[] = "SETHAR";
+        const char InstrcutionJMP[] = "JMP";
+        const char InstrcutionJE[] = "JE ";
+        const char InstrcutionJNE[] = "JNE";
+        const char InstrcutionJG[] = "JG ";
+        const char InstrcutionJL[] = "JL ";
+        const char InstrcutionJGE[] = "JGE";
+        const char InstrcutionJLE[] = "JLE";
+        const char InstrcutionPUSH[] = "PUS";
+        const char InstrcutionPOP[] = "POP";
+        const char InstrcutionCALL[] = "CAL";
+        const char InstrcutionRET[] = "RET";
+        const char InstrcutionCALLHOS[] = "CALLHOS";
+        const char InstrcutionPAUSE[] = "PASUE";
+        const char InstrcutionEXIT[] = "EXI";
+};
 
 }

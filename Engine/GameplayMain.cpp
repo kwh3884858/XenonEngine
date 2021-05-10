@@ -11,6 +11,7 @@
 
 #include "CrossPlatform/Polygon2D.h"
 
+#include "Engine/VirtualMachine/XenonCompiler.h"
 
 
 namespace Gameplay {
@@ -19,6 +20,8 @@ namespace Gameplay {
     using CrossPlatform::Database;
     using CrossPlatform::Polygon2D;
     using Primitive::Primitive2D;
+
+    using XenonEnigne::XenonCompiler;
 
     Polygon2D* tmpPolygon;
     Polygon2D* tmpRectangle;
@@ -43,6 +46,8 @@ namespace Gameplay {
         //printf("(%u, %u)\n", vertexList2[2].x, vertexList2[2].y);
         //printf("(%u, %u)\n", vertexList2[3].x, vertexList2[3].y);
 
+        XenonCompiler compiler;
+        compiler.Initialize();
     }
 
     void GameplayMain()

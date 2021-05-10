@@ -9,6 +9,8 @@
 
 namespace XenonEnigne
 {
+
+
     using Algorithm::String;
 
     struct Token {

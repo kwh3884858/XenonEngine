@@ -21,10 +21,14 @@ namespace Algorithm
 
         void Add(T value);
         void Count()const;
+        void ToInt()const;
 
     private:
         Vector<T> m_string;
     };
+
+    template<typename T>
+    bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
 
     template<typename T>
     StringBase<T>::StringBase()
@@ -64,6 +68,34 @@ namespace Algorithm
     void Algorithm::StringBase<T>::Count() const
     {
         return m_string.Count();
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::ToInt() const
+    {
+        int size = m_string.Count() + 1;
+        T* content = new content[size];
+        memcpy(content, m_string.begin(), m_string.Count());
+        content[size] = '\0';
+        int result = atoi(content);
+        return result;
+    }
+
+    template<typename T>
+    bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs)
+    {
+        if (lhs.Count() != rhs.Count())
+        {
+            return false;
+        }
+        for (int i = 0 ; i < lhs.Count();i++)
+        {
+            if (lhs[i] != rhs[i])
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     typedef StringBase<char> String;
