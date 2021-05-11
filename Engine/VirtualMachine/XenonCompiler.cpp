@@ -1,5 +1,6 @@
 #include "XenonCompiler.h"
 #include "Engine/VirtualMachine/XenonScriptAssemblerMachine.h"
+#include <cassert>
 
 namespace XenonEnigne 
 {
@@ -15,7 +16,8 @@ namespace XenonEnigne
     {
         m_xsam = new XenonScriptAssemblerMachine;
         XenonFile*const xenonFile = FileManager::get().ReadFile("XenonScriptAssemblerMachineInstrction.xet");
-        m_xsam->InitializeInstructionList(xenonFile);
+        bool result = m_xsam->InitializeInstructionList(xenonFile);
+        assert(result == true);
     }
 
 }

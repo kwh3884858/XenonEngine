@@ -14,50 +14,39 @@ namespace XenonEnigne
 
     class XenonScriptAssemblerMachine
     {
+        typedef   InstructionState(XenonScriptAssemblerMachine::*CreateListFunction)(LexerState currentState, const String& tmpString);
+
         typedef Vector<Token*> TokenVector;
     public:
         XenonScriptAssemblerMachine();
         ~XenonScriptAssemblerMachine();
-        void InitializeInstructionList(const XenonFile* xenonFile)const;
 
+        bool InitializeInstructionList(const XenonFile* xenonFile)const;
+        void InitializeDelimiterList(const XenonFile*const xenonFile)const;
     private:
+        void InstructionError(InstructionState state, char character, unsigned int index)const;
+        void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
+        void UpdateCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
+        InstructionState CreateInstructionList(InstructionState currentState, const String& tmpString, Instruction*const instruction, int& tokenOpAmount, int& currentTokenopCount);
+        DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*const delimitSymbol);
         void DetermineCharacterType(char c)const;
-        void StripComment(XenonFile*const xenonFile, char commentChar)const;
-        LexerState GetNextToken(XenonFile*const xenonFile, unsigned int& currentIndex, Token*const token)const;
-        LexerState TokenError(char currentCharacter,LexerState currentState,unsigned int currentIndex)const;
+
+        LexerState GetNextToken(XenonFile*const xenonFile, unsigned int& refCurrentIndex, Token*const token)const;
+        LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone)const;
+        LexerState TokenError(LexerState state, char character, unsigned int index)const;
         void DetermineTokenType(Token* const token, LexerState currentState)const;
+
         TokenVector* Lexer(XenonFile*const xenonFile)const;
-        TokenVector* Parsing(XenonFile*const xenonFile)const;
+        void Parsing(TokenVector*const tokenVector)const;
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
         bool IsCharNumeric(char character)const;
         bool IsCharIdent(char character)const;
         bool IsCharFullStop(char character)const;
+        bool IsCharDelimiter(char character)const;
 
-        enum TokeType{
-            TokenTypeInt            =   0 ,          // An integer literal
-            TokenTypeFloat          =   1 ,          // An floating-point literal
-            TokenTypeString         =   2 ,          // An string literal
-            TokenTypeQuote          =   3 ,          // A double-quote
-            TokenTypeIdent          =   4 ,          // An identifier
-            TokenTypeColon          =   5 ,          // A colon :
-            TokenTypeOpenBracket    =   6 ,          // An openening bracket  (
-            TokenTypeCloseBracket   =   7 ,          // An closing bracket    )
-            TokenTypeComma          =   8 ,          // A comma ,
-            TokenTypeOpenBrace     =   9 ,          // An openening curly brace { 
-            TokenTypeCloseBrace    =   10,          // An closing curly brace   }
-            TokenTypeNew_Line       =   11,          // A newline
-            TokenTypeInstr			=   12,			// An instruction
-            TokenTypeSetStackSize   =   13,          // The SetStackSize directive
-            TokenTypeVar            =   14,          // The Var/Var [] directives
-            TokenTypeFunc           =   15,          // The Function directives
-            TokenTypeParam          =   16,          // The Param directives
-            TokenTypeReg_Retval     =   17,          // The _RetVal directives
-            TokenTypeInvalid        =   18,          // Error code for invalid tokens
-            END_OF_TOKEN_STREAM       =   19          // The end of the stream has been
-            // reached
-        }
+
 
         const char SymbolWhiteSpace = ' ';
         const char SymbolColon = ':';
@@ -66,11 +55,11 @@ namespace XenonEnigne
         const char SymbolOpenBrace = '{';
         const char SymbolCloseBrace = '}';
         const char SymbolSemicolon = ';';
-        const char SymbolQuote = '"';
         const char SymbolComma = ',';
+        const char SymbolQuote = '"';
         const char SymbolBackslash = '\\';
-        const char SymbolSlash = '/';
-        const char SymbolFullStop = '.';
+        //const char SymbolSlash = '/';
+        //const char SymbolFullStop = '.';
 
         enum LexerState {
             LexerStateError,
@@ -82,13 +71,21 @@ namespace XenonEnigne
             LexerStateIntegral,
             LexerStateFloat,
             LexerStateDelimiter,
-
+            LexerStateComment,
         };
         enum TokenType {
-            Intergal,
+            Intergal = 0,
             Float,
             Identifier,
-            MOV,
+            StringEntity,
+            Keyword,
+
+            TokenTypeCount
+        };
+
+        enum KeyWord
+        {
+            MOV = 0,
             ADD,
             SUB,
             MUL,
@@ -99,93 +96,136 @@ namespace XenonEnigne
             INC,
             DEC,
 
-            AND    ,
-            OR     ,
-            XOR    ,
-            NOT    ,
-            SHL    ,
-            SHR    ,
+            AND,
+            OR,
+            XOR,
+            NOT,
+            SHL,
+            SHR,
 
-            CONCAT ,
+            CONCAT,
             GETCHAR,
             SETCHAR,
-            
-            JMP    ,
-            JE     ,
-            JNE    ,
-            JG     ,
-            JL     ,
-            JGE    ,
-            JLE    ,
-            
-            PUSH   ,
-            POP    ,
-            
-            CALL   ,
-            RET    ,
+
+            JMP,
+            JE,
+            JNE,
+            JG,
+            JL,
+            JGE,
+            JLE,
+
+            PUSH,
+            POP,
+
+            FUNC,
+            CALL,
+            RET,
             CALLHOS,
-            
-            PAUSE  ,
-            EXIT   ,
 
-            TokenTypeCount
+            PAUSE,
+            EXIT
         };
-        
 
-        struct StateChain {
-            char m_symbol;
-            LexerState m_fromState;
-            LexerState m_toState;
+        enum DelimiterWord
+        {
+            Colon = 0,          // A colon :
+            SemiColon,          // A SemiColon
+            OpenBracket,          // An openening bracket  [
+            CloseBracket,          // An closing bracket    ]
+            Comma,          // A comma,
+            OpenBrace,          // An openening curly brace { 
+            CloseBrace,          // An closing curly brace   }
+
         };
 
         struct Token
         {
             TokenType m_tokenType;
-           Vector< char> m_character;
-            
+            union
+            {
+                KeyWord m_keyword;
+                DelimiterWord m_delimiter;
+            };
+            Vector< char> m_character;
         };
 
-        const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string
-        
-
+        struct DelimiterSymbol
+        {
+            char m_symbol;
+            DelimiterWord m_tokenType;
+        };
+        enum DelimiterSymbolState
+        {
+            Symbol,
+            DelimiterType
+        };
 
 
         // ---- Operand Type Bitfield Flags ---------------------------------------------------
 
     // The following constants are used as flags into an operand type bit field, hence
     // their values being increasing powers of 2.
-        typedef int OpBitfiledFlag;
-        const OpBitfiledFlag OP_FLAG_TYPE_NONE       = 0     ;
-        const OpBitfiledFlag OP_FLAG_TYPE_INT        =1      ;      // Integer literal value
-        const OpBitfiledFlag OP_FLAG_TYPE_FLOAT      =2      ;      // Floating-point literal value
-        const OpBitfiledFlag OP_FLAG_TYPE_STRING     =4      ;      // Integer literal value
-        const OpBitfiledFlag OP_FLAG_TYPE_MEM_REF    =8      ;      // Memory reference (variable or array
+        typedef long long OpBitfiledFlag;
+        const OpBitfiledFlag OP_FLAG_TYPE_NONE = 0;
+        const OpBitfiledFlag OP_FLAG_TYPE_INT = 1;      // Integer literal value
+        const OpBitfiledFlag OP_FLAG_TYPE_FLOAT = 2;      // Floating-point literal value
+        const OpBitfiledFlag OP_FLAG_TYPE_STRING = 4;      // Integer literal value
+        const OpBitfiledFlag OP_FLAG_TYPE_MEM_REF = 8;      // Memory reference (variable or array
                                                                     // index; both absolute and relative)
-        const OpBitfiledFlag OP_FLAG_TYPE_LINE_LABEL =16     ;      // Line label (used for jumps)
-        const OpBitfiledFlag OP_FLAG_TYPE_FUNC_NAME  =32     ;      // Function table index (used for Call)
-        const OpBitfiledFlag OP_FLAG_TYPE_HOST_API_CALL =  64 ;     // Host API Call table index (used for
+        const OpBitfiledFlag OP_FLAG_TYPE_LINE_LABEL = 16;      // Line label (used for jumps)
+        const OpBitfiledFlag OP_FLAG_TYPE_FUNC_NAME = 32;      // Function table index (used for Call)
+        const OpBitfiledFlag OP_FLAG_TYPE_HOST_API_CALL = 64;     // Host API Call table index (used for
                                                                     // CallHost)
- 
         struct Instruction
         {
             String m_mnemonic;
-            TokenType m_opType ;
+            KeyWord m_opType;
             int m_opCount = 0;
             OpBitfiledFlag op = OP_FLAG_TYPE_NONE;
         };
 
         enum InstructionState
         {
-            Mnomonic,
-            OpType,
-            OpCount,
-            OpTypeList
+            InstructionStateStart,
+            InstructionStateMnomonic,
+            InstructionStateOpType,
+            InstructionStateOpCount,
+            InstructionStateOpTypeList
         };
 
-        Vector<Instruction*> m_instructionList;
-        Vector<StateChain> m_stateTransformList;
 
-        // Ready for deletion
+        Vector<DelimiterSymbol*> m_delimiterList;
+        Vector<Instruction*> m_instructionList;
+
+
+
+        // Ready for deletion///////////////////////////////////
+        const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string
+
+        enum TokeType {
+            TokenTypeInt = 0,          // An integer literal
+            TokenTypeFloat = 1,          // An floating-point literal
+            TokenTypeString = 2,          // An string literal
+            TokenTypeQuote = 3,          // A double-quote
+            TokenTypeIdent = 4,          // An identifier
+            TokenTypeColon = 5,          // A colon :
+            TokenTypeOpenBracket = 6,          // An openening bracket  (
+            TokenTypeCloseBracket = 7,          // An closing bracket    )
+            TokenTypeComma = 8,          // A comma ,
+            TokenTypeOpenBrace = 9,          // An openening curly brace { 
+            TokenTypeCloseBrace = 10,          // An closing curly brace   }
+            TokenTypeNew_Line = 11,          // A newline
+            TokenTypeInstr = 12,			// An instruction
+            TokenTypeSetStackSize = 13,          // The SetStackSize directive
+            TokenTypeVar = 14,          // The Var/Var [] directives
+            TokenTypeFunc = 15,          // The Function directives
+            TokenTypeParam = 16,          // The Param directives
+            TokenTypeReg_Retval = 17,          // The _RetVal directives
+            TokenTypeInvalid = 18,          // Error code for invalid tokens
+            END_OF_TOKEN_STREAM = 19          // The end of the stream has been
+            // reached
+        }
         enum InstrctionOpCode {
             INSTR_MOV = 0,
 
@@ -262,6 +302,6 @@ namespace XenonEnigne
         const char InstrcutionCALLHOS[] = "CALLHOS";
         const char InstrcutionPAUSE[] = "PASUE";
         const char InstrcutionEXIT[] = "EXI";
-};
+    };
 
 }
