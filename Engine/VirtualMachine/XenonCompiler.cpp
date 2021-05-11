@@ -1,5 +1,6 @@
 #include "XenonCompiler.h"
 #include "Engine/VirtualMachine/XenonScriptAssemblerMachine.h"
+#include "Engine/FileManager/FileManager.h"
 #include <cassert>
 
 namespace XenonEnigne 

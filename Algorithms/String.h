@@ -7,28 +7,37 @@
 #include "Algorithms/Vector.h"
 namespace Algorithm
 {
+    template<typename T>
+    class StringBase;
+
+    template<typename T>
+    bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
 
     template<typename T>
     class StringBase
     {
     public:
+        template<typename T>
+        friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
+
         StringBase();
         StringBase(const StringBase& value);
         StringBase(const T* value, unsigned int size);
         ~StringBase();
 
-        T operator[](int index);
+        T operator[](int index) const;
+        T operator[](unsigned int index) const;
 
         void Add(T value);
-        void Count()const;
-        void ToInt()const;
-
+        int Count()const;
+        int ToInt()const;
+        char ToChar()const;
+        void Clear();
     private:
         Vector<T> m_string;
     };
 
-    template<typename T>
-    bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
+
 
     template<typename T>
     StringBase<T>::StringBase()
@@ -53,7 +62,13 @@ namespace Algorithm
     }
 
     template<typename T>
-    T Algorithm::StringBase<T>::operator[](int index)
+    T Algorithm::StringBase<T>::operator[](int index)const 
+    {
+        return m_string[index];
+    }
+
+    template<typename T>
+    inline T StringBase<T>::operator[](unsigned int index)const
     {
         return m_string[index];
     }
@@ -65,13 +80,13 @@ namespace Algorithm
     }
 
     template<typename T>
-    void Algorithm::StringBase<T>::Count() const
+    int Algorithm::StringBase<T>::Count() const
     {
         return m_string.Count();
     }
 
     template<typename T>
-    void Algorithm::StringBase<T>::ToInt() const
+    int Algorithm::StringBase<T>::ToInt() const
     {
         int size = m_string.Count() + 1;
         T* content = new content[size];
@@ -79,6 +94,22 @@ namespace Algorithm
         content[size] = '\0';
         int result = atoi(content);
         return result;
+    }
+
+    template<typename T>
+    inline char StringBase<T>::ToChar() const
+    {
+        if (Count() < 1)
+        {
+            return 0;
+        }
+        return (*this)[0];
+    }
+
+    template<typename T>
+    inline void StringBase<T>::Clear()
+    {
+        m_string.Clear();
     }
 
     template<typename T>

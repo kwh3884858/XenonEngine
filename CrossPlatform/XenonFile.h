@@ -7,7 +7,7 @@ namespace CrossPlatform
 
     struct XenonFile
     {
-        Algorithm::String m_content = nullptr;
+        Algorithm::String m_content ;
         unsigned int m_lineSize = 0;
     };
 

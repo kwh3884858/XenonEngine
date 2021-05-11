@@ -1,8 +1,8 @@
 #include "XenonScriptAssemblerMachine.h"
+#include <stdio.h>  // printf
 
 namespace XenonEnigne
 {
-    using EndOfLine = CrossPlatform::CL;
     XenonScriptAssemblerMachine::XenonScriptAssemblerMachine()
     {
     }
@@ -11,7 +11,7 @@ namespace XenonEnigne
     {
     }
 
-    bool XenonScriptAssemblerMachine::InitializeInstructionList(const XenonFile* xenonFile) const
+    bool XenonScriptAssemblerMachine::InitializeInstructionList(const XenonFile * const xenonFile) 
     {
         unsigned int index = 0;
         bool isDone = false;
@@ -28,6 +28,7 @@ namespace XenonEnigne
         {
              isDone = false;
              isShouldAdd = true;
+             char currentChar = xenonFile->m_content[index];
             switch (currentState)
             {
             case InstructionStateStart:
@@ -61,27 +62,63 @@ namespace XenonEnigne
                 break;
             case InstructionStateOpType:
             {
+                if (IsCharNumeric(currentChar))
+                {
+                }
+                else if (currentChar == SymbolComma)
+                {
+                    isShouldAdd = false;
+                    isDone = true;
+                }
+                else
+                {
+                    InstructionError(currentState, currentChar, index);
+                    return false;
+                }
+            }
+                break;
+            case InstructionStateOpCount:
+            {
+                if (IsCharNumeric(currentChar))
+                {
+                }
                 if (IsNewLine(currentChar))
                 {
                     isShouldAdd = false;
                     isDone = true;
                 }
-                if (IsCharWhitespace(currentChar))
+                else
                 {
-                    isShouldAdd = false;
+                    InstructionError(currentState, currentChar, index);
+                    return false;
                 }
             }
                 break;
-            case InstructionStateOpCount:
-                break;
             case InstructionStateOpTypeList:
+                if (IsCharNumeric(currentChar))
+                {
+                }
+                else if (currentChar == SymbolComma)
+                {
+                    isShouldAdd = false;
+                    isDone = true;
+                }
+                else if (IsNewLine(currentChar))
+                {
+                    currentTokenOpCount++;
+                    isShouldAdd = false;
+                    isDone = true;
+                }
+                else
+                {
+                    InstructionError(currentState, currentChar, index);
+                    return false;
+                }
                 break;
             default:
                 break;
 
             }
-            char currentChar = xenonFile->m_content[index];
-            UpdateCharacter(currentChar, isShouldAdd, isDone);
 
             if (isShouldAdd)
             {
@@ -89,19 +126,68 @@ namespace XenonEnigne
             }
             if (isDone)
             {
+                switch (currentState)
+                {
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateStart:
+                    break;
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateMnomonic:
+                {
+                    instrction = new Instruction;
+                    instrction->m_mnemonic = tmpString;
+                    currentState = InstructionState::InstructionStateOpType;
+                }
+                    break;
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpType:
+                {
+                    instrction->m_opType = static_cast<KeyWord>( tmpString.ToInt() );
+                    currentState = InstructionState::InstructionStateOpCount;
+                }
+                    break;
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpCount:
+                {
+                    instrction->m_opCount = tmpString.ToInt();
+                    tokenOpAmount = instrction->m_opCount;
+                    if (tokenOpAmount > 0)
+                    {
+                        currentTokenOpCount = 0;
+                        for (int i = 0; i < tokenOpAmount; i++)
+                        {
+                            instrction->op.Add(OP_FLAG_TYPE_NONE);
+                        }
+                        currentState = InstructionState::InstructionStateOpTypeList;
+                    }
+                    else
+                    {
+                        m_instructionList.Add(instrction);
+                        currentState = InstructionState::InstructionStateMnomonic;
+                    }
+                }
+                    break;
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpTypeList:
+                {
+                    int bitOffset = tmpString.ToInt();
+                    instrction->op[currentTokenOpCount] &= (1 << bitOffset);
+                    if (currentTokenOpCount >= tokenOpAmount)
+                    {
+                        currentState = InstructionState::InstructionStateStart;
+                    }
+                }
+                    break;
+                default:
+                    break;
+                }
                 currentState = CreateInstructionList(currentState, tmpString, instrction, tokenOpAmount, currentTokenOpCount);
                 isDone = false;
                 tmpString.Clear();
             }
 
             index++;
-            isShouldAdd = true;
         }
 
         return true;
     }
 
-    void XenonScriptAssemblerMachine::InitializeDelimiterList(const XenonFile*const xenonFile) const
+    void XenonScriptAssemblerMachine::InitializeDelimiterList(const XenonFile*const xenonFile)
     {
         unsigned int index = 0;
         bool isDone = false;
@@ -134,11 +220,11 @@ namespace XenonEnigne
 
     void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, unsigned int index) const
     {
-        printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d", character, currentLexerState, index);
+        printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d", character, state, index);
 
     }
 
-    void XenonScriptAssemblerMachine::UpdateCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone) const
+    void XenonScriptAssemblerMachine::UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone) const
     {
         if (IsNewLine(currentChar) || currentChar == SymbolComma)
         {
@@ -162,40 +248,24 @@ namespace XenonEnigne
         {
         case InstructionStateMnomonic:
         {
-            instrction = new Instruction;
-            instrction->m_mnemonic = tmpString;
-            currentState = InstructionState::InstructionStateOpType;
+
         }
         break;
         case InstructionStateOpType:
         {
-            instrction->m_opType = tmpString.ToInt();
-            currentState = InstructionState::InstructionStateOpCount;
+
         }
         break;
         case InstructionStateOpCount:
         {
-            instrction->m_opCount = tmpString.ToInt();
-            tokenOpAmount = instrction->m_opCount;
-            if (tokenOpAmount > 0)
-            {
-                currentTokenOpCount = 0;
-                currentState = InstructionState::InstructionStateOpTypeList;
-            }
-            else
-            {
-                instrction->op = OP_FLAG_TYPE_NONE;
-                m_instructionList->Add(instrction);
-                currentState = InstructionState::InstructionStateMnomonic;
-            }
+
         }
         break;
         case InstructionStateOpTypeList:
         {
             if (currentTokenOpCount < tokenOpAmount)
             {
-                int bitOffset = tmpString.ToInt();
-                instrction->op &= (1 << bitOffset);
+
                 currentTokenOpCount++;
             }
             else
@@ -212,20 +282,20 @@ namespace XenonEnigne
         return currentState;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*const delimitSymbol)
+    XenonEnigne::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol)
     {
         switch (currentState)
         {
         case Symbol:
         {
             delimitSymbol = new DelimiterSymbol;
-            delimitSymbol->m_symbol = tmpString;
-            currentState = InstructionState::DelimiterType;
+            delimitSymbol->m_symbol = tmpString.ToChar();
+            currentState = DelimiterSymbolState::DelimiterType;
         }
         break;
         case DelimiterType:
         {
-            delimitSymbol->m_tokenType = tmpString.ToInt();
+            delimitSymbol->m_tokenType = static_cast<DelimiterWord>( tmpString.ToInt() );
             currentState = DelimiterSymbolState::Symbol;
         }
         break;
@@ -272,7 +342,7 @@ namespace XenonEnigne
         return currentLexerState;
     }
 
-    LexerState XenonScriptAssemblerMachine::DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone) const
+    XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone) const
     {
         switch (lexerState)
         {
@@ -405,8 +475,7 @@ namespace XenonEnigne
         break;
         default:
             printf("Undefined State\n");
-            return nullptr;
-            break;
+            return LexerState::LexerStateError;
 
         }
 

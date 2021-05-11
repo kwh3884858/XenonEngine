@@ -26,7 +26,7 @@ namespace Algorithm
 		int Count()const;
 		int Capacity()const;
 
-		T operator[](int index);
+		T operator[](int index)const;
 
 		//For Algorithm
 		bool Swap(const int lhs, const int rhs);
@@ -165,7 +165,7 @@ namespace Algorithm
 	}
 
 	template<typename T>
-	inline T Vector<T>::operator[](int index)
+	inline T Vector<T>::operator[](int index) const
 	{
 		if (index <0 || index >= m_count)
 		{

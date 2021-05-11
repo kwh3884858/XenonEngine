@@ -6,6 +6,7 @@
 #pragma once
 #include "Algorithms/Vector.h"
 #include "CrossPlatform/XenonFile.h"
+
 namespace XenonEnigne
 {
     using Algorithm::Vector;
@@ -14,39 +15,14 @@ namespace XenonEnigne
 
     class XenonScriptAssemblerMachine
     {
-        typedef   InstructionState(XenonScriptAssemblerMachine::*CreateListFunction)(LexerState currentState, const String& tmpString);
-
-        typedef Vector<Token*> TokenVector;
+        
     public:
         XenonScriptAssemblerMachine();
         ~XenonScriptAssemblerMachine();
 
-        bool InitializeInstructionList(const XenonFile* xenonFile)const;
-        void InitializeDelimiterList(const XenonFile*const xenonFile)const;
+        bool InitializeInstructionList(const XenonFile * const xenonFile);
+        void InitializeDelimiterList(const XenonFile*const xenonFile);
     private:
-        void InstructionError(InstructionState state, char character, unsigned int index)const;
-        void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
-        void UpdateCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
-        InstructionState CreateInstructionList(InstructionState currentState, const String& tmpString, Instruction*const instruction, int& tokenOpAmount, int& currentTokenopCount);
-        DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*const delimitSymbol);
-        void DetermineCharacterType(char c)const;
-
-        LexerState GetNextToken(XenonFile*const xenonFile, unsigned int& refCurrentIndex, Token*const token)const;
-        LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone)const;
-        LexerState TokenError(LexerState state, char character, unsigned int index)const;
-        void DetermineTokenType(Token* const token, LexerState currentState)const;
-
-        TokenVector* Lexer(XenonFile*const xenonFile)const;
-        void Parsing(TokenVector*const tokenVector)const;
-
-        bool IsNewLine(char character)const;
-        bool IsCharWhitespace(char character)const;
-        bool IsCharNumeric(char character)const;
-        bool IsCharIdent(char character)const;
-        bool IsCharFullStop(char character)const;
-        bool IsCharDelimiter(char character)const;
-
-
 
         const char SymbolWhiteSpace = ' ';
         const char SymbolColon = ':';
@@ -58,8 +34,8 @@ namespace XenonEnigne
         const char SymbolComma = ',';
         const char SymbolQuote = '"';
         const char SymbolBackslash = '\\';
+        const char SymbolFullStop = '.';
         //const char SymbolSlash = '/';
-        //const char SymbolFullStop = '.';
 
         enum LexerState {
             LexerStateError,
@@ -147,7 +123,7 @@ namespace XenonEnigne
                 KeyWord m_keyword;
                 DelimiterWord m_delimiter;
             };
-            Vector< char> m_character;
+            String m_character;
         };
 
         struct DelimiterSymbol
@@ -182,7 +158,7 @@ namespace XenonEnigne
             String m_mnemonic;
             KeyWord m_opType;
             int m_opCount = 0;
-            OpBitfiledFlag op = OP_FLAG_TYPE_NONE;
+            Vector< OpBitfiledFlag > op;
         };
 
         enum InstructionState
@@ -194,6 +170,29 @@ namespace XenonEnigne
             InstructionStateOpTypeList
         };
 
+        typedef Vector<Token*> TokenVector;
+
+        void InstructionError(InstructionState state, char character, unsigned int index)const;
+        void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
+        void UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone)const;
+        InstructionState CreateInstructionList(InstructionState currentState, const String& tmpString, Instruction* const instruction, int& tokenOpAmount, int& currentTokenopCount);
+        DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);
+        void DetermineCharacterType(char c)const;
+
+        LexerState GetNextToken(XenonFile* const xenonFile, unsigned int& refCurrentIndex, Token* const token)const;
+        LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone)const;
+        LexerState TokenError(LexerState state, char character, unsigned int index)const;
+        void DetermineTokenType(Token* const token, LexerState currentState)const;
+
+        TokenVector* Lexer(XenonFile* const xenonFile)const;
+        void Parsing(TokenVector* const tokenVector)const;
+
+        bool IsNewLine(char character)const;
+        bool IsCharWhitespace(char character)const;
+        bool IsCharNumeric(char character)const;
+        bool IsCharIdent(char character)const;
+        bool IsCharFullStop(char character)const;
+        bool IsCharDelimiter(char character)const;
 
         Vector<DelimiterSymbol*> m_delimiterList;
         Vector<Instruction*> m_instructionList;
