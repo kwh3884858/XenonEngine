@@ -474,8 +474,12 @@ namespace XenonEnigne
         }
         break;
         default:
+        {
             printf("Undefined State\n");
+            TokenError(lexerState, character, index);
             return LexerState::LexerStateError;
+        }
+
 
         }
 
@@ -484,7 +488,7 @@ namespace XenonEnigne
 
     XenonEnigne::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::TokenError(LexerState state, char character, unsigned int index) const
     {
-        printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d", character, currentLexerState, index);
+        printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d", character, state, index);
         return LexerState::LexerStateError;
     }
 
@@ -527,7 +531,7 @@ namespace XenonEnigne
             token->m_tokenType = TokenType::Identifier;
             for (int i = 0; i < m_delimiterList.Count(); i++)
             {
-                if (token->m_character == m_delimiterList[i]->m_symbol)
+                if (token->m_character.ToChar() == m_delimiterList[i]->m_symbol)
                 {
                     token->m_delimiter = m_delimiterList[i]->m_tokenType;
                     break;
