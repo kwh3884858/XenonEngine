@@ -165,8 +165,11 @@ namespace XenonEnigne
                     break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpTypeList:
                 {
-                    int bitOffset = tmpString.ToInt();
-                    instrction->op[currentTokenOpCount] &= (1 << bitOffset);
+                    int typeFlag = 0;
+                   bool result = StringToType(keyWordString, tmpString, typeFlag);
+                   assert(result == true);
+                   assert(typeFlag != 0);
+                    instrction->op[currentTokenOpCount] &= 1 << typeFlag;
                     if (currentTokenOpCount >= tokenOpAmount)
                     {
                         currentState = InstructionState::InstructionStateStart;
@@ -176,8 +179,7 @@ namespace XenonEnigne
                 default:
                     break;
                 }
-                currentState = CreateInstructionList(currentState, tmpString, instrction, tokenOpAmount, currentTokenOpCount);
-                isDone = false;
+
                 tmpString.Clear();
             }
 

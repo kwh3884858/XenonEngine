@@ -27,6 +27,7 @@ namespace Algorithm
 
         T operator[](int index) const;
         T operator[](unsigned int index) const;
+        bool operator==(const T* rhs)const;
 
         void Add(T value);
         int Count()const;
@@ -45,7 +46,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    StringBase<T>::StringBase(const StringBase& value):
+    StringBase<T>::StringBase(const StringBase& value) :
         m_string(value.m_string)
     {
     }
@@ -62,7 +63,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    T Algorithm::StringBase<T>::operator[](int index)const 
+    T Algorithm::StringBase<T>::operator[](int index)const
     {
         return m_string[index];
     }
@@ -71,6 +72,26 @@ namespace Algorithm
     inline T StringBase<T>::operator[](unsigned int index)const
     {
         return m_string[index];
+    }
+
+    template<typename T>
+    bool operator==(const T* rhs)const
+    {
+        for (int i = 0; i < Count(); i++)
+        {
+            if (m_string[i] != rhs[i])
+            {
+                return false;
+            }
+        }
+        if (rhs[Count() + 1] == '\0')
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     template<typename T>
@@ -119,7 +140,7 @@ namespace Algorithm
         {
             return false;
         }
-        for (int i = 0 ; i < lhs.Count();i++)
+        for (int i = 0; i < lhs.Count(); i++)
         {
             if (lhs[i] != rhs[i])
             {

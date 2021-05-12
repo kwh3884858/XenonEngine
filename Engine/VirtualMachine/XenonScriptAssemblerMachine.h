@@ -6,16 +6,17 @@
 #pragma once
 #include "Algorithms/Vector.h"
 #include "CrossPlatform/XenonFile.h"
-
+#include "Algorithms/TypeString.h"
 namespace XenonEnigne
 {
     using Algorithm::Vector;
     using CrossPlatform::XenonFile;
     using Algorithm::String;
+    using Algorithm::TypeString;
 
     class XenonScriptAssemblerMachine
     {
-        
+
     public:
         XenonScriptAssemblerMachine();
         ~XenonScriptAssemblerMachine();
@@ -52,13 +53,27 @@ namespace XenonEnigne
         enum TokenType {
             Intergal = 0,
             Float,
-            Identifier,
             StringEntity,
+            Identifier,
+            Label,
+            Function,
+            HostAPI,
+            Register,
             Keyword,
-
             TokenTypeCount
         };
 
+        static const TypeString<int> keyWordString[] =
+        {
+            {"int",  TokenType::Intergal},
+            {"float", TokenType::Float},
+            {"string",  TokenType::StringEntity},
+            {"identifier",  TokenType::Identifier},
+            {"label",  TokenType::Label},
+            {"function",  TokenType::Function},
+            {"hostAPI",  TokenType::HostAPI},
+            {"register",   TokenType::Register},
+        };
         enum KeyWord
         {
             MOV = 0,
