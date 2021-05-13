@@ -564,7 +564,7 @@ namespace XenonEnigne
         }
     }
 
-    bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector) const
+    bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector) 
 {
 
         unsigned int globalStackSize = 0;
@@ -572,70 +572,29 @@ namespace XenonEnigne
         bool isInFunction = false;
         unsigned int currentFunctionIndex = 0;
         unsigned int lineSize = 0;
-        for (int i = 0; i < tokenVector->Count(); i++)
+
+        ScriptHeader scriptHeader;
+        for (unsigned int index = 0; index < tokenVector->Count(); index++)
         {
-            Token * currentToken = (*tokenVector)[i];
+            Token * currentToken = (*tokenVector)[index];
             switch (currentToken->m_tokenType)
             {
             case Intergal:
             {
-                Token * token = (*tokenVector)[i + 1];
-                if (!token || token->m_tokenType != TokenType::Identifier)
+                bool result = CreateSymbol(tokenVector, currentToken,TokenType::Intergal, index ,isInFunction,localStackSize, globalStackSize, currentFunctionIndex);
+                if (!result)
                 {
                     return false;
-                }
-
-                int size = 1;
-                token = (*tokenVector)[i + 2];
-                if (!token || token->m_tokenType == TokenType::Delimiter)
-                {
-                    if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
-                    {
-                        return false;
-                    }
-                    token = (*tokenVector)[i + 3];
-                    if (!token || token->m_tokenType != TokenType::Intergal)
-                    {
-                        return false;
-                    }
-                    size = token->m_character.ToInt();
-                    token = (*tokenVector)[i + 4];
-                    if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
-                    {
-                        return false;
-                    }
-
-                    int stackIndex = 0;
-                    if (isInFunction)
-                    {
-                        stackIndex = -( Local_Stack_Start_Index + localStackSize );
-                    }
-                    else
-                    {
-                        stackIndex = globalStackSize;
-                    }
-
-                    SymbolElemnt* symbol = new SymbolElemnt;
-                    symbol->m_variableType = TokenType::Intergal;
-                    symbol->m_symbolToken = currentToken;
-                    symbol->m_size = size;
-                    symbol->m_stackIndex = stackIndex;
-                    symbol->m_functionIndex = currentFunctionIndex;
-
-                    if (isInFunction)
-                    {
-                        localStackSize += size;
-                    }
-                    else
-                    {
-                        globalStackSize += size;
-                    }
                 }
             }
                 break;
             case Float:
             {
-
+                bool result = CreateSymbol(tokenVector, currentToken, TokenType::Float, index, isInFunction, localStackSize, globalStackSize, currentFunctionIndex);
+                if (!result)
+                {
+                    return false;
+                }
             }
                 break;
             case Identifier:
@@ -644,6 +603,43 @@ namespace XenonEnigne
             }
                 break;
             case StringEntity:
+                break;
+            case TokenType::Label:
+                break;
+            case TokenType::Function:
+            {
+                if (isInFunction)
+                {
+                    return false;
+                }
+
+                Token* token = (*tokenVector)[++index];
+                if (!token || token->m_tokenType != TokenType::Identifier)
+                {
+                    return false;
+                }
+
+                FuntionElement*const function = new FuntionElement;
+                function->m_functionToken = token;
+                function->m_functionIndex = currentFunctionIndex;
+                m_functionTable.Add(function);
+
+                token = (*tokenVector)[++index];
+                if (!token || token->m_tokenType != TokenType::Delimiter)
+                {
+                    if (!token || token->m_delimiter != DelimiterWord::OpenBrace)
+                    {
+                        return false;
+                    }
+                }
+
+                if (true)
+                {
+
+                }
+
+                isInFunction = true;
+            }
                 break;
             case Keyword:
             {
@@ -662,6 +658,64 @@ namespace XenonEnigne
 
 
         delete tokenVector;
+    }
+
+    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken,TokenType tokenType, unsigned int& refIndex, bool isInFunction, unsigned int & refLocalStackSize, unsigned int & refGlobalStackSize, unsigned int currentFunctionIndex)
+    {
+        Token* token = (*tokenVector)[++refIndex];
+        if (!token || token->m_tokenType != TokenType::Identifier)
+        {
+            return false;
+        }
+
+        int size = 1;
+        token = (*tokenVector)[++refIndex];
+        if (!token || token->m_tokenType == TokenType::Delimiter)
+        {
+            if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
+            {
+                return false;
+            }
+            token = (*tokenVector)[++refIndex];
+            if (!token || token->m_tokenType != TokenType::Intergal)
+            {
+                return false;
+            }
+            size = token->m_character.ToInt();
+            token = (*tokenVector)[++refIndex ];
+            if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
+            {
+                return false;
+            }
+
+            int stackIndex = 0;
+            if (isInFunction)
+            {
+                stackIndex = -(Local_Stack_Start_Index + refLocalStackSize);
+            }
+            else
+            {
+                stackIndex = refGlobalStackSize;
+            }
+
+            SymbolElement* symbol = new SymbolElement;
+            symbol->m_variableType = TokenType::Intergal;
+            symbol->m_symbolToken = currentToken;
+            symbol->m_size = size;
+            symbol->m_stackIndex = stackIndex;
+            symbol->m_functionIndex = currentFunctionIndex;
+
+            m_symbolTable.Add(symbol);
+            if (isInFunction)
+            {
+                refLocalStackSize += size;
+            }
+            else
+            {
+                refGlobalStackSize += size;
+            }
+        }
+        return true;
     }
 
     bool XenonScriptAssemblerMachine::IsNewLine(char character) const

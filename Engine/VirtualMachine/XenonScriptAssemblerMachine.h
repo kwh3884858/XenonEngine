@@ -154,6 +154,12 @@ namespace XenonEnigne
             DelimiterType
         };
 
+        struct ScriptHeader
+        {
+            bool m_isMainEntryExist = false;
+            int m_mainFunctionEntryIndex = -1;
+        };
+
         struct FuntionElement
         {
             Token* m_functionToken = nullptr;
@@ -161,7 +167,7 @@ namespace XenonEnigne
 
         };
 
-        struct SymbolElemnt 
+        struct SymbolElement 
         {
             TokenType m_variableType = TokenType::None;
             Token* m_symbolToken = nullptr;
@@ -217,7 +223,8 @@ namespace XenonEnigne
         void DetermineTokenType(Token* const token, LexerState currentState)const;
 
         TokenVector* Lexer(XenonFile* const xenonFile)const;
-        bool Parsing(TokenVector* const tokenVector)const;
+        bool Parsing(TokenVector* const tokenVector);
+        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, unsigned int& refIndex, bool isInFunction, unsigned int& refLocalStackSize, unsigned int& refGlobalStackSize, unsigned int currentFunctionIndex);
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
@@ -226,15 +233,15 @@ namespace XenonEnigne
         bool IsCharFullStop(char character)const;
         bool IsCharDelimiter(char character)const;
 
-
+        const String Main_Function_Name = "_Main";
         unsigned int Local_Stack_Start_Index = 2;
 
         Vector<DelimiterSymbol*> m_delimiterList;
         Vector<Instruction*> m_instructionList;
 
         // For Paring
-        TokenVector m_stringVector;
-
+        Vector<SymbolElement*> m_symbolTable;
+        Vector<FuntionElement*> m_functionTable;
 
         // Ready for deletion///////////////////////////////////
         const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string

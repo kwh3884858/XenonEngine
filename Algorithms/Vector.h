@@ -27,6 +27,7 @@ namespace Algorithm
 		int Capacity()const;
 
 		T operator[](int index)const;
+		Vector<T>& operator=(const Vector& rhs);
 
 		//For Algorithm
 		bool Swap(const int lhs, const int rhs);
@@ -172,6 +173,19 @@ namespace Algorithm
 			return nullptr;
 		}
 		return m_content[index];
+	}
+
+	template<typename T>
+	inline Vector<T>& Vector<T>::operator=(const Vector& rhs)
+	{
+		if (thie = &rhs)
+		{
+			return *this;
+		}
+		Destory();
+		Initialize(rhs.Capacity());
+		InternalReplace(rhs.m_content, rhs.m_count);
+		return *this;
 	}
     
     template<typename T>
