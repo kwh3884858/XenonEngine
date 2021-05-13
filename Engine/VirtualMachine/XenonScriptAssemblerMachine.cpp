@@ -530,7 +530,7 @@ namespace XenonEnigne
             break;
         case LexerStateDelimiter:
         {
-            token->m_tokenType = TokenType::Identifier;
+            token->m_tokenType = TokenType::Delimiter;
             for (int i = 0; i < m_delimiterList.Count(); i++)
             {
                 if (token->m_character.ToChar() == m_delimiterList[i]->m_symbol)
@@ -564,18 +564,79 @@ namespace XenonEnigne
         }
     }
 
-    void XenonScriptAssemblerMachine::Parsing(TokenVector*const tokenVector) const
+    bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector) const
 {
-        unsigned int stackSize = 0;
+
+        unsigned int globalStackSize = 0;
+        unsigned int localStackSize = 0;
+        bool isInFunction = false;
+        unsigned int currentFunctionIndex = 0;
         unsigned int lineSize = 0;
         for (int i = 0; i < tokenVector->Count(); i++)
         {
-            Token * token = (*tokenVector)[i];
-            switch (token->m_tokenType)
+            Token * currentToken = (*tokenVector)[i];
+            switch (currentToken->m_tokenType)
             {
             case Intergal:
+            {
+                Token * token = (*tokenVector)[i + 1];
+                if (!token || token->m_tokenType != TokenType::Identifier)
+                {
+                    return false;
+                }
+
+                int size = 1;
+                token = (*tokenVector)[i + 2];
+                if (!token || token->m_tokenType == TokenType::Delimiter)
+                {
+                    if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
+                    {
+                        return false;
+                    }
+                    token = (*tokenVector)[i + 3];
+                    if (!token || token->m_tokenType != TokenType::Intergal)
+                    {
+                        return false;
+                    }
+                    size = token->m_character.ToInt();
+                    token = (*tokenVector)[i + 4];
+                    if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
+                    {
+                        return false;
+                    }
+
+                    int stackIndex = 0;
+                    if (isInFunction)
+                    {
+                        stackIndex = -( Local_Stack_Start_Index + localStackSize );
+                    }
+                    else
+                    {
+                        stackIndex = globalStackSize;
+                    }
+
+                    SymbolElemnt* symbol = new SymbolElemnt;
+                    symbol->m_variableType = TokenType::Intergal;
+                    symbol->m_symbolToken = currentToken;
+                    symbol->m_size = size;
+                    symbol->m_stackIndex = stackIndex;
+                    symbol->m_functionIndex = currentFunctionIndex;
+
+                    if (isInFunction)
+                    {
+                        localStackSize += size;
+                    }
+                    else
+                    {
+                        globalStackSize += size;
+                    }
+                }
+            }
                 break;
             case Float:
+            {
+
+            }
                 break;
             case Identifier:
             {

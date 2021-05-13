@@ -299,7 +299,7 @@
     <ClInclude Include="CrossPlatform\XenonFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Algorithms\NamedEnum.h">
+    <ClInclude Include="Algorithms\TypeString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

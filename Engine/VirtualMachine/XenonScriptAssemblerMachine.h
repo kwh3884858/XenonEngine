@@ -51,7 +51,8 @@ namespace XenonEnigne
             LexerStateComment,
         };
         enum TokenType {
-            Intergal = 0,
+            None = -1,
+            Intergal,
             Float,
             StringEntity,
             Identifier,
@@ -60,6 +61,7 @@ namespace XenonEnigne
             HostAPI,
             Register,
             Keyword,
+            Delimiter,
             TokenTypeCount
         };
 
@@ -152,6 +154,21 @@ namespace XenonEnigne
             DelimiterType
         };
 
+        struct FuntionElement
+        {
+            Token* m_functionToken = nullptr;
+            int m_functionIndex = -1;
+
+        };
+
+        struct SymbolElemnt 
+        {
+            TokenType m_variableType = TokenType::None;
+            Token* m_symbolToken = nullptr;
+            unsigned int m_size = 0;
+            int m_stackIndex = 0;
+            unsigned int m_functionIndex = 0;
+        };
 
         // ---- Operand Type Bitfield Flags ---------------------------------------------------
 
@@ -200,7 +217,7 @@ namespace XenonEnigne
         void DetermineTokenType(Token* const token, LexerState currentState)const;
 
         TokenVector* Lexer(XenonFile* const xenonFile)const;
-        void Parsing(TokenVector* const tokenVector)const;
+        bool Parsing(TokenVector* const tokenVector)const;
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
@@ -209,9 +226,14 @@ namespace XenonEnigne
         bool IsCharFullStop(char character)const;
         bool IsCharDelimiter(char character)const;
 
+
+        unsigned int Local_Stack_Start_Index = 2;
+
         Vector<DelimiterSymbol*> m_delimiterList;
         Vector<Instruction*> m_instructionList;
 
+        // For Paring
+        TokenVector m_stringVector;
 
 
         // Ready for deletion///////////////////////////////////

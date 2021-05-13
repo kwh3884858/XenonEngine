@@ -148,7 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Algorithms\Dictionary.h" />
     <ClInclude Include="Algorithms\Iterator.h" />
-    <ClInclude Include="Algorithms\NamedEnum.h" />
+    <ClInclude Include="Algorithms\TypeString.h" />
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />
     <ClInclude Include="Algorithms\String.h" />
