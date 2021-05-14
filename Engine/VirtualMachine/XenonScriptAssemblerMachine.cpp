@@ -569,9 +569,11 @@ namespace XenonEnigne
 
         unsigned int globalStackSize = 0;
         unsigned int localStackSize = 0;
-        bool isInFunction = false;
-        unsigned int currentFunctionIndex = 0;
+        unsigned int paramterCount = 0;
+
+        FuntionElement* currentFunction = nullptr;
         unsigned int lineSize = 0;
+        unsigned int instructionStreamCount = 0;
 
         ScriptHeader scriptHeader;
         for (unsigned int index = 0; index < tokenVector->Count(); index++)
@@ -608,7 +610,7 @@ namespace XenonEnigne
                 break;
             case TokenType::Function:
             {
-                if (isInFunction)
+                if (currentFunction)
                 {
                     return false;
                 }
@@ -619,10 +621,13 @@ namespace XenonEnigne
                     return false;
                 }
 
-                FuntionElement*const function = new FuntionElement;
-                function->m_functionToken = token;
-                function->m_functionIndex = currentFunctionIndex;
-                m_functionTable.Add(function);
+                currentFunction = new FuntionElement;
+                currentFunction->m_functionToken = token;
+                currentFunction->m_functionIndex = m_functionTable.Count();
+                currentFunction->m_entryPoint = instructionStreamCount;
+
+                m_functionTable.Add(currentFunction);
+                currentFunctionIndex++;
 
                 token = (*tokenVector)[++index];
                 if (!token || token->m_tokenType != TokenType::Delimiter)
@@ -633,25 +638,66 @@ namespace XenonEnigne
                     }
                 }
 
-                if (true)
+                if (token->m_character == Main_Function_Name)
                 {
-
+                    scriptHeader.m_isMainEntryExist = true;
+                    scriptHeader.m_mainFunctionEntryIndex = currentFunctionIndex;
                 }
 
                 isInFunction = true;
+                ++instructionStreamCount;
             }
                 break;
             case Keyword:
             {
-                switch (token->m_keyword)
+                switch (currentToken->m_keyword)
                 {
-                    case  
                 default:
                     break;
                 }
             }
                 break;
             case TokenTypeCount:
+                break;
+            case None:
+                break;
+            case HostAPI:
+                break;
+            case Register:
+                break;
+            case Delimiter:
+                switch (currentToken->m_delimiter)
+                {
+                default:
+                    break;
+                case Colon:
+                    break;
+                case SemiColon:
+                    break;
+                case OpenBracket:
+                    break;
+                case CloseBracket:
+                {
+                    if (currentFunction)
+                    {
+                        currentFunction->m_localStackSize = localStackSize;
+                        currentFunction->m_parameterCount = paramterCount;
+                        m_functionTable.Add(currentFunction);
+                        currentFunction = nullptr;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                    break;
+                case Comma:
+                    break;
+                case OpenBrace:
+                    break;
+                case CloseBrace:
+                    break;
+                }
                 break;
             }
         }

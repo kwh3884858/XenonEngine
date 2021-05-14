@@ -164,7 +164,9 @@ namespace XenonEnigne
         {
             Token* m_functionToken = nullptr;
             int m_functionIndex = -1;
-
+            int m_entryPoint = -1;
+            int m_localStackSize = 0;
+            int m_parameterCount = 0;
         };
 
         struct SymbolElement 
