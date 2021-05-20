@@ -190,6 +190,7 @@
     <ClInclude Include="MathLab\MathLabDefinition.h" />
     <ClInclude Include="MathLab\Matrix2.h" />
     <ClInclude Include="MathLab\Matrix3.h" />
+    <ClInclude Include="MathLab\Quaternion.h" />
     <ClInclude Include="MathLab\Vector2f.h" />
     <ClInclude Include="MathLab\Vector3f.h" />
     <ClInclude Include="MathLab\Vector3.h" />

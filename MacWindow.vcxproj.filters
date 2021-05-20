@@ -302,6 +302,9 @@
     <ClInclude Include="Algorithms\TypeString.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MathLab\Quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
