@@ -23,6 +23,9 @@ namespace MathLab {
         Quaternion operator-(const Quaternion& value);
         Quaternion operator*(const Quaternion& value);
 
+        T Magnitude()const;
+        T MagnitudeSquad()const;
+
         Quaternion ToConjugate()const;
     protected:
     private:
@@ -131,6 +134,18 @@ namespace MathLab {
         m_x = m_w * value.m_x + m_x * value.m_w + m_y * value.m_z - m_z * value.m_y;
         m_y = m_w * value.m_y + m_y * value.m_w + m_z * value.m_x - m_x * value.m_z;
         m_z = m_w * value.m_z + m_z * value.m_w + m_x * value.m_y - m_y * value.m_x;
+    }
+
+    template<typename T>
+    T MathLab::Quaternion<T>::Magnitude() const
+    {
+        return sqrt(MagnitudeSquad());
+    }
+
+    template<typename T>
+    T MathLab::Quaternion<T>::MagnitudeSquad() const
+    {
+        return m_w * m_w + m_x * m_x + m_y * m_y + m_z * m_z;
     }
 
     template<typename T>
