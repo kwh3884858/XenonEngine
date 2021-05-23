@@ -112,6 +112,7 @@ namespace XenonEnigne
             POP,
 
             FUNC,
+            PARAM,
             CALL,
             RET,
             CALLHOS,
@@ -123,7 +124,7 @@ namespace XenonEnigne
         enum DelimiterWord
         {
             Colon = 0,          // A colon :
-            SemiColon,          // A SemiColon
+            SemiColon,          // A SemiColon ;
             OpenBracket,          // An openening bracket  [
             CloseBracket,          // An closing bracket    ]
             Comma,          // A comma,
@@ -160,13 +161,16 @@ namespace XenonEnigne
             int m_mainFunctionEntryIndex = -1;
         };
 
-        struct FuntionElement
+        const String Main_Function_Name = "_Main";
+        
+        struct FunctionElement
         {
             Token* m_functionToken = nullptr;
             int m_functionIndex = -1;
             int m_entryPoint = -1;
             int m_localStackSize = 0;
             int m_parameterCount = 0;
+
         };
 
         struct SymbolElement 
@@ -176,6 +180,13 @@ namespace XenonEnigne
             unsigned int m_size = 0;
             int m_stackIndex = 0;
             unsigned int m_functionIndex = 0;
+        };
+
+        struct LabelElement
+        {
+            Token* token = nullptr;
+            unsigned int m_instructionStreamIndex = 0;
+            FunctionElement* m_currentFunction = 0;
         };
 
         // ---- Operand Type Bitfield Flags ---------------------------------------------------
@@ -193,7 +204,7 @@ namespace XenonEnigne
         const OpBitfiledFlag OP_FLAG_TYPE_FUNC_NAME = 32;      // Function table index (used for Call)
         const OpBitfiledFlag OP_FLAG_TYPE_HOST_API_CALL = 64;     // Host API Call table index (used for
                                                                     // CallHost)
-        struct Instruction
+        struct InstructionLookup
         {
             String m_mnemonic;
             KeyWord m_opType;
@@ -210,12 +221,38 @@ namespace XenonEnigne
             InstructionStateOpTypeList
         };
 
+        // Assembled Instruction Stream
+
+        struct InstructionOp
+        {
+            int m_type;                                  // Type
+            union                                       // The value
+            {
+                int m_intLiteral;                        // Integer literal
+                float m_floatLiteral;                    // Float literal
+                int m_stringTableIndex;                  // String table index
+                int m_stackIndex;                        // Stack index
+                int m_instructionIndex;                        // Instruction index
+                int m_funcIndex;                         // Function index
+                int m_hostAPICallIndex;                  // Host API Call index
+                int m_reg;                               // Register code
+            };
+            int m_offsetIndex;                           // Index of the offset
+        };
+
+        struct Instruction
+        {
+            unsigned int m_opCode;
+            unsigned int m_opCount;
+            Vector<InstructionOp*> m_ops;
+        };
+
         typedef Vector<Token*> TokenVector;
 
         void InstructionError(InstructionState state, char character, unsigned int index)const;
         void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
         void UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone)const;
-        InstructionState CreateInstructionList(InstructionState currentState, const String& tmpString, Instruction* const instruction, int& tokenOpAmount, int& currentTokenopCount);
+        InstructionState CreateInstructionList(InstructionState currentState, const String& tmpString, InstructionLookup* const instruction, int& tokenOpAmount, int& currentTokenopCount);
         DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);
         void DetermineCharacterType(char c)const;
 
@@ -226,7 +263,7 @@ namespace XenonEnigne
 
         TokenVector* Lexer(XenonFile* const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
-        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, unsigned int& refIndex, bool isInFunction, unsigned int& refLocalStackSize, unsigned int& refGlobalStackSize, unsigned int currentFunctionIndex);
+        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
@@ -235,15 +272,18 @@ namespace XenonEnigne
         bool IsCharFullStop(char character)const;
         bool IsCharDelimiter(char character)const;
 
-        const String Main_Function_Name = "_Main";
+        Token* MoveToNextToken(const TokenVector& tokenVector, unsigned int& index)const;
+        FunctionElement*const GetFunctionByName(const String& functionName) const;
+
         unsigned int Local_Stack_Start_Index = 2;
 
         Vector<DelimiterSymbol*> m_delimiterList;
-        Vector<Instruction*> m_instructionList;
+        Vector<InstructionLookup*> m_instructionList;
 
         // For Paring
         Vector<SymbolElement*> m_symbolTable;
-        Vector<FuntionElement*> m_functionTable;
+        Vector<FunctionElement*> m_functionTable;
+        Vector<LabelElement*> m_labelTable;
 
         // Ready for deletion///////////////////////////////////
         const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string

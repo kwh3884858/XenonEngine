@@ -11,7 +11,7 @@ namespace XenonEnigne
     {
     }
 
-    bool XenonScriptAssemblerMachine::InitializeInstructionList(const XenonFile * const xenonFile) 
+    bool XenonScriptAssemblerMachine::InitializeInstructionList(const XenonFile * const xenonFile)
     {
         unsigned int index = 0;
         bool isDone = false;
@@ -22,13 +22,13 @@ namespace XenonEnigne
         int tokenOpAmount = 0;
         int currentTokenOpCount = 0;
 
-        Instruction* instrction;
+        InstructionLookup* instrction;
 
         while (index < xenonFile->m_content.Count())
         {
-             isDone = false;
-             isShouldAdd = true;
-             char currentChar = xenonFile->m_content[index];
+            isDone = false;
+            isShouldAdd = true;
+            char currentChar = xenonFile->m_content[index];
             switch (currentState)
             {
             case InstructionStateStart:
@@ -42,7 +42,7 @@ namespace XenonEnigne
                     isShouldAdd = false;
                 }
             }
-                break;
+            break;
             case InstructionStateMnomonic:
             {
                 if (IsCharIdent(currentChar))
@@ -59,7 +59,7 @@ namespace XenonEnigne
                     return false;
                 }
             }
-                break;
+            break;
             case InstructionStateOpType:
             {
                 if (IsCharNumeric(currentChar))
@@ -76,7 +76,7 @@ namespace XenonEnigne
                     return false;
                 }
             }
-                break;
+            break;
             case InstructionStateOpCount:
             {
                 if (IsCharNumeric(currentChar))
@@ -93,7 +93,7 @@ namespace XenonEnigne
                     return false;
                 }
             }
-                break;
+            break;
             case InstructionStateOpTypeList:
                 if (IsCharNumeric(currentChar))
                 {
@@ -132,17 +132,17 @@ namespace XenonEnigne
                     break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateMnomonic:
                 {
-                    instrction = new Instruction;
+                    instrction = new InstructionLookup;
                     instrction->m_mnemonic = tmpString;
                     currentState = InstructionState::InstructionStateOpType;
                 }
-                    break;
+                break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpType:
                 {
-                    instrction->m_opType = static_cast<KeyWord>( tmpString.ToInt() );
+                    instrction->m_opType = static_cast<KeyWord>(tmpString.ToInt());
                     currentState = InstructionState::InstructionStateOpCount;
                 }
-                    break;
+                break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpCount:
                 {
                     instrction->m_opCount = tmpString.ToInt();
@@ -162,20 +162,20 @@ namespace XenonEnigne
                         currentState = InstructionState::InstructionStateMnomonic;
                     }
                 }
-                    break;
+                break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpTypeList:
                 {
                     int typeFlag = 0;
-                   bool result = StringToType(keyWordString, tmpString, typeFlag);
-                   assert(result == true);
-                   assert(typeFlag != 0);
+                    bool result = StringToType(keyWordString, tmpString, typeFlag);
+                    assert(result == true);
+                    assert(typeFlag != 0);
                     instrction->op[currentTokenOpCount] &= 1 << typeFlag;
                     if (currentTokenOpCount >= tokenOpAmount)
                     {
                         currentState = InstructionState::InstructionStateStart;
                     }
                 }
-                    break;
+                break;
                 default:
                     break;
                 }
@@ -244,7 +244,7 @@ namespace XenonEnigne
         }
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::InstructionState XenonScriptAssemblerMachine::CreateInstructionList(InstructionState currentState, const String& tmpString, Instruction*const instruction, int& tokenOpAmount, int& currentTokenopCount)
+    XenonEnigne::XenonScriptAssemblerMachine::InstructionState XenonScriptAssemblerMachine::CreateInstructionList(InstructionState currentState, const String& tmpString, InstructionLookup*const instruction, int& tokenOpAmount, int& currentTokenopCount)
     {
         switch (currentState)
         {
@@ -297,7 +297,7 @@ namespace XenonEnigne
         break;
         case DelimiterType:
         {
-            delimitSymbol->m_tokenType = static_cast<DelimiterWord>( tmpString.ToInt() );
+            delimitSymbol->m_tokenType = static_cast<DelimiterWord>(tmpString.ToInt());
             currentState = DelimiterSymbolState::Symbol;
         }
         break;
@@ -564,15 +564,11 @@ namespace XenonEnigne
         }
     }
 
-    bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector) 
-{
-
+    bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector)
+    {
         unsigned int globalStackSize = 0;
-        unsigned int localStackSize = 0;
-        unsigned int paramterCount = 0;
 
-        FuntionElement* currentFunction = nullptr;
-        unsigned int lineSize = 0;
+        FunctionElement* currentFunction = nullptr;
         unsigned int instructionStreamCount = 0;
 
         ScriptHeader scriptHeader;
@@ -583,106 +579,129 @@ namespace XenonEnigne
             {
             case Intergal:
             {
-                bool result = CreateSymbol(tokenVector, currentToken,TokenType::Intergal, index ,isInFunction,localStackSize, globalStackSize, currentFunctionIndex);
+                bool result = CreateSymbol(tokenVector, currentToken, TokenType::Intergal, currentFunction, index, globalStackSize);
                 if (!result)
                 {
                     return false;
                 }
             }
-                break;
+            break;
             case Float:
             {
-                bool result = CreateSymbol(tokenVector, currentToken, TokenType::Float, index, isInFunction, localStackSize, globalStackSize, currentFunctionIndex);
+                bool result = CreateSymbol(tokenVector, currentToken, TokenType::Float, currentFunction, index, globalStackSize);
                 if (!result)
                 {
                     return false;
                 }
             }
-                break;
+            break;
             case Identifier:
             {
+                // Line Label
+                Token* token = (*tokenVector)[index - 1];
+                if (!token || token->m_tokenType != TokenType::Delimiter)
+                {
+                    return false;
+                }
 
+                if (token->m_delimiter == DelimiterWord::Colon)
+                {
+                    LabelElement* const label = new LabelElement;
+                    label->token = currentToken;
+                    label->m_instructionStreamIndex = instructionStreamCount;
+                    label->m_currentFunction = currentFunction;
+                    m_labelTable.Add(label);
+                }
             }
-                break;
+            break;
             case StringEntity:
                 break;
             case TokenType::Label:
                 break;
             case TokenType::Function:
-            {
-                if (currentFunction)
-                {
-                    return false;
-                }
-
-                Token* token = (*tokenVector)[++index];
-                if (!token || token->m_tokenType != TokenType::Identifier)
-                {
-                    return false;
-                }
-
-                currentFunction = new FuntionElement;
-                currentFunction->m_functionToken = token;
-                currentFunction->m_functionIndex = m_functionTable.Count();
-                currentFunction->m_entryPoint = instructionStreamCount;
-
-                m_functionTable.Add(currentFunction);
-                currentFunctionIndex++;
-
-                token = (*tokenVector)[++index];
-                if (!token || token->m_tokenType != TokenType::Delimiter)
-                {
-                    if (!token || token->m_delimiter != DelimiterWord::OpenBrace)
-                    {
-                        return false;
-                    }
-                }
-
-                if (token->m_character == Main_Function_Name)
-                {
-                    scriptHeader.m_isMainEntryExist = true;
-                    scriptHeader.m_mainFunctionEntryIndex = currentFunctionIndex;
-                }
-
-                isInFunction = true;
-                ++instructionStreamCount;
-            }
                 break;
             case Keyword:
             {
                 switch (currentToken->m_keyword)
                 {
-                default:
-                    break;
-                }
-            }
-                break;
-            case TokenTypeCount:
-                break;
-            case None:
-                break;
-            case HostAPI:
-                break;
-            case Register:
-                break;
-            case Delimiter:
-                switch (currentToken->m_delimiter)
-                {
-                default:
-                    break;
-                case Colon:
-                    break;
-                case SemiColon:
-                    break;
-                case OpenBracket:
-                    break;
-                case CloseBracket:
+                case FUNC:
                 {
                     if (currentFunction)
                     {
-                        currentFunction->m_localStackSize = localStackSize;
-                        currentFunction->m_parameterCount = paramterCount;
-                        m_functionTable.Add(currentFunction);
+                        return false;
+                    }
+
+                    Token* token = (*tokenVector)[++index];
+                    if (!token || token->m_tokenType != TokenType::Identifier)
+                    {
+                        return false;
+                    }
+
+                    currentFunction = new FunctionElement;
+                    currentFunction->m_functionToken = token;
+                    currentFunction->m_functionIndex = m_functionTable.Count();
+                    currentFunction->m_entryPoint = instructionStreamCount;
+
+                    m_functionTable.Add(currentFunction);
+
+                    token = (*tokenVector)[++index];
+                    if (!token || token->m_tokenType != TokenType::Delimiter)
+                    {
+                        if (!token || token->m_delimiter != DelimiterWord::OpenBrace)
+                        {
+                            return false;
+                        }
+                    }
+
+                    if (token->m_character == Main_Function_Name)
+                    {
+                        scriptHeader.m_isMainEntryExist = true;
+                        scriptHeader.m_mainFunctionEntryIndex = currentFunction->m_functionIndex;
+                    }
+
+                    instructionStreamCount++;
+                }
+                break;
+                case PARAM:
+                {
+                    if (!currentFunction)
+                    {
+                        return false;
+                    }
+
+                    if (currentFunction->m_functionToken->m_character == Main_Function_Name)
+                    {
+                        return false;
+                    }
+
+                    Token* token = (*tokenVector)[++index];
+                    if (!token || token->m_tokenType != TokenType::Identifier)
+                    {
+                        return false;
+                    }
+
+                    currentFunction->m_parameterCount++;
+                }
+                break;
+                default:
+                {
+                    if (!currentFunction)
+                    {
+                        return false;
+                    }
+
+                    instructionStreamCount++;
+                }
+                break;
+                }
+            }
+            break;
+            case Delimiter:
+            {
+                if (currentToken->m_delimiter == DelimiterWord::CloseBracket)
+                {
+                    if (currentFunction)
+                    {
                         currentFunction = nullptr;
                     }
                     else
@@ -690,23 +709,137 @@ namespace XenonEnigne
                         return false;
                     }
                 }
-                    break;
-                case Comma:
-                    break;
-                case OpenBrace:
-                    break;
-                case CloseBrace:
-                    break;
+            }
+            break;
+            }
+        }
+
+        assert(currentFunction == nullptr);
+
+        for (unsigned int index = 0; index < tokenVector->Count(); index++)
+        {
+            Token * currentToken = (*tokenVector)[index];
+            switch (currentToken->m_tokenType)
+            {
+            case None:
+                break;
+            case Intergal:
+                break;
+            case Float:
+                break;
+            case StringEntity:
+                break;
+            case Identifier:
+                break;
+            case Label:
+                break;
+            case Function:
+            {
+                Token *token = MoveToNextToken(*tokenVector, index);
+                FunctionElement*const function = GetFunctionByName(token->m_character);
+                if (!function)
+                {
+                    return false;
                 }
+            }
+                currentFunction = function;
+
+                break;
+            case HostAPI:
+                break;
+            case Register:
+                break;
+            case Keyword:
+                switch (currentToken->m_keyword)
+                {
+                case MOV:
+                    break;
+                case ADD:
+                    break;
+                case SUB:
+                    break;
+                case MUL:
+                    break;
+                case DIV:
+                    break;
+                case MOD:
+                    break;
+                case EXP:
+                    break;
+                case NEG:
+                    break;
+                case INC:
+                    break;
+                case DEC:
+                    break;
+                case AND:
+                    break;
+                case OR:
+                    break;
+                case XOR:
+                    break;
+                case NOT:
+                    break;
+                case SHL:
+                    break;
+                case SHR:
+                    break;
+                case CONCAT:
+                    break;
+                case GETCHAR:
+                    break;
+                case SETCHAR:
+                    break;
+                case JMP:
+                    break;
+                case JE:
+                    break;
+                case JNE:
+                    break;
+                case JG:
+                    break;
+                case JL:
+                    break;
+                case JGE:
+                    break;
+                case JLE:
+                    break;
+                case PUSH:
+                    break;
+                case POP:
+                    break;
+                case FUNC:
+                    break;
+                case PARAM:
+                    break;
+                case CALL:
+                    break;
+                case RET:
+                    break;
+                case CALLHOS:
+                    break;
+                case PAUSE:
+                    break;
+                case EXIT:
+                    break;
+                default:
+                    break;
+                    
+                }
+                break;
+            case Delimiter:
+                break;
+            case TokenTypeCount:
+                break;
+            default:
                 break;
             }
         }
 
-
         delete tokenVector;
     }
 
-    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken,TokenType tokenType, unsigned int& refIndex, bool isInFunction, unsigned int & refLocalStackSize, unsigned int & refGlobalStackSize, unsigned int currentFunctionIndex)
+    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize)
     {
         Token* token = (*tokenVector)[++refIndex];
         if (!token || token->m_tokenType != TokenType::Identifier)
@@ -728,16 +861,16 @@ namespace XenonEnigne
                 return false;
             }
             size = token->m_character.ToInt();
-            token = (*tokenVector)[++refIndex ];
+            token = (*tokenVector)[++refIndex];
             if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
             {
                 return false;
             }
 
             int stackIndex = 0;
-            if (isInFunction)
+            if (functionElement)
             {
-                stackIndex = -(Local_Stack_Start_Index + refLocalStackSize);
+                stackIndex = -(Local_Stack_Start_Index + functionElement->m_localStackSize);
             }
             else
             {
@@ -749,12 +882,12 @@ namespace XenonEnigne
             symbol->m_symbolToken = currentToken;
             symbol->m_size = size;
             symbol->m_stackIndex = stackIndex;
-            symbol->m_functionIndex = currentFunctionIndex;
+            symbol->m_functionIndex = functionElement->m_functionIndex;
 
             m_symbolTable.Add(symbol);
-            if (isInFunction)
+            if (functionElement)
             {
-                refLocalStackSize += size;
+                functionElement->m_localStackSize += size;
             }
             else
             {
@@ -825,5 +958,23 @@ namespace XenonEnigne
             return true;
         }
         return false;
+    }
+
+    XenonEnigne::XenonScriptAssemblerMachine::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, unsigned int& index) const
+    {
+        assert(index + 1 < tokenVector.Count());
+        return tokenVector[index++];
+    }
+
+    XenonScriptAssemblerMachine::FunctionElement*const XenonScriptAssemblerMachine::GetFunctionByName(const String& functionName) const
+    {
+        for (int i = 0; i < m_functionTable.Count(); i++)
+        {
+            if (m_functionTable[i]->m_functionToken->m_character==functionName)
+            {
+                return m_functionTable[i];
+            }
+        }
+        return nullptr;
     }
 }
