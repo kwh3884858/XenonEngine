@@ -209,7 +209,7 @@ namespace XenonEnigne
             String m_mnemonic;
             KeyWord m_opType;
             int m_opCount = 0;
-            Vector< OpBitfiledFlag > op;
+            Vector< OpBitfiledFlag > m_opFlags;
         };
 
         enum InstructionState
@@ -263,6 +263,8 @@ namespace XenonEnigne
 
         TokenVector* Lexer(XenonFile* const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
+        bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
+        bool Parsing(TokenVector* const tokenVector);
         bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
 
         bool IsNewLine(char character)const;
@@ -274,6 +276,7 @@ namespace XenonEnigne
 
         Token* MoveToNextToken(const TokenVector& tokenVector, unsigned int& index)const;
         FunctionElement*const GetFunctionByName(const String& functionName) const;
+        InstructionLookup*const GetInstructionByKeyword(const KeyWord& keyword) const;
 
         unsigned int Local_Stack_Start_Index = 2;
 
