@@ -52,8 +52,8 @@ namespace XenonEnigne
         };
         enum TokenType {
             None = -1,
-            Intergal,
-            Float,
+            IntergalIiteral,
+            FloatIiteral,
             StringEntity,
             Identifier,
             Label,
@@ -67,8 +67,8 @@ namespace XenonEnigne
 
         static const TypeString<int> keyWordString[] =
         {
-            {"int",  TokenType::Intergal},
-            {"float", TokenType::Float},
+            {"int",  TokenType::IntergalIiteral},
+            {"float", TokenType::FloatIiteral},
             {"string",  TokenType::StringEntity},
             {"identifier",  TokenType::Identifier},
             {"label",  TokenType::Label},
@@ -78,6 +78,9 @@ namespace XenonEnigne
         };
         enum KeyWord
         {
+            INT,
+            FLOAT,
+
             MOV = 0,
             ADD,
             SUB,
@@ -133,6 +136,20 @@ namespace XenonEnigne
 
         };
 
+        enum InstructionOpType
+        {
+ InstructionOpTypeNone = 0,
+ InstructionOpTypeInteralLiteral                 ,           // Integer literal value
+ InstructionOpTypeFloatLiteral               ,           // Floating-point literal value
+ InstructionOpTypeSTRING_INDEX        ,           // String literal value
+ InstructionOpTypeABS_STACK_INDEX     ,           // Absolute array index
+ InstructionOpTypeREL_STACK_INDEX     ,           // Relative array index
+ InstructionOpTypeINSTR_INDEX         ,           // Instruction index
+ InstructionOpTypeFUNC_INDEX          ,           // Function index
+ InstructionOpTypeHOST_API_CALL_INDEX ,           // Host API call index
+ InstructionOpTypeREG                 ,           // Register
+        };
+
         struct Token
         {
             TokenType m_tokenType;
@@ -175,7 +192,7 @@ namespace XenonEnigne
 
         struct SymbolElement 
         {
-            TokenType m_variableType = TokenType::None;
+            InstructionOpType m_variableType = InstructionOpType::InstructionOpTypeNone;
             Token* m_symbolToken = nullptr;
             unsigned int m_size = 0;
             int m_stackIndex = 0;
@@ -265,7 +282,7 @@ namespace XenonEnigne
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
         bool Parsing(TokenVector* const tokenVector);
-        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
+        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;

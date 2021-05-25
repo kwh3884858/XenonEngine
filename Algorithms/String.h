@@ -34,12 +34,12 @@ namespace Algorithm
         void Add(T value);
         int Count()const;
         int ToInt()const;
+        float ToFloat()const;
         char ToChar()const;
         void Clear();
     private:
         Vector<T> m_string;
     };
-
 
 
     template<typename T>
@@ -134,10 +134,22 @@ namespace Algorithm
     int Algorithm::StringBase<T>::ToInt() const
     {
         int size = m_string.Count() + 1;
-        T* content = new content[size];
+        T* content = new T[size];
         memcpy(content, m_string.begin(), m_string.Count());
         content[size] = '\0';
         int result = atoi(content);
+        return result;
+    }
+
+
+    template<typename T>
+    float Algorithm::StringBase<T>::ToFloat() const
+    {
+        int size = m_string.Count() + 1;
+        T* content = new T[size];
+        memcpy(content, m_string.begin(), m_string.Count());
+        content[size] = '\0';
+        float result = atof(content);
         return result;
     }
 

@@ -523,10 +523,10 @@ namespace XenonEnigne
         case LexerStateEscape:
             break;
         case LexerStateIntegral:
-            token->m_tokenType = TokenType::Intergal;
+            token->m_tokenType = TokenType::IntergalIiteral;
             break;
         case LexerStateFloat:
-            token->m_tokenType = TokenType::Float;
+            token->m_tokenType = TokenType::FloatIiteral;
             break;
         case LexerStateDelimiter:
         {
@@ -580,15 +580,12 @@ namespace XenonEnigne
             {
             case None:
                 break;
-            case Intergal:
+            case IntergalIiteral:
             {
-                if (currentInstrction == nullptr && currentInstructionLookup == nullptr)
-                {
-                    
-                }
+
             }
-                break;
-            case Float:
+            break;
+            case FloatIiteral:
                 break;
             case StringEntity:
                 break;
@@ -601,108 +598,180 @@ namespace XenonEnigne
 
             }
 
-                break;
+            break;
             case HostAPI:
                 break;
             case Register:
                 break;
             case Keyword:
-                switch (currentToken->m_keyword)
-                {
-                case MOV:
-                {
-                    currentInstrction = new Instruction;
-                    currentInstructionLookup = GetInstructionByKeyword(KeyWord::MOV);
 
-                    currentInstrction->m_opCode = (int)KeyWord::MOV;
-                    currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
-                    currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
+                currentInstrction = new Instruction;
+                currentInstructionLookup = GetInstructionByKeyword(currentToken->m_keyword);
 
-                }
-                    break;
-                case ADD:
-                    break;
-                case SUB:
-                    break;
-                case MUL:
-                    break;
-                case DIV:
-                    break;
-                case MOD:
-                    break;
-                case EXP:
-                    break;
-                case NEG:
-                    break;
-                case INC:
-                    break;
-                case DEC:
-                    break;
-                case AND:
-                    break;
-                case OR:
-                    break;
-                case XOR:
-                    break;
-                case NOT:
-                    break;
-                case SHL:
-                    break;
-                case SHR:
-                    break;
-                case CONCAT:
-                    break;
-                case GETCHAR:
-                    break;
-                case SETCHAR:
-                    break;
-                case JMP:
-                    break;
-                case JE:
-                    break;
-                case JNE:
-                    break;
-                case JG:
-                    break;
-                case JL:
-                    break;
-                case JGE:
-                    break;
-                case JLE:
-                    break;
-                case PUSH:
-                    break;
-                case POP:
-                    break;
-                case FUNC:
+                currentInstrction->m_opCode = (int)KeyWord::MOV;
+                currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
+                currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
+
+                for (int parameterIndex = 0; parameterIndex < currentInstrction->m_opCount; parameterIndex++)
                 {
-                    Token *token = MoveToNextToken(*tokenVector, index);
-                    FunctionElement*const function = GetFunctionByName(token->m_character);
-                    if (!function)
+                    currentToken = MoveToNextToken(tokenVector, index);
+                    switch (currentToken->m_tokenType)
                     {
-                        return false;
+                    case None:
+                        break;
+                    case IntergalIiteral:
+                    {
+                        if (currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType) > 0)
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
+                            currentInstrction->m_ops[parameterIndex]->m_intLiteral = currentToken->m_character.ToInt();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    break;
+                    case FloatIiteral:
+                    {
+                        if (currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType) > 0)
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFloatLiteral;
+                            currentInstrction->m_ops[parameterIndex]->m_intLiteral = currentToken->m_character.ToFloat();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                        break;
+                    case StringEntity:
+                        break;
+                    case Identifier:
+                        break;
+                    case Label:
+                        break;
+                    case Function:
+                        break;
+                    case HostAPI:
+                        break;
+                    case Register:
+                        break;
+                    case Keyword:
+                        break;
+                    case Delimiter:
+                        break;
+                    case TokenTypeCount:
+                        break;
+                    default:
+                        break;
+
                     }
 
-                    currentFunction = function;
+                    //Ready For Delete
+                    switch (currentToken->m_keyword)
+                    {
+                    case KeyWord::INT:
+                    {
+                        InstructionOp* const instrctionOp = new InstructionOp;
+                        instrctionOp->m_type =
+                            currentInstrction->m_ops.
+                    }
+                    break;
+                    case KeyWord::FLOAT:
+                        break;
+                    case MOV:
+                    {
 
+
+                    }
+                    break;
+                    case ADD:
+                        break;
+                    case SUB:
+                        break;
+                    case MUL:
+                        break;
+                    case DIV:
+                        break;
+                    case MOD:
+                        break;
+                    case EXP:
+                        break;
+                    case NEG:
+                        break;
+                    case INC:
+                        break;
+                    case DEC:
+                        break;
+                    case AND:
+                        break;
+                    case OR:
+                        break;
+                    case XOR:
+                        break;
+                    case NOT:
+                        break;
+                    case SHL:
+                        break;
+                    case SHR:
+                        break;
+                    case CONCAT:
+                        break;
+                    case GETCHAR:
+                        break;
+                    case SETCHAR:
+                        break;
+                    case JMP:
+                        break;
+                    case JE:
+                        break;
+                    case JNE:
+                        break;
+                    case JG:
+                        break;
+                    case JL:
+                        break;
+                    case JGE:
+                        break;
+                    case JLE:
+                        break;
+                    case PUSH:
+                        break;
+                    case POP:
+                        break;
+                    case FUNC:
+                    {
+                        Token *token = MoveToNextToken(*tokenVector, index);
+                        FunctionElement*const function = GetFunctionByName(token->m_character);
+                        if (!function)
+                        {
+                            return false;
+                        }
+
+                        currentFunction = function;
+
+                    }
+                    break;
+                    case PARAM:
+                        break;
+                    case CALL:
+                        break;
+                    case RET:
+                        break;
+                    case CALLHOS:
+                        break;
+                    case PAUSE:
+                        break;
+                    case EXIT:
+                        break;
+                    default:
+                        break;
+
+                    }
                 }
-                    break;
-                case PARAM:
-                    break;
-                case CALL:
-                    break;
-                case RET:
-                    break;
-                case CALLHOS:
-                    break;
-                case PAUSE:
-                    break;
-                case EXIT:
-                    break;
-                default:
-                    break;
-                    
-                }
+
+
                 break;
             case Delimiter:
                 break;
@@ -729,22 +798,14 @@ namespace XenonEnigne
             Token * currentToken = (*tokenVector)[index];
             switch (currentToken->m_tokenType)
             {
-            case Intergal:
+            case IntergalIiteral:
             {
-                bool result = CreateSymbol(tokenVector, currentToken, TokenType::Intergal, currentFunction, index, globalStackSize);
-                if (!result)
-                {
-                    return false;
-                }
+
             }
             break;
-            case Float:
+            case FloatIiteral:
             {
-                bool result = CreateSymbol(tokenVector, currentToken, TokenType::Float, currentFunction, index, globalStackSize);
-                if (!result)
-                {
-                    return false;
-                }
+
             }
             break;
             case Identifier:
@@ -845,6 +906,90 @@ namespace XenonEnigne
                     instructionStreamCount++;
                 }
                 break;
+                case INT:
+                {
+                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpTypeInteralLiteral, currentFunction, index, globalStackSize);
+                    if (!result)
+                    {
+                        return false;
+                    }
+                }
+                break;
+                case FLOAT:
+                {
+                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpTypeFloatLiteral, currentFunction, index, globalStackSize);
+                    if (!result)
+                    {
+                        return false;
+                    }
+                }
+                break;
+                case MOV:
+                    break;
+                case ADD:
+                    break;
+                case SUB:
+                    break;
+                case MUL:
+                    break;
+                case DIV:
+                    break;
+                case MOD:
+                    break;
+                case EXP:
+                    break;
+                case NEG:
+                    break;
+                case INC:
+                    break;
+                case DEC:
+                    break;
+                case AND:
+                    break;
+                case OR:
+                    break;
+                case XOR:
+                    break;
+                case NOT:
+                    break;
+                case SHL:
+                    break;
+                case SHR:
+                    break;
+                case CONCAT:
+                    break;
+                case GETCHAR:
+                    break;
+                case SETCHAR:
+                    break;
+                case JMP:
+                    break;
+                case JE:
+                    break;
+                case JNE:
+                    break;
+                case JG:
+                    break;
+                case JL:
+                    break;
+                case JGE:
+                    break;
+                case JLE:
+                    break;
+                case PUSH:
+                    break;
+                case POP:
+                    break;
+                case CALL:
+                    break;
+                case RET:
+                    break;
+                case CALLHOS:
+                    break;
+                case PAUSE:
+                    break;
+                case EXIT:
+                    break;
                 }
             }
             break;
@@ -863,13 +1008,21 @@ namespace XenonEnigne
                 }
             }
             break;
+            case None:
+                break;
+            case HostAPI:
+                break;
+            case Register:
+                break;
+            case TokenTypeCount:
+                break;
             }
         }
 
         assert(currentFunction == nullptr);
     }
 
-    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, TokenType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize)
+    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType instructionOpType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize)
     {
         Token* token = (*tokenVector)[++refIndex];
         if (!token || token->m_tokenType != TokenType::Identifier)
@@ -886,7 +1039,7 @@ namespace XenonEnigne
                 return false;
             }
             token = (*tokenVector)[++refIndex];
-            if (!token || token->m_tokenType != TokenType::Intergal)
+            if (!token || token->m_tokenType != TokenType::IntergalIiteral)
             {
                 return false;
             }
@@ -896,34 +1049,35 @@ namespace XenonEnigne
             {
                 return false;
             }
-
-            int stackIndex = 0;
-            if (functionElement)
-            {
-                stackIndex = -(Local_Stack_Start_Index + functionElement->m_localStackSize);
-            }
-            else
-            {
-                stackIndex = refGlobalStackSize;
-            }
-
-            SymbolElement* symbol = new SymbolElement;
-            symbol->m_variableType = TokenType::Intergal;
-            symbol->m_symbolToken = currentToken;
-            symbol->m_size = size;
-            symbol->m_stackIndex = stackIndex;
-            symbol->m_functionIndex = functionElement->m_functionIndex;
-
-            m_symbolTable.Add(symbol);
-            if (functionElement)
-            {
-                functionElement->m_localStackSize += size;
-            }
-            else
-            {
-                refGlobalStackSize += size;
-            }
         }
+
+        int stackIndex = 0;
+        if (functionElement)
+        {
+            stackIndex = -(Local_Stack_Start_Index + functionElement->m_localStackSize);
+        }
+        else
+        {
+            stackIndex = refGlobalStackSize;
+        }
+
+        SymbolElement* symbol = new SymbolElement;
+        symbol->m_variableType = instructionOpType;
+        symbol->m_symbolToken = currentToken;
+        symbol->m_size = size;
+        symbol->m_stackIndex = stackIndex;
+        symbol->m_functionIndex = functionElement->m_functionIndex;
+
+        m_symbolTable.Add(symbol);
+        if (functionElement)
+        {
+            functionElement->m_localStackSize += size;
+        }
+        else
+        {
+            refGlobalStackSize += size;
+        }
+
         return true;
     }
 
@@ -1000,7 +1154,7 @@ namespace XenonEnigne
     {
         for (int i = 0; i < m_functionTable.Count(); i++)
         {
-            if (m_functionTable[i]->m_functionToken->m_character==functionName)
+            if (m_functionTable[i]->m_functionToken->m_character == functionName)
             {
                 return m_functionTable[i];
             }
