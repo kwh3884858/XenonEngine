@@ -138,16 +138,16 @@ namespace XenonEnigne
 
         enum InstructionOpType
         {
- InstructionOpTypeNone = 0,
- InstructionOpTypeInteralLiteral                 ,           // Integer literal value
- InstructionOpTypeFloatLiteral               ,           // Floating-point literal value
- InstructionOpTypeSTRING_INDEX        ,           // String literal value
- InstructionOpTypeABS_STACK_INDEX     ,           // Absolute array index
- InstructionOpTypeREL_STACK_INDEX     ,           // Relative array index
- InstructionOpTypeINSTR_INDEX         ,           // Instruction index
- InstructionOpTypeFUNC_INDEX          ,           // Function index
- InstructionOpTypeHOST_API_CALL_INDEX ,           // Host API call index
- InstructionOpTypeREG                 ,           // Register
+            InstructionOpTypeNone = 0,
+            InstructionOpTypeInteralLiteral,           // Integer literal value
+            InstructionOpTypeFloatLiteral,           // Floating-point literal value
+            InstructionOpTypeStringIndex,           // String literal value
+            InstructionOpTypeABS_STACK_INDEX,           // Absolute array index
+            InstructionOpTypeREL_STACK_INDEX,           // Relative array index
+            InstructionOpTypeINSTR_INDEX,           // Instruction index
+            InstructionOpTypeFunctionIndex,           // Function index
+            InstructionOpTypeHOST_API_CALL_INDEX,           // Host API call index
+            InstructionOpTypeREG,           // Register
         };
 
         struct Token
@@ -174,12 +174,12 @@ namespace XenonEnigne
 
         struct ScriptHeader
         {
-            bool m_isMainEntryExist = false;
+            unsigned int m_globalDataSize = 0;
             int m_mainFunctionEntryIndex = -1;
         };
 
         const String Main_Function_Name = "_Main";
-        
+
         struct FunctionElement
         {
             Token* m_functionToken = nullptr;
@@ -190,7 +190,7 @@ namespace XenonEnigne
 
         };
 
-        struct SymbolElement 
+        struct SymbolElement
         {
             InstructionOpType m_variableType = InstructionOpType::InstructionOpTypeNone;
             Token* m_symbolToken = nullptr;
@@ -242,10 +242,10 @@ namespace XenonEnigne
 
         struct InstructionOp
         {
-            int m_type;                                  // Type
+            InstructionOpType m_type = InstructionOpType::InstructionOpTypeNone;                                  // Type
             union                                       // The value
             {
-                int m_intLiteral;                        // Integer literal
+                int m_interalLiteral;                        // Integer literal
                 float m_floatLiteral;                    // Float literal
                 int m_stringTableIndex;                  // String table index
                 int m_stackIndex;                        // Stack index
@@ -259,7 +259,7 @@ namespace XenonEnigne
 
         struct Instruction
         {
-            unsigned int m_opCode;
+            KeyWord m_opCode;
             unsigned int m_opCount;
             Vector<InstructionOp*> m_ops;
         };
@@ -297,13 +297,17 @@ namespace XenonEnigne
 
         unsigned int Local_Stack_Start_Index = 2;
 
+        ScriptHeader m_scriptHeader;
+
         Vector<DelimiterSymbol*> m_delimiterList;
-        Vector<InstructionLookup*> m_instructionList;
+        Vector<InstructionLookup*> m_instructionLookupList;
 
         // For Paring
         Vector<SymbolElement*> m_symbolTable;
         Vector<FunctionElement*> m_functionTable;
         Vector<LabelElement*> m_labelTable;
+        Vector<String> m_stringTable;
+        Vector<Instruction*> m_instructionList;
 
         // Ready for deletion///////////////////////////////////
         const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string

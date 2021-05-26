@@ -103,7 +103,6 @@ namespace Algorithm
 	{
 		if (IsCapacityEnough() == false) {
 			Reallocation();
-
 		}
 		m_content[m_count] = element;
 		m_count++;
