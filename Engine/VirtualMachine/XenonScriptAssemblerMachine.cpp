@@ -244,46 +244,6 @@ namespace XenonEnigne
         }
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::InstructionState XenonScriptAssemblerMachine::CreateInstructionList(InstructionState currentState, const String& tmpString, InstructionLookup*const instruction, int& tokenOpAmount, int& currentTokenopCount)
-    {
-        switch (currentState)
-        {
-        case InstructionStateMnomonic:
-        {
-
-        }
-        break;
-        case InstructionStateOpType:
-        {
-
-        }
-        break;
-        case InstructionStateOpCount:
-        {
-
-        }
-        break;
-        case InstructionStateOpTypeList:
-        {
-            if (currentTokenOpCount < tokenOpAmount)
-            {
-
-                currentTokenOpCount++;
-            }
-            else
-            {
-                m_instructionLookupList->Add(instrction);
-                currentState = InstructionState::InstructionStateMnomonic;
-            }
-        }
-        break;
-        default:
-            break;
-        }
-
-        return currentState;
-    }
-
     XenonEnigne::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol)
     {
         switch (currentState)
@@ -569,227 +529,7 @@ namespace XenonEnigne
         BuildSymbolAndFunctionAndLabelTable(tokenVector);
 
         Vector<Instruction*> instructionStream;
-        FunctionElement* currentFunction = nullptr;
-        int currentFunctionParamCount = 0;
-        Instruction* currentInstrction = nullptr;
-        InstructionLookup* currentInstructionLookup;
-
-        for (unsigned int index = 0; index < tokenVector->Count(); index++)
-        {
-            Token * currentToken = (*tokenVector)[index];
-            switch (currentToken->m_tokenType)
-            {
-            case None:
-                break;
-            case IntergalIiteral:
-            {
-
-            }
-            break;
-            case FloatIiteral:
-                break;
-            case StringEntity:
-                break;
-            case Identifier:
-                break;
-            case Label:
-                break;
-            case Function:
-            {
-                Token *token = MoveToNextToken(*tokenVector, index);
-                FunctionElement*const functionElement = GetFunctionByName(token->m_character);
-                if (functionElement)
-                {
-                    currentFunction = functionElement;
-                    currentFunctionParamCount = 0;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-
-            break;
-            case HostAPI:
-                break;
-            case Register:
-                break;
-            case Keyword:
-            {
-                switch (currentToken->m_keyword)
-                {
-                case KeyWord::PARAM:
-                {
-                    currentToken = MoveToNextToken(tokenVector, index);
-                    assert(currentToken->m_tokenType == TokenType::Keyword);
-
-                    InstructionOpType variable = (currentToken->m_keyword == KeyWord::INT) ? 
-                        InstructionOpType::InstructionOpTypeInteralLiteral : InstructionOpType::InstructionOpTypeFloatLiteral;
-
-                    currentToken = MoveToNextToken(tokenVector, index);
-                    assert(currentToken->m_tokenType == TokenType::Identifier);
-
-                    currentFunctionParamCount++;
-                    assert(currentFunctionParamCount <= currentFunction->m_parameterCount);
-                    int stackIndex = -(Local_Stack_Start_Index + currentFunction->m_localStackSize + currentFunctionParamCount);
-
-                    assert(currentFunction != nullptr);
-                    if (currentFunction)
-                    {
-                        SymbolElement* symbol = new SymbolElement;
-                        symbol->m_variableType = variable;
-                        symbol->m_symbolToken = currentToken;
-                        symbol->m_size = 1;
-                        symbol->m_stackIndex = stackIndex;
-                        symbol->m_functionIndex = currentFunction->m_functionIndex;
-
-                        m_symbolTable.Add(symbol);
-                    }
-                }
-                break;
-                default:
-                {
-                    currentInstrction = new Instruction;
-                    currentInstructionLookup = GetInstructionByKeyword(currentToken->m_keyword);
-
-                    currentInstrction->m_opCode = currentToken->m_tokenType;
-                    currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
-                    currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
-
-                    m_instructionList.Add(currentInstrction);
-
-                    for (int parameterIndex = 0; parameterIndex < currentInstrction->m_opCount; parameterIndex++)
-                    {
-                        currentToken = MoveToNextToken(tokenVector, index);
-
-                        if (!((currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType)) > 0))
-                        {
-                            return false;
-                        }
-
-                        switch (currentToken->m_tokenType)
-                        {
-                        case None:
-                            break;
-                        case IntergalIiteral:
-                        {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
-                            currentInstrction->m_ops[parameterIndex]->m_interalLiteral = currentToken->m_character.ToInt();
-                        }
-                        break;
-                        case FloatIiteral:
-                        {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFloatLiteral;
-                            currentInstrction->m_ops[parameterIndex]->m_floatLiteral = currentToken->m_character.ToFloat();
-                        }
-                        break;
-                        case StringEntity:
-                        {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeStringIndex;
-                            currentInstrction->m_ops[parameterIndex]->m_stringTableIndex = m_stringTable.Count();
-                            m_stringTable.Add(currentToken->m_character);
-                        }
-                        break;
-                        case Identifier:
-                        {
-
-                            currentToken = MoveToNextToken(tokenVector, index);
-                        }
-                        break;
-                        case Label:
-                            break;
-                        case Function:
-                        {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFunctionIndex;
-                            FunctionElement*const functionElement = GetFunctionByName(currentToken->m_character);
-                            if (functionElement)
-                            {
-                                currentInstrction->m_ops[parameterIndex]->m_funcIndex = functionElement->m_functionIndex;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-
-                        }
-                        break;
-                        case HostAPI:
-                            break;
-                        case Register:
-                            break;
-                        case Keyword:
-                            break;
-                        case Delimiter:
-                            break;
-                        case TokenTypeCount:
-                            break;
-                        default:
-                            break;
-
-                        }
-                    }
-
-                }
-                break;
-                }
-            }
-
-                break;
-            case Delimiter:
-            {
-                switch (currentToken->m_delimiter)
-                {
-                case Colon:
-                    break;
-                case SemiColon:
-                    break;
-                case OpenBracket:
-                    break;
-                case CloseBracket:
-                    break;
-                case Comma:
-                    break;
-                case OpenBrace:
-                    break;
-                case CloseBrace:
-                {
-                    currentInstrction = new Instruction;
-
-                    currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
-                    currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
-
-
-                    if (currentFunction->m_functionIndex == m_scriptHeader.m_mainFunctionEntryIndex)
-                    {
-                        currentInstrction->m_opCode = KeyWord::EXIT;
-                        currentInstrction->m_opCount = 1;
-                        InstructionOp* const op = new InstructionOp();
-                        op->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
-                        op->m_interalLiteral = 0;
-                        currentInstrction->m_ops.Add(op);
-                    }
-                    else
-                    {
-                        currentInstrction->m_opCode = KeyWord::EXIT;
-                        currentInstrction->m_opCount = 0;
-
-                    }
-                    currentFunction = nullptr;
-                    m_instructionList.Add(currentInstrction);
-                }
-                    break;
-                default:
-                    break;
-
-                }
-            }
-                break;
-            case TokenTypeCount:
-                break;
-            default:
-                break;
-            }
-        }
+        CreateInstructionList(tokenVector, instructionStream);
 
         delete tokenVector;
     }
@@ -828,7 +568,7 @@ namespace XenonEnigne
                 if (token->m_delimiter == DelimiterWord::Colon)
                 {
                     LabelElement* const label = new LabelElement;
-                    label->token = currentToken;
+                    label->m_token = currentToken;
                     label->m_instructionStreamIndex = instructionStreamCount;
                     label->m_currentFunction = currentFunction;
                     m_labelTable.Add(label);
@@ -1029,6 +769,306 @@ namespace XenonEnigne
         assert(currentFunction == nullptr);
     }
 
+    void XenonScriptAssemblerMachine::CreateInstructionList(TokenVector* const const tokenVector, const Vector<Instruction *>& instructionStream)
+    {
+        FunctionElement* currentFunction = nullptr;
+        int currentFunctionParamCount = 0;
+        Instruction* currentInstrction = nullptr;
+        InstructionLookup* currentInstructionLookup;
+
+        for (unsigned int index = 0; index < tokenVector->Count(); index++)
+        {
+            Token * currentToken = (*tokenVector)[index];
+            switch (currentToken->m_tokenType)
+            {
+            case None:
+                break;
+            case IntergalIiteral:
+            {
+            }
+            break;
+            case FloatIiteral:
+                break;
+            case StringEntity:
+                break;
+            case Identifier:
+                break;
+            case Label:
+                break;
+            case Function:
+            {
+                Token *token = MoveToNextToken(*tokenVector, index);
+                FunctionElement*const functionElement = GetFunctionByName(token->m_character);
+                if (functionElement)
+                {
+                    currentFunction = functionElement;
+                    currentFunctionParamCount = 0;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            break;
+            case HostAPI:
+                break;
+            case Register:
+                break;
+            case Keyword:
+            {
+                switch (currentToken->m_keyword)
+                {
+                case KeyWord::PARAM:
+                {
+                    currentToken = MoveToNextToken(tokenVector, index);
+                    assert(currentToken->m_tokenType == TokenType::Keyword);
+
+                    InstructionOpType variable = (currentToken->m_keyword == KeyWord::INT) ?
+                        InstructionOpType::InstructionOpTypeInteralLiteral : InstructionOpType::InstructionOpTypeFloatLiteral;
+
+                    currentToken = MoveToNextToken(tokenVector, index);
+                    assert(currentToken->m_tokenType == TokenType::Identifier);
+
+                    currentFunctionParamCount++;
+                    assert(currentFunctionParamCount <= currentFunction->m_parameterCount);
+                    int stackIndex = -(Local_Stack_Start_Index + currentFunction->m_localStackSize + currentFunctionParamCount);
+
+                    assert(currentFunction != nullptr);
+                    if (currentFunction)
+                    {
+                        SymbolElement* symbol = new SymbolElement;
+                        symbol->m_variableType = variable;
+                        symbol->m_symbolToken = currentToken;
+                        symbol->m_size = 1;
+                        symbol->m_stackIndex = stackIndex;
+                        symbol->m_functionIndex = currentFunction->m_functionIndex;
+
+                        m_symbolTable.Add(symbol);
+                    }
+                }
+                break;
+                case TokenType::Identifier:
+                {
+                    currentInstrction = new Instruction;
+                    currentInstructionLookup = GetInstructionByKeyword(currentToken->m_keyword);
+
+                    currentInstrction->m_opCode = currentToken->m_tokenType;
+                    currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
+                    currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
+
+                    m_instructionList.Add(currentInstrction);
+
+                    for (int parameterIndex = 0; parameterIndex < currentInstrction->m_opCount; parameterIndex++)
+                    {
+                        currentToken = MoveToNextToken(tokenVector, index);
+
+                        if (!((currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType)) > 0))
+                        {
+                            return false;
+                        }
+
+                        switch (currentToken->m_tokenType)
+                        {
+                        case None:
+                            break;
+                        case IntergalIiteral:
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
+                            currentInstrction->m_ops[parameterIndex]->m_interalLiteral = currentToken->m_character.ToInt();
+                        }
+                        break;
+                        case FloatIiteral:
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFloatLiteral;
+                            currentInstrction->m_ops[parameterIndex]->m_floatLiteral = currentToken->m_character.ToFloat();
+                        }
+                        break;
+                        case StringEntity:
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeStringIndex;
+                            currentInstrction->m_ops[parameterIndex]->m_stringTableIndex = m_stringTable.Count();
+                            m_stringTable.Add(currentToken->m_character);
+                        }
+                        break;
+                        case TokenType::Register:
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeRegister;
+                            currentInstrction->m_ops[parameterIndex]->m_floatLiteral = 0;
+                        }
+                        break;
+                        case Identifier:
+                        {
+                            String identifier = currentToken->m_character;
+                            SymbolElement* const symbolElement = GetSymbolByName(identifier);
+                            FunctionElement* const functionElement = GetFunctionByName(identifier);
+                            LabelElement* const labelElement = GetLabelByName(identifier);
+
+                            if (symbolElement != nullptr)
+                            {
+                                if (symbolElement->m_size > 1)
+                                {
+                                    currentToken = MoveToNextToken(tokenVector, index);
+                                    assert(currentToken->m_delimiter == DelimiterWord::OpenBracket);
+                                    currentToken = MoveToNextToken(tokenVector, index);
+                                    assert(currentToken->m_tokenType == TokenType::IntergalIiteral);
+
+                                    if (currentToken->m_tokenType == TokenType::IntergalIiteral)
+                                    {
+                                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeAbsoluteStackIndex;
+                                        int arrayIndex = currentToken->m_character.ToInt();
+                                        currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex + arrayIndex;
+
+                                    }
+                                    else if (currentToken->m_tokenType == TokenType::Identifier)
+                                    {
+                                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeRelativeStackIndex;
+                                        SymbolElement* const indexSymbol = GetSymbolByName(currentToken->m_character);
+                                        assert(indexSymbol != nullptr);
+                                        currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex;
+                                        currentInstrction->m_ops[parameterIndex]->m_offsetIndex = indexSymbol->m_stackIndex;
+                                    }
+                                    else
+                                    {
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeAbsoluteStackIndex;
+                                    currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex;
+
+                                }
+
+                            }
+                            else if ((currentInstructionLookup->m_opFlags[parameterIndex] & 1 << TokenType::Function) > 0 &&
+                                functionElement != nullptr)
+                            {
+                                currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFunctionIndex;
+                                currentInstrction->m_ops[parameterIndex]->m_stackIndex = functionElement->m_functionIndex;
+                            }
+                            else if ((currentInstructionLookup->m_opFlags[parameterIndex] & 1 << TokenType::Label) > 0 &&
+                                labelElement != nullptr)
+                            {
+                                currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeInstructionIndex;
+                                currentInstrction->m_ops[parameterIndex]->m_stackIndex = labelElement->m_instructionStreamIndex;
+                            }
+                            else if ((currentInstructionLookup->m_opFlags[parameterIndex] & 1 << TokenType::HostAPI) > 0)
+                            {
+                                currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeHostAPICallIndex;
+                                currentInstrction->m_ops[parameterIndex]->m_hostAPICallIndex = m_stringTable.Count();
+                                m_stringTable.Add(currentToken->m_character);
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        break;
+                        case Label:
+                            break;
+                        case Function:
+                        {
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFunctionIndex;
+                            FunctionElement*const functionElement = GetFunctionByName(currentToken->m_character);
+                            if (functionElement)
+                            {
+                                currentInstrction->m_ops[parameterIndex]->m_funcIndex = functionElement->m_functionIndex;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+
+                        }
+                        break;
+                        case HostAPI:
+                            break;
+                        case Register:
+                            break;
+                        case Keyword:
+                            break;
+                        case Delimiter:
+                            break;
+                        case TokenTypeCount:
+                            break;
+                        default:
+                            break;
+
+                        }
+                    }
+
+                }
+                break;
+                default:
+                {
+                    assert(true == false);
+                }
+                break;
+                }
+
+                break;
+            }
+
+            break;
+            case Delimiter:
+            {
+                switch (currentToken->m_delimiter)
+                {
+                case Colon:
+                    break;
+                case SemiColon:
+                    break;
+                case OpenBracket:
+                    break;
+                case CloseBracket:
+                    break;
+                case Comma:
+                    break;
+                case OpenBrace:
+                    break;
+                case CloseBrace:
+                {
+                    currentInstrction = new Instruction;
+
+                    currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
+                    currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
+
+
+                    if (currentFunction->m_functionIndex == m_scriptHeader.m_mainFunctionEntryIndex)
+                    {
+                        currentInstrction->m_opCode = KeyWord::EXIT;
+                        currentInstrction->m_opCount = 1;
+                        InstructionOp* const op = new InstructionOp();
+                        op->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
+                        op->m_interalLiteral = 0;
+                        currentInstrction->m_ops.Add(op);
+                    }
+                    else
+                    {
+                        currentInstrction->m_opCode = KeyWord::EXIT;
+                        currentInstrction->m_opCount = 0;
+
+                    }
+                    currentFunction = nullptr;
+                    m_instructionList.Add(currentInstrction);
+                }
+                break;
+                default:
+                    break;
+
+                }
+            }
+            break;
+            case TokenTypeCount:
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
+
     bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType instructionOpType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize)
     {
         Token* token = (*tokenVector)[++refIndex];
@@ -1157,6 +1197,18 @@ namespace XenonEnigne
         return tokenVector[index++];
     }
 
+    XenonEnigne::XenonScriptAssemblerMachine::SymbolElement*const XenonScriptAssemblerMachine::GetSymbolByName(const String& symbolName) const
+    {
+        for (int i = 0; i < m_symbolTable.Count(); i++)
+        {
+            if (m_symbolTable[i]->m_symbolToken->m_character == symbolName)
+            {
+                return m_symbolTable[i];
+            }
+        }
+        return nullptr;
+    }
+
     XenonScriptAssemblerMachine::FunctionElement*const XenonScriptAssemblerMachine::GetFunctionByName(const String& functionName) const
     {
         for (int i = 0; i < m_functionTable.Count(); i++)
@@ -1164,6 +1216,18 @@ namespace XenonEnigne
             if (m_functionTable[i]->m_functionToken->m_character == functionName)
             {
                 return m_functionTable[i];
+            }
+        }
+        return nullptr;
+    }
+
+    XenonEnigne::XenonScriptAssemblerMachine::LabelElement*const XenonScriptAssemblerMachine::GetLabelByName(const String& labelName)
+    {
+        for (int i = 0; i < m_labelTable.Count(); i++)
+        {
+            if (m_labelTable[i].m_token->m_character == labelName)
+            {
+                return m_labelTable[i];
             }
         }
         return nullptr;

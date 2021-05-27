@@ -26,6 +26,8 @@ namespace Algorithm
 		int Count()const;
 		int Capacity()const;
 
+        bool IsExist(const T& element)const;
+
 		T operator[](int index)const;
 		Vector<T>& operator=(const Vector& rhs);
 
@@ -163,6 +165,19 @@ namespace Algorithm
 	{
 		return m_capacity;
 	}
+
+    template<typename T>
+    bool Algorithm::Vector<T>::IsExist(const T& element) const
+    {
+        for (int i = 0; i< Count(); i++ )
+        {
+            if (m_content[i] == element)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	template<typename T>
 	inline T Vector<T>::operator[](int index) const

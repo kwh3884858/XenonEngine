@@ -142,12 +142,12 @@ namespace XenonEnigne
             InstructionOpTypeInteralLiteral,           // Integer literal value
             InstructionOpTypeFloatLiteral,           // Floating-point literal value
             InstructionOpTypeStringIndex,           // String literal value
-            InstructionOpTypeABS_STACK_INDEX,           // Absolute array index
-            InstructionOpTypeREL_STACK_INDEX,           // Relative array index
-            InstructionOpTypeINSTR_INDEX,           // Instruction index
+            InstructionOpTypeAbsoluteStackIndex,           // Absolute array index
+            InstructionOpTypeRelativeStackIndex,           // Relative array index
+            InstructionOpTypeInstructionIndex,           // Instruction index
             InstructionOpTypeFunctionIndex,           // Function index
-            InstructionOpTypeHOST_API_CALL_INDEX,           // Host API call index
-            InstructionOpTypeREG,           // Register
+            InstructionOpTypeHostAPICallIndex,           // Host API call index
+            InstructionOpTypeRegister,           // Register
         };
 
         struct Token
@@ -201,7 +201,7 @@ namespace XenonEnigne
 
         struct LabelElement
         {
-            Token* token = nullptr;
+            Token* m_token = nullptr;
             unsigned int m_instructionStreamIndex = 0;
             FunctionElement* m_currentFunction = 0;
         };
@@ -269,7 +269,6 @@ namespace XenonEnigne
         void InstructionError(InstructionState state, char character, unsigned int index)const;
         void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
         void UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone)const;
-        InstructionState CreateInstructionList(InstructionState currentState, const String& tmpString, InstructionLookup* const instruction, int& tokenOpAmount, int& currentTokenopCount);
         DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);
         void DetermineCharacterType(char c)const;
 
@@ -281,7 +280,8 @@ namespace XenonEnigne
         TokenVector* Lexer(XenonFile* const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
-        bool Parsing(TokenVector* const tokenVector);
+        void CreateInstructionList(TokenVector* const const tokenVector, const Vector<Instruction *>& instructionStream);
+
         bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
 
         bool IsNewLine(char character)const;
@@ -292,7 +292,9 @@ namespace XenonEnigne
         bool IsCharDelimiter(char character)const;
 
         Token* MoveToNextToken(const TokenVector& tokenVector, unsigned int& index)const;
+        SymbolElement*const GetSymbolByName(const String& symbolName)const;
         FunctionElement*const GetFunctionByName(const String& functionName) const;
+        LabelElement*const GetLabelByName(const String& labelName);
         InstructionLookup*const GetInstructionByKeyword(const KeyWord& keyword) const;
 
         unsigned int Local_Stack_Start_Index = 2;
