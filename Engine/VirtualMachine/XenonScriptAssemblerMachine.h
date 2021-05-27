@@ -16,15 +16,6 @@ namespace XenonEnigne
 
     class XenonScriptAssemblerMachine
     {
-
-    public:
-        XenonScriptAssemblerMachine();
-        ~XenonScriptAssemblerMachine();
-
-        bool InitializeInstructionList(const XenonFile * const xenonFile);
-        void InitializeDelimiterList(const XenonFile*const xenonFile);
-    private:
-
         const char SymbolWhiteSpace = ' ';
         const char SymbolColon = ':';
         const char SymbolOpenBracket = '[';
@@ -65,7 +56,7 @@ namespace XenonEnigne
             TokenTypeCount
         };
 
-        static const TypeString<int> keyWordString[] =
+        const TypeString<int> keyWordString[] =
         {
             {"int",  TokenType::IntergalIiteral},
             {"float", TokenType::FloatIiteral},
@@ -74,8 +65,9 @@ namespace XenonEnigne
             {"label",  TokenType::Label},
             {"function",  TokenType::Function},
             {"hostAPI",  TokenType::HostAPI},
-            {"register",   TokenType::Register},
+            {"register",   TokenType::Register}
         };
+
         enum KeyWord
         {
             INT,
@@ -178,7 +170,7 @@ namespace XenonEnigne
             int m_mainFunctionEntryIndex = -1;
         };
 
-        const String Main_Function_Name = "_Main";
+        const String Main_Function_Name = "Main";
 
         struct FunctionElement
         {
@@ -264,6 +256,15 @@ namespace XenonEnigne
             Vector<InstructionOp*> m_ops;
         };
 
+
+    public:
+        XenonScriptAssemblerMachine();
+        ~XenonScriptAssemblerMachine();
+
+        bool InitializeInstructionList(const XenonFile* const xenonFile);
+        bool InitializeDelimiterList(const XenonFile* const xenonFile);
+    private:
+
         typedef Vector<Token*> TokenVector;
 
         void InstructionError(InstructionState state, char character, unsigned int index)const;
@@ -280,7 +281,7 @@ namespace XenonEnigne
         TokenVector* Lexer(XenonFile* const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
-        void CreateInstructionList(TokenVector* const const tokenVector, const Vector<Instruction *>& instructionStream);
+        void CreateInstructionList(TokenVector* const const tokenVector, const Vector<Instruction*>& instructionStream);
 
         bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
 
@@ -292,10 +293,10 @@ namespace XenonEnigne
         bool IsCharDelimiter(char character)const;
 
         Token* MoveToNextToken(const TokenVector& tokenVector, unsigned int& index)const;
-        SymbolElement*const GetSymbolByName(const String& symbolName)const;
-        FunctionElement*const GetFunctionByName(const String& functionName) const;
-        LabelElement*const GetLabelByName(const String& labelName);
-        InstructionLookup*const GetInstructionByKeyword(const KeyWord& keyword) const;
+        SymbolElement* const GetSymbolByName(const String& symbolName)const;
+        FunctionElement* const GetFunctionByName(const String& functionName) const;
+        LabelElement* const GetLabelByName(const String& labelName);
+        InstructionLookup* const GetInstructionByKeyword(const KeyWord& keyword) const;
 
         unsigned int Local_Stack_Start_Index = 2;
 
@@ -310,109 +311,5 @@ namespace XenonEnigne
         Vector<LabelElement*> m_labelTable;
         Vector<String> m_stringTable;
         Vector<Instruction*> m_instructionList;
-
-        // Ready for deletion///////////////////////////////////
-        const int MaxInstructionMnemonicSize = 16;      // Maximum size of an instruction mnemonic's string
-
-        enum TokeType {
-            TokenTypeInt = 0,          // An integer literal
-            TokenTypeFloat = 1,          // An floating-point literal
-            TokenTypeString = 2,          // An string literal
-            TokenTypeQuote = 3,          // A double-quote
-            TokenTypeIdent = 4,          // An identifier
-            TokenTypeColon = 5,          // A colon :
-            TokenTypeOpenBracket = 6,          // An openening bracket  (
-            TokenTypeCloseBracket = 7,          // An closing bracket    )
-            TokenTypeComma = 8,          // A comma ,
-            TokenTypeOpenBrace = 9,          // An openening curly brace { 
-            TokenTypeCloseBrace = 10,          // An closing curly brace   }
-            TokenTypeNew_Line = 11,          // A newline
-            TokenTypeInstr = 12,			// An instruction
-            TokenTypeSetStackSize = 13,          // The SetStackSize directive
-            TokenTypeVar = 14,          // The Var/Var [] directives
-            TokenTypeFunc = 15,          // The Function directives
-            TokenTypeParam = 16,          // The Param directives
-            TokenTypeReg_Retval = 17,          // The _RetVal directives
-            TokenTypeInvalid = 18,          // Error code for invalid tokens
-            END_OF_TOKEN_STREAM = 19          // The end of the stream has been
-            // reached
-        }
-        enum InstrctionOpCode {
-            INSTR_MOV = 0,
-
-            INSTR_ADD = 1,
-            INSTR_SUB = 2,
-            INSTR_MUL = 3,
-            INSTR_DIV = 4,
-            INSTR_MOD = 5,
-            INSTR_EXP = 6,
-            INSTR_NEG = 7,
-            INSTR_INC = 8,
-            INSTR_DEC = 9,
-
-            INSTR_AND = 10,
-            INSTR_OR = 11,
-            INSTR_XOR = 12,
-            INSTR_NOT = 13,
-            INSTR_SHL = 14,
-            INSTR_SHR = 15,
-
-            INSTR_CONCAT = 16,
-            INSTR_GETCHAR = 17,
-            INSTR_SETCHAR = 18,
-
-            INSTR_JMP = 19,
-            INSTR_JE = 20,
-            INSTR_JNE = 21,
-            INSTR_JG = 22,
-            INSTR_JL = 23,
-            INSTR_JGE = 24,
-            INSTR_JLE = 25,
-
-            INSTR_PUSH = 26,
-            INSTR_POP = 27,
-
-            INSTR_CALL = 28,
-            INSTR_RET = 29,
-            INSTR_CALLHOST = 30,
-
-            INSTR_PAUSE = 31,
-            INSTR_EXIT = 32
-        };
-
-        const char InstrcutionMOV[] = "MOV";
-        const char InstrcutionADD[] = "ADD";
-        const char InstrcutionSUB[] = "SUB";
-        const char InstrcutionMUL[] = "MUL";
-        const char InstrcutionDIV[] = "DIV";
-        const char InstrcutionMOD[] = "MOD";
-        const char InstrcutionEXP[] = "EXP";
-        const char InstrcutionNEG[] = "NEG";
-        const char InstrcutionINC[] = "INC";
-        const char InstrcutionDEC[] = "DEC";
-        const char InstrcutionAND[] = "AND";
-        const char InstrcutionOR[] = "OR ";
-        const char InstrcutionXOR[] = "XOR";
-        const char InstrcutionNOT[] = "NOT";
-        const char InstrcutionSHL[] = "SHL";
-        const char InstrcutionSHR[] = "SHR";
-        const char InstrcutionCONCAT[] = "CONAT";
-        const char InstrcutionGETCHAR[] = "GETHAR";
-        const char InstrcutionSETCHAR[] = "SETHAR";
-        const char InstrcutionJMP[] = "JMP";
-        const char InstrcutionJE[] = "JE ";
-        const char InstrcutionJNE[] = "JNE";
-        const char InstrcutionJG[] = "JG ";
-        const char InstrcutionJL[] = "JL ";
-        const char InstrcutionJGE[] = "JGE";
-        const char InstrcutionJLE[] = "JLE";
-        const char InstrcutionPUSH[] = "PUS";
-        const char InstrcutionPOP[] = "POP";
-        const char InstrcutionCALL[] = "CAL";
-        const char InstrcutionRET[] = "RET";
-        const char InstrcutionCALLHOS[] = "CALLHOS";
-        const char InstrcutionPAUSE[] = "PASUE";
-        const char InstrcutionEXIT[] = "EXI";
-    };
-
+    }
 }

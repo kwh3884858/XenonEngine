@@ -16,9 +16,14 @@ namespace XenonEnigne
     void XenonCompiler::Initialize()
     {
         m_xsam = new XenonScriptAssemblerMachine;
-        XenonFile*const xenonFile = FileManager::get().ReadFile("XenonScriptAssemblerMachineInstrction.xet");
-        bool result = m_xsam->InitializeInstructionList(xenonFile);
+        XenonFile*const instructionListFile = FileManager::get().ReadFile("XenonScriptAssemblerMachineInstrction.xet");
+        bool result = m_xsam->InitializeInstructionList(instructionListFile);
         assert(result == true);
+
+        XenonFile* const delimiterListFile = FileManager::get().ReadFile("XenonScriptAssemblerDelimiter.xet");
+        result = m_xsam->InitializeDelimiterList(delimiterListFile);
+        assert(result == true);
+
     }
 
 }

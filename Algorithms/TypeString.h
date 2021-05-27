@@ -1,6 +1,4 @@
 #pragma once
-#ifndef ENUMSTRING_H
-#define ENUMSTRING_H
 
 #include "Algorithms/Vector.h"
 #include "Algorithms/String.h"
@@ -12,6 +10,9 @@ namespace Algorithm
     {
         char const *    m_string;
         Type            m_typeVal;
+        //TypeString(char const* string, Type typeVal) :
+        //    m_string(string),
+        //    m_typeVal(typeVal) {}
     };
 
     template<typename Type>
@@ -185,4 +186,4 @@ namespace Algorithm
         return EnumToString(helper, enumVal);
     }
 }
-#endif // ENUMSTRING_H
+

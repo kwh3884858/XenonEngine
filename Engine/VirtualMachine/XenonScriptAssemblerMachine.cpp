@@ -189,7 +189,7 @@ namespace XenonEnigne
         return true;
     }
 
-    void XenonScriptAssemblerMachine::InitializeDelimiterList(const XenonFile*const xenonFile)
+    bool XenonScriptAssemblerMachine::InitializeDelimiterList(const XenonFile*const xenonFile)
     {
         unsigned int index = 0;
         bool isDone = false;
@@ -218,6 +218,8 @@ namespace XenonEnigne
             index++;
             isShouldAdd = true;
         }
+
+        return true;
     }
 
     void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, unsigned int index) const
