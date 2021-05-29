@@ -197,7 +197,7 @@ namespace XenonEnigne
         DelimiterSymbolState currentState = DelimiterSymbolState::Symbol;
         String tmpString;
 
-        DelimiterSymbol* delimiterSymbol;
+        DelimiterSymbol* delimiterSymbol = nullptr;
 
         while (index < xenonFile->m_content.Count())
         {
@@ -211,12 +211,18 @@ namespace XenonEnigne
             if (isDone)
             {
                 currentState = CreateDelimiterList(currentState, tmpString, delimiterSymbol);
+                m_delimiterList.Add(delimiterSymbol);
                 isDone = false;
                 tmpString.Clear();
             }
 
             index++;
             isShouldAdd = true;
+        }
+
+        if (delimiterSymbol != nullptr)
+        {
+            m_delimiterList.Add(delimiterSymbol);
         }
 
         return true;

@@ -1,0 +1,3 @@
+#!/bin/bash
+cp XenonScriptAssemblerMachineInstrction.xet XenonScriptAssemblerMachineInstrction.xet.csv
+cp XenonScriptAssemblerDelimiter.xet XenonScriptAssemblerDelimiter.xet.csv

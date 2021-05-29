@@ -42,7 +42,7 @@ namespace XenonEnigne
             LexerStateComment,
         };
         enum TokenType {
-            None = -1,
+            None = 0,
             IntergalIiteral,
             FloatIiteral,
             StringEntity,
@@ -73,7 +73,7 @@ namespace XenonEnigne
             INT,
             FLOAT,
 
-            MOV = 0,
+            MOV,
             ADD,
             SUB,
             MUL,
