@@ -5,9 +5,13 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/XenonManager.h"
-#include "CrossPlatform/Interface/IFileReader.h"
+
 
 namespace XenonEnigne {
+    namespace CrossPlatform {
+        class IFileReader;
+    }
+
     class FileManager : public CrossPlatform::XenonManager<FileManager>
     {
     public:

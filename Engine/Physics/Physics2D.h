@@ -23,8 +23,8 @@ namespace XenonPhysics
         struct CollisionInfo 
         {
             CollisionType m_collisionType = CollisionType::NoCollision;
-            Vector2f mCollisionNormalVec;
-            Vector2f mRelativeVelocityVec;
+            Vector2f m_collisionNormalVec;
+            Vector2f m_relativeVelocityVec;
         };
 
         Physics2D();

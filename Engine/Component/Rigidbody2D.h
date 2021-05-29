@@ -18,6 +18,7 @@ namespace XenonEngine
 {
     using MathLab::Vector2f;
     using Algorithm::Vector;
+
     class Rigidbody2D final : public IComponent
     {
     public:
@@ -25,9 +26,9 @@ namespace XenonEngine
         Rigidbody2D(GameObject* gameobject, bool isStatic, float mass, float inertia);
         virtual ~Rigidbody2D() override;
 
-        bool FixedUpdate(double deltaTime);     //One time step
+        bool FixedUpdate(float deltaTime);     //One time step
         
-        bool AddForce(const Physics2D*const force);
+        bool AddForce(const XenonPhysics::Force2D&  force);
 
         Vector2f GetVelocity()const { return m_velocity; }
         void SetVelocity(Vector2f velocity) { m_velocity = velocity; }
@@ -53,7 +54,7 @@ namespace XenonEngine
         Vector2f m_gravity; // Simulation gravity, default value is (0, mass * gravity acceleration)
         
         Vector2f m_forces;
-        Vector2f m_moments;
-    }
+        float m_moments;
+    };
 
 }

@@ -7,7 +7,7 @@
 #include "Collider2D.h"
 namespace XenonEngine
 {
-    class CircleCollider2DConfig 
+    struct CircleCollider2DConfig 
     {
         float m_radius;
     };
@@ -15,7 +15,7 @@ namespace XenonEngine
     class CircleCollider2D final :public Collider2D
     {
     public:
-        static const float PI = 3.1415926f;
+        static const float PI ;
 
         CircleCollider2D(GameObject* gameobject) :
             Collider2D(gameobject, ColliderType::Circle) {}

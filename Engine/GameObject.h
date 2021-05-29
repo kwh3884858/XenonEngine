@@ -5,11 +5,14 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 
 #pragma once
+#include "Algorithms/Vector.h"
 #include <cassert>
 namespace XenonEngine
 {
+    using Algorithm::Vector;
+
     class IComponent;
-    enum ComponentType;
+    enum ComponentType :int;
 
     class GameObject
     {

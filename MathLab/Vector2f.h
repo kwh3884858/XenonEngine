@@ -41,15 +41,16 @@ namespace MathLab {
         friend Vector2<T> operator+ <>(const Vector2<T>& v1, const Vector2<T>& v2);
         friend Vector2<T> operator- <>(const Vector2<T>& v1, const Vector2<T>& v2);
 
+        Vector2 operator-()const;
         Vector2& operator=(const Vector2& value);
         Vector2& operator+=(const Vector2& value);
         Vector2& operator-=(const Vector2& value);
 
-        Vector2 operator*(float value);
-        Vector2 operator/(float value);
+        Vector2 operator*(T value)const;
+        Vector2 operator/(T value)const;
 
-        T dot(const Vector2& vec)const;
-        T cross(const Vector2& vec)const;
+        T Dot(const Vector2& vec)const;
+        T Cross(const Vector2& vec)const;
 
         Vector2();
         Vector2(T ax, T ay);
@@ -63,7 +64,7 @@ namespace MathLab {
     };
 
     template<typename T>
-    __declspec(selectany) Vector2 Vector2<T>::Zero = Vector2f(0, 0);
+    __declspec(selectany) Vector2<T> Vector2<T>::Zero = Vector2f(0, 0);
 
 
     template<typename T>
@@ -87,6 +88,12 @@ namespace MathLab {
     template<typename T>
     Vector2<T>::~Vector2() {
 
+    }
+
+    template<typename T>
+    Vector2<T> MathLab::Vector2<T>::operator-() const
+    {
+        Vector2 result(-this->x, -this->y)
     }
 
     template<typename T>
@@ -118,7 +125,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector2 MathLab::Vector2<T>::operator*(float value)
+    Vector2<T> MathLab::Vector2<T>::operator*(T value)const
     {
         Vector2<T> vector(*this);
         vector *= value;
@@ -127,7 +134,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector2 MathLab::Vector2<T>::operator/(float value)
+    Vector2<T> MathLab::Vector2<T>::operator/(T value)const
     {
         Vector2<T> vector(*this);
         vector /= value;
@@ -136,13 +143,13 @@ namespace MathLab {
     }
 
     template<typename T>
-    T MathLab::Vector2<T>::dot(const Vector2& vec) const
+    T MathLab::Vector2<T>::Dot(const Vector2& vec) const
     {
         return this->x * vec.x + this->y * vec.y;
     }
 
     template<typename T>
-    T MathLab::Vector2<T>::cross(const Vector2& vec) const
+    T MathLab::Vector2<T>::Cross(const Vector2& vec) const
     {
         return this->x * vec.y - vec.x * this->y;
     }
@@ -200,7 +207,7 @@ namespace MathLab {
     template<typename T>
     T MathLab::Vector2<T>::DoubleMagnitude() const
     {
-        return this->dot(*this);
+        return this->Dot(*this);
     }
 }
 #endif /* VectorStruct_h */

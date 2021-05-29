@@ -7,7 +7,7 @@
 namespace XenonEngine
 {
     class GameObject;
-public enum ComponentType
+    enum ComponentType :int
     {
         None,
         Transform,
@@ -18,8 +18,10 @@ public enum ComponentType
         Script,
         Input
     };
+
     class IComponent
     {
+    public:
         IComponent(ComponentType type, GameObject* gameobject) :
             m_type(type),
             m_gameobject(gameobject)
@@ -43,4 +45,5 @@ public enum ComponentType
         GameObject* m_gameobject = nullptr;
 
     };
+
 }

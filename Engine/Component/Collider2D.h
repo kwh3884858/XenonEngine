@@ -17,9 +17,9 @@ namespace XenonEngine
             Box
         };
 
-        Collider2D(GameObject* gameobject, m_colliderType) :
+        Collider2D(GameObject* gameobject, ColliderType colliderType) :
             IComponent(ComponentType::Collider2D, gameobject),
-            m_colliderType(ColliderType::None)
+            m_colliderType(colliderType)
         {}
         virtual ~Collider2D()override = 0;
 

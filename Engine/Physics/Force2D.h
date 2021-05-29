@@ -2,7 +2,7 @@
 #include "MathLab/Vector2f.h"
 namespace XenonPhysics
 {
-    using Vector2f;
+    using MathLab::Vector2f;
     class Force2D
     {
     public:

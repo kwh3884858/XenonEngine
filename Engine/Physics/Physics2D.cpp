@@ -181,13 +181,13 @@ namespace XenonPhysics
 
         float s = relativePositionVector.Magnitude() - sumOfRaidus;
 
-        retval.mCollisionNormalVec = relativePositionVector.Normalize();
+        retval.m_collisionNormalVec = relativePositionVector.Normalize();
 
         Vector2f v1 = body1->GetVelocity();
         Vector2f v2 = body2->GetVelocity();
-        retval.mRelativeVelocityVec = v1 - v2;
+        retval.m_relativeVelocityVec = v1 - v2;
 
-        float rvn = retval.mCollisionNormalVec.dot(retval.mRelativeVelocityVec);
+        float rvn = retval.m_collisionNormalVec.Dot(retval.m_relativeVelocityVec);
 
         // They are approaching each other
         if (s <= CollisionTolerance && rvn < 0.0f)
@@ -249,9 +249,9 @@ namespace XenonPhysics
         float distance = sqrtf(distX * distX + distY * distY);
         float relativeDistance = distance - radius;
 
-        retval.mCollisionNormalVec = (circlePosition - closestToCircle).Normalize();
-        retval.mRelativeVelocityVec = ball->GetVelocity() - box->GetVelocity();
-        float rvn = retval.mCollisionNormalVec.dot(retval.mRelativeVelocityVec);
+        retval.m_collisionNormalVec = (circlePosition - closestToCircle).Normalize();
+        retval.m_relativeVelocityVec = ball->GetVelocity() - box->GetVelocity();
+        float rvn = retval.m_collisionNormalVec.Dot(retval.m_relativeVelocityVec);
 
         if (relativeDistance < CollisionTolerance && rvn < 0.0f)
         {
@@ -276,16 +276,16 @@ namespace XenonPhysics
 
     void Physics2D::ApplyImpulse(Rigidbody2D* body1, Rigidbody2D* body2, CollisionInfo info)
     {
-        float j = (mRelativeVelocityVec.dot(mCollisionNormalVec) *
+        float j = (info.m_relativeVelocityVec.Dot(info.m_collisionNormalVec) *
             -(1 +  CoefficientOfRestitution)) /
-            (mCollisionNormalVec.dot(mCollisionNormalVec) *
+            (info.m_collisionNormalVec.Dot(info.m_collisionNormalVec) *
             (1 / body1->GetMass() + 1 / body2->GetMass()));
 
         Vector2f body1Velocity = body1->GetVelocity();
         Vector2f body2Velocity = body2->GetVelocity();
 
-        body1Velocity += (j * mCollisionNormalVec) / body1->GetMass();
-        body2Velocity -= (j * mCollisionNormalVec) / body2->GetMass();
+        body1Velocity += (j * info.m_collisionNormalVec) / body1->GetMass();
+        body2Velocity -= (j * info.m_collisionNormalVec) / body2->GetMass();
 
         body1->SetVelocity(body1Velocity);
         body2->SetVelocity(body2Velocity);
@@ -304,7 +304,7 @@ namespace XenonPhysics
             else
             {
                 dynamicBodyVelocity = dynamicBody->GetVelocity();
-                dynamicBodyVelocity += -2 * mRelativeVelocityVec.dot(mCollisionNormalVec) * mCollisionNormalVec;
+                dynamicBodyVelocity += -2 * info.m_relativeVelocityVec.Dot(info.m_collisionNormalVec) * info.m_collisionNormalVec;
                 dynamicBody->SetVelocity(dynamicBodyVelocity);
             }
         }
@@ -317,7 +317,7 @@ namespace XenonPhysics
             else
             {
                 dynamicBodyVelocity = staticBody->GetVelocity();
-                dynamicBodyVelocity += -2 * mRelativeVelocityVec.dot(mCollisionNormalVec) * mCollisionNormalVec;
+                dynamicBodyVelocity += -2 * info.m_relativeVelocityVec.Dot(info.m_collisionNormalVec) * info.m_collisionNormalVec;
                 staticBody->SetVelocity(dynamicBodyVelocity);
             }
         }
@@ -325,13 +325,13 @@ namespace XenonPhysics
         return;
         //TODO
         //Vector3f dynamicBodyVelocity = body2->getVelocityVec();
-        /*j = (mRelativeVelocityVec.dot(mCollisionNormalVec) *
+        /*j = (mRelativeVelocityVec.Dot(mCollisionNormalVec) *
             -2) /
-            (mCollisionNormalVec.dot(mCollisionNormalVec) *
+            (mCollisionNormalVec.Dot(mCollisionNormalVec) *
                 (1 / staticBody->getMass() + 1 / dynamicBody->getMass()));*/
 
-                //float dotResult = ;
-                //dynamicBodyVelocity += -2 * mRelativeVelocityVec.dot(mCollisionNormalVec) * mCollisionNormalVec;
+                //float DotResult = ;
+                //dynamicBodyVelocity += -2 * mRelativeVelocityVec.Dot(mCollisionNormalVec) * mCollisionNormalVec;
                 /*Vector3f temp1 = dynamicBodyVelocity + temp;
                 dynamicBodyVelocity = temp1;*/
                 //Vector3f body1Velocity = staticBody->getVelocityVec();

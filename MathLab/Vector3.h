@@ -6,6 +6,8 @@
 #pragma once
 #include "MathLab/Vector2f.h"
 namespace MathLab {
+    template<typename T>
+    struct Vector3;
 
     typedef     Vector3<int>        Vector3i;
     typedef     Vector3<float>      Vector3f;
@@ -43,14 +45,14 @@ namespace MathLab {
     };
 
     template<typename T>
-    Vector3 operator+(const Vector3& v1, const Vector3& v2);
+    Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2);
     template<typename T>
-    Vector3 operator-(const Vector3& v1, const Vector3& v2);
+    Vector3<T> operator-(const Vector3<T>& v1, const Vector3<T>& v2);
 
     template<typename T>
-    void SwapVector(Vector3* vectorA, Vector3* vectorB);
+    void SwapVector(Vector3<T>* vectorA, Vector3<T>* vectorB);
     template<typename T>
-    bool LessY(const Vector3& origin, const Vector3& compare);
+    bool LessY(const Vector3<T>& origin, const Vector3<T>& compare);
     //template<typename T>
     //void Exchange(Vector3*const a, Vector3*const b);
 
@@ -91,7 +93,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector3& Vector3<T>::operator+=(const Vector3& rvalue)
+    Vector3<T>& Vector3<T>::operator+=(const Vector3& rvalue)
     {
         this->x += rvalue.x;
         this->y += rvalue.y;
@@ -100,7 +102,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector3& Vector3<T>::operator-=(const Vector3& rvalue)
+    Vector3<T>& Vector3<T>::operator-=(const Vector3& rvalue)
     {
         this->x -= rvalue.x;
         this->y -= rvalue.y;
@@ -154,21 +156,21 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector3 operator+(const Vector3& v1, const Vector3& v2) {
+    Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2) {
         Vector3 vector(v1);
         vector += v2;
         return  vector;
     }
 
     template<typename T>
-    Vector3 operator-(const Vector3& v1, const Vector3& v2) {
+    Vector3<T> operator-(const Vector3<T>& v1, const Vector3<T>& v2) {
         Vector3 vector(v1);
         vector -= v2;
         return  vector;
     }
 
     template<typename T>
-    void SwapVector(Vector3* vectorA, Vector3* vectorB) {
+    void SwapVector(Vector3<T>* vectorA, Vector3<T>* vectorB) {
         Vector3 temp = *vectorA;
         vectorA->x = vectorB->x;
         vectorA->y = vectorB->y;
@@ -181,7 +183,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    bool LessY(const Vector3& origin, const Vector3& compare) {
+    bool LessY(const Vector3<T>& origin, const Vector3<T>& compare) {
         return origin.y < compare.y;
     }
 

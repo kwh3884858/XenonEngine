@@ -9,7 +9,7 @@
 namespace XenonEngine
 {
     class Rigidbody2D;
-    using MathLab::Vector2f
+    using MathLab::Vector2f;
     class Transform2D final: public IComponent
     {
     public:

@@ -2,10 +2,6 @@
 
 namespace XenonEngine {
 
-    Transform2D::Transform2D()
-    {
-    }
-
     Transform2D::~Transform2D()
     {
     }

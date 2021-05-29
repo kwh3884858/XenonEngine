@@ -1,26 +1,32 @@
-#include "Rigidbody2D.h"
-#include "Transform2D.h"
+#include "Engine/GameObject.h"
+#include "Engine/Component/Rigidbody2D.h"
+#include "Engine/Component/Transform2D.h"
+#include "Engine/Component/Collider2D.h"
+
 #include "Engine/Physics/Force2D.h"
 #include "Engine/Physics/PhysicsConstant.h"
+
 #include "MathLab/Vector3.h"
+#include "MathLab/MathLib.h"
 #include <cassert>
 namespace XenonEngine
 {
     using MathLab::Vector3;
-
+    using XenonPhysics::Force2D;
+    
     Rigidbody2D::Rigidbody2D(GameObject* gameobject, bool isStatic, float mass, float inertia) :
         IComponent(ComponentType::Rigidbody2D, gameobject),
         mIsStatic(isStatic),
         m_mass(mass),
         m_inertia(inertia),
         m_inertiaInverse(1/m_inertia),
-        m_velocity(Vector2f.Zero),
-        m_localVelocity(Vector2f.Zero),
+        m_velocity(Vector2f::Zero),
+        m_localVelocity(Vector2f::Zero),
         m_localAngularVelocity(0),
         m_speed(0),
-        m_gravity(Vector2f(0, m_mass * Gravity)),
-        m_forces(Vector2f.Zero),
-        m_moments(Vector2f.Zero)
+        m_gravity(Vector2f(0, m_mass * XenonPhysics::Gravity)),
+        m_forces(Vector2f::Zero),
+        m_moments(0)
     {
     }
 
@@ -28,7 +34,7 @@ namespace XenonEngine
     {
     }
 
-    bool Rigidbody2D::FixedUpdate(double deltaTime)
+    bool Rigidbody2D::FixedUpdate(float deltaTime)
     {
         CalculateForcesAndMoments(deltaTime);
 
@@ -39,7 +45,7 @@ namespace XenonEngine
         Vector2f dv = a * deltaTime;
         m_velocity += dv;
         Vector2f ds = m_velocity * deltaTime;
-        Transform2D* transform = m_gameobject->GetComponent(ComponentType::Transform);
+        Transform2D* transform = m_gameobject->GetComponent<Transform2D>(ComponentType::Transform);
         assert(transform != nullptr);
         transform->AddPosition(ds);
 
@@ -52,27 +58,27 @@ namespace XenonEngine
         transform->AddRotation(dr);
 
         //Misc. calculation
-        m_speed = m_velocity.Normalize();
+        m_speed = m_velocity.Magnitude();
         m_localVelocity = MathLab::Rotate(m_velocity, -transform->GetOrientation()); 
 
         //Reset force
-        m_forces = Vector2f.Zero;
-        m_moments = Vector2f.Zero;
+        m_forces = Vector2f::Zero;
+        m_moments = 0;
 
         return true;
     }
 
-    bool Rigidbody2D::AddForce(const Physics2D*const force)
+    bool Rigidbody2D::AddForce(const XenonPhysics::Force2D& force)
     {
-        m_forces += force;
+        m_forces += force.m_forceDirection * force.fvalue;
     }
 
     void Rigidbody2D::CalculateForcesAndMoments(double deltaTime)
     {
         assert(m_gameobject != nullptr);
 
-        Vector2f sumOfForces = Vector2f.Zero;
-        Vector2f sumOfMoments = Vector2f.Zero;
+        Vector2f sumOfForces = Vector2f::Zero;
+        Vector2f sumOfMoments = Vector2f::Zero;
 
         //Calculate forces and momnents in body space
 
@@ -87,7 +93,7 @@ namespace XenonEngine
         float projectedArea = 1;
         float radius = 0;
 
-        Collider2D* collider = m_gameobject->GetComponent(IComponent::Collider2D);
+        Collider2D* collider = m_gameobject->GetComponent< Collider2D>(ComponentType::Collider2D);
         if (collider != nullptr)
         {
             projectedArea = collider->GetArea();
@@ -104,7 +110,7 @@ namespace XenonEngine
             Vector2f dragVector = -normalizedVelocity;
 
             //Determine the resultant force on the element
-            float tmp = 0.5f * AirDensity * localSpeed * localSpeed * projectedArea * LinearDragCofficient;
+            float tmp = 0.5f * XenonPhysics::AirDensity * localSpeed * localSpeed * projectedArea * XenonPhysics::LinearDragCofficient;
             Vector2f resultant = dragVector * tmp;
 
             //Keep a running total of these resultant forces
@@ -134,6 +140,8 @@ namespace XenonEngine
         //No moment since line of action is through center of gravity
         sumOfForces += m_forces;
 
+        Transform2D* transform = m_gameobject->GetComponent<Transform2D>(ComponentType::Transform);
+        assert(transform != nullptr);
         //Convert forces from model spece to world space
         m_forces = MathLab::Rotate(sumOfForces, transform->GetOrientation());
         m_moments = sumOfMoments;

@@ -1,6 +1,10 @@
 #include "Engine/FileManager/FileManager.h"
+#include "CrossPlatform/Interface/IFileReader.h"
 
 namespace XenonEnigne {
+
+    using CrossPlatform::IFileReader;
+
     void FileManager::SetFileReader(CrossPlatform::IFileReader*const fileReader)
     {
         m_fileReader = fileReader;
