@@ -38,8 +38,9 @@ namespace Algorithm
         T* end();
         const T* end()const;
 
+        bool Initialize(int size);
+
 	private:
-		bool Initialize(int size);
 		bool IsCapacityEnough();
 		bool Reallocation();
         bool InternalReplace(const T*const content, unsigned int size);

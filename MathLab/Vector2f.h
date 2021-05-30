@@ -21,6 +21,8 @@ namespace MathLab {
     Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2);
     template<typename T>
     Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2);
+    template<typename T>
+    Vector2<T> operator*(const T& v1, const Vector2<T>& value);
 
     template<typename T>
     void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB);
@@ -93,7 +95,8 @@ namespace MathLab {
     template<typename T>
     Vector2<T> MathLab::Vector2<T>::operator-() const
     {
-        Vector2 result(-this->x, -this->y)
+        Vector2 result(-this->x, -this->y);
+        return result;
     }
 
     template<typename T>
@@ -128,8 +131,8 @@ namespace MathLab {
     Vector2<T> MathLab::Vector2<T>::operator*(T value)const
     {
         Vector2<T> vector(*this);
-        vector *= value;
-        vector *= value;
+        vector.x *= value;
+        vector.y *= value;
         return vector;
     }
 
@@ -137,8 +140,8 @@ namespace MathLab {
     Vector2<T> MathLab::Vector2<T>::operator/(T value)const
     {
         Vector2<T> vector(*this);
-        vector /= value;
-        vector /= value;
+        vector.x /= value;
+        vector.y /= value;
         return vector;
     }
 
@@ -176,6 +179,12 @@ namespace MathLab {
     }
 
     template<typename T>
+    Vector2<T> operator*(const T& v1, const Vector2<T>& value)
+    {
+        return value * v1;
+    }
+
+    template<typename T>
     void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB)
     {
         Vector2<T> temp (vectorA);
@@ -193,15 +202,15 @@ namespace MathLab {
     {
         T magnitide = Magnitude();
         Vector2<T> temp;
-        temp->x = this->x / magnitide;
-        temp->y = this->y / magnitide;
+        temp.x = this->x / magnitide;
+        temp.y = this->y / magnitide;
         return temp;
     }
 
     template<typename T>
     T MathLab::Vector2<T>::Magnitude() const
     {
-        return sqrt(DoubleMagnitude());
+        return static_cast<T>( sqrt(DoubleMagnitude()) );
     }
 
     template<typename T>

@@ -22,6 +22,7 @@ namespace XenonEngine
         //void SetPosition(Vector2f position) { m_position = position; }
         //void SetRotation(float rotation) { m_orientation = rotation; }
         void AddPosition(const Vector2f& position) { m_position += position; }
+        const Vector2f& GetPosition()const { return m_position; }
 
         float GetOrientation()const { return m_orientation; }
         void AddRotation(float rotation) { m_orientation += rotation; }

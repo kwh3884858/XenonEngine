@@ -7,7 +7,7 @@
 #pragma once
 namespace CrossPlatform {
 
-    class XenonFile;
+    struct XenonFile;
 
     class IFileReader
     {

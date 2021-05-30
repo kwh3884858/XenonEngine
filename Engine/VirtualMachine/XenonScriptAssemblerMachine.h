@@ -56,17 +56,8 @@ namespace XenonEnigne
             TokenTypeCount
         };
 
-        const TypeString<int> keyWordString[] =
-        {
-            {"int",  TokenType::IntergalIiteral},
-            {"float", TokenType::FloatIiteral},
-            {"string",  TokenType::StringEntity},
-            {"identifier",  TokenType::Identifier},
-            {"label",  TokenType::Label},
-            {"function",  TokenType::Function},
-            {"hostAPI",  TokenType::HostAPI},
-            {"register",   TokenType::Register}
-        };
+        static constexpr int keywordStringCount = 8;
+        static const TypeString<int> keyWordString[keywordStringCount];
 
         enum KeyWord
         {
@@ -170,7 +161,7 @@ namespace XenonEnigne
             int m_mainFunctionEntryIndex = -1;
         };
 
-        const String Main_Function_Name = "Main";
+        static constexpr String Main_Function_Name ="Main";
 
         struct FunctionElement
         {
@@ -281,7 +272,7 @@ namespace XenonEnigne
         TokenVector* Lexer(XenonFile* const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
-        void CreateInstructionList(TokenVector* const const tokenVector, const Vector<Instruction*>& instructionStream);
+        bool CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction*>& instructionStream);
 
         bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
 
@@ -311,5 +302,5 @@ namespace XenonEnigne
         Vector<LabelElement*> m_labelTable;
         Vector<String> m_stringTable;
         Vector<Instruction*> m_instructionList;
-    }
+    };
 }

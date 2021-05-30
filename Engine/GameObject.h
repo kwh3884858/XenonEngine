@@ -6,13 +6,13 @@
 
 #pragma once
 #include "Algorithms/Vector.h"
+
+#include "Engine/Component/IComponent.h"
 #include <cassert>
+
 namespace XenonEngine
 {
     using Algorithm::Vector;
-
-    class IComponent;
-    enum ComponentType :int;
 
     class GameObject
     {
@@ -32,7 +32,7 @@ namespace XenonEngine
         virtual void Start();
         virtual void Update();
         virtual void Destroy();
-
+        virtual void OnTrigger(GameObject* gameobject) { return; }
     private:
         const char* m_name;
         Vector<IComponent*> m_components;
@@ -41,13 +41,13 @@ namespace XenonEngine
     template<typename T>
     void GameObject::AddComponent(T * component)
     {
-        m_components.add(static_cast<IComponent*>(component));
+        m_components.Add(static_cast<IComponent*>(component));
     }
 
     template<typename T>
     T * GameObject::GetComponent(ComponentType type)
     {
-        for (size_t i = 0; i < m_components.Count(); i++)
+        for (int i = 0; i < m_components.Count(); i++)
         {
             if (m_components[i]->GetComponentType() == type)
             {
@@ -60,7 +60,7 @@ namespace XenonEngine
     template<typename T>
     bool GameObject::RemoveComponent(T* type)
     {
-        for (size_t i = 0; i < m_components.Count(); i++)
+        for (int i = 0; i < m_components.Count(); i++)
         {
             if (m_components[i] == type)
             {

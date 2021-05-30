@@ -78,7 +78,7 @@ namespace XenonEngine
         assert(m_gameobject != nullptr);
 
         Vector2f sumOfForces = Vector2f::Zero;
-        Vector2f sumOfMoments = Vector2f::Zero;
+        float sumOfMoments =0;
 
         //Calculate forces and momnents in body space
 
@@ -93,7 +93,7 @@ namespace XenonEngine
         float projectedArea = 1;
         float radius = 0;
 
-        Collider2D* collider = m_gameobject->GetComponent< Collider2D>(ComponentType::Collider2D);
+        XenonEngine::Collider2D* collider = m_gameobject->GetComponent<XenonEngine::Collider2D>(ComponentType::Collider2D);
         if (collider != nullptr)
         {
             projectedArea = collider->GetArea();

@@ -6,12 +6,12 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
 
+namespace CrossPlatform {
+    class IFileReader;
+    struct XenonFile;
+}
 
 namespace XenonEnigne {
-    namespace CrossPlatform {
-        class IFileReader;
-    }
-
     class FileManager : public CrossPlatform::XenonManager<FileManager>
     {
     public:
@@ -19,7 +19,7 @@ namespace XenonEnigne {
         void SetFileReader(CrossPlatform::IFileReader*const fileReader);
 
         virtual bool Shutdown() override;
-        XenonFile*const ReadFile(const char* const fileName);
+        CrossPlatform::XenonFile*const ReadFile(const char* const fileName);
     private:
         CrossPlatform::IFileReader* m_fileReader;
     };

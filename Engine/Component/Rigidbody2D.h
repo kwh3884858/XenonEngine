@@ -27,8 +27,8 @@ namespace XenonEngine
         virtual ~Rigidbody2D() override;
 
         bool FixedUpdate(float deltaTime);     //One time step
-        
-        bool AddForce(const XenonPhysics::Force2D&  force);
+
+        bool AddForce(const XenonPhysics::Force2D& force);
 
         Vector2f GetVelocity()const { return m_velocity; }
         void SetVelocity(Vector2f velocity) { m_velocity = velocity; }
@@ -52,7 +52,7 @@ namespace XenonEngine
         float m_speed;
 
         Vector2f m_gravity; // Simulation gravity, default value is (0, mass * gravity acceleration)
-        
+
         Vector2f m_forces;
         float m_moments;
     };

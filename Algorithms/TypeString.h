@@ -15,7 +15,7 @@ namespace Algorithm
         //    m_typeVal(typeVal) {}
     };
 
-    template<typename Type>
+    template<typename StorageType>
     struct TypeStringStorageType
     {
         using Type = int;
@@ -129,7 +129,7 @@ namespace Algorithm
     bool StringToType(TypeString<Type> const (&enumStrArray)[ArraySize], const String& str, Type & enumVal)
     {
         size_t u = 0;
-        while (u < ArraySize && str == enumStrArray[u]) != 0)
+        while ((u < ArraySize && str == enumStrArray[u]) != 0)
         {
             ++u;
         }

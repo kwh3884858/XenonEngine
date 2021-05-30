@@ -169,7 +169,9 @@ namespace XenonEnigne
                     bool result = StringToType(keyWordString, tmpString, typeFlag);
                     assert(result == true);
                     assert(typeFlag != 0);
-                    instrction->m_opFlags[currentTokenOpCount] &= 1 << typeFlag;
+                    OpBitfiledFlag currentFlag = instrction->m_opFlags[currentTokenOpCount];
+                    currentFlag &= 1 << typeFlag;
+                    instrction->m_opFlags[currentTokenOpCount] = currentFlag;
                     if (currentTokenOpCount >= tokenOpAmount)
                     {
                         currentState = InstructionState::InstructionStateStart;
@@ -777,7 +779,7 @@ namespace XenonEnigne
         assert(currentFunction == nullptr);
     }
 
-    void XenonScriptAssemblerMachine::CreateInstructionList(TokenVector* const const tokenVector, const Vector<Instruction *>& instructionStream)
+    bool XenonScriptAssemblerMachine::CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction *>& instructionStream)
     {
         FunctionElement* currentFunction = nullptr;
         int currentFunctionParamCount = 0;
@@ -829,13 +831,13 @@ namespace XenonEnigne
                 {
                 case KeyWord::PARAM:
                 {
-                    currentToken = MoveToNextToken(tokenVector, index);
+                    currentToken = MoveToNextToken(*tokenVector, index);
                     assert(currentToken->m_tokenType == TokenType::Keyword);
 
                     InstructionOpType variable = (currentToken->m_keyword == KeyWord::INT) ?
                         InstructionOpType::InstructionOpTypeInteralLiteral : InstructionOpType::InstructionOpTypeFloatLiteral;
 
-                    currentToken = MoveToNextToken(tokenVector, index);
+                    currentToken = MoveToNextToken(*tokenVector, index);
                     assert(currentToken->m_tokenType == TokenType::Identifier);
 
                     currentFunctionParamCount++;
@@ -861,7 +863,7 @@ namespace XenonEnigne
                     currentInstrction = new Instruction;
                     currentInstructionLookup = GetInstructionByKeyword(currentToken->m_keyword);
 
-                    currentInstrction->m_opCode = currentToken->m_tokenType;
+                    currentInstrction->m_opCode = currentToken->m_keyword;
                     currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
                     currentInstrction->m_ops.Initialize(currentInstrction->m_opCount);
 
@@ -1074,7 +1076,7 @@ namespace XenonEnigne
                 break;
             }
         }
-
+        return true;
     }
 
     bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType instructionOpType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize)
@@ -1252,5 +1254,18 @@ namespace XenonEnigne
         }
         return nullptr;
     }
+
+    const XenonEnigne::TypeString<int> XenonScriptAssemblerMachine::keyWordString =
+    {
+        {"int",  TokenType::IntergalIiteral},
+        {"float", TokenType::FloatIiteral},
+        {"string",  TokenType::StringEntity},
+        {"identifier",  TokenType::Identifier},
+        {"label",  TokenType::Label},
+        {"function",  TokenType::Function},
+        {"hostAPI",  TokenType::HostAPI},
+        {"register",   TokenType::Register}
+    };
+
 
 }
