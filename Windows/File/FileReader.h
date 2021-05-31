@@ -6,11 +6,16 @@
 #pragma once
 #include "CrossPlatform/Interface/IFileReader.h"
 
+namespace CrossPlatform
+{
+    struct XenonFile;
+}
+
 namespace File
 {
     class FileReader : public CrossPlatform::IFileReader
     {
     public:
-        virtual XenonFile*const ReadFile(const char* const fileName )const override;
+        virtual CrossPlatform::XenonFile* const ReadFile(const char* const fileName)const override;
     };
 }

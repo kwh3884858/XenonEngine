@@ -27,7 +27,7 @@ namespace XenonEngine
             m_gameobject(gameobject)
         {
         }
-        virtual ~IComponent() = 0;
+        virtual ~IComponent() {};
 
         IComponentType GetComponentType() { return m_type; }
 

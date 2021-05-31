@@ -59,7 +59,7 @@ namespace XenonEngine
 
         //Misc. calculation
         m_speed = m_velocity.Magnitude();
-        m_localVelocity = MathLab::Rotate(m_velocity, -transform->GetOrientation()); 
+        m_localVelocity = MathLab::Rotate2D(m_velocity, -transform->GetOrientation()); 
 
         //Reset force
         m_forces = Vector2f::Zero;
@@ -71,6 +71,7 @@ namespace XenonEngine
     bool Rigidbody2D::AddForce(const XenonPhysics::Force2D& force)
     {
         m_forces += force.m_forceDirection * force.fvalue;
+        return true;
     }
 
     void Rigidbody2D::CalculateForcesAndMoments(double deltaTime)
@@ -143,7 +144,7 @@ namespace XenonEngine
         Transform2D* transform = m_gameobject->GetComponent<Transform2D>(ComponentType::Transform);
         assert(transform != nullptr);
         //Convert forces from model spece to world space
-        m_forces = MathLab::Rotate(sumOfForces, transform->GetOrientation());
+        m_forces = MathLab::Rotate2D(sumOfForces, transform->GetOrientation());
         m_moments = sumOfMoments;
         
     }

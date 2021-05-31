@@ -18,7 +18,7 @@ namespace MathLab{
      Vector3f RotateYAxis(const Vector3f& vec, const float degree);
      Vector3f RotateZAxis(const Vector3f& vec, const float degree);
 
-     Vector2f Rotate(const Vector2f& vec, const float degree);
+     Vector2f Rotate2D(const Vector2f& vec, const float degree);
 
      template <typename T>
      const T& clamp(const T& value, const T& min, const T& max) {

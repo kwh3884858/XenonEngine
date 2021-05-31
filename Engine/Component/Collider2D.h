@@ -21,7 +21,7 @@ namespace XenonEngine
             IComponent(ComponentType::Collider2D, gameobject),
             m_colliderType(colliderType)
         {}
-        virtual ~Collider2D()override = 0;
+        virtual ~Collider2D()override {};
 
         bool IsTrigger() const { return mIsTrigger; }
         ColliderType GetColliderType() const { return m_colliderType; }

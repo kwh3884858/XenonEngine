@@ -161,7 +161,7 @@ namespace XenonEnigne
             int m_mainFunctionEntryIndex = -1;
         };
 
-        static constexpr String Main_Function_Name ="Main";
+        static constexpr char Main_Function_Name[] ="Main";
 
         struct FunctionElement
         {
@@ -258,13 +258,13 @@ namespace XenonEnigne
 
         typedef Vector<Token*> TokenVector;
 
-        void InstructionError(InstructionState state, char character, unsigned int index)const;
+        void InstructionError(InstructionState state, char character, int index)const;
         void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
         void UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone)const;
         DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);
         void DetermineCharacterType(char c)const;
 
-        LexerState GetNextToken(XenonFile* const xenonFile, unsigned int& refCurrentIndex, Token* const token)const;
+        LexerState GetNextToken(XenonFile* const xenonFile, int& refCurrentIndex, Token* const token)const;
         LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone)const;
         LexerState TokenError(LexerState state, char character, unsigned int index)const;
         void DetermineTokenType(Token* const token, LexerState currentState)const;
@@ -274,7 +274,7 @@ namespace XenonEnigne
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
         bool CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction*>& instructionStream);
 
-        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize);
+        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize);
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
@@ -283,7 +283,7 @@ namespace XenonEnigne
         bool IsCharFullStop(char character)const;
         bool IsCharDelimiter(char character)const;
 
-        Token* MoveToNextToken(const TokenVector& tokenVector, unsigned int& index)const;
+        Token* MoveToNextToken(const TokenVector& tokenVector, int& index)const;
         SymbolElement* const GetSymbolByName(const String& symbolName)const;
         FunctionElement* const GetFunctionByName(const String& functionName) const;
         LabelElement* const GetLabelByName(const String& labelName);

@@ -20,7 +20,7 @@ namespace XenonEnigne {
 
     XenonFile*const FileManager::ReadFile(const char* const fileName)
     {
-        m_fileReader->ReadFile(fileName);
+       return m_fileReader->ReadFile(fileName);
     }
 
 }

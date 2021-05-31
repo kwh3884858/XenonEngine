@@ -4,6 +4,7 @@
 //  Created by whkong on 2021-4-24.
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
+#include <cstdlib>
 #include "Algorithms/Vector.h"
 namespace Algorithm
 {
@@ -101,7 +102,7 @@ namespace Algorithm
     template<typename T>
     inline bool StringBase<T>::operator==(const T* rhs) const
     {
-        for (int i = 0; i < Count(); i++)
+        for ( int i = 0; i < Count(); i++)
         {
             if (m_string[i] != rhs[i])
             {
@@ -125,7 +126,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    int Algorithm::StringBase<T>::Count() const
+     int Algorithm::StringBase<T>::Count() const
     {
         return m_string.Count();
     }
@@ -133,7 +134,7 @@ namespace Algorithm
     template<typename T>
     int Algorithm::StringBase<T>::ToInt() const
     {
-        int size = m_string.Count() + 1;
+         int size = m_string.Count() + 1;
         T* content = new T[size];
         memcpy(content, m_string.begin(), m_string.Count());
         content[size] = '\0';

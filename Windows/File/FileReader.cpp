@@ -29,11 +29,11 @@ namespace File
             while (!fins.eof())
             {
                 fins >> charBuffer;
-                if (charBuffer == CrossPlatform::CL) // CL, carriage return
+                if (charBuffer == XenonFile::CL) // CL, carriage return
                 {
                     xenonFile->m_lineSize++;
                 }
-                if (charBuffer == CrossPlatform::LF) //LF, line feed
+                if (charBuffer == XenonFile::LF) //LF, line feed
                 {
                     continue;
                 }

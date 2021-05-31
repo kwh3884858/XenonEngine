@@ -34,7 +34,7 @@ namespace MathLab {
 
     Vector3f RotateYAxis(const Vector3f& vec, const float degree)
     {
-        float radian = DegreeToRadians(degree);
+        float radius = DegreeToRadians(degree);
         Matrix3 rotationMatrix(
             Vector3f(cos(radius), 0, sin(radius)),
             Vector3f(0, 1, 0),
@@ -46,7 +46,7 @@ namespace MathLab {
 
     Vector3f RotateZAxis(const Vector3f& vec, const float degree)
     {
-        float radian = DegreeToRadians(degree);
+        float radius = DegreeToRadians(degree);
         Matrix3 rotationMatrix(
             Vector3f(cos(radius), sin(radius), 0),
             Vector3f(-sin(radius), cos(radius), 0),
@@ -56,9 +56,9 @@ namespace MathLab {
         return result;
     }
 
-    Vector2f Rotate(const Vector2& vec, const float degree)
+    Vector2f Rotate2D(const Vector2f& vec, const float degree)
     {
-        float radian = DegreeToRadians(degree);
+        float radius = DegreeToRadians(degree);
         Matrix2X2 rotationMatrix(
             Vector2f(cos(radius), sin(radius)),
             Vector2f(-sin(radius), cos(radius))

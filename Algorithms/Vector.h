@@ -3,6 +3,7 @@
 
 //class Iterator;
 #include <cstring>
+#include <cassert>
 
 namespace Algorithm
 {
@@ -28,7 +29,7 @@ namespace Algorithm
 
         bool IsExist(const T& element)const;
 
-		T operator[](int index)const;
+		T& operator[](int index)const;
 		Vector<T>& operator=(const Vector& rhs);
 
 		//For Algorithm
@@ -181,19 +182,16 @@ namespace Algorithm
     }
 
 	template<typename T>
-	inline T Vector<T>::operator[](int index) const
+	inline T& Vector<T>::operator[](int index) const
 	{
-		if (index <0 || index >= m_count)
-		{
-			return nullptr;
-		}
+        assert(index >= 0 && index < m_count);
 		return m_content[index];
 	}
 
 	template<typename T>
 	inline Vector<T>& Vector<T>::operator=(const Vector& rhs)
 	{
-		if (thie = &rhs)
+		if (this == &rhs)
 		{
 			return *this;
 		}
@@ -260,6 +258,7 @@ namespace Algorithm
     {
         memcpy(m_content, content, size);
         m_count = size;
+        return true;
     }
 
     template<typename T>

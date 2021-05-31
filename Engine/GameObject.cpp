@@ -1,11 +1,11 @@
 #include "GameObject.h"
 
-#include "IComponent.h"
+#include "Engine/Component/IComponent.h"
 namespace XenonEngine
 {
 
     GameObject::GameObject(const char* name /*= "XenonGameObject"*/):
-        m_name(name),
+        m_name(name)
     {
     }
 
@@ -21,7 +21,7 @@ namespace XenonEngine
 
     void GameObject::Start()
     {
-        for (size_t i = 0; i < m_components.count(); i++)
+        for (int i = 0; i < m_components.Count(); i++)
         {
             m_components[i]->Start();
         }
@@ -29,7 +29,7 @@ namespace XenonEngine
 
     void GameObject::Update()
     {
-        for (size_t i = 0; i < m_components.count(); i++)
+        for (int i = 0; i < m_components.Count(); i++)
         {
             m_components[i]->Update();
         }
@@ -37,7 +37,7 @@ namespace XenonEngine
 
     void GameObject::Destroy()
     {
-        for (size_t i = 0; i < m_components.count(); i++)
+        for (int i = 0; i < m_components.Count(); i++)
         {
             m_components[i]->Destroy();
 

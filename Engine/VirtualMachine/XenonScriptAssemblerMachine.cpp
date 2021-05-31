@@ -13,7 +13,7 @@ namespace XenonEnigne
 
     bool XenonScriptAssemblerMachine::InitializeInstructionList(const XenonFile * const xenonFile)
     {
-        unsigned int index = 0;
+        int index = 0;
         bool isDone = false;
         bool isShouldAdd = true;
         InstructionState currentState = InstructionState::InstructionStateMnomonic;
@@ -193,7 +193,7 @@ namespace XenonEnigne
 
     bool XenonScriptAssemblerMachine::InitializeDelimiterList(const XenonFile*const xenonFile)
     {
-        unsigned int index = 0;
+        int index = 0;
         bool isDone = false;
         bool isShouldAdd = true;
         DelimiterSymbolState currentState = DelimiterSymbolState::Symbol;
@@ -230,7 +230,7 @@ namespace XenonEnigne
         return true;
     }
 
-    void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, unsigned int index) const
+    void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index) const
     {
         printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d", character, state, index);
 
@@ -277,7 +277,7 @@ namespace XenonEnigne
         return currentState;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::GetNextToken(XenonFile*const xenonFile, unsigned int& refCurrentIndex, Token*const token) const
+    XenonEnigne::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::GetNextToken(XenonFile* const xenonFile, int& refCurrentIndex, Token* const token) const
     {
         char currentCharacter = '\0';
         bool isShouldAddCharacter = true;
@@ -516,8 +516,8 @@ namespace XenonEnigne
 
     XenonScriptAssemblerMachine::TokenVector* XenonScriptAssemblerMachine::Lexer(XenonFile*const xenonFile) const
     {
+        int currentIndex = 0;
         TokenVector* tokenVector = new TokenVector;
-        unsigned int currentIndex = 0;
         while (currentIndex < xenonFile->m_content.Count()) {
             Token* token = new Token;
             LexerState lexerState = GetNextToken(xenonFile, currentIndex, token);
@@ -532,6 +532,7 @@ namespace XenonEnigne
                 break;
             }
         }
+        assert(true == false);
     }
 
     bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector)
@@ -542,6 +543,7 @@ namespace XenonEnigne
         CreateInstructionList(tokenVector, instructionStream);
 
         delete tokenVector;
+        return true;
     }
 
     bool XenonScriptAssemblerMachine::BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector)
@@ -551,7 +553,7 @@ namespace XenonEnigne
         FunctionElement* currentFunction = nullptr;
         unsigned int instructionStreamCount = 0;
 
-        for (unsigned int index = 0; index < tokenVector->Count(); index++)
+        for (int index = 0; index < tokenVector->Count(); index++)
         {
             Token * currentToken = (*tokenVector)[index];
             switch (currentToken->m_tokenType)
@@ -786,7 +788,7 @@ namespace XenonEnigne
         Instruction* currentInstrction = nullptr;
         InstructionLookup* currentInstructionLookup;
 
-        for (unsigned int index = 0; index < tokenVector->Count(); index++)
+        for (int index = 0; index < tokenVector->Count(); index++)
         {
             Token * currentToken = (*tokenVector)[index];
             switch (currentToken->m_tokenType)
@@ -871,7 +873,7 @@ namespace XenonEnigne
 
                     for (int parameterIndex = 0; parameterIndex < currentInstrction->m_opCount; parameterIndex++)
                     {
-                        currentToken = MoveToNextToken(tokenVector, index);
+                        currentToken = MoveToNextToken(*tokenVector, index);
 
                         if (!((currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType)) > 0))
                         {
@@ -918,9 +920,9 @@ namespace XenonEnigne
                             {
                                 if (symbolElement->m_size > 1)
                                 {
-                                    currentToken = MoveToNextToken(tokenVector, index);
+                                    currentToken = MoveToNextToken(*tokenVector, index);
                                     assert(currentToken->m_delimiter == DelimiterWord::OpenBracket);
-                                    currentToken = MoveToNextToken(tokenVector, index);
+                                    currentToken = MoveToNextToken(*tokenVector, index);
                                     assert(currentToken->m_tokenType == TokenType::IntergalIiteral);
 
                                     if (currentToken->m_tokenType == TokenType::IntergalIiteral)
@@ -993,8 +995,6 @@ namespace XenonEnigne
                         }
                         break;
                         case HostAPI:
-                            break;
-                        case Register:
                             break;
                         case Keyword:
                             break;
@@ -1079,7 +1079,7 @@ namespace XenonEnigne
         return true;
     }
 
-    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType instructionOpType, FunctionElement* const functionElement, unsigned int& refIndex, unsigned int& refGlobalStackSize)
+    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize)
     {
         Token* token = (*tokenVector)[++refIndex];
         if (!token || token->m_tokenType != TokenType::Identifier)
@@ -1119,7 +1119,7 @@ namespace XenonEnigne
         }
 
         SymbolElement* symbol = new SymbolElement;
-        symbol->m_variableType = instructionOpType;
+        symbol->m_variableType = tokenType;
         symbol->m_symbolToken = currentToken;
         symbol->m_size = size;
         symbol->m_stackIndex = stackIndex;
@@ -1140,7 +1140,7 @@ namespace XenonEnigne
 
     bool XenonScriptAssemblerMachine::IsNewLine(char character) const
     {
-        if (character == '\t' || character == '\r')
+        if (character == '\n' || character == '\r')
             return true;
         else
             return false;
@@ -1201,7 +1201,7 @@ namespace XenonEnigne
         return false;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, unsigned int& index) const
+    XenonEnigne::XenonScriptAssemblerMachine::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, int& index) const
     {
         assert(index + 1 < tokenVector.Count());
         return tokenVector[index++];
@@ -1235,7 +1235,7 @@ namespace XenonEnigne
     {
         for (int i = 0; i < m_labelTable.Count(); i++)
         {
-            if (m_labelTable[i].m_token->m_character == labelName)
+            if (m_labelTable[i]->m_token->m_character == labelName)
             {
                 return m_labelTable[i];
             }
@@ -1247,7 +1247,7 @@ namespace XenonEnigne
     {
         for (int i = 0; i < m_instructionLookupList.Count(); i++)
         {
-            if (m_instructionLookupList[i].m_opType == functionName)
+            if (m_instructionLookupList[i]->m_opType == keyword)
             {
                 return m_instructionLookupList[i];
             }
@@ -1255,7 +1255,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    const XenonEnigne::TypeString<int> XenonScriptAssemblerMachine::keyWordString =
+    const XenonEnigne::TypeString<int> XenonScriptAssemblerMachine::keyWordString[keywordStringCount] =
     {
         {"int",  TokenType::IntergalIiteral},
         {"float", TokenType::FloatIiteral},
