@@ -6,6 +6,8 @@
 #pragma once
 #include <cstdlib>
 #include "Algorithms/Vector.h"
+#include "Algorithms/DeterministicFiniteAutomaton.h"
+
 namespace Algorithm
 {
     template<typename T>
@@ -38,10 +40,15 @@ namespace Algorithm
         float ToFloat()const;
         char ToChar()const;
         void Clear();
+
+        bool Find(const StringBase& subString);
+        void Append(const StringBase& subString);
     private:
+        static void CreateDFA(const T* findContent, int findLength, DeterministicFiniteAutomaton* pOutDFA);
+        static void CreateReverseDFA(const T* findContent, int findLength, DeterministicFiniteAutomaton* pOutDFA);
+
         Vector<T> m_string;
     };
-
 
     template<typename T>
     StringBase<T>::StringBase()
@@ -186,6 +193,85 @@ namespace Algorithm
         }
         return true;
     }
+
+
+    template<typename T>
+    bool Algorithm::StringBase<T>::Find(const StringBase& subString)
+    {
+        DeterministicFiniteAutomaton* dfa = new DeterministicFiniteAutomaton;
+        int character[265];
+        int nonCharacterCount = 0;
+
+        //Count character occurrences
+        memset(character, 0, sizeof(character));
+        for (int i = 0; i < Count(); i++) {
+            int index = m_string[i];
+            character[index]++;
+        }
+        for (int i = 0; i < 265; i++) {
+            if (character[i] != 0) {
+                nonCharacterCount++;
+            }
+        }
+
+        pOutDFA->m_characterCount = nonCharacterCount;
+        pOutDFA->m_countentlength = Count();
+
+        pOutDFA->m_next = new int[pOutDFA->m_characterCount * pOutDFA->m_countentlength];
+        memset(pOutDFA->m_next, 0, pOutDFA->m_characterCount * pOutDFA->m_countentlength * sizeof(T));
+        pOutDFA->m_character = new char[pOutDFA->m_characterCount];
+
+        nonCharacterCount = 0;
+        for (int i = 0; i < 265; i++) {
+            if (character[i] != 0) {
+                pOutDFA->m_character[nonCharacterCount++] = i;
+            }
+        }
+
+        int X = 0;
+        pOutDFA->Set(pOutDFA->GetCharacterPos(subString[0]), 0, 1);
+        for (int i = 1; i < pOutDFA->m_countentlength; i++) {
+            for (int j = 0; j < pOutDFA->m_characterCount; j++) {
+                pOutDFA->Set(j, i, pOutDFA->Get(j, X));
+            }
+            int charPos = pOutDFA->GetCharacterPos(subString[i]);
+
+            pOutDFA->Set(charPos, i, i + 1);
+
+            X = pOutDFA->Get(charPos, X);
+        }
+
+        int j = 0;
+        for (int i = 0; i < Count(); i++) {
+            j = dfa->Get(dfa->GetCharacterPos(m_string[i]), j);
+
+            if (j == findLength) {
+                delete dfa;
+                return i + 1 - subString.Count();
+            }
+        }
+        delete dfa;
+        return -1;
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::Append(const StringBase& subString)
+    {
+        
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::CreateDFA(const T* findContent, int findLength, DeterministicFiniteAutomaton* pOutDFA)
+    {
+
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::CreateReverseDFA(const T* findContent, int findLength, DeterministicFiniteAutomaton* pOutDFA)
+    {
+
+    }
+
 
     typedef StringBase<char> String;
 

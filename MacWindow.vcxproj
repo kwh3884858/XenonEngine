@@ -157,6 +157,7 @@
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
     <ClInclude Include="CrossPlatform\XenonFile.h" />
+    <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h" />
     <ClInclude Include="Engine\Component\BoxCollider2D.h" />
     <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />

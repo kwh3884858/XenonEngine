@@ -305,6 +305,9 @@
     <ClInclude Include="MathLab\Quaternion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
