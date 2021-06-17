@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iostream> // For std::cerr
 #include <assert.h>
+#include <windows.h>
 
 namespace File
 {
@@ -49,6 +50,13 @@ namespace File
         fins.close();
 
         return xenonFile;
+    }
+
+    Algorithm::String FileReader::GetApplicationPath() const
+    {
+        char buffer[MAX_PATH];
+        GetModuleFileNameA(NULL, buffer, MAX_PATH);
+        return String(buffer);
     }
 
 }

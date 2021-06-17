@@ -15,5 +15,6 @@ namespace CrossPlatform {
         virtual ~IFileReader() {}
 
         virtual XenonFile* const ReadFile(const char* const fileName)const = 0;
+        virtual Algorithm::String GetApplicationPath()const = 0;
     };
 }

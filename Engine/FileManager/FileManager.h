@@ -5,6 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/XenonManager.h"
+#include "Algorithms/String.h"
 
 namespace CrossPlatform {
     class IFileReader;
@@ -20,6 +21,7 @@ namespace XenonEnigne {
 
         virtual bool Shutdown() override;
         CrossPlatform::XenonFile*const ReadFile(const char* const fileName);
+        Algorithm::String GetApplicationPath()const;
     private:
         CrossPlatform::IFileReader* m_fileReader;
     };

@@ -17,5 +17,6 @@ namespace File
     {
     public:
         virtual CrossPlatform::XenonFile* const ReadFile(const char* const fileName)const override;
+        virtual Algorithm::String GetApplicationPath()const override;
     };
 }

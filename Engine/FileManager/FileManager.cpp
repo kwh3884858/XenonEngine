@@ -23,4 +23,9 @@ namespace XenonEnigne {
        return m_fileReader->ReadFile(fileName);
     }
 
+    Algorithm::String FileManager::GetApplicationPath() const
+    {
+        return m_fileReader->GetApplicationPath();
+    }
+
 }
