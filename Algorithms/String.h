@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include "Algorithms/Vector.h"
 #include "Algorithms/DeterministicFiniteAutomaton.h"
+#include "Algorithms/AlgorithmMacro.h"
 
 namespace Algorithm
 {
@@ -24,26 +25,31 @@ namespace Algorithm
         friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
 
         StringBase();
-        StringBase(const StringBase& value);
-        StringBase(const T* value, unsigned int size);
-        StringBase(const T* value);
+         StringBase(const StringBase& value);
+         StringBase(const T* value, unsigned int size);
+         StringBase(const T* value);
         ~StringBase();
 
         T operator[](int index) const;
         T operator[](unsigned int index) const;
         StringBase<T>& operator=(const StringBase<T>& rhs);
         StringBase<T>& operator=(const T* rhs);
-        bool operator==(const T* rhs)const;
+         //bool operator==(const T* rhs)const;
+         bool operator==(const StringBase<T>& rhs)const;
+        //bool operator!=(const T* rhs)const;
+        bool operator!=(const StringBase<T>& rhs)const;
 
         void Add(T value);
         int Count()const;
         int ToInt()const;
         float ToFloat()const;
         char ToChar()const;
+        void CString(char*const pOutChar) const;
         void Clear();
 
         int Find(const StringBase& subString);
         void Append(const StringBase& subString);
+        StringBase<T> Substring(unsigned int start, unsigned int end);
     private:
         Vector<T> m_string;
     };
@@ -72,6 +78,7 @@ namespace Algorithm
         while (value[index] != '\0')
         {
             m_string.Add(value[index]);
+            index++;
         }
     }
 
@@ -114,24 +121,50 @@ namespace Algorithm
         return *this;
     }
 
+    //template<typename T>
+    //inline bool StringBase<T>::operator==(const T* rhs) const
+    //{
+    //    if (rhs[Count() + 1] != '\0')
+    //    {
+    //        return false;
+    //    }
+    //    for ( int i = 0; i < Count(); i++)
+    //    {
+    //        if (m_string[i] != rhs[i])
+    //        {
+    //            return false;
+    //        }
+    //    }
+    //    return true;
+    //}
+
     template<typename T>
-    inline bool StringBase<T>::operator==(const T* rhs) const
+    bool Algorithm::StringBase<T>::operator==(const StringBase<T>& rhs)const
     {
-        for ( int i = 0; i < Count(); i++)
+        if (Count() != rhs.Count())
+        {
+            return false;
+        }
+        for (int i = 0; i < Count(); i++)
         {
             if (m_string[i] != rhs[i])
             {
                 return false;
             }
         }
-        if (rhs[Count() + 1] == '\0')
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return true;
+    }
+
+    //template<typename T>
+    //bool Algorithm::StringBase<T>::operator!=(const T* rhs) const
+    //{
+    //    return !((*this) == rhs);
+    //}
+
+    template<typename T>
+    bool Algorithm::StringBase<T>::operator!=(const StringBase<T>& rhs)const
+    {
+        return !((*this) == rhs);
     }
 
     template<typename T>
@@ -149,9 +182,15 @@ namespace Algorithm
     template<typename T>
     int Algorithm::StringBase<T>::ToInt() const
     {
-         int size = m_string.Count() + 1;
+#ifdef XenonEngine_Debug
+        for (int i = 0; i < Count(); i++)
+        {
+            assert((m_string[i] >= '0' && m_string[i] <= '9') == true);
+        }
+#endif
+        int size = m_string.Count() + 1;
         T* content = new T[size];
-        memcpy(content, m_string.begin(), m_string.Count());
+        memcpy(content, m_string.Begin(), m_string.Count());
         content[size] = '\0';
         int result = atoi(content);
         return result;
@@ -163,9 +202,10 @@ namespace Algorithm
     {
         int size = m_string.Count() + 1;
         T* content = new T[size];
-        memcpy(content, m_string.begin(), m_string.Count());
-        content[size] = '\0';
+        memcpy(content, m_string.Begin(), m_string.Count());
+        content[m_string.Count()] = '\0';
         float result = atof(content);
+        delete content;
         return result;
     }
 
@@ -177,6 +217,13 @@ namespace Algorithm
             return 0;
         }
         return (*this)[0];
+    }
+
+    template<typename T>
+    inline void StringBase<T>::CString(char*const pOutChar) const
+    {
+        memcpy(pOutChar, m_string.Begin(), m_string.Count());
+        pOutChar[m_string.Count()] = '\0';
     }
 
     template<typename T>
@@ -209,6 +256,8 @@ namespace Algorithm
         int character[265];
         int nonCharacterCount = 0;
 
+        //Construct DFA
+
         //Count character occurrences
         memset(character, 0, sizeof(character));
         for (int i = 0; i < subString.Count(); i++) {
@@ -221,12 +270,12 @@ namespace Algorithm
             }
         }
 
-        DeterministicFiniteAutomaton* pOutDFA = new DeterministicFiniteAutomaton;
+        DeterministicFiniteAutomaton<T>* pOutDFA = new DeterministicFiniteAutomaton<T>;
         pOutDFA->m_characterCount = nonCharacterCount;
         pOutDFA->m_countentlength = subString.Count();
 
         pOutDFA->m_next = new int[pOutDFA->m_characterCount * pOutDFA->m_countentlength];
-        memset(pOutDFA->m_next, 0, pOutDFA->m_characterCount * pOutDFA->m_countentlength * sizeof(T));
+        memset(pOutDFA->m_next, 0, pOutDFA->m_characterCount * pOutDFA->m_countentlength * sizeof(int));
         pOutDFA->m_character = new char[pOutDFA->m_characterCount];
 
         nonCharacterCount = 0;
@@ -236,25 +285,28 @@ namespace Algorithm
             }
         }
 
-        int X = 0;
-        pOutDFA->Set(pOutDFA->GetCharacterPos(subString[0]), 0, 1);
-        for (int i = 1; i < pOutDFA->m_countentlength; i++) {
-            for (int j = 0; j < pOutDFA->m_characterCount; j++) {
-                pOutDFA->Set(j, i, pOutDFA->Get(j, X));
+        const int startPos = 0;
+        const int nextPosWhenFirstCharacterIsCorrect = 1;
+        pOutDFA->Set(pOutDFA->GetCharacterPos(subString[0]), startPos, nextPosWhenFirstCharacterIsCorrect);
+        
+        int restartPos = 0;
+        for (int currentSubStringIndex = 1; currentSubStringIndex < pOutDFA->m_countentlength; currentSubStringIndex++) {
+            for (int character = 0; character < pOutDFA->m_characterCount; character++) {
+                pOutDFA->Set(character, currentSubStringIndex, pOutDFA->Get(character, restartPos));
             }
-            int charPos = pOutDFA->GetCharacterPos(subString[i]);
+            int characterTablePos = pOutDFA->GetCharacterPos(subString[currentSubStringIndex]);
 
-            pOutDFA->Set(charPos, i, i + 1);
+            pOutDFA->Set(characterTablePos, currentSubStringIndex, currentSubStringIndex + 1);
 
-            X = pOutDFA->Get(charPos, X);
+            restartPos = pOutDFA->Get(characterTablePos, restartPos);
         }
 
         // Find content
-        int j = 0;
+        int nextPos = 0;
         for (int i = 0; i < Count(); i++) {
-            j = pOutDFA->Get(pOutDFA->GetCharacterPos(m_string[i]), j);
+            nextPos = pOutDFA->Get(pOutDFA->GetCharacterPos(m_string[i]), nextPos);
 
-            if (j == subString.Count()) {
+            if (nextPos == subString.Count()) {
                 delete pOutDFA;
                 return i + 1 - subString.Count();
             }
@@ -272,6 +324,13 @@ namespace Algorithm
         }
     }
 
+    template<typename T>
+    Algorithm::StringBase<T> Algorithm::StringBase<T>::Substring(unsigned int start, unsigned int end)
+    {
+        StringBase<T> result;
+        result.m_string.Replace(m_string.Begin() + start, end - start );
+        return result;
+    }
 
     typedef StringBase<char> String;
 

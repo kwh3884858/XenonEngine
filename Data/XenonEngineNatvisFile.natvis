@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <Type Name="Algorithm::StringBase&lt;*&gt;">
+        <DisplayString>{m_string.m_content,[m_string.m_count]}</DisplayString>
+        <StringView>m_string.m_content,[m_string.m_count]</StringView>
+    </Type>
+    <Type Name="Algorithm::Vector&lt;*&gt;">
+        <DisplayString>{{size = {m_count}}}</DisplayString>
+        <Expand>
+            <Item Name="[size]">m_count</Item>
+            <Item Name="[capacity]">m_capacity</Item>
+            <ArrayItems>
+                <Size>m_count</Size>
+                <ValuePointer>m_content</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
+
+    <!--<Type Name="Algorithm::StringBase&lt;*&gt;">
+        <DisplayString>{{size = {m_count}}}</DisplayString>
+        <Expand>
+            <Item Name="[size]">m_count</Item>
+            <Item Name="[capacity]">m_capacity</Item>
+            <ArrayItems>
+                <Size>m_count</Size>
+                <ValuePointer>m_content</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>-->
+</AutoVisualizer>

@@ -16,15 +16,25 @@ namespace XenonEnigne
     void XenonCompiler::Initialize()
     {
         m_xsam = new XenonScriptAssemblerMachine;
-        XenonFile*const instructionListFile = FileManager::get().ReadFile("XenonScriptAssemblerMachineInstrction.xet");
+
+        String applicationPath = FileManager::get().GetApplicationPath();
+        int pos = applicationPath.Find("XenonEngine.exe");
+
+        String instructionPath = applicationPath.Substring(0, pos);
+        instructionPath.Append("XenonScriptAssemblerMachineInstrction.xet");
+        XenonFile*const instructionListFile = FileManager::get().ReadFile(instructionPath);
         assert(instructionListFile != nullptr);
         bool result = m_xsam->InitializeInstructionList(instructionListFile);
         assert(result == true);
 
-        XenonFile* const delimiterListFile = FileManager::get().ReadFile("../Data/XenonScriptAssemblerDelimiter.xet");
+        String delimiterPath = applicationPath.Substring(0, pos);
+        delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
+        XenonFile* const delimiterListFile = FileManager::get().ReadFile(delimiterPath);
         result = m_xsam->InitializeDelimiterList(delimiterListFile);
         assert(result == true);
 
+        String assemblerFile = applicationPath.Substring(0, pos);
+        delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
     }
 
 }

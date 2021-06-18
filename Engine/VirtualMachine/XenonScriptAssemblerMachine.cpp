@@ -22,6 +22,8 @@ namespace XenonEnigne
         int tokenOpAmount = 0;
         int currentTokenOpCount = 0;
 
+        int instructionLineForDebug = 1;
+
         InstructionLookup* instrction;
 
         while (index < xenonFile->m_content.Count())
@@ -55,7 +57,7 @@ namespace XenonEnigne
                 }
                 else
                 {
-                    InstructionError(currentState, currentChar, index);
+                    InstructionError(currentState, currentChar, index, instructionLineForDebug);
                     return false;
                 }
             }
@@ -72,7 +74,7 @@ namespace XenonEnigne
                 }
                 else
                 {
-                    InstructionError(currentState, currentChar, index);
+                    InstructionError(currentState, currentChar, index, instructionLineForDebug);
                     return false;
                 }
             }
@@ -82,20 +84,21 @@ namespace XenonEnigne
                 if (IsCharNumeric(currentChar))
                 {
                 }
-                if (IsNewLine(currentChar))
+                else if (IsNewLine(currentChar))
                 {
                     isShouldAdd = false;
                     isDone = true;
+                    instructionLineForDebug++;
                 }
                 else
                 {
-                    InstructionError(currentState, currentChar, index);
+                    InstructionError(currentState, currentChar, index, instructionLineForDebug);
                     return false;
                 }
             }
             break;
             case InstructionStateOpTypeList:
-                if (IsCharNumeric(currentChar))
+                if (IsCharIdent(currentChar))
                 {
                 }
                 else if (currentChar == SymbolComma)
@@ -108,10 +111,11 @@ namespace XenonEnigne
                     currentTokenOpCount++;
                     isShouldAdd = false;
                     isDone = true;
+                    instructionLineForDebug++;
                 }
                 else
                 {
-                    InstructionError(currentState, currentChar, index);
+                    InstructionError(currentState, currentChar, index, instructionLineForDebug);
                     return false;
                 }
                 break;
@@ -135,6 +139,7 @@ namespace XenonEnigne
                     instrction = new InstructionLookup;
                     instrction->m_mnemonic = tmpString;
                     currentState = InstructionState::InstructionStateOpType;
+                    m_instructionLookupList.Add(instrction);
                 }
                 break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpType:
@@ -158,24 +163,31 @@ namespace XenonEnigne
                     }
                     else
                     {
-                        m_instructionLookupList.Add(instrction);
                         currentState = InstructionState::InstructionStateMnomonic;
                     }
                 }
                 break;
                 case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpTypeList:
                 {
-                    int typeFlag = 0;
-                    bool result = StringToType(keyWordString, tmpString, typeFlag);
-                    assert(result == true);
-                    assert(typeFlag != 0);
-                    OpBitfiledFlag currentFlag = instrction->m_opFlags[currentTokenOpCount];
-                    currentFlag &= 1 << typeFlag;
-                    instrction->m_opFlags[currentTokenOpCount] = currentFlag;
                     if (currentTokenOpCount >= tokenOpAmount)
                     {
                         currentState = InstructionState::InstructionStateStart;
+                        //Current Token Op is over max Op Vector Capacity.
+                        currentTokenOpCount--;
                     }
+
+                    int typeFlag = 0;
+                    bool result = StringToType(keyWordString, tmpString, typeFlag);
+                    if (!result)
+                    {
+                        InstructionError(InstructionState::InstructionStateOpTypeList, currentChar, index, instructionLineForDebug);
+                        return false;
+                    }
+                    assert(result == true);
+                    assert(typeFlag != 0);
+                    OpBitfiledFlag currentFlag = instrction->m_opFlags[currentTokenOpCount];
+                    currentFlag |= (typeFlag << 1);
+                    instrction->m_opFlags[currentTokenOpCount] = currentFlag;
                 }
                 break;
                 default:
@@ -213,7 +225,6 @@ namespace XenonEnigne
             if (isDone)
             {
                 currentState = CreateDelimiterList(currentState, tmpString, delimiterSymbol);
-                m_delimiterList.Add(delimiterSymbol);
                 isDone = false;
                 tmpString.Clear();
             }
@@ -222,17 +233,12 @@ namespace XenonEnigne
             isShouldAdd = true;
         }
 
-        if (delimiterSymbol != nullptr)
-        {
-            m_delimiterList.Add(delimiterSymbol);
-        }
-
         return true;
     }
 
-    void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index) const
+    void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const
     {
-        printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d", character, state, index);
+        printf("Fetal Error: Lexer Error\n Character '%c' From State %d is undefined\n In the index %d in Line %d\n", character, state, index, lineISize);
 
     }
 
@@ -243,7 +249,7 @@ namespace XenonEnigne
             isShouldAdd = false;
             isDone = true;
         }
-        if (IsCharWhitespace(currentChar))
+        else if (IsCharWhitespace(currentChar))
         {
             isShouldAdd = false;
             isDone = false;
@@ -254,21 +260,22 @@ namespace XenonEnigne
         }
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol)
+    XenonEnigne::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimiterSymbol)
     {
         switch (currentState)
         {
         case Symbol:
         {
-            delimitSymbol = new DelimiterSymbol;
-            delimitSymbol->m_symbol = tmpString.ToChar();
+            delimiterSymbol = new DelimiterSymbol;
+            delimiterSymbol->m_symbol = tmpString.ToChar();
             currentState = DelimiterSymbolState::DelimiterType;
         }
         break;
         case DelimiterType:
         {
-            delimitSymbol->m_tokenType = static_cast<DelimiterWord>(tmpString.ToInt());
+            delimiterSymbol->m_tokenType = static_cast<DelimiterWord>(tmpString.ToInt());
             currentState = DelimiterSymbolState::Symbol;
+            m_delimiterList.Add(delimiterSymbol);
         }
         break;
         default:

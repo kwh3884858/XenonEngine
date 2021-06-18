@@ -1,6 +1,7 @@
 #pragma once
 namespace Algorithm
 {
+    //For Kruth-Morris-Paratt Substring Find Algorithm
     template<typename T>
     class DeterministicFiniteAutomaton
     {

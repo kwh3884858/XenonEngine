@@ -85,6 +85,8 @@ namespace Gameplay {
         {
             j = 400;
         }
+
+
     }
 
     void GameplayShutdown()

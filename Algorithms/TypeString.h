@@ -129,7 +129,8 @@ namespace Algorithm
     bool StringToType(TypeString<Type> const (&enumStrArray)[ArraySize], const String& str, Type & enumVal)
     {
         size_t u = 0;
-        while ((u < ArraySize && str == enumStrArray[u].m_string) != 0)
+        bool res = str == enumStrArray[u].m_string;
+        while (u < ArraySize && str != enumStrArray[u].m_string)
         {
             ++u;
         }

@@ -12,14 +12,14 @@ namespace File
     using Algorithm::Vector;
     using CrossPlatform::XenonFile;
 
-    XenonFile*const FileReader::ReadFile(const char* const fileName) const
-{
-        assert(fileName != nullptr);
-
+    XenonFile*const FileReader::ReadFile(const Algorithm::String fileName) const
+    {
         std::ifstream fins;
         XenonFile* xenonFile = new XenonFile;
+        char fileNameA[MAX_PATH];
+        fileName.CString(fileNameA);
 
-        fins.open(fileName);
+        fins.open(fileNameA);
 
         // If it could not open the file then exit.
         if (!fins.fail())
@@ -27,16 +27,20 @@ namespace File
             fins >> std::noskipws;
             char charBuffer = '\0';
 
-            while (!fins.eof())
+            while(true)
             {
                 fins >> charBuffer;
+                if (fins.eof())
+                {
+                    break;
+                }
                 if (charBuffer == XenonFile::CL) // CL, carriage return
                 {
-                    xenonFile->m_lineSize++;
+                    continue;
                 }
                 if (charBuffer == XenonFile::LF) //LF, line feed
                 {
-                    continue;
+                    xenonFile->m_lineSize++;
                 }
                 xenonFile->m_content.Add(charBuffer);
             }
@@ -44,6 +48,7 @@ namespace File
         }
         else
         {
+            printf("FIle Cannot Open!");
             std::cerr << "Error: " << strerror(errno);
             return nullptr;
         }
@@ -56,7 +61,7 @@ namespace File
     {
         char buffer[MAX_PATH];
         GetModuleFileNameA(NULL, buffer, MAX_PATH);
-        return String(buffer);
+        return Algorithm::String(buffer);
     }
 
 }

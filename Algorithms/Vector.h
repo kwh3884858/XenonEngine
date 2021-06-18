@@ -20,7 +20,7 @@ namespace Algorithm
 
 		bool Add(const T& element);
 		bool Remove(const T& element);
-        bool Replace(const T*const content,unsigned int size);
+        void Replace(const T*const content,unsigned int size);
         bool Clear();
 
 		int IndexOf(T element)const;
@@ -34,10 +34,10 @@ namespace Algorithm
 
 		//For Algorithm
 		bool Swap(const int lhs, const int rhs);
-		T* begin();
-        const T* begin()const;
-        T* end();
-        const T* end()const;
+		T* Begin();
+        const T* Begin()const;
+        T* End();
+        const T* End()const;
 
         bool Initialize(int size);
 
@@ -133,7 +133,7 @@ namespace Algorithm
 	}
 
     template<typename T>
-    bool Algorithm::Vector<T>::Replace(const T*const content, unsigned int size)
+    void Algorithm::Vector<T>::Replace(const T*const content, unsigned int size)
     {
         if (m_capacity <= size)
         {
@@ -202,19 +202,19 @@ namespace Algorithm
 	}
     
     template<typename T>
-    const T* Vector<T>::begin()const
+    const T* Vector<T>::Begin()const
     {
         return m_content;
     }
 
     template<typename T>
-    T*  Vector<T>::begin()
+    T*  Vector<T>::Begin()
     {
-        return const_cast<T*>(static_cast<const Vector<T>&>(*this).begin());
+        return const_cast<T*>(static_cast<const Vector<T>&>(*this).Begin());
     }
     
     template<typename T>
-    const T* Vector<T>::end()const
+    const T* Vector<T>::End()const
     {
         if (m_count == 0)
         {
@@ -224,9 +224,9 @@ namespace Algorithm
     }
 
     template<typename T>
-    T* Vector<T>::end()
+    T* Vector<T>::End()
     {
-        return const_cast<T*>(static_cast<const Vector<T>&>(*this).end());
+        return const_cast<T*>(static_cast<const Vector<T>&>(*this).End());
     }
 
 	template<typename T>

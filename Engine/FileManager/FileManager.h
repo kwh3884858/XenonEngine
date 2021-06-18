@@ -20,7 +20,8 @@ namespace XenonEnigne {
         void SetFileReader(CrossPlatform::IFileReader*const fileReader);
 
         virtual bool Shutdown() override;
-        CrossPlatform::XenonFile*const ReadFile(const char* const fileName);
+        CrossPlatform::XenonFile*const ReadFile(const Algorithm::String fileName);
+        //CrossPlatform::XenonFile*const ReadFile(const char* const fileName);
         Algorithm::String GetApplicationPath()const;
     private:
         CrossPlatform::IFileReader* m_fileReader;

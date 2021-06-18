@@ -116,7 +116,7 @@ namespace XenonEnigne
             Comma,          // A comma,
             OpenBrace,          // An openening curly brace { 
             CloseBrace,          // An closing curly brace   }
-
+            
         };
 
         enum InstructionOpType
@@ -258,7 +258,7 @@ namespace XenonEnigne
 
         typedef Vector<Token*> TokenVector;
 
-        void InstructionError(InstructionState state, char character, int index)const;
+        void InstructionError(InstructionState state, char character, int index, int lineISize)const;
         void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
         void UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone)const;
         DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);

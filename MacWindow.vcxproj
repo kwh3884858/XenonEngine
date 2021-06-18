@@ -146,6 +146,7 @@
     <ClCompile Include="Windows\WindowDrawer\WindowDGIDrawer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Algorithms\AlgorithmMacro.h" />
     <ClInclude Include="Algorithms\Dictionary.h" />
     <ClInclude Include="Algorithms\Iterator.h" />
     <ClInclude Include="Algorithms\TypeString.h" />
@@ -223,6 +224,9 @@
     <ResourceCompile Include="Windows\Resources\Resources.rc">
       <DeploymentContent>false</DeploymentContent>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Data\XenonEngineNatvisFile.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

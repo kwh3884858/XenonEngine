@@ -5,6 +5,8 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 
 #pragma once
+#include "Algorithms/String.h"
+
 namespace CrossPlatform {
 
     struct XenonFile;
@@ -14,7 +16,7 @@ namespace CrossPlatform {
     public:
         virtual ~IFileReader() {}
 
-        virtual XenonFile* const ReadFile(const char* const fileName)const = 0;
+        virtual XenonFile* const ReadFile(const Algorithm::String fileName)const = 0;
         virtual Algorithm::String GetApplicationPath()const = 0;
     };
 }

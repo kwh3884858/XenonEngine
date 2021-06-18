@@ -308,6 +308,9 @@
     <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Algorithms\AlgorithmMacro.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
@@ -322,5 +325,8 @@
     <ResourceCompile Include="Windows\Resources\Resources.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="Data\XenonEngineNatvisFile.natvis" />
   </ItemGroup>
 </Project>

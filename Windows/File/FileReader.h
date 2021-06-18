@@ -16,7 +16,7 @@ namespace File
     class FileReader : public CrossPlatform::IFileReader
     {
     public:
-        virtual CrossPlatform::XenonFile* const ReadFile(const char* const fileName)const override;
+        virtual CrossPlatform::XenonFile* const ReadFile(const Algorithm::String fileName)const override;
         virtual Algorithm::String GetApplicationPath()const override;
     };
 }
