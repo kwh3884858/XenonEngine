@@ -54,6 +54,7 @@ namespace WindowInput {
         result = lpdi->EnumDevices(DI8DEVCLASS_GAMECTRL, DirectInputEnumJoystick, &m_joyStickGUID, DIEDFL_ATTACHEDONLY);
         assert(result == DI_OK);
         
+        // If you get a error from here, please plug in a controller.
         result = lpdi->CreateDevice(m_joyStickGUID, &lpdiJoystick,nullptr);
         assert(result == DI_OK);
 

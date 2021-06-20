@@ -35,6 +35,7 @@ namespace XenonEnigne
             LexerStateStart,
             LexerStateIdentifier,
             LexerStateString,
+            LexerStateStringEnd,
             LexerStateEscape,
             LexerStateIntegral,
             LexerStateFloat,
@@ -101,7 +102,7 @@ namespace XenonEnigne
             PARAM,
             CALL,
             RET,
-            CALLHOS,
+            CALLHOST,
 
             PAUSE,
             EXIT
@@ -135,13 +136,13 @@ namespace XenonEnigne
 
         struct Token
         {
+            String m_character;
             TokenType m_tokenType;
             union
             {
                 KeyWord m_keyword;
                 DelimiterWord m_delimiter;
             };
-            String m_character;
         };
 
         struct DelimiterSymbol
@@ -254,6 +255,7 @@ namespace XenonEnigne
 
         bool InitializeInstructionList(const XenonFile* const xenonFile);
         bool InitializeDelimiterList(const XenonFile* const xenonFile);
+        void Compiler(const XenonFile* const xenonFile);
     private:
 
         typedef Vector<Token*> TokenVector;
@@ -264,15 +266,17 @@ namespace XenonEnigne
         DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);
         void DetermineCharacterType(char c)const;
 
-        LexerState GetNextToken(XenonFile* const xenonFile, int& refCurrentIndex, Token* const token)const;
-        LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone)const;
-        LexerState TokenError(LexerState state, char character, unsigned int index)const;
+        LexerState GetNextToken(const XenonFile * const xenonFile, int& refCurrentIndex, Token* const token)const;
+        LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone, int& refLineCountForDebug)const;
+        LexerState TokenError(LexerState state, char character, unsigned int index, int lineCountForDebug)const;
         void DetermineTokenType(Token* const token, LexerState currentState)const;
 
-        TokenVector* Lexer(XenonFile* const xenonFile)const;
+        TokenVector* Lexer(const XenonFile * const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
+        void BuildTableError(const Token*const token, int index);
         bool CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction*>& instructionStream);
+        void CreateInstructionListError(const Token* const token, int index);
 
         bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize);
 
@@ -284,6 +288,7 @@ namespace XenonEnigne
         bool IsCharDelimiter(char character)const;
 
         Token* MoveToNextToken(const TokenVector& tokenVector, int& index)const;
+        Token* PeekNextToken(const TokenVector& tokenVector, int& index)const;
         SymbolElement* const GetSymbolByName(const String& symbolName)const;
         FunctionElement* const GetFunctionByName(const String& functionName) const;
         LabelElement* const GetLabelByName(const String& labelName);
@@ -301,6 +306,7 @@ namespace XenonEnigne
         Vector<FunctionElement*> m_functionTable;
         Vector<LabelElement*> m_labelTable;
         Vector<String> m_stringTable;
+        Vector<String> m_hostAPITable;
         Vector<Instruction*> m_instructionList;
     };
 }

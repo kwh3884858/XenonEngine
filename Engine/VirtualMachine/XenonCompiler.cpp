@@ -33,8 +33,10 @@ namespace XenonEnigne
         result = m_xsam->InitializeDelimiterList(delimiterListFile);
         assert(result == true);
 
-        String assemblerFile = applicationPath.Substring(0, pos);
-        delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
+        String assemblerPath = applicationPath.Substring(0, pos);
+        assemblerPath.Append("Main.xea");
+        XenonFile* const assemblerFile = FileManager::get().ReadFile(assemblerPath);
+        m_xsam->Compiler(assemblerFile);
     }
 
 }
