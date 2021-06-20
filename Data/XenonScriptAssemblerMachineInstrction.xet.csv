@@ -1,7 +1,7 @@
 INT,0,1
-int
+identifier
 FLOAT,1,1
-float,
+identifier
 MOV,2,2
 identifier,register
 int,float,string,identifier,register
@@ -53,7 +53,7 @@ GETCHAR,19,3
 identifier,register
 string,identifier,register
 int,identifier,register
-SETCHAR,20,
+SETCHAR,20,3
 identifier,register
 int,identifier,register
 string,identifier,register
@@ -92,7 +92,7 @@ PARAM,31,0
 CALL,32,1
 function
 RET,33,0
-CALLHOS,34,1
+CALLHOST,34,1
 hostAPI
 PAUSE,35,1
 int,float,identifier,register

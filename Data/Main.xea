@@ -1,3 +1,7 @@
+FUNC Main
+{		
+	CALL DoStuff
+}
 ; Project.
 
 ;	XVM Final
@@ -23,60 +27,60 @@
 
 	; ---- Simple function for doing random stuff
 
-	Func DoStuff
+	FUNC DoStuff
 	{
 		; Print a string sequence on the host side
 
-		Push		1
-		Push		"The following string sequence were printed by the host app:"
-		CallHost	DebugPrint
+		PUSH		1
+		PUSH		"The following string sequence were printed by the host app:"
+		CALLHOST	DebugPrint
 	
-		Push		4
-		Push		" - Host app string"
-		CallHost	DebugPrint
+		PUSH		4
+		PUSH		" - Host app string"
+		CALLHOST	DebugPrint
 		
 		; Print a string sequence on on the script side (with added delay)
 		
-		Push		1
-		Push		"These, on the other hand, were printed individually by the script:"
-		CallHost	DebugPrint
+		PUSH		1
+		PUSH		"These, on the other hand, were printed individually by the script:"
+		CALLHOST	DebugPrint
 		
-		Var		Counter
-		Mov		Counter, 8
+		INT		Counter
+		MOV		Counter, 8
 
 		LoopStart:	
 		
-			Push		1
-			Push		" - Script string"
-			CallHost	DebugPrint
-			Pause		200
+			PUSH		1
+			PUSH		" - Script string"
+			CALLHOST	DebugPrint
+			PAUSE		200
 			
-			Dec		Counter
+			DEC		Counter
 			
 		JGE		Counter, 0, LoopStart
 		
 		; Return a value to the host
 
-		Push		1
-		Push		"Returning Pi to the host..."
-		CallHost	DebugPrint
+		PUSH		1
+		PUSH		"Returning Pi to the host..."
+		CALLHOST	DebugPrint
 		
-		Mov		_RetVal, 3.14159
+		MOV		_RetVal, 3.14159
 	}
 	
 	; ---- Function to be invoked and run alongside a host application loop
 	
-	Func InvokeLoop
+	FUNC InvokeLoop
 	{
 		; Print a string infinitely
 
 		LoopStart:
 		
-			Push		1
-			Push		"Looping..."
-			CallHost	DebugPrint
+			PUSH		1
+			PUSH		"Looping..."
+			CALLHOST	DebugPrint
 
-			Pause		200
+			PAUSE		200
 			
-		Jmp		LoopStart
+		JMP		LoopStart
 	}
