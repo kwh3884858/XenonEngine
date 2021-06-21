@@ -1,8 +1,13 @@
 #include "XenonScriptAssemblerMachine.h"
+
+#include "Algorithms/StreamingVector.h"
+
 #include <stdio.h>  // printf
 
 namespace XenonEnigne
 {
+    using Algorithm::StreamingVector;
+
     XenonScriptAssemblerMachine::XenonScriptAssemblerMachine()
     {
     }
@@ -259,8 +264,21 @@ namespace XenonEnigne
         xexFile->m_fileName = xenonFile->m_fileName.Substring(0, pos);
         xexFile->m_fileName.Append(".xex");
 
-        Vector<char> executeStream;
-        executeStream.Add(m_scriptHeader.m_globalDataSize);
+        StreamingVector<char> executeStream;
+        executeStream.Add(&m_scriptHeader.m_globalDataSize, sizeof(m_scriptHeader.m_globalDataSize));
+        executeStream.Add(&m_scriptHeader.m_mainFunctionEntryIndex, sizeof(m_scriptHeader.m_mainFunctionEntryIndex));
+
+        for (int inedx = 0; inedx < m_instructionList.Count(); inedx++)
+        {
+            executeStream.Add(&m_instructionList[index]->m_opCode, sizeof(m_instructionList[index]->m_opCode));
+            unsigned int opCount = m_instructionList[index]->m_opCount;
+            for (int opIndex = 0; opIndex < opCount; opIndex++)
+            {
+                executeStream.Add(&m_instructionList[index]->m_op[opIndex]->m_type, sizeof(m_instructionList[index]->m_op[opIndex]->m_type));
+                executeStream.Add(&m_instructionList[index]->m_op[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_op[opIndex]->m_interalLiteral));
+            }
+
+        }
 
     }
 

@@ -60,7 +60,7 @@ namespace XenonEnigne
         static constexpr int keywordStringCount = 8;
         static const TypeString<int> keyWordString[keywordStringCount];
 
-        enum KeyWord
+        enum KeyWord:int
         {
             INT,
             FLOAT,

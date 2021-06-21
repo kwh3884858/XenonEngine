@@ -12,9 +12,9 @@ namespace Algorithm
         StringBase<T>& operator=(const StringBase<T>& rhs);
         ~StreamingVector();
 
-        void Add(void*const pdata, int size, int count);
+        void Add(void*const pdata, int size, int count = 1);
     private:
-        Reallocation(int neededSpace);
+        void Reallocation(int neededSpace);
     };
 
     template<typename T>
@@ -33,7 +33,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    Algorithm::StreamingVector<T>::Reallocation(int neededSpace)
+    void Algorithm::StreamingVector<T>::Reallocation(int neededSpace)
     {
         assert(m_capacity != 0);
 
@@ -46,7 +46,6 @@ namespace Algorithm
         }
         delete[] m_content;
         m_content = newContent;
-        return true;
     }
 
 }
