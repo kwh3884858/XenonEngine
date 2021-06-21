@@ -149,6 +149,7 @@
     <ClInclude Include="Algorithms\AlgorithmMacro.h" />
     <ClInclude Include="Algorithms\Dictionary.h" />
     <ClInclude Include="Algorithms\Iterator.h" />
+    <ClInclude Include="Algorithms\StreamingVector.h" />
     <ClInclude Include="Algorithms\TypeString.h" />
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />

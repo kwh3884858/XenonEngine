@@ -255,7 +255,8 @@ namespace XenonEnigne
 
         bool InitializeInstructionList(const XenonFile* const xenonFile);
         bool InitializeDelimiterList(const XenonFile* const xenonFile);
-        void Compiler(const XenonFile* const xenonFile);
+        void Compiler(const XenonFile* const xenonFile);        
+        void BuildXEX(XenonFile*const xenonFile)const;
     private:
 
         typedef Vector<Token*> TokenVector;
@@ -277,6 +278,7 @@ namespace XenonEnigne
         void BuildTableError(const Token*const token, int index);
         bool CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction*>& instructionStream);
         void CreateInstructionListError(const Token* const token, int index);
+        void PrintAssemblerState(XenonFile*const xenonFile)const;
 
         bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize);
 

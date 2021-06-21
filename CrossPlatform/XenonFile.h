@@ -14,6 +14,7 @@ namespace CrossPlatform
 
         Algorithm::String m_content ;
         unsigned int m_lineSize = 0;
+        Algorithm::String m_fileName;
     };
 
     __declspec(selectany) const int XenonFile::CL = '\r';

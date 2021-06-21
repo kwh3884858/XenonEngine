@@ -250,8 +250,22 @@ namespace XenonEnigne
         tokens = nullptr;
     }
 
-    void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const
+ void XenonScriptAssemblerMachine::BuildXEX(XenonFile*const xenonFile) const
     {
+        PrintAssemblerState(xenonFile);
+
+        XenonFile*const xexFile = new XenonFile;
+        int pos = xenonFile->m_fileName.Find(".xea");
+        xexFile->m_fileName = xenonFile->m_fileName.Substring(0, pos);
+        xexFile->m_fileName.Append(".xex");
+
+        Vector<char> executeStream;
+        executeStream.Add(m_scriptHeader.m_globalDataSize);
+
+    }
+
+    void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const
+    { 
         printf("Fetal Error: Construct Instruction Error\n Character '%c' From State %d is undefined\n In the index %d in Line %d\n", character, state, index, lineISize);
 
     }
@@ -737,17 +751,6 @@ namespace XenonEnigne
                     currentFunction->m_parameterCount++;
                 }
                 break;
-                default:
-                {
-                    if (!currentFunction)
-                    {
-                        BuildTableError(currentToken, index);
-                        return false;
-                    }
-
-                    instructionStreamCount++;
-                }
-                break;
                 case MOV:
                     break;
                 case ADD:
@@ -844,6 +847,17 @@ namespace XenonEnigne
                 break;
             case TokenTypeCount:
                 break;
+            default:
+            {
+                if (!currentFunction)
+                {
+                    BuildTableError(currentToken, index);
+                    return false;
+                }
+
+                instructionStreamCount++;
+            }
+            break;
             }
         }
         assert(currentFunction == nullptr);
@@ -1160,6 +1174,52 @@ namespace XenonEnigne
         char errorToken[64];
         token->m_character.CString(errorToken);
         printf("Fetal Error: Parsing Create Instruction List Error\n Character %c In the index %d \n", errorToken, index);
+    }
+
+    void XenonScriptAssemblerMachine::PrintAssemblerState(XenonFile*const xenonFile) const
+{
+        int iVarCount = 0;
+        int iArrayCount = 0;
+        int iGlobalCount =0;
+        for (int i = 0;i < m_symbolTable.Count(); i++)
+        {
+           if (m_symbolTable[i]->m_size >1)
+           {
+               iArrayCount++;
+           }
+           else {
+               iVarCount++;
+           }
+           if (m_symbolTable[i]->m_stackIndex >= 0)
+           {
+               ++iGlobalCount;
+
+           }
+        }
+
+        // Print out final calculations
+        char filePaht[MAX_PATH];
+        xenonFile->m_fileName.CString(filePaht);
+
+        printf("%Created successfully!\n\n");
+        printf("File Path: %s\n", filePaht);
+        printf("Global Data Size: %d\n", m_scriptHeader.m_globalDataSize);
+
+        printf("\n");
+        printf("Instructions Assembled: %d\n", m_instructionList.Count());
+        printf("             Variables: %d\n", iVarCount);
+        printf("                Arrays: %d\n", iArrayCount);
+        printf("               Globals: %d\n", iGlobalCount);
+        printf("       String Literals: %d\n", m_stringTable.Count());
+        printf("                Labels: %d\n", m_labelTable.Count());
+        printf("        Host API Calls: %d\n", m_hostAPITable.Count());
+        printf("             Functions: %d\n", m_functionTable.Count());
+
+        printf("      _Main () Present: ");
+        if (m_scriptHeader.m_mainFunctionEntryIndex != -1)
+            printf("Yes (Index %d)\n", m_scriptHeader.m_mainFunctionEntryIndex);
+        else
+            printf("No\n");
     }
 
     bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize)

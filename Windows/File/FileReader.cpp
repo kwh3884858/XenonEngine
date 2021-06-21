@@ -53,7 +53,7 @@ namespace File
             return nullptr;
         }
         fins.close();
-
+        xenonFile->m_fileName = fileName;
         return xenonFile;
     }
 
