@@ -12,13 +12,13 @@ namespace Algorithm
         StringBase<T>& operator=(const StringBase<T>& rhs);
         ~StreamingVector();
 
-        void Add(void*const pdata, int size, int count = 1);
+        void Add(const void*const pdata, int size, int count = 1);
     private:
         void Reallocation(int neededSpace);
     };
 
     template<typename T>
-    void Algorithm::StreamingVector<T>::Add(void*const pdata, int size, int count)
+    void Algorithm::StreamingVector<T>::Add(const void*const pdata, int size, int count)
     {
         int neededSpace = size * count;
         int currentIndex = m_count - 1;

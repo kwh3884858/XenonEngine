@@ -268,15 +268,15 @@ namespace XenonEnigne
         executeStream.Add(&m_scriptHeader.m_globalDataSize, sizeof(m_scriptHeader.m_globalDataSize));
         executeStream.Add(&m_scriptHeader.m_mainFunctionEntryIndex, sizeof(m_scriptHeader.m_mainFunctionEntryIndex));
 
-        executeStream.Add(&m_instructionList.Count(), sizeof(m_instructionList.Count()));
-        for (int inedx = 0; inedx < m_instructionList.Count(); inedx++)
+        executeStream.Add(&(m_instructionList.Count()), sizeof(m_instructionList.Count()));
+        for (int index = 0; index < m_instructionList.Count(); index++)
         {
             executeStream.Add(&m_instructionList[index]->m_opCode, sizeof(m_instructionList[index]->m_opCode));
             unsigned int opCount = m_instructionList[index]->m_opCount;
             for (int opIndex = 0; opIndex < opCount; opIndex++)
             {
-                executeStream.Add(&m_instructionList[index]->m_op[opIndex]->m_type, sizeof(m_instructionList[index]->m_op[opIndex]->m_type));
-                executeStream.Add(&m_instructionList[index]->m_op[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_op[opIndex]->m_interalLiteral));
+                executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_type, sizeof(m_instructionList[index]->m_ops[opIndex]->m_type));
+                executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_interalLiteral));
             }
         }
 
@@ -286,23 +286,28 @@ namespace XenonEnigne
             executeStream.Add(&m_symbolTable[index]->m_variableType, sizeof(m_symbolTable[index]->m_variableType));
             assert(m_symbolTable[index]->m_size > 0);
             executeStream.Add(&m_symbolTable[index]->m_size, sizeof(m_symbolTable[index]->m_size));
-            executeStream.Add(&m_symbolTable[index]->m_stackIndex, sizeof(m_symbolTable[index]->m_stackIndex))
-            executeStream.Add(&m_symbolTable[index]->m_functionIndex,sizeof(m_symbolTable[index]->m_functionIndex))
-            executeStream.Add(&m_symbolTable[index]->m_stackIndex)
+            executeStream.Add(&m_symbolTable[index]->m_stackIndex, sizeof(m_symbolTable[index]->m_stackIndex));
+            executeStream.Add(&m_symbolTable[index]->m_functionIndex, sizeof(m_symbolTable[index]->m_functionIndex));
+            executeStream.Add(&m_symbolTable[index]->m_symbolToken->m_)
         }
 
         for (int index = 0; index < m_functionTable.Count(); index++)
         {
 
         }
+
+        executeStream.Add(&m_labelTable.Count(), sizeof(m_labelTable.Count()));
         for (int index= 0;index<m_labelTable.Count(); index++)
         {
+            executeStream.Add(m_labelTable[index]->m_instructionStreamIndex, sizeof(m_labelTable[index]->m_instructionStreamIndex));
 
         }
 
+        executeStream.Add(&m_stringTable.Count(), sizeof(m_symbolTable.Count()));
         for (int index = 0; index < m_stringTable.Count(); index++)
         {
-
+            executeStream.Add(&(m_stringTable[index].Count()), sizeof(m_stringTable[index].Count()));
+            executeStream.Add(m_stringTable[index].Beign(), sizeof(char));
         }
 
 

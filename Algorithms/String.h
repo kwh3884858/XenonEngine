@@ -46,6 +46,7 @@ namespace Algorithm
         char ToChar()const;
         void CString(char*const pOutChar) const;
         void Clear();
+        const T* const Beign()const;
 
         int Find(const StringBase& subString);
         void Append(const StringBase& subString);
@@ -230,6 +231,12 @@ namespace Algorithm
     inline void StringBase<T>::Clear()
     {
         m_string.Clear();
+    }
+
+    template<typename T>
+    inline const T* const StringBase<T>::Beign() const
+    {
+        return m_string.Begin();
     }
 
     template<typename T>
