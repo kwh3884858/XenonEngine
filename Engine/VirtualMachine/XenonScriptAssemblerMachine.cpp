@@ -268,6 +268,7 @@ namespace XenonEnigne
         executeStream.Add(&m_scriptHeader.m_globalDataSize, sizeof(m_scriptHeader.m_globalDataSize));
         executeStream.Add(&m_scriptHeader.m_mainFunctionEntryIndex, sizeof(m_scriptHeader.m_mainFunctionEntryIndex));
 
+        executeStream.Add(&m_instructionList.Count(), sizeof(m_instructionList.Count()));
         for (int inedx = 0; inedx < m_instructionList.Count(); inedx++)
         {
             executeStream.Add(&m_instructionList[index]->m_opCode, sizeof(m_instructionList[index]->m_opCode));
@@ -277,9 +278,39 @@ namespace XenonEnigne
                 executeStream.Add(&m_instructionList[index]->m_op[opIndex]->m_type, sizeof(m_instructionList[index]->m_op[opIndex]->m_type));
                 executeStream.Add(&m_instructionList[index]->m_op[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_op[opIndex]->m_interalLiteral));
             }
+        }
+
+        executeStream.Add(&m_symbolTable.Count(), sizeof(m_symbolTable.Count()));
+        for (int index = 0; index < m_symbolTable.Count(); index++)
+        {
+            executeStream.Add(&m_symbolTable[index]->m_variableType, sizeof(m_symbolTable[index]->m_variableType));
+            assert(m_symbolTable[index]->m_size > 0);
+            executeStream.Add(&m_symbolTable[index]->m_size, sizeof(m_symbolTable[index]->m_size));
+            executeStream.Add(&m_symbolTable[index]->m_stackIndex, sizeof(m_symbolTable[index]->m_stackIndex))
+            executeStream.Add(&m_symbolTable[index]->m_functionIndex,sizeof(m_symbolTable[index]->m_functionIndex))
+            executeStream.Add(&m_symbolTable[index]->m_stackIndex)
+        }
+
+        for (int index = 0; index < m_functionTable.Count(); index++)
+        {
+
+        }
+        for (int index= 0;index<m_labelTable.Count(); index++)
+        {
 
         }
 
+        for (int index = 0; index < m_stringTable.Count(); index++)
+        {
+
+        }
+
+
+
+        for (int index = 0; index < length; index++)
+        {
+
+        }
     }
 
     void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const
