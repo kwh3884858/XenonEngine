@@ -7,6 +7,7 @@ namespace XenonEnigne {
 
     using CrossPlatform::IFileReader;
     using CrossPlatform::XenonFile;
+    using Algorithm::StreamingVector;
 
     void FileManager::SetFileReader(CrossPlatform::IFileReader*const fileReader)
     {

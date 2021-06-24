@@ -1,6 +1,7 @@
 #include "Windows/File/FileReader.h"
 #include "Algorithms/Vector.h"
 #include "CrossPlatform/XenonFile.h"
+#include "Algorithms/StreamingVector.h"
 
 #include <fstream>
 #include <iostream> // For std::cerr
@@ -11,6 +12,7 @@ namespace File
 {
     using Algorithm::Vector;
     using CrossPlatform::XenonFile;
+    using Algorithm::StreamingVector;
 
     XenonFile*const FileReader::ReadFile(const Algorithm::String fileName) const
     {
@@ -64,7 +66,7 @@ namespace File
         char fileNameA[MAX_PATH];
         fileName.CString(fileNameA);
 
-        fouts.open(fileNameA, ios::out|ios::binary);
+        fouts.open(fileNameA, std::ios::out | std::ios::binary);
         if (!fouts.good())
         {
             fouts.write(stream->Begin(), stream->Count());

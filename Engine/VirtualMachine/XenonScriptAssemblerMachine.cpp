@@ -1,7 +1,7 @@
 #include "XenonScriptAssemblerMachine.h"
 
 #include "Algorithms/StreamingVector.h"
-
+#include "Engine/FileManager/FileManager.h"
 #include <stdio.h>  // printf
 
 namespace XenonEnigne
@@ -293,39 +293,47 @@ namespace XenonEnigne
         //    executeStream.Add(&m_symbolTable[index]->m_functionIndex, sizeof(m_symbolTable[index]->m_functionIndex));
         //    executeStream.Add(&m_symbolTable[index]->m_symbolToken->m_)
         //}
-
-        int count = m_functionTable.Count();
-        executeStream.Add(&count, sizeof(count));
-        for (int index = 0; index < m_functionTable.Count(); index++)
         {
-            executeStream.Add(&m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
-            executeStream.Add(&m_functionTable[index]->m_entryPoint, sizeof(m_functionTable[index]->m_entryPoint));
-            executeStream.Add(&m_functionTable[index]->m_localStackSize, sizeof(m_functionTable[index]->m_localStackSize));
-            executeStream.Add(&m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
+            int count = m_functionTable.Count();
+            executeStream.Add(&count, sizeof(count));
+            for (int index = 0; index < m_functionTable.Count(); index++)
+            {
+                executeStream.Add(&m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
+                executeStream.Add(&m_functionTable[index]->m_entryPoint, sizeof(m_functionTable[index]->m_entryPoint));
+                executeStream.Add(&m_functionTable[index]->m_localStackSize, sizeof(m_functionTable[index]->m_localStackSize));
+                executeStream.Add(&m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
+            }
         }
 
-        int count = m_labelTable.Count();
-        executeStream.Add(&count, sizeof(count));
-        for (int index= 0;index<m_labelTable.Count(); index++)
         {
-            executeStream.Add(m_labelTable[index]->m_instructionStreamIndex, sizeof(m_labelTable[index]->m_instructionStreamIndex));
-
+            int count = m_labelTable.Count();
+            executeStream.Add(&count, sizeof(count));
+            for (int index = 0; index < m_labelTable.Count(); index++)
+            {
+                executeStream.Add(&(m_labelTable[index]->m_instructionStreamIndex), sizeof(m_labelTable[index]->m_instructionStreamIndex));
+            }
         }
 
-        int count = m_stringTable.Count();
-        executeStream.Add(&count, sizeof(count));
-        for (int index = 0; index < m_stringTable.Count(); index++)
         {
-            executeStream.Add(&(m_stringTable[index].Count()), sizeof(m_stringTable[index].Count()));
-            executeStream.Add(m_stringTable[index].Beign(), sizeof(char), m_stringTable[index].Count());
+            int count = m_stringTable.Count();
+            executeStream.Add(&count, sizeof(count));
+            for (int index = 0; index < m_stringTable.Count(); index++)
+            {
+                int stringLength = m_stringTable[index].Count();
+                executeStream.Add(&stringLength, sizeof(stringLength));
+                executeStream.Add(m_stringTable[index].Beign(), sizeof(char), m_stringTable[index].Count());
+            }
         }
 
-        int count = m_hostAPITable.Count();
-        executeStream.Add(&count, sizeof(count));
-        for (int index = 0; index < m_hostAPITable; index++)
         {
-            executeStream.Add(&(m_hostAPITable[index].Count()), sizeof(m_hostAPITable[index].Count()));
-            executeStream.Add(m_hostAPITable[index].Beign(), sizeof(char), m_hostAPITable[index].Count());
+            int count = m_hostAPITable.Count();
+            executeStream.Add(&count, sizeof(count));
+            for (int index = 0; index < m_hostAPITable.Count(); index++)
+            {
+                int hostAPITableLength = m_hostAPITable[index].Count();
+                executeStream.Add(&hostAPITableLength, sizeof(hostAPITableLength));
+                executeStream.Add(m_hostAPITable[index].Beign(), sizeof(char), m_hostAPITable[index].Count());
+            }
         }
 
         int pos = xenonFile->m_fileName.Find(".xea");
