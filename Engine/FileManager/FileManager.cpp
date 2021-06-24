@@ -18,9 +18,14 @@ namespace XenonEnigne {
         return true;
     }
 
-    CrossPlatform::XenonFile*const FileManager::ReadFile(const Algorithm::String fileName)
+    CrossPlatform::XenonFile*const FileManager::ReadFile(const Algorithm::String fileName)const
     {
         return m_fileReader->ReadFile(fileName);
+    }
+
+    bool FileManager::WriteFile(const Algorithm::String fileName, StreamingVector<char>*const stream)const
+    {
+        return m_fileReader->WriteFile(fileName, stream);
     }
 
     //XenonFile*const FileManager::ReadFile(const char* const fileName)

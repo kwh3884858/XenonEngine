@@ -10,13 +10,20 @@
 namespace CrossPlatform {
 
     struct XenonFile;
-
+    
+    namespace Algorithm
+    {
+        template<typename T>
+        class StreamingVector;
+    }
+    
     class IFileReader
     {
     public:
         virtual ~IFileReader() {}
 
         virtual XenonFile* const ReadFile(const Algorithm::String fileName)const = 0;
+        virtual bool WriteFile(const Algorithm::String fileName, StreamingVector<char>*const stream) const = 0;
         virtual Algorithm::String GetApplicationPath()const = 0;
     };
 }

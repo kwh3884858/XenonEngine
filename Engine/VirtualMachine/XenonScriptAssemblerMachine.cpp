@@ -255,14 +255,9 @@ namespace XenonEnigne
         tokens = nullptr;
     }
 
- void XenonScriptAssemblerMachine::BuildXEX(XenonFile*const xenonFile) const
+    void XenonScriptAssemblerMachine::BuildXEX(XenonFile*const xenonFile) const
     {
         PrintAssemblerState(xenonFile);
-
-        XenonFile*const xexFile = new XenonFile;
-        int pos = xenonFile->m_fileName.Find(".xea");
-        xexFile->m_fileName = xenonFile->m_fileName.Substring(0, pos);
-        xexFile->m_fileName.Append(".xex");
 
         StreamingVector<char> executeStream;
         executeStream.Add(&m_scriptHeader.m_globalDataSize, sizeof(m_scriptHeader.m_globalDataSize));
@@ -276,24 +271,35 @@ namespace XenonEnigne
             for (int opIndex = 0; opIndex < opCount; opIndex++)
             {
                 executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_type, sizeof(m_instructionList[index]->m_ops[opIndex]->m_type));
-                executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_interalLiteral));
+                if (m_instructionList[index]->m_ops[opIndex]->m_type == InstructionOpType::InstructionOpTypeFloatLiteral)
+                {
+                    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_floatLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_floatLiteral));
+                }
+                else
+                {
+                    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_interalLiteral));
+                }
             }
         }
 
-        executeStream.Add(&m_symbolTable.Count(), sizeof(m_symbolTable.Count()));
-        for (int index = 0; index < m_symbolTable.Count(); index++)
-        {
-            executeStream.Add(&m_symbolTable[index]->m_variableType, sizeof(m_symbolTable[index]->m_variableType));
-            assert(m_symbolTable[index]->m_size > 0);
-            executeStream.Add(&m_symbolTable[index]->m_size, sizeof(m_symbolTable[index]->m_size));
-            executeStream.Add(&m_symbolTable[index]->m_stackIndex, sizeof(m_symbolTable[index]->m_stackIndex));
-            executeStream.Add(&m_symbolTable[index]->m_functionIndex, sizeof(m_symbolTable[index]->m_functionIndex));
-            executeStream.Add(&m_symbolTable[index]->m_symbolToken->m_)
-        }
+        //executeStream.Add(&m_symbolTable.Count(), sizeof(m_symbolTable.Count()));
+        //for (int index = 0; index < m_symbolTable.Count(); index++)
+        //{
+        //    executeStream.Add(&m_symbolTable[index]->m_variableType, sizeof(m_symbolTable[index]->m_variableType));
+        //    assert(m_symbolTable[index]->m_size > 0);
+        //    executeStream.Add(&m_symbolTable[index]->m_size, sizeof(m_symbolTable[index]->m_size));
+        //    executeStream.Add(&m_symbolTable[index]->m_stackIndex, sizeof(m_symbolTable[index]->m_stackIndex));
+        //    executeStream.Add(&m_symbolTable[index]->m_functionIndex, sizeof(m_symbolTable[index]->m_functionIndex));
+        //    executeStream.Add(&m_symbolTable[index]->m_symbolToken->m_)
+        //}
 
+        executeStream.Add(&m_functionTable.Count(), sizeof(m_functionTable.Count()));
         for (int index = 0; index < m_functionTable.Count(); index++)
         {
-
+            executeStream.Add(&m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
+            executeStream.Add(&m_functionTable[index]->m_entryPoint, sizeof(m_functionTable[index]->m_entryPoint));
+            executeStream.Add(&m_functionTable[index]->m_localStackSize, sizeof(m_functionTable[index]->m_localStackSize));
+            executeStream.Add(&m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
         }
 
         executeStream.Add(&m_labelTable.Count(), sizeof(m_labelTable.Count()));
@@ -303,19 +309,25 @@ namespace XenonEnigne
 
         }
 
-        executeStream.Add(&m_stringTable.Count(), sizeof(m_symbolTable.Count()));
+        executeStream.Add(&m_stringTable.Count(), sizeof(m_stringTable.Count()));
         for (int index = 0; index < m_stringTable.Count(); index++)
         {
             executeStream.Add(&(m_stringTable[index].Count()), sizeof(m_stringTable[index].Count()));
-            executeStream.Add(m_stringTable[index].Beign(), sizeof(char));
+            executeStream.Add(m_stringTable[index].Beign(), sizeof(char), m_stringTable[index].Count());
         }
 
-
-
-        for (int index = 0; index < length; index++)
+        executeStream.Add(&m_hostAPITable.Count(), sizeof(m_hostAPITable.Count()));
+        for (int index = 0; index < m_hostAPITable; index++)
         {
-
+            executeStream.Add(&(m_hostAPITable[index].Count()), sizeof(m_hostAPITable[index].Count()));
+            executeStream.Add(m_hostAPITable[index].Beign(), sizeof(char), m_hostAPITable[index].Count());
         }
+
+        int pos = xenonFile->m_fileName.Find(".xea");
+        String outputFileName = xenonFile->m_fileName.Substring(0, pos);
+        outputFileName.Append(".xex");
+
+        FileManager::get().WriteFile(outputFileName, &executeStream);
     }
 
     void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const
@@ -1232,22 +1244,21 @@ namespace XenonEnigne
 
     void XenonScriptAssemblerMachine::PrintAssemblerState(XenonFile*const xenonFile) const
 {
-        int iVarCount = 0;
-        int iArrayCount = 0;
-        int iGlobalCount =0;
+        int variableCount = 0;
+        int arrayCount = 0;
+        int globalCount =0;
         for (int i = 0;i < m_symbolTable.Count(); i++)
         {
            if (m_symbolTable[i]->m_size >1)
            {
-               iArrayCount++;
+               arrayCount++;
            }
            else {
-               iVarCount++;
+               variableCount++;
            }
            if (m_symbolTable[i]->m_stackIndex >= 0)
            {
-               ++iGlobalCount;
-
+               ++globalCount;
            }
         }
 
@@ -1261,9 +1272,9 @@ namespace XenonEnigne
 
         printf("\n");
         printf("Instructions Assembled: %d\n", m_instructionList.Count());
-        printf("             Variables: %d\n", iVarCount);
-        printf("                Arrays: %d\n", iArrayCount);
-        printf("               Globals: %d\n", iGlobalCount);
+        printf("             Variables: %d\n", variableCount);
+        printf("                Arrays: %d\n", arrayCount);
+        printf("               Globals: %d\n", globalCount);
         printf("       String Literals: %d\n", m_stringTable.Count());
         printf("                Labels: %d\n", m_labelTable.Count());
         printf("        Host API Calls: %d\n", m_hostAPITable.Count());
