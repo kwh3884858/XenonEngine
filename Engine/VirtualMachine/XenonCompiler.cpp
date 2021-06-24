@@ -17,12 +17,12 @@ namespace XenonEnigne
     {
         m_xsam = new XenonScriptAssemblerMachine;
 
-        String applicationPath = FileManager::get().GetApplicationPath();
+        String applicationPath = FileManager::Get().GetApplicationPath();
         int pos = applicationPath.Find("XenonEngine.exe");
 
         String instructionPath = applicationPath.Substring(0, pos);
         instructionPath.Append("XenonScriptAssemblerMachineInstrction.xet");
-        XenonFile*const instructionListFile = FileManager::get().ReadFile(instructionPath);
+        XenonFile*const instructionListFile = FileManager::Get().ReadFile(instructionPath);
         assert(instructionListFile != nullptr);
         bool result = m_xsam->InitializeInstructionList(instructionListFile);
         delete instructionListFile;
@@ -31,7 +31,7 @@ namespace XenonEnigne
 
         String delimiterPath = applicationPath.Substring(0, pos);
         delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
-        XenonFile* const delimiterListFile = FileManager::get().ReadFile(delimiterPath);
+        XenonFile* const delimiterListFile = FileManager::Get().ReadFile(delimiterPath);
         result = m_xsam->InitializeDelimiterList(delimiterListFile);
         delete delimiterListFile;
         delimiterListFile = nullptr;
@@ -39,7 +39,7 @@ namespace XenonEnigne
 
         String assemblerPath = applicationPath.Substring(0, pos);
         assemblerPath.Append("Main.xea");
-        XenonFile* const assemblerFile = FileManager::get().ReadFile(assemblerPath);
+        XenonFile* const assemblerFile = FileManager::Get().ReadFile(assemblerPath);
         m_xsam->Compiler(assemblerFile);
         m_xsam->BuildXEX(assemblerFile);
         delete assemblerFile;

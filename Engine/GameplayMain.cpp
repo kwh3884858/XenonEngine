@@ -54,8 +54,8 @@ namespace Gameplay {
     {
         //printf("/////////////Line///////////////");
         //Primitive2D::get().DrawLine(Vector2i(10, 10), Vector2i(200, 10),CrossPlatform::WHITE);
-        unsigned int width = Database::get().engineConfig.m_width;
-        unsigned int height = Database::get().engineConfig.m_height;
+        unsigned int width = Database::Get().engineConfig.m_width;
+        unsigned int height = Database::Get().engineConfig.m_height;
         //for (int i = 0 ;i < height; i++)
         //{
         //    Primitive2D::get().DrawPixel(i, i);
@@ -161,10 +161,10 @@ namespace Gameplay {
                 }
                 float reciprocalOfZ = -1 / donutVertex.z;
 
-                unsigned int screenWidth = Database::get().engineConfig.m_width;
-                unsigned int screenHight = Database::get().engineConfig.m_height;
+                unsigned int screenWidth = Database::Get().engineConfig.m_width;
+                unsigned int screenHight = Database::Get().engineConfig.m_height;
                 // Rasterized
-                if (Database::get().engineConfig.m_isPerspectiveProjection)
+                if (Database::Get().engineConfig.m_isPerspectiveProjection)
                 {
                     screenX = (int)screenWidth / 2 + donutVertex.x * reciprocalOfZ * 100;
                     screenY = (int)screenHight / 2 - donutVertex.y * reciprocalOfZ * 100;
@@ -176,7 +176,7 @@ namespace Gameplay {
 
                 // Z buffer
                 //float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
-                float curretZBuffer = static_cast<float>(Primitive2D::get().GetZbuffer(Vector2i( screenX, screenY)));
+                float curretZBuffer = static_cast<float>(Primitive2D::Get().GetZbuffer(Vector2i( screenX, screenY)));
 
                 if (curretZBuffer < reciprocalOfZ)
                 {
@@ -187,8 +187,8 @@ namespace Gameplay {
                         L *= 255; //scale up to 255
                         L += 20;
                         L = MathLab::clamp(L, 0.0f, 255.0f);
-                        Primitive2D::get().SetZBuffer(Vector2i( screenX, screenY), static_cast<unsigned int>(reciprocalOfZ));
-                        Primitive2D::get().DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
+                        Primitive2D::Get().SetZBuffer(Vector2i( screenX, screenY), static_cast<unsigned int>(reciprocalOfZ));
+                        Primitive2D::Get().DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
                     }
                 }
             }
@@ -202,7 +202,7 @@ namespace Gameplay {
         assert(polygon.m_numberOfVertex >= 3);
         for (int i = 1; i < polygon.m_numberOfVertex - 1;i++)
         {
-            Primitive2D::get().DrawTriangle(
+            Primitive2D::Get().DrawTriangle(
                 polygon.m_position + polygon.m_vertexList[0],
                 polygon.m_position + polygon.m_vertexList[i],
                 polygon.m_position + polygon.m_vertexList[i + 1],

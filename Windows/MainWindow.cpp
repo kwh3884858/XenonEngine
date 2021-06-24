@@ -43,8 +43,8 @@ MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_timer(nullptr)
 , m_directXDrawSurface(nullptr)
 , m_lastUpdateTiemstamp(0)
-, m_screenWidth(Database::get().engineConfig.m_width)
-, m_screenHight(Database::get().engineConfig.m_height)
+, m_screenWidth(Database::Get().engineConfig.m_width)
+, m_screenHight(Database::Get().engineConfig.m_height)
 , m_directInput(nullptr)
 //, m_isFullScreen(false)
 //, m_perspectiveProjection(true)
@@ -68,7 +68,7 @@ void MainWindow::Initialize()
     m_debugConsole = new DebugTool::DebugConsole();
     m_debugConsole->Initialize();
 
-    if (Database::get().engineConfig.m_isFullScreen)
+    if (Database::Get().engineConfig.m_isFullScreen)
     {
         m_screenWidth = GetSystemMetrics(SM_CXSCREEN);
         m_screenHight = GetSystemMetrics(SM_CYSCREEN);
@@ -78,7 +78,7 @@ void MainWindow::Initialize()
     //int screenHight = 600;
     if (!this->Create(L"Xenon Engine",
         /*WS_CLIPSIBLINGS | WS_CLIPCHILDREN*/
-        Database::get().engineConfig.m_isFullScreen ? (WS_POPUP) : (/*WS_OVERLAPPED | WS_POPUP*/ WS_OVERLAPPEDWINDOW),
+        Database::Get().engineConfig.m_isFullScreen ? (WS_POPUP) : (/*WS_OVERLAPPED | WS_POPUP*/ WS_OVERLAPPEDWINDOW),
         m_screenWidth,
         m_screenHight,
         0,
@@ -86,7 +86,7 @@ void MainWindow::Initialize()
         CW_USEDEFAULT,
         nullptr,
         LoadMenu(mhInstance, MAKEINTRESOURCE(IDR_MAIN_MENU)),
-        Database::get().engineConfig.m_isFullScreen)
+        Database::Get().engineConfig.m_isFullScreen)
     )
     {
         m_debugConsole->RetrieveError(_T("MainWindow::Initialize"));
@@ -123,7 +123,7 @@ void MainWindow::Initialize()
         config->resolutionX = m_screenWidth;
         config->resolutionY = m_screenHight;
         config->m_hwnd = GetHwnd();
-        config->m_isFullScreen = Database::get().engineConfig.m_isFullScreen;
+        config->m_isFullScreen = Database::Get().engineConfig.m_isFullScreen;
 
         m_windowDrawer->SetDrawerConfig(config);
         bool result = m_windowDrawer->Initialize();
@@ -142,12 +142,12 @@ void MainWindow::Initialize()
     Primitive::Primitive2DConfig primitive2DConfig;
     primitive2DConfig.m_drawerSurface = m_directXDrawSurface;
     primitive2DConfig.m_zBuffer = m_zBuffer;
-    primitive2DConfig.m_MinDrawPosition = Vector2f(Database::get().engineConfig.m_minX, Database::get().engineConfig.m_minY);
-    primitive2DConfig.m_MaxDrawPosition = Vector2f(Database::get().engineConfig.m_maxX, Database::get().engineConfig.m_maxY);
-    Primitive::Primitive2D::get().SetConfig(&primitive2DConfig);
+    primitive2DConfig.m_MinDrawPosition = Vector2f(Database::Get().engineConfig.m_minX, Database::Get().engineConfig.m_minY);
+    primitive2DConfig.m_MaxDrawPosition = Vector2f(Database::Get().engineConfig.m_maxX, Database::Get().engineConfig.m_maxY);
+    Primitive::Primitive2D::Get().SetConfig(&primitive2DConfig);
 
     m_fileReader = new File::FileReader;
-    XenonEnigne::FileManager::get().SetFileReader(m_fileReader);
+    XenonEnigne::FileManager::Get().SetFileReader(m_fileReader);
 
     WindowInput::DirectXInputConfig* inputConfig = new WindowInput::DirectXInputConfig();
     inputConfig->m_hwnd = GetHwnd();
@@ -161,8 +161,8 @@ void MainWindow::Shutdown()
 {
     m_directInput->ShutDown();
 
-    XenonEnigne::FileManager::get().Shutdown();
-    Primitive::Primitive2D::get().Shutdown();
+    XenonEnigne::FileManager::Get().Shutdown();
+    Primitive::Primitive2D::Get().Shutdown();
 
     delete m_fileReader;
     m_fileReader = nullptr;
@@ -300,7 +300,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
         if (virtualCode == 0x50) //P
         {
-            Database::get().engineConfig.m_isPerspectiveProjection = !Database::get().engineConfig.m_isPerspectiveProjection;
+            Database::Get().engineConfig.m_isPerspectiveProjection = !Database::Get().engineConfig.m_isPerspectiveProjection;
         }
     }
     break;

@@ -327,7 +327,7 @@ namespace XenonEnigne
         String outputFileName = xenonFile->m_fileName.Substring(0, pos);
         outputFileName.Append(".xex");
 
-        FileManager::get().WriteFile(outputFileName, &executeStream);
+        FileManager::Get().WriteFile(outputFileName, &executeStream);
     }
 
     void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const

@@ -12,7 +12,7 @@ using CrossPlatform::XenonFile;
 
     bool XenonVirtualMachine::Initialize()
     {
-        XenonFile*const fileContent = FileManager::get().ReadFile("main.xon");
+        XenonFile*const fileContent = FileManager::Get().ReadFile("main.xon");
 
         return true;
     }

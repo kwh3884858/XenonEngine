@@ -16,7 +16,7 @@ namespace CrossPlatform {
 		virtual ~XenonSingleton() = default;
 
 		//Get singleton class, have and the only have one instance;
-		static inline T& get() {
+		static inline T& Get() {
 
 			static T* gpSingleton = nullptr;
 			

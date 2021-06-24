@@ -187,7 +187,7 @@ void BaseWindow<T>::ShutdownWindows()
 	ShowCursor(false);
 	
 	//TODO: add graphic setting
-	if (Database::get().engineConfig.m_isFullScreen)
+	if (Database::Get().engineConfig.m_isFullScreen)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}
