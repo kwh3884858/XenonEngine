@@ -1,6 +1,7 @@
 #include "Engine/FileManager/FileManager.h"
 #include "CrossPlatform/Interface/IFileReader.h"
 #include "CrossPlatform/XenonFile.h"
+#include "Algorithms/StreamingVector.h"
 
 namespace XenonEnigne {
 

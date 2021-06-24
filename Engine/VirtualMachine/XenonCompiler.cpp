@@ -22,7 +22,7 @@ namespace XenonEnigne
 
         String instructionPath = applicationPath.Substring(0, pos);
         instructionPath.Append("XenonScriptAssemblerMachineInstrction.xet");
-        XenonFile*const instructionListFile = FileManager::Get().ReadFile(instructionPath);
+        XenonFile* instructionListFile = FileManager::Get().ReadFile(instructionPath);
         assert(instructionListFile != nullptr);
         bool result = m_xsam->InitializeInstructionList(instructionListFile);
         delete instructionListFile;
@@ -31,7 +31,7 @@ namespace XenonEnigne
 
         String delimiterPath = applicationPath.Substring(0, pos);
         delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
-        XenonFile* const delimiterListFile = FileManager::Get().ReadFile(delimiterPath);
+        XenonFile*  delimiterListFile = FileManager::Get().ReadFile(delimiterPath);
         result = m_xsam->InitializeDelimiterList(delimiterListFile);
         delete delimiterListFile;
         delimiterListFile = nullptr;
@@ -39,7 +39,7 @@ namespace XenonEnigne
 
         String assemblerPath = applicationPath.Substring(0, pos);
         assemblerPath.Append("Main.xea");
-        XenonFile* const assemblerFile = FileManager::Get().ReadFile(assemblerPath);
+        XenonFile*  assemblerFile = FileManager::Get().ReadFile(assemblerPath);
         m_xsam->Compiler(assemblerFile);
         m_xsam->BuildXEX(assemblerFile);
         delete assemblerFile;

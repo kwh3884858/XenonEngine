@@ -7,16 +7,16 @@
 #pragma once
 #include "Algorithms/String.h"
 
+namespace Algorithm
+{
+    template<typename T>
+    class StreamingVector;
+}
+
 namespace CrossPlatform {
 
     struct XenonFile;
-    
-    namespace Algorithm
-    {
-        template<typename T>
-        class StreamingVector;
-    }
-    
+       
     class IFileReader
     {
     public:

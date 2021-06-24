@@ -263,7 +263,8 @@ namespace XenonEnigne
         executeStream.Add(&m_scriptHeader.m_globalDataSize, sizeof(m_scriptHeader.m_globalDataSize));
         executeStream.Add(&m_scriptHeader.m_mainFunctionEntryIndex, sizeof(m_scriptHeader.m_mainFunctionEntryIndex));
 
-        executeStream.Add(&(m_instructionList.Count()), sizeof(m_instructionList.Count()));
+        int count = m_instructionList.Count();
+        executeStream.Add(&count, sizeof(count));
         for (int index = 0; index < m_instructionList.Count(); index++)
         {
             executeStream.Add(&m_instructionList[index]->m_opCode, sizeof(m_instructionList[index]->m_opCode));
@@ -293,7 +294,8 @@ namespace XenonEnigne
         //    executeStream.Add(&m_symbolTable[index]->m_symbolToken->m_)
         //}
 
-        executeStream.Add(&m_functionTable.Count(), sizeof(m_functionTable.Count()));
+        int count = m_functionTable.Count();
+        executeStream.Add(&count, sizeof(count));
         for (int index = 0; index < m_functionTable.Count(); index++)
         {
             executeStream.Add(&m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
@@ -302,21 +304,24 @@ namespace XenonEnigne
             executeStream.Add(&m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
         }
 
-        executeStream.Add(&m_labelTable.Count(), sizeof(m_labelTable.Count()));
+        int count = m_labelTable.Count();
+        executeStream.Add(&count, sizeof(count));
         for (int index= 0;index<m_labelTable.Count(); index++)
         {
             executeStream.Add(m_labelTable[index]->m_instructionStreamIndex, sizeof(m_labelTable[index]->m_instructionStreamIndex));
 
         }
 
-        executeStream.Add(&m_stringTable.Count(), sizeof(m_stringTable.Count()));
+        int count = m_stringTable.Count();
+        executeStream.Add(&count, sizeof(count));
         for (int index = 0; index < m_stringTable.Count(); index++)
         {
             executeStream.Add(&(m_stringTable[index].Count()), sizeof(m_stringTable[index].Count()));
             executeStream.Add(m_stringTable[index].Beign(), sizeof(char), m_stringTable[index].Count());
         }
 
-        executeStream.Add(&m_hostAPITable.Count(), sizeof(m_hostAPITable.Count()));
+        int count = m_hostAPITable.Count();
+        executeStream.Add(&count, sizeof(count));
         for (int index = 0; index < m_hostAPITable; index++)
         {
             executeStream.Add(&(m_hostAPITable[index].Count()), sizeof(m_hostAPITable[index].Count()));

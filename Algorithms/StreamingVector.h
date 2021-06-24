@@ -4,7 +4,7 @@
 namespace Algorithm
 {
     template<typename T>
-    class StreamingVector : public Vector
+    class StreamingVector : public Vector<T>
     {
     public:
         StreamingVector();
