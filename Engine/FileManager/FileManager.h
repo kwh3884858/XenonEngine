@@ -6,6 +6,7 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
 #include "Algorithms/String.h"
+//#include "Algorithms/StreamingVector.h"
 
 namespace CrossPlatform {
     class IFileReader;
@@ -16,6 +17,10 @@ namespace Algorithm
 {
     template<typename T>
     class StreamingVector;
+
+    template<typename T>
+    class StringBase;
+    typedef StringBase<char> String;
 }
 
 namespace XenonEnigne {
@@ -26,8 +31,8 @@ namespace XenonEnigne {
         void SetFileReader(CrossPlatform::IFileReader*const fileReader);
 
         virtual bool Shutdown() override;
-        CrossPlatform::XenonFile*const ReadFile(const Algorithm::String fileName)const;
-        bool WriteFile(const Algorithm::String fileName, StreamingVector<char>*const stream)const;
+        CrossPlatform::XenonFile*const ReadFile(const Algorithm::String& fileName)const;
+        bool WriteFile(const Algorithm::String& fileName, const Algorithm::StreamingVector<char>& stream)const;
         //CrossPlatform::XenonFile*const ReadFile(const char* const fileName);
         Algorithm::String GetApplicationPath()const;
     private:

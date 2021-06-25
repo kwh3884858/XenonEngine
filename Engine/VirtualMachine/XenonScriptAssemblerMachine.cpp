@@ -340,7 +340,7 @@ namespace XenonEnigne
         String outputFileName = xenonFile->m_fileName.Substring(0, pos);
         outputFileName.Append(".xex");
 
-        FileManager::Get().WriteFile(outputFileName, &executeStream);
+        FileManager::Get().WriteFile(outputFileName, executeStream);
     }
 
     void XenonScriptAssemblerMachine::InstructionError(InstructionState state, char character, int index, int lineISize) const
@@ -1276,7 +1276,7 @@ namespace XenonEnigne
         }
 
         // Print out final calculations
-        char filePaht[MAX_PATH];
+        char filePaht[200];
         xenonFile->m_fileName.CString(filePaht);
 
         printf("%Created successfully!\n\n");

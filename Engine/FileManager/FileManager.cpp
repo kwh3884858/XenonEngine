@@ -1,12 +1,14 @@
 #include "Engine/FileManager/FileManager.h"
 #include "CrossPlatform/Interface/IFileReader.h"
 #include "CrossPlatform/XenonFile.h"
+#include "Algorithms/Vector.h"
 #include "Algorithms/StreamingVector.h"
 
 namespace XenonEnigne {
 
     using CrossPlatform::IFileReader;
     using CrossPlatform::XenonFile;
+    using Algorithm::Vector;
     using Algorithm::StreamingVector;
 
     void FileManager::SetFileReader(CrossPlatform::IFileReader*const fileReader)
@@ -20,12 +22,12 @@ namespace XenonEnigne {
         return true;
     }
 
-    CrossPlatform::XenonFile*const FileManager::ReadFile(const Algorithm::String fileName)const
+    CrossPlatform::XenonFile*const FileManager::ReadFile(const Algorithm::String& fileName)const
     {
         return m_fileReader->ReadFile(fileName);
     }
 
-    bool FileManager::WriteFile(const Algorithm::String fileName, StreamingVector<char>*const stream)const
+    bool FileManager::WriteFile(const Algorithm::String& fileName, const Algorithm::StreamingVector<char>& stream)const
     {
         return m_fileReader->WriteFile(fileName, stream);
     }

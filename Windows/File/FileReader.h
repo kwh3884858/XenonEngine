@@ -17,7 +17,7 @@ namespace File
     {
     public:
         virtual CrossPlatform::XenonFile* const ReadFile(const Algorithm::String fileName)const override;
-        virtual bool WriteFile(const Algorithm::String fileName, Algorithm::StreamingVector<char>*const stream)const override;
+        virtual bool WriteFile(const Algorithm::String fileName, const Algorithm::StreamingVector<char>& stream)const override;
         virtual Algorithm::String GetApplicationPath()const override;
     };
 }

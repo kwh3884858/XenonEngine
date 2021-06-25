@@ -24,7 +24,7 @@ namespace File
         fins.open(fileNameA);
 
         // If it could not open the file then exit.
-        if (!fins.good())
+        if (fins.good())
         {
             fins >> std::noskipws;
             char charBuffer = '\0';
@@ -50,6 +50,7 @@ namespace File
         }
         else
         {
+            assert(true == false);
             fins.close();
             printf("FIle Cannot Open!");
             std::cerr << "Error: " << strerror(errno);
@@ -60,20 +61,21 @@ namespace File
         return xenonFile;
     }
 
-    bool FileReader::WriteFile(const Algorithm::String fileName, StreamingVector<char>*const stream) const
+    bool FileReader::WriteFile(const Algorithm::String fileName, const Algorithm::StreamingVector<char>& stream) const
     {
         std::ofstream fouts;
         char fileNameA[MAX_PATH];
         fileName.CString(fileNameA);
 
         fouts.open(fileNameA, std::ios::out | std::ios::binary);
-        if (!fouts.good())
+        if (fouts.good())
         {
-            fouts.write(stream->Begin(), stream->Count());
+            fouts.write(stream.Begin(), stream.Count());
             fouts.close();
         }
         else
         {
+            assert(true == false);
             fouts.close();
             printf("FIle Cannot Open!");
             std::cerr << "Error: " << strerror(errno);

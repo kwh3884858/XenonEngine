@@ -23,7 +23,7 @@ namespace CrossPlatform {
         virtual ~IFileReader() {}
 
         virtual XenonFile* const ReadFile(const Algorithm::String fileName)const = 0;
-        virtual bool WriteFile(const Algorithm::String fileName, Algorithm::StreamingVector<char>*const stream) const = 0;
+        virtual bool WriteFile(const Algorithm::String fileName, const Algorithm::StreamingVector<char>& stream) const = 0;
         virtual Algorithm::String GetApplicationPath()const = 0;
     };
 }

@@ -9,7 +9,6 @@ namespace Algorithm
     public:
         StreamingVector();
         StreamingVector(const StreamingVector& value);
-        StringBase<T>& operator=(const StringBase<T>& rhs);
         ~StreamingVector();
 
         void Add(const void*const pdata, int size, int count = 1);
@@ -18,17 +17,34 @@ namespace Algorithm
     };
 
     template<typename T>
+    inline StreamingVector<T>::StreamingVector():
+        Vector<T>()
+    {
+    }
+
+    template<typename T>
+    inline StreamingVector<T>::StreamingVector(const StreamingVector& value):
+        Vector<T>(value)
+    {
+    }
+
+    template<typename T>
+    inline StreamingVector<T>::~StreamingVector()
+    {
+    }
+
+    template<typename T>
     void Algorithm::StreamingVector<T>::Add(const void*const pdata, int size, int count)
     {
         int neededSpace = size * count;
-        int currentIndex = m_count - 1;
         m_count += neededSpace;
         if (!IsCapacityEnough())
         {
             Reallocation(neededSpace);
         }
         assert(m_count <= m_capacity);
-        memcpy(m_content[currentIndex], pdata, neededSpace);
+        int currentIndex = m_count - 1;
+        memcpy(m_content + currentIndex, pdata, neededSpace);
 
     }
 
@@ -38,12 +54,13 @@ namespace Algorithm
         assert(m_capacity != 0);
 
         int expandedSpace = m_capacity > neededSpace ? m_capacity : neededSpace;
-        m_capacity = 2 * m_capacity;
+        m_capacity = 2 * expandedSpace;
         T* newContent = new T[m_capacity];
         for (int i = 0; i < m_count; i++)
         {
             newContent[i] = m_content[i];
         }
+        assert(newContent != nullptr);
         delete[] m_content;
         m_content = newContent;
     }

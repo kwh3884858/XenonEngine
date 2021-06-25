@@ -39,17 +39,17 @@ namespace Algorithm
         T* End();
         const T* End()const;
 
-	private:
-		bool Initialize(int size);
+	protected:
 		bool IsCapacityEnough();
-		bool Reallocation();
-        bool InternalReplace(const T*const content, unsigned int size);
-        bool Destory();
-
 		T* m_content;
 		int m_count;
 		int m_capacity;
 
+	private:
+		bool Initialize(int size);
+		bool Reallocation();
+        bool InternalReplace(const T*const content, unsigned int size);
+        bool Destory();
 	};
 
 	template<typename T>
@@ -80,10 +80,8 @@ namespace Algorithm
 	template<typename T>
 	bool Vector<T>::Initialize(int size)
 	{
-		if (size <= 0)
-		{
-			return false;
-		}
+		assert(size > 0);
+
 		m_capacity = size;
 		m_count = 0;
 		m_content = new T[m_capacity];
