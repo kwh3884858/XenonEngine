@@ -61,6 +61,44 @@ namespace File
         return xenonFile;
     }
 
+    Algorithm::StreamingVector<char>* FileReader::ReadStreamFile(const Algorithm::String fileName) const
+    {
+        std::ifstream fins;
+        Algorithm::StreamingVector<char>* streamedFile = new Algorithm::StreamingVector<char>;
+        char fileNameA[MAX_PATH];
+        fileName.CString(fileNameA);
+
+        fins.open(fileNameA);
+
+        // If it could not open the file then exit.
+        if (fins.good())
+        {
+            fins >> std::noskipws;
+            char charBuffer = '\0';
+
+            while (true)
+            {
+                fins >> charBuffer;
+                if (fins.eof())
+                {
+                    break;
+                }
+                streamedFile->Add(&charBuffer,sizeof(charBuffer));
+            }
+            fins.close();
+        }
+        else
+        {
+            assert(true == false);
+            fins.close();
+            printf("FIle Cannot Open!");
+            std::cerr << "Error: " << strerror(errno);
+            return nullptr;
+        }
+
+        return streamedFile;
+    }
+
     bool FileReader::WriteFile(const Algorithm::String fileName, const Algorithm::StreamingVector<char>& stream) const
     {
         std::ofstream fouts;
