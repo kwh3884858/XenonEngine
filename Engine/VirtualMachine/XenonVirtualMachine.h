@@ -11,16 +11,6 @@ namespace XenonEnigne
 {
     using Algorithm::String;
 
-    //struct Token {
-    //    TokenType m_tokenType = TokenType::None;
-    //    String m_value;
-    //    Token() {}
-    //    Token(TokenType type, String value) :
-    //        m_tokenType(type),
-    //        m_value(value)
-    //    {
-    //    }
-    //};
     const char Op_Char_Left_Bracket = '(';
     const char Op_Char_Right_Bracket = ')';
     const char Op_Char_Slash = '/';

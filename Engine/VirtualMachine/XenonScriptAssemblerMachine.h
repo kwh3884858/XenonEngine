@@ -30,30 +30,30 @@ namespace XenonEnigne
         //const char SymbolSlash = '/';
 
         enum LexerState {
-            LexerStateError,
-            LexerStateDone,
-            LexerStateStart,
-            LexerStateIdentifier,
-            LexerStateString,
-            LexerStateStringEnd,
-            LexerStateEscape,
-            LexerStateIntegral,
-            LexerStateFloat,
-            LexerStateDelimiter,
-            LexerStateComment,
+            LexerState_Error,
+            LexerState_Done,
+            LexerState_Start,
+            LexerState_Identifier,
+            LexerState_String,
+            LexerState_StringEnd,
+            LexerState_Escape,
+            LexerState_Integral,
+            LexerState_Float,
+            LexerState_Delimiter,
+            LexerState_Comment
         };
         enum TokenType {
             None = 0,
-            IntergalIiteral,
-            FloatIiteral,
-            StringEntity,
-            Identifier,
-            Label,
-            Function,
-            HostAPI,
-            Register,
-            Keyword,
-            Delimiter,
+            TokenType_IntergalIiteral,
+            TokenType_FloatIiteral,
+            TokenType_StringEntity,
+            TokenType_Identifier,
+            TokenType_Label,
+            TokenType_Function,
+            TokenType_HostAPI,
+            TokenType_Register,
+            TokenType_Keyword,
+            TokenType_Delimiter,
             TokenTypeCount
         };
 
@@ -62,76 +62,76 @@ namespace XenonEnigne
 
         enum KeyWord:short
         {
-            INT,
-            FLOAT,
+            KeyWord_INT,
+            KeyWord_FLOAT,
 
-            MOV,
-            ADD,
-            SUB,
-            MUL,
-            DIV,
-            MOD,
-            EXP,
-            NEG,
-            INC,
-            DEC,
+            KeyWord_MOV,
+            KeyWord_ADD,
+            KeyWord_SUB,
+            KeyWord_MUL,
+            KeyWord_DIV,
+            KeyWord_MOD,
+            KeyWord_EXP,
+            KeyWord_NEG,
+            KeyWord_INC,
+            KeyWord_DEC,
 
-            AND,
-            OR,
-            XOR,
-            NOT,
-            SHL,
-            SHR,
+            KeyWord_AND,
+            KeyWord_OR,
+            KeyWord_XOR,
+            KeyWord_NOT,
+            KeyWord_SHL,
+            KeyWord_SHR,
 
-            CONCAT,
-            GETCHAR,
-            SETCHAR,
+            KeyWord_CONCAT,
+            KeyWord_GETCHAR,
+            KeyWord_SETCHAR,
 
-            JMP,
-            JE,
-            JNE,
-            JG,
-            JL,
-            JGE,
-            JLE,
+            KeyWord_JMP,
+            KeyWord_JE,
+            KeyWord_JNE,
+            KeyWord_JG,
+            KeyWord_JL,
+            KeyWord_JGE,
+            KeyWord_JLE,
 
-            PUSH,
-            POP,
+            KeyWord_PUSH,
+            KeyWord_POP,
 
-            FUNC,
-            PARAM,
-            CALL,
-            RET,
-            CALLHOST,
+            KeyWord_FUNC,
+            KeyWord_PARAM,
+            KeyWord_CALL,
+            KeyWord_RET,
+            KeyWord_CALLHOST,
 
-            PAUSE,
-            EXIT
+            KeyWord_PAUSE,
+            KeyWord_EXIT
         };
 
         enum DelimiterWord
         {
-            Colon = 0,          // A colon :
-            SemiColon,          // A SemiColon ;
-            OpenBracket,          // An openening bracket  [
-            CloseBracket,          // An closing bracket    ]
-            Comma,          // A comma,
-            OpenBrace,          // An openening curly brace { 
-            CloseBrace,          // An closing curly brace   }
+            DelimiterWord_Colon = 0,          // A colon :
+            DelimiterWord_SemiColon,          // A SemiColon ;
+            DelimiterWord_OpenBracket,          // An openening bracket  [
+            DelimiterWord_CloseBracket,          // An closing bracket    ]
+            DelimiterWord_Comma,          // A comma,
+            DelimiterWord_OpenBrace,          // An openening curly brace { 
+            DelimiterWord_CloseBrace,          // An closing curly brace   }
             
         };
 
         enum InstructionOpType
         {
-            InstructionOpTypeNone = 0,
-            InstructionOpTypeInteralLiteral,           // Integer literal value
-            InstructionOpTypeFloatLiteral,           // Floating-point literal value
-            InstructionOpTypeStringIndex,           // String literal value
-            InstructionOpTypeAbsoluteStackIndex,           // Absolute array index
-            InstructionOpTypeRelativeStackIndex,           // Relative array index
-            InstructionOpTypeInstructionIndex,           // Instruction index
-            InstructionOpTypeFunctionIndex,           // Function index
-            InstructionOpTypeHostAPICallIndex,           // Host API call index
-            InstructionOpTypeRegister,           // Register
+            InstructionOpType_None = 0,
+            InstructionOpType_InteralLiteral,           // Integer literal value
+            InstructionOpType_FloatLiteral,           // Floating-point literal value
+            InstructionOpType_StringIndex,           // String literal value
+            InstructionOpType_AbsoluteStackIndex,           // Absolute array index
+            InstructionOpType_RelativeStackIndex,           // Relative array index
+            InstructionOpType_InstructionIndex,           // Instruction index
+            InstructionOpType_FunctionIndex,           // Function index
+            InstructionOpType_HostAPICallIndex,           // Host API call index
+            InstructionOpType_Register,           // Register
         };
 
         struct Token
@@ -152,8 +152,8 @@ namespace XenonEnigne
         };
         enum DelimiterSymbolState
         {
-            Symbol,
-            DelimiterType
+            DelimiterSymbolState_Symbol,
+            DelimiterSymbolState_DelimiterType
         };
 
         struct ScriptHeader
@@ -176,7 +176,7 @@ namespace XenonEnigne
 
         struct SymbolElement
         {
-            InstructionOpType m_variableType = InstructionOpType::InstructionOpTypeNone;
+            InstructionOpType m_variableType = InstructionOpType::InstructionOpType_None;
             Token* m_symbolToken = nullptr;
             unsigned int m_size = 0;
             int m_stackIndex = 0;
@@ -190,21 +190,10 @@ namespace XenonEnigne
             FunctionElement* m_currentFunction = 0;
         };
 
-        // ---- Operand Type Bitfield Flags ---------------------------------------------------
-
-    // The following constants are used as flags into an operand type bit field, hence
-    // their values being increasing powers of 2.
+        // Operand Type Bitfield Flags 
         typedef long long OpBitfiledFlag;
         const OpBitfiledFlag OP_FLAG_TYPE_NONE = 0;
-        const OpBitfiledFlag OP_FLAG_TYPE_INT = 1;      // Integer literal value
-        const OpBitfiledFlag OP_FLAG_TYPE_FLOAT = 2;      // Floating-point literal value
-        const OpBitfiledFlag OP_FLAG_TYPE_STRING = 4;      // Integer literal value
-        const OpBitfiledFlag OP_FLAG_TYPE_MEM_REF = 8;      // Memory reference (variable or array
-                                                                    // index; both absolute and relative)
-        const OpBitfiledFlag OP_FLAG_TYPE_LINE_LABEL = 16;      // Line label (used for jumps)
-        const OpBitfiledFlag OP_FLAG_TYPE_FUNC_NAME = 32;      // Function table index (used for Call)
-        const OpBitfiledFlag OP_FLAG_TYPE_HOST_API_CALL = 64;     // Host API Call table index (used for
-                                                                    // CallHost)
+
         struct InstructionLookup
         {
             String m_mnemonic;
@@ -215,18 +204,18 @@ namespace XenonEnigne
 
         enum InstructionState
         {
-            InstructionStateStart,
-            InstructionStateMnomonic,
-            InstructionStateOpType,
-            InstructionStateOpCount,
-            InstructionStateOpTypeList
+            InstructionState_Start,
+            InstructionState_Mnomonic,
+            InstructionState_OpType,
+            InstructionState_OpCount,
+            InstructionState_OpTypeList
         };
 
         // Assembled Instruction Stream
 
         struct InstructionOp
         {
-            InstructionOpType m_type = InstructionOpType::InstructionOpTypeNone;                                  // Type
+            InstructionOpType m_type = InstructionOpType::InstructionOpType_None;                                  // Type
             union                                       // The value
             {
                 int m_interalLiteral;                        // Integer literal

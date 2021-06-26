@@ -21,7 +21,7 @@ namespace XenonEnigne
         int index = 0;
         bool isDone = false;
         bool isShouldAdd = true;
-        InstructionState currentState = InstructionState::InstructionStateMnomonic;
+        InstructionState currentState = InstructionState::InstructionState_Mnomonic;
         String tmpString;
 
         int tokenOpAmount = 0;
@@ -38,11 +38,11 @@ namespace XenonEnigne
             char currentChar = xenonFile->m_content[index];
             switch (currentState)
             {
-            case InstructionStateStart:
+            case InstructionState_Start:
             {
                 if (IsCharIdent(currentChar))
                 {
-                    currentState = InstructionState::InstructionStateMnomonic;
+                    currentState = InstructionState::InstructionState_Mnomonic;
                 }
                 else
                 {
@@ -50,7 +50,7 @@ namespace XenonEnigne
                 }
             }
             break;
-            case InstructionStateMnomonic:
+            case InstructionState_Mnomonic:
             {
                 if (IsCharIdent(currentChar))
                 {
@@ -67,7 +67,7 @@ namespace XenonEnigne
                 }
             }
             break;
-            case InstructionStateOpType:
+            case InstructionState_OpType:
             {
                 if (IsCharNumeric(currentChar))
                 {
@@ -84,7 +84,7 @@ namespace XenonEnigne
                 }
             }
             break;
-            case InstructionStateOpCount:
+            case InstructionState_OpCount:
             {
                 if (IsCharNumeric(currentChar))
                 {
@@ -102,7 +102,7 @@ namespace XenonEnigne
                 }
             }
             break;
-            case InstructionStateOpTypeList:
+            case InstructionState_OpTypeList:
                 if (IsCharIdent(currentChar))
                 {
                 }
@@ -137,23 +137,23 @@ namespace XenonEnigne
             {
                 switch (currentState)
                 {
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateStart:
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_Start:
                     break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateMnomonic:
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_Mnomonic:
                 {
                     instrction = new InstructionLookup;
                     instrction->m_mnemonic = tmpString;
-                    currentState = InstructionState::InstructionStateOpType;
+                    currentState = InstructionState::InstructionState_OpType;
                     m_instructionLookupList.Add(instrction);
                 }
                 break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpType:
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_OpType:
                 {
                     instrction->m_opType = static_cast<KeyWord>(tmpString.ToInt());
-                    currentState = InstructionState::InstructionStateOpCount;
+                    currentState = InstructionState::InstructionState_OpCount;
                 }
                 break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpCount:
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_OpCount:
                 {
                     instrction->m_opCount = tmpString.ToInt();
                     tokenOpAmount = instrction->m_opCount;
@@ -164,19 +164,19 @@ namespace XenonEnigne
                         {
                             instrction->m_opFlags.Add(OP_FLAG_TYPE_NONE);
                         }
-                        currentState = InstructionState::InstructionStateOpTypeList;
+                        currentState = InstructionState::InstructionState_OpTypeList;
                     }
                     else
                     {
-                        currentState = InstructionState::InstructionStateMnomonic;
+                        currentState = InstructionState::InstructionState_Mnomonic;
                     }
                 }
                 break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionStateOpTypeList:
+                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_OpTypeList:
                 {
                     if (currentTokenOpCount >= tokenOpAmount)
                     {
-                        currentState = InstructionState::InstructionStateStart;
+                        currentState = InstructionState::InstructionState_Start;
                         //Current Token Op is over max Op Vector Capacity.
                         currentTokenOpCount--;
                     }
@@ -185,7 +185,7 @@ namespace XenonEnigne
                     bool result = StringToType(keyWordString, tmpString, typeFlag);
                     if (!result)
                     {
-                        InstructionError(InstructionState::InstructionStateOpTypeList, currentChar, index, instructionLineForDebug);
+                        InstructionError(InstructionState::InstructionState_OpTypeList, currentChar, index, instructionLineForDebug);
                         return false;
                     }
                     assert(result == true);
@@ -213,7 +213,7 @@ namespace XenonEnigne
         int index = 0;
         bool isDone = false;
         bool isShouldAdd = true;
-        DelimiterSymbolState currentState = DelimiterSymbolState::Symbol;
+        DelimiterSymbolState currentState = DelimiterSymbolState::DelimiterSymbolState_Symbol;
         String tmpString;
 
         DelimiterSymbol* delimiterSymbol = nullptr;
@@ -272,7 +272,7 @@ namespace XenonEnigne
             for (int opIndex = 0; opIndex < opCount; opIndex++)
             {
                 executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_type, sizeof(m_instructionList[index]->m_ops[opIndex]->m_type));
-                if (m_instructionList[index]->m_ops[opIndex]->m_type == InstructionOpType::InstructionOpTypeFloatLiteral)
+                if (m_instructionList[index]->m_ops[opIndex]->m_type == InstructionOpType::InstructionOpType_FloatLiteral)
                 {
                     executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_floatLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_floatLiteral));
                 }
@@ -371,17 +371,17 @@ namespace XenonEnigne
     {
         switch (currentState)
         {
-        case Symbol:
+        case DelimiterSymbolState_Symbol:
         {
             delimiterSymbol = new DelimiterSymbol;
             delimiterSymbol->m_symbol = tmpString.ToChar();
-            currentState = DelimiterSymbolState::DelimiterType;
+            currentState = DelimiterSymbolState::DelimiterSymbolState_DelimiterType;
         }
         break;
-        case DelimiterType:
+        case DelimiterSymbolState_DelimiterType:
         {
             delimiterSymbol->m_tokenType = static_cast<DelimiterWord>(tmpString.ToInt());
-            currentState = DelimiterSymbolState::Symbol;
+            currentState = DelimiterSymbolState::DelimiterSymbolState_Symbol;
             m_delimiterList.Add(delimiterSymbol);
         }
         break;
@@ -395,7 +395,7 @@ namespace XenonEnigne
     {
         char currentCharacter = '\0';
         bool isShouldAddCharacter = true;
-        LexerState currentLexerState = LexerState::LexerStateStart;
+        LexerState currentLexerState = LexerState::LexerState_Start;
         bool isTokenDone = false;
         int lineCountForDebug = 1;
 
@@ -410,7 +410,7 @@ namespace XenonEnigne
                     DetermineTokenType(token, currentLexerState);
                     return currentLexerState;
                 }
-                return LexerState::LexerStateDone;
+                return LexerState::LexerState_Done;
             }
             currentCharacter = xenonFile->m_content[refCurrentIndex];
 
@@ -426,7 +426,7 @@ namespace XenonEnigne
             if (isTokenDone)
             {
                 DetermineTokenType(token, currentLexerState);
-                if (currentLexerState != LexerState::LexerStateStringEnd)
+                if (currentLexerState != LexerState::LexerState_StringEnd)
                 {
                     refCurrentIndex--;
                 }
@@ -441,7 +441,7 @@ namespace XenonEnigne
     {
         switch (lexerState)
         {
-        case LexerState::LexerStateStart:
+        case LexerState::LexerState_Start:
         {
             if (IsNewLine(character))
             {
@@ -455,24 +455,24 @@ namespace XenonEnigne
             else if (character == SymbolSemicolon)
             {
                 isShouldAddCharacter = false;
-                lexerState = LexerState::LexerStateComment;
+                lexerState = LexerState::LexerState_Comment;
             }
             else if (IsCharNumeric(character))
             {
-                lexerState = LexerState::LexerStateIntegral;
+                lexerState = LexerState::LexerState_Integral;
             }
             else if (IsCharIdent(character))
             {
-                lexerState = LexerState::LexerStateIdentifier;
+                lexerState = LexerState::LexerState_Identifier;
             }
             else if (IsCharDelimiter(character))
             {
-                lexerState = LexerState::LexerStateDelimiter;
+                lexerState = LexerState::LexerState_Delimiter;
             }
             else if (character == SymbolQuote) // "
             {
                 isShouldAddCharacter = false;
-                lexerState = LexerState::LexerStateString;
+                lexerState = LexerState::LexerState_String;
             }
             else
             {
@@ -480,15 +480,15 @@ namespace XenonEnigne
             }
         }
         break;
-        case LexerState::LexerStateIntegral:
+        case LexerState::LexerState_Integral:
         {
             if (IsCharNumeric(character))
             {
-                lexerState = LexerState::LexerStateIntegral;
+                lexerState = LexerState::LexerState_Integral;
             }
             else if (IsCharFullStop(character))
             {
-                lexerState = LexerState::LexerStateFloat;
+                lexerState = LexerState::LexerState_Float;
             }
             else if (IsCharWhitespace(character))
             {
@@ -499,7 +499,7 @@ namespace XenonEnigne
             {
                 isShouldAddCharacter = false;
                 isTokenDone = true;
-                //lexerState = LexerState::LexerStateDelimiter;
+                //lexerState = LexerState::LexerState_Delimiter;
             }
             else
             {
@@ -507,11 +507,11 @@ namespace XenonEnigne
             }
         }
         break;
-        case LexerState::LexerStateFloat:
+        case LexerState::LexerState_Float:
         {
             if (IsCharNumeric(character))
             {
-                lexerState = LexerState::LexerStateFloat;
+                lexerState = LexerState::LexerState_Float;
             }
             else if (IsCharWhitespace(character))
             {
@@ -524,15 +524,15 @@ namespace XenonEnigne
             }
         }
         break;
-        case LexerStateError:
+        case LexerState_Error:
             break;
-        case LexerStateDone:
+        case LexerState_Done:
             break;
-        case LexerStateIdentifier:
+        case LexerState_Identifier:
         {
             if (IsCharIdent(character))
             {
-                lexerState = LexerState::LexerStateIdentifier;
+                lexerState = LexerState::LexerState_Identifier;
             }
             else if (IsCharWhitespace(character))
             {
@@ -543,7 +543,7 @@ namespace XenonEnigne
             {
                 isShouldAddCharacter = false;
                 isTokenDone = true;
-                //lexerState = LexerState::LexerStateDelimiter;
+                //lexerState = LexerState::LexerState_Delimiter;
             }
             else
             {
@@ -551,38 +551,38 @@ namespace XenonEnigne
             }
         }
         break;
-        case LexerStateString:
+        case LexerState_String:
         {
             if (character == SymbolQuote)
             {
                 isShouldAddCharacter = false;
                 isTokenDone = true;
-                lexerState = LexerState::LexerStateStringEnd;
+                lexerState = LexerState::LexerState_StringEnd;
             }
             else if(character == SymbolBackslash)
             {
                 isShouldAddCharacter = false;
-                lexerState = LexerState::LexerStateEscape;
+                lexerState = LexerState::LexerState_Escape;
             }
         }
         break;
-        case LexerStateEscape:
+        case LexerState_Escape:
         {
-            lexerState = LexerState::LexerStateString;
+            lexerState = LexerState::LexerState_String;
         }
         break;
-        case LexerStateDelimiter:
+        case LexerState_Delimiter:
         {
             isShouldAddCharacter = false;
             isTokenDone = true;
         }
         break;
-        case LexerStateComment:
+        case LexerState_Comment:
         {
             isShouldAddCharacter = false;
             if (IsNewLine(character))
             {
-                lexerState = LexerState::LexerStateStart;
+                lexerState = LexerState::LexerState_Start;
             }
         }
         break;
@@ -590,7 +590,7 @@ namespace XenonEnigne
         {
             printf("Undefined State\n");
             TokenError(lexerState, character, index, refLineCountForDebug);
-            return LexerState::LexerStateError;
+            return LexerState::LexerState_Error;
         }
 
 
@@ -602,7 +602,7 @@ namespace XenonEnigne
     XenonEnigne::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::TokenError(LexerState state, char character, unsigned int index, int lineCountForDebug) const
     {
         printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d and line %d", character, state, index, lineCountForDebug);
-        return LexerState::LexerStateError;
+        return LexerState::LexerState_Error;
     }
 
     void XenonScriptAssemblerMachine::DetermineTokenType(Token* const token, LexerState currentState) const
@@ -611,41 +611,41 @@ namespace XenonEnigne
         {
         default:
             break;
-        case LexerStateError:
+        case LexerState_Error:
             break;
-        case LexerStateDone:
+        case LexerState_Done:
             break;
-        case LexerStateStart:
+        case LexerState_Start:
             break;
-        case LexerStateIdentifier:
-            token->m_tokenType = TokenType::Identifier;
+        case LexerState_Identifier:
+            token->m_tokenType = TokenType::TokenType_Identifier;
             for (int i = 0; i < m_instructionLookupList.Count(); i++)
             {
                 if (token->m_character == m_instructionLookupList[i]->m_mnemonic)
                 {
-                    token->m_tokenType = TokenType::Keyword;
+                    token->m_tokenType = TokenType::TokenType_Keyword;
                     token->m_keyword = m_instructionLookupList[i]->m_opType;
                     break;
                 }
             }
             break;
-        case LexerStateString:
-            token->m_tokenType = TokenType::StringEntity;
+        case LexerState_String:
+            token->m_tokenType = TokenType::TokenType_StringEntity;
             break;
-        case LexerStateStringEnd:
-            token->m_tokenType = TokenType::StringEntity;
+        case LexerState_StringEnd:
+            token->m_tokenType = TokenType::TokenType_StringEntity;
             break;
-        case LexerStateEscape:
+        case LexerState_Escape:
             break;
-        case LexerStateIntegral:
-            token->m_tokenType = TokenType::IntergalIiteral;
+        case LexerState_Integral:
+            token->m_tokenType = TokenType::TokenType_IntergalIiteral;
             break;
-        case LexerStateFloat:
-            token->m_tokenType = TokenType::FloatIiteral;
+        case LexerState_Float:
+            token->m_tokenType = TokenType::TokenType_FloatIiteral;
             break;
-        case LexerStateDelimiter:
+        case LexerState_Delimiter:
         {
-            token->m_tokenType = TokenType::Delimiter;
+            token->m_tokenType = TokenType::TokenType_Delimiter;
             for (int i = 0; i < m_delimiterList.Count(); i++)
             {
                 if (token->m_character.ToChar() == m_delimiterList[i]->m_symbol)
@@ -668,9 +668,9 @@ namespace XenonEnigne
             LexerState lexerState = GetNextToken(xenonFile, currentIndex, token);
             switch (lexerState)
             {
-            case LexerState::LexerStateDone:
+            case LexerState::LexerState_Done:
                 return tokenVector;
-            case LexerState::LexerStateError:
+            case LexerState::LexerState_Error:
                 return nullptr;
             default:
                 tokenVector->Add(token);
@@ -703,26 +703,26 @@ namespace XenonEnigne
             Token * currentToken = (*tokenVector)[index];
             switch (currentToken->m_tokenType)
             {
-            case IntergalIiteral:
+            case TokenType_IntergalIiteral:
             {
 
             }
             break;
-            case FloatIiteral:
+            case TokenType_FloatIiteral:
             {
 
             }
             break;
-            case Identifier:
+            case TokenType_Identifier:
             {
                 // Line Label
                 Token* token = PeekNextToken(*tokenVector, index);
-                if (!token || token->m_tokenType != TokenType::Delimiter)
+                if (!token || token->m_tokenType != TokenType::TokenType_Delimiter)
                 {
                     continue;
                 }
 
-                if (token->m_delimiter == DelimiterWord::Colon)
+                if (token->m_delimiter == DelimiterWord::DelimiterWord_Colon)
                 {
                     Token* token = MoveToNextToken(*tokenVector, index);
 
@@ -734,19 +734,19 @@ namespace XenonEnigne
                 }
             }
             break;
-            case StringEntity:
+            case TokenType_StringEntity:
                 break;
-            case TokenType::Label:
+            case TokenType::TokenType_Label:
                 break;
-            case TokenType::Function:
+            case TokenType::TokenType_Function:
                 break;
-            case Keyword:
+            case TokenType_Keyword:
             {
                 switch (currentToken->m_keyword)
                 {
-                case INT:
+                case KeyWord_INT:
                 {
-                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpTypeInteralLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
+                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpType_InteralLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
                     if (!result)
                     {
                         BuildTableError(currentToken, index);
@@ -754,9 +754,9 @@ namespace XenonEnigne
                     }
                 }
                 break;
-                case FLOAT:
+                case KeyWord_FLOAT:
                 {
-                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpTypeFloatLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
+                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpType_FloatLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
                     if (!result)
                     {
                         BuildTableError(currentToken, index);
@@ -764,7 +764,7 @@ namespace XenonEnigne
                     }
                 }
                 break;
-                case FUNC:
+                case KeyWord_FUNC:
                 {
                     if (currentFunction)
                     {
@@ -773,13 +773,13 @@ namespace XenonEnigne
                     }
 
                     Token* token = MoveToNextToken(*tokenVector, index);
-                    if (!token || token->m_tokenType != TokenType::Identifier)
+                    if (!token || token->m_tokenType != TokenType::TokenType_Identifier)
                     {
                         BuildTableError(currentToken, index);
                         return false;
                     }
 
-                    token->m_tokenType = TokenType::Function;
+                    token->m_tokenType = TokenType::TokenType_Function;
 
                     currentFunction = new FunctionElement;
                     currentFunction->m_functionToken = token;
@@ -794,9 +794,9 @@ namespace XenonEnigne
                     }
 
                     token = MoveToNextToken(*tokenVector, index);
-                    if (!token || token->m_tokenType != TokenType::Delimiter)
+                    if (!token || token->m_tokenType != TokenType::TokenType_Delimiter)
                     {
-                        if (!token || token->m_delimiter != DelimiterWord::OpenBrace)
+                        if (!token || token->m_delimiter != DelimiterWord::DelimiterWord_OpenBrace)
                         {
                             BuildTableError(currentToken, index);
                             return false;
@@ -806,7 +806,7 @@ namespace XenonEnigne
                     instructionStreamCount++;
                 }
                 break;
-                case PARAM:
+                case KeyWord_PARAM:
                 {
                     if (!currentFunction)
                     {
@@ -821,7 +821,7 @@ namespace XenonEnigne
                     }
 
                     Token* token = MoveToNextToken(*tokenVector, index);
-                    if (!token || token->m_tokenType != TokenType::Identifier)
+                    if (!token || token->m_tokenType != TokenType::TokenType_Identifier)
                     {
                         BuildTableError(currentToken, index);
                         return false;
@@ -830,81 +830,81 @@ namespace XenonEnigne
                     currentFunction->m_parameterCount++;
                 }
                 break;
-                case MOV:
+                case KeyWord_MOV:
                     break;
-                case ADD:
+                case KeyWord_ADD:
                     break;
-                case SUB:
+                case KeyWord_SUB:
                     break;
-                case MUL:
+                case KeyWord_MUL:
                     break;
-                case DIV:
+                case KeyWord_DIV:
                     break;
-                case MOD:
+                case KeyWord_MOD:
                     break;
-                case EXP:
+                case KeyWord_EXP:
                     break;
-                case NEG:
+                case KeyWord_NEG:
                     break;
-                case INC:
+                case KeyWord_INC:
                     break;
-                case DEC:
+                case KeyWord_DEC:
                     break;
-                case AND:
+                case KeyWord_AND:
                     break;
-                case OR:
+                case KeyWord_OR:
                     break;
-                case XOR:
+                case KeyWord_XOR:
                     break;
-                case NOT:
+                case KeyWord_NOT:
                     break;
-                case SHL:
+                case KeyWord_SHL:
                     break;
-                case SHR:
+                case KeyWord_SHR:
                     break;
-                case CONCAT:
+                case KeyWord_CONCAT:
                     break;
-                case GETCHAR:
+                case KeyWord_GETCHAR:
                     break;
-                case SETCHAR:
+                case KeyWord_SETCHAR:
                     break;
-                case JMP:
+                case KeyWord_JMP:
                     break;
-                case JE:
+                case KeyWord_JE:
                     break;
-                case JNE:
+                case KeyWord_JNE:
                     break;
-                case JG:
+                case KeyWord_JG:
                     break;
-                case JL:
+                case KeyWord_JL:
                     break;
-                case JGE:
+                case KeyWord_JGE:
                     break;
-                case JLE:
+                case KeyWord_JLE:
                     break;
-                case PUSH:
+                case KeyWord_PUSH:
                     break;
-                case POP:
+                case KeyWord_POP:
                     break;
-                case CALL:
+                case KeyWord_CALL:
                     break;
-                case RET:
+                case KeyWord_RET:
                     break;
-                case CALLHOST:
+                case KeyWord_CALLHOST:
                 {
 
                 }
                     break;
-                case PAUSE:
+                case KeyWord_PAUSE:
                     break;
-                case EXIT:
+                case KeyWord_EXIT:
                     break;
                 }
             }
             break;
-            case Delimiter:
+            case TokenType_Delimiter:
             {
-                if (currentToken->m_delimiter == DelimiterWord::CloseBrace)
+                if (currentToken->m_delimiter == DelimiterWord::DelimiterWord_CloseBrace)
                 {
                     if (currentFunction)
                     {
@@ -920,9 +920,9 @@ namespace XenonEnigne
             break;
             case None:
                 break;
-            case HostAPI:
+            case TokenType_HostAPI:
                 break;
-            case Register:
+            case TokenType_Register:
                 break;
             case TokenTypeCount:
                 break;
@@ -964,17 +964,17 @@ namespace XenonEnigne
             {
             case None:
                 break;
-            case IntergalIiteral:
+            case TokenType_IntergalIiteral:
             {
             }
             break;
-            case FloatIiteral:
+            case TokenType_FloatIiteral:
                 break;
-            case StringEntity:
+            case TokenType_StringEntity:
                 break;
-            case Label:
+            case TokenType_Label:
                 break;
-            case Function:
+            case TokenType_Function:
             {
                 //Token *token = MoveToNextToken(*tokenVector, index);
                 FunctionElement*const functionElement = GetFunctionByName(currentToken->m_character);
@@ -990,20 +990,20 @@ namespace XenonEnigne
             }
 
             break;
-            case TokenType::Keyword:
+            case TokenType::TokenType_Keyword:
             {
                 switch (currentToken->m_keyword)
                 {
-                case KeyWord::PARAM:
+                case KeyWord::KeyWord_PARAM:
                 {
                     currentToken = MoveToNextToken(*tokenVector, index);
-                    assert(currentToken->m_tokenType == TokenType::Keyword);
+                    assert(currentToken->m_tokenType == TokenType::TokenType_Keyword);
 
-                    InstructionOpType variable = (currentToken->m_keyword == KeyWord::INT) ?
-                        InstructionOpType::InstructionOpTypeInteralLiteral : InstructionOpType::InstructionOpTypeFloatLiteral;
+                    InstructionOpType variable = (currentToken->m_keyword == KeyWord::KeyWord_INT) ?
+                        InstructionOpType::InstructionOpType_InteralLiteral : InstructionOpType::InstructionOpType_FloatLiteral;
 
                     currentToken = MoveToNextToken(*tokenVector, index);
-                    assert(currentToken->m_tokenType == TokenType::Identifier);
+                    assert(currentToken->m_tokenType == TokenType::TokenType_Identifier);
 
                     currentFunctionParamCount++;
                     assert(currentFunctionParamCount <= currentFunction->m_parameterCount);
@@ -1023,7 +1023,7 @@ namespace XenonEnigne
                     }
                 }
                 break;
-                case KeyWord::FUNC:
+                case KeyWord::KeyWord_FUNC:
                     continue;
                 }
 
@@ -1053,21 +1053,21 @@ namespace XenonEnigne
                     {
                     case None:
                         break;
-                    case IntergalIiteral:
+                    case TokenType_IntergalIiteral:
                     {
-                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
+                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_InteralLiteral;
                         currentInstrction->m_ops[parameterIndex]->m_interalLiteral = currentToken->m_character.ToInt();
                     }
                     break;
-                    case FloatIiteral:
+                    case TokenType_FloatIiteral:
                     {
-                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFloatLiteral;
+                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_FloatLiteral;
                         currentInstrction->m_ops[parameterIndex]->m_floatLiteral = currentToken->m_character.ToFloat();
                     }
                     break;
-                    case StringEntity:
+                    case TokenType_StringEntity:
                     {
-                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeStringIndex;
+                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_StringIndex;
                         int indexOfString = m_stringTable.IndexOf(currentToken->m_character);
                         if (indexOfString == -1)
                         {
@@ -1080,13 +1080,13 @@ namespace XenonEnigne
                         }
                     }
                     break;
-                    case TokenType::Register:
+                    case TokenType::TokenType_Register:
                     {
-                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeRegister;
+                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_Register;
                         currentInstrction->m_ops[parameterIndex]->m_floatLiteral = 0;
                     }
                     break;
-                    case TokenType::Identifier:
+                    case TokenType::TokenType_Identifier:
                     {
                         String identifier = currentToken->m_character;
                         SymbolElement* const symbolElement = GetSymbolByName(identifier);
@@ -1098,19 +1098,19 @@ namespace XenonEnigne
                             if (symbolElement->m_size > 1)
                             {
                                 currentToken = MoveToNextToken(*tokenVector, index);
-                                assert(currentToken->m_delimiter == DelimiterWord::OpenBracket);
+                                assert(currentToken->m_delimiter == DelimiterWord::DelimiterWord_OpenBracket);
                                 currentToken = MoveToNextToken(*tokenVector, index);
-                                assert(currentToken->m_tokenType == TokenType::IntergalIiteral);
+                                assert(currentToken->m_tokenType == TokenType::TokenType_IntergalIiteral);
 
-                                if (currentToken->m_tokenType == TokenType::IntergalIiteral)
+                                if (currentToken->m_tokenType == TokenType::TokenType_IntergalIiteral)
                                 {
-                                    currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeAbsoluteStackIndex;
+                                    currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_AbsoluteStackIndex;
                                     int arrayIndex = currentToken->m_character.ToInt();
                                     currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex + arrayIndex;
                                 }
-                                else if (currentToken->m_tokenType == TokenType::Identifier)
+                                else if (currentToken->m_tokenType == TokenType::TokenType_Identifier)
                                 {
-                                    currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeRelativeStackIndex;
+                                    currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_RelativeStackIndex;
                                     SymbolElement* const indexSymbol = GetSymbolByName(currentToken->m_character);
                                     assert(indexSymbol != nullptr);
                                     currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex;
@@ -1124,25 +1124,25 @@ namespace XenonEnigne
                             }
                             else
                             {
-                                currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeAbsoluteStackIndex;
+                                currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_AbsoluteStackIndex;
                                 currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex;
                             }
                         }
-                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::Function <<1) > 0 &&
+                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::TokenType_Function <<1) > 0 &&
                             functionElement != nullptr)
                         {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFunctionIndex;
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_FunctionIndex;
                             currentInstrction->m_ops[parameterIndex]->m_stackIndex = functionElement->m_functionIndex;
                         }
-                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::Label << 1) > 0 &&
+                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::TokenType_Label << 1) > 0 &&
                             labelElement != nullptr)
                         {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeInstructionIndex;
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_InstructionIndex;
                             currentInstrction->m_ops[parameterIndex]->m_stackIndex = labelElement->m_instructionStreamIndex;
                         }
-                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::HostAPI << 1) > 0)
+                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::TokenType_HostAPI << 1) > 0)
                         {
-                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeHostAPICallIndex;
+                            currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_HostAPICallIndex;
                             int indexOfHostAPI = m_hostAPITable.IndexOf(currentToken->m_character);
                             if (indexOfHostAPI == -1)
                             {
@@ -1161,11 +1161,11 @@ namespace XenonEnigne
                         }
                     }
                     break;
-                    case Label:
+                    case TokenType_Label:
                         break;
-                    case Function:
+                    case TokenType_Function:
                     {
-                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeFunctionIndex;
+                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_FunctionIndex;
                         FunctionElement* const functionElement = GetFunctionByName(currentToken->m_character);
                         if (functionElement)
                         {
@@ -1178,9 +1178,9 @@ namespace XenonEnigne
                         }
                     }
                     break;
-                    case HostAPI:
+                    case TokenType_HostAPI:
                         break;
-                    case Delimiter:
+                    case TokenType_Delimiter:
                         break;
                     case TokenTypeCount:
                         break;
@@ -1191,43 +1191,43 @@ namespace XenonEnigne
                 }
             }
             break;
-            case HostAPI:
+            case TokenType_HostAPI:
                 break;
-            case Register:
+            case TokenType_Register:
                 break;
-            case Delimiter:
+            case TokenType_Delimiter:
             {
                 switch (currentToken->m_delimiter)
                 {
-                case Colon:
+                case DelimiterWord_Colon:
                     break;
-                case SemiColon:
+                case DelimiterWord_SemiColon:
                     break;
-                case OpenBracket:
+                case DelimiterWord_OpenBracket:
                     break;
-                case CloseBracket:
+                case DelimiterWord_CloseBracket:
                     break;
-                case Comma:
+                case DelimiterWord_Comma:
                     break;
-                case OpenBrace:
+                case DelimiterWord_OpenBrace:
                     break;
-                case CloseBrace:
+                case DelimiterWord_CloseBrace:
                 {
                     currentInstrction = new Instruction;
                     currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
 
                     if (currentFunction->m_functionIndex == m_scriptHeader.m_mainFunctionEntryIndex)
                     {
-                        currentInstrction->m_opCode = KeyWord::EXIT;
+                        currentInstrction->m_opCode = KeyWord::KeyWord_EXIT;
                         currentInstrction->m_opCount = 1;
                         InstructionOp* const op = new InstructionOp();
-                        op->m_type = InstructionOpType::InstructionOpTypeInteralLiteral;
+                        op->m_type = InstructionOpType::InstructionOpType_InteralLiteral;
                         op->m_interalLiteral = 0;
                         currentInstrction->m_ops.Add(op);
                     }
                     else
                     {
-                        currentInstrction->m_opCode = KeyWord::EXIT;
+                        currentInstrction->m_opCode = KeyWord::KeyWord_EXIT;
                         currentInstrction->m_opCount = 0;
                     }
                     currentFunction = nullptr;
@@ -1303,27 +1303,27 @@ namespace XenonEnigne
     bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize)
     {
         Token* token = (*tokenVector)[++refIndex];
-        if (!token || token->m_tokenType != TokenType::Identifier)
+        if (!token || token->m_tokenType != TokenType::TokenType_Identifier)
         {
             return false;
         }
 
         int size = 1;
         token = (*tokenVector)[++refIndex];
-        if (!token || token->m_tokenType == TokenType::Delimiter)
+        if (!token || token->m_tokenType == TokenType::TokenType_Delimiter)
         {
-            if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
+            if (!token || token->m_delimiter != DelimiterWord::DelimiterWord_OpenBracket)
             {
                 return false;
             }
             token = (*tokenVector)[++refIndex];
-            if (!token || token->m_tokenType != TokenType::IntergalIiteral)
+            if (!token || token->m_tokenType != TokenType::TokenType_IntergalIiteral)
             {
                 return false;
             }
             size = token->m_character.ToInt();
             token = (*tokenVector)[++refIndex];
-            if (!token || token->m_delimiter != DelimiterWord::OpenBracket)
+            if (!token || token->m_delimiter != DelimiterWord::DelimiterWord_OpenBracket)
             {
                 return false;
             }
@@ -1485,14 +1485,14 @@ namespace XenonEnigne
 
     const XenonEnigne::TypeString<int> XenonScriptAssemblerMachine::keyWordString[keywordStringCount] =
     {
-        {"int",  TokenType::IntergalIiteral},
-        {"float", TokenType::FloatIiteral},
-        {"string",  TokenType::StringEntity},
-        {"identifier",  TokenType::Identifier},
-        {"label",  TokenType::Label},
-        {"function",  TokenType::Function},
-        {"hostAPI",  TokenType::HostAPI},
-        {"register",   TokenType::Register}
+        {"int",  TokenType::TokenType_IntergalIiteral},
+        {"float", TokenType::TokenType_FloatIiteral},
+        {"string",  TokenType::TokenType_StringEntity},
+        {"identifier",  TokenType::TokenType_Identifier},
+        {"label",  TokenType::TokenType_Label},
+        {"function",  TokenType::TokenType_Function},
+        {"hostAPI",  TokenType::TokenType_HostAPI},
+        {"register",   TokenType::TokenType_Register}
     };
 
 
