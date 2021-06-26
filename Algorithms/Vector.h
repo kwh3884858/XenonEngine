@@ -144,7 +144,7 @@ namespace Algorithm
 	int Vector<T>::IndexOf(T element)const
 	{
 		if (m_count == 0) return -1;
-		for (int i = m_count - 1; i >= 0; i++)
+		for (int i = m_count - 1; i >= 0; i--)
 		{
 			if (m_content[i] == element) {
 				return i;

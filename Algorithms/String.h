@@ -146,7 +146,8 @@ namespace Algorithm
         {
             return false;
         }
-        for (int i = 0; i < Count(); i++)
+        int minCount = Count() < rhs.Count() ? Count() : rhs.Count();
+        for (int i = 0; i < minCount; i++)
         {
             if (m_string[i] != rhs[i])
             {

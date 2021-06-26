@@ -14,6 +14,7 @@ namespace Algorithm
         void Add(const void*const pdata, int size, int count = 1);
     private:
         void Reallocation(int neededSpace);
+        bool IsCapacityEnough(int need)const;
     };
 
     template<typename T>
@@ -37,15 +38,14 @@ namespace Algorithm
     void Algorithm::StreamingVector<T>::Add(const void*const pdata, int size, int count)
     {
         int neededSpace = size * count;
-        m_count += neededSpace;
-        if (!IsCapacityEnough())
+        if (!IsCapacityEnough(neededSpace))
         {
             Reallocation(neededSpace);
         }
         assert(m_count <= m_capacity);
-        int currentIndex = m_count - 1;
-        memcpy(m_content + currentIndex, pdata, neededSpace);
 
+        memcpy(m_content + m_count, pdata, neededSpace);
+        m_count += neededSpace;
     }
 
     template<typename T>
@@ -63,6 +63,12 @@ namespace Algorithm
         assert(newContent != nullptr);
         delete[] m_content;
         m_content = newContent;
+    }
+
+    template<typename T>
+    inline bool StreamingVector<T>::IsCapacityEnough(int need) const
+    {
+        return m_count + need < m_capacity;
     }
 
 }
