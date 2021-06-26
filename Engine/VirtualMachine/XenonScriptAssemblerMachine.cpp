@@ -1069,7 +1069,7 @@ namespace XenonEnigne
                     {
                         currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeStringIndex;
                         int indexOfString = m_stringTable.IndexOf(currentToken->m_character);
-                        if (indexOfString != -1)
+                        if (indexOfString == -1)
                         {
                             currentInstrction->m_ops[parameterIndex]->m_stringTableIndex = m_stringTable.Count();
                             m_stringTable.Add(currentToken->m_character);
@@ -1144,7 +1144,7 @@ namespace XenonEnigne
                         {
                             currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpTypeHostAPICallIndex;
                             int indexOfHostAPI = m_hostAPITable.IndexOf(currentToken->m_character);
-                            if (indexOfHostAPI != -1)
+                            if (indexOfHostAPI == -1)
                             {
                                 currentInstrction->m_ops[parameterIndex]->m_stringTableIndex = m_hostAPITable.Count();
                                 m_hostAPITable.Add(currentToken->m_character);
