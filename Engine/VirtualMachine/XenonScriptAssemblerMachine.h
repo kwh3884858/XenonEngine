@@ -216,13 +216,13 @@ namespace XenonEnigne
         struct InstructionOp
         {
             InstructionOpType m_type = InstructionOpType::InstructionOpType_None;                                  // Type
-            union                                       // The value
+            union                                        // The value
             {
-                int m_interalLiteral;                        // Integer literal
+                int m_interalLiteral;                    // Integer literal
                 float m_floatLiteral;                    // Float literal
                 int m_stringTableIndex;                  // String table index
                 int m_stackIndex;                        // Stack index
-                int m_instructionIndex;                        // Instruction index
+                int m_instructionIndex;                  // Instruction index
                 int m_funcIndex;                         // Function index
                 int m_hostAPICallIndex;                  // Host API Call index
                 int m_reg;                               // Register code

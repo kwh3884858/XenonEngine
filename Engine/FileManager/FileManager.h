@@ -32,6 +32,7 @@ namespace XenonEnigne {
 
         virtual bool Shutdown() override;
         CrossPlatform::XenonFile*const ReadFile(const Algorithm::String& fileName)const;
+        Algorithm::StreamingVector<char>* ReadStreamFile(const Algorithm::String& fileName)const;
         bool WriteFile(const Algorithm::String& fileName, const Algorithm::StreamingVector<char>& stream)const;
         //CrossPlatform::XenonFile*const ReadFile(const char* const fileName);
         Algorithm::String GetApplicationPath()const;

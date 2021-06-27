@@ -1,10 +1,14 @@
 #include "XenonCompiler.h"
 #include "Engine/VirtualMachine/XenonScriptAssemblerMachine.h"
+#include "Engine/VirtualMachine/XenonVirtualMachine.h"
 #include "Engine/FileManager/FileManager.h"
+#include "Algorithms/StreamingVector.h"
 #include <cassert>
 
 namespace XenonEnigne 
 {
+    using Algorithm::StreamingVector;
+
     XenonCompiler::XenonCompiler()
     {
     }
@@ -44,6 +48,13 @@ namespace XenonEnigne
         m_xsam->BuildXEX(assemblerFile);
         delete assemblerFile;
         assemblerFile = nullptr;
+
+        delete m_xsam;
+
+        m_xvm = new XenonVirtualMachine;
+        String executableFilePath = applicationPath.Substring(0, pos);
+        StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);
+        m_xvm->LoadScript(streamedFile);
     }
 
 }

@@ -17,6 +17,11 @@ using CrossPlatform::XenonFile;
         return true;
     }
 
+    void XenonVirtualMachine::LoadScript(Algorithm::StreamingVector<char>* streamedFile)
+    {
+        
+    }
+
     //bool XenonVirtualMachine::Laxer(const char* const content, Token** const tokens)
     //{
     //    unsigned int index = 0;

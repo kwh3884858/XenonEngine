@@ -7,6 +7,7 @@
 
 namespace XenonEnigne {
     class XenonScriptAssemblerMachine;
+    class XenonVirtualMachine;
 
     class XenonCompiler
     {
@@ -18,7 +19,7 @@ namespace XenonEnigne {
 
     private:
         XenonScriptAssemblerMachine* m_xsam;
-
+        XenonVirtualMachine* m_xvm;
     };
 
 

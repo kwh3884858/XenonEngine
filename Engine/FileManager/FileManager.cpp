@@ -27,6 +27,11 @@ namespace XenonEnigne {
         return m_fileReader->ReadFile(fileName);
     }
 
+    Algorithm::StreamingVector<char>* FileManager::ReadStreamFile(const Algorithm::String& fileName) const
+    {
+        return m_fileReader->ReadStreamFile(fileName);
+    }
+
     bool FileManager::WriteFile(const Algorithm::String& fileName, const Algorithm::StreamingVector<char>& stream)const
     {
         return m_fileReader->WriteFile(fileName, stream);

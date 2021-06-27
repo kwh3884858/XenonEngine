@@ -5,11 +5,15 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/XenonManager.h"
-#include "Algorithms/String.h"
+
+namespace Algorithm
+{
+    template<typename T>
+    class StreamingVector;
+}
 
 namespace XenonEnigne
 {
-    using Algorithm::String;
 
     const char Op_Char_Left_Bracket = '(';
     const char Op_Char_Right_Bracket = ')';
@@ -38,6 +42,9 @@ namespace XenonEnigne
     public:
         virtual bool Initialize()override;
         virtual bool Shutdown()override { return true; }
+
+        void LoadScript(Algorithm::StreamingVector<char>* streamedFile);
+        void RunScript();
     private:
         //bool Laxer(const char* const content, Token** const tokens);
 
