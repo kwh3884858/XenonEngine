@@ -314,6 +314,9 @@
     <ClInclude Include="Algorithms\StreamingVector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\VirtualMachine\XenonStruction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

@@ -182,6 +182,7 @@
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\GameplayMain.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.h" />
+    <ClInclude Include="Engine\VirtualMachine\XenonStruction.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonVirtualMachine.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonCompiler.h" />
     <ClInclude Include="Engine\Component\IComponent.h" />

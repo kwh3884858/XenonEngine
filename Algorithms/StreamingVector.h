@@ -12,6 +12,7 @@ namespace Algorithm
         ~StreamingVector();
 
         void Add(const void*const pdata, int size, int count = 1);
+        int Read(int index, const void* const pdata, int size, int count = 1)const;
     private:
         void Reallocation(int neededSpace);
         bool IsCapacityEnough(int need)const;
@@ -46,6 +47,21 @@ namespace Algorithm
 
         memcpy(m_content + m_count, pdata, neededSpace);
         m_count += neededSpace;
+    }
+
+    template<typename T>
+    inline int StreamingVector<T>::Read(int index, const void* const pdata, int size, int count) const
+    {
+        assert(index >= 0);
+        assert(pdata != nullptr);
+
+        int readSpace = size * count;
+        assert(readSpace != 0);
+        assert(m_count + readSpace <= m_capacity);
+
+        memcpy(pdata, m_content + index, readSpace);
+        m_count += readSpace;
+        return m_count;
     }
 
     template<typename T>

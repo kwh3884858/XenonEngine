@@ -272,14 +272,14 @@ namespace XenonEnigne
             for (int opIndex = 0; opIndex < opCount; opIndex++)
             {
                 executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_type, sizeof(m_instructionList[index]->m_ops[opIndex]->m_type));
-                if (m_instructionList[index]->m_ops[opIndex]->m_type == InstructionOpType::InstructionOpType_FloatLiteral)
-                {
-                    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_floatLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_floatLiteral));
-                }
-                else
-                {
+                //if (m_instructionList[index]->m_ops[opIndex]->m_type == InstructionOpType::InstructionOpType_FloatLiteral)
+                //{
+                //    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_floatLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_floatLiteral));
+                //}
+                //else
+                //{
                     executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_interalLiteral));
-                }
+                //}
             }
         }
 
@@ -1447,7 +1447,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    XenonScriptAssemblerMachine::FunctionElement*const XenonScriptAssemblerMachine::GetFunctionByName(const String& functionName) const
+    XenonEnigne::FunctionElement*const XenonScriptAssemblerMachine::GetFunctionByName(const String& functionName) const
     {
         for (int i = 0; i < m_functionTable.Count(); i++)
         {
@@ -1459,7 +1459,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::LabelElement*const XenonScriptAssemblerMachine::GetLabelByName(const String& labelName)
+    XenonEnigne::LabelElement*const XenonScriptAssemblerMachine::GetLabelByName(const String& labelName)
     {
         for (int i = 0; i < m_labelTable.Count(); i++)
         {
