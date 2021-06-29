@@ -50,7 +50,51 @@ namespace XenonEnigne
 			streamIndex = streamedFile->Read(streamIndex, &count, sizeof(count));
 			for (int index = 0; index < count; index++)
 			{
+				m_functionTable.Add(new FunctionElement);
+				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
+				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_entryPoint, sizeof(m_functionTable[index]->m_entryPoint));
+				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_localStackSize, sizeof(m_functionTable[index]->m_localStackSize));
+				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
+			}
+		}
 
+		{
+			int count = 0;
+			streamIndex = streamedFile->Read(streamIndex, &count, sizeof(count));
+			for (int index = 0; index < count; index++)
+			{
+				m_labelTable.Add(new LabelElement);
+				streamIndex = streamedFile->Read(streamIndex, &m_labelTable[index]->m_instructionStreamIndex, sizeof(m_labelTable[index]->m_instructionStreamIndex));
+			}
+		}
+
+		{
+			int count = 0;
+			streamIndex = streamedFile->Read(streamIndex, &count, sizeof(count));
+			for (int index = 0; index < count; index++)
+			{
+				int stringLength = 0;
+				streamIndex = streamedFile->Read(streamIndex, &stringLength, sizeof(stringLength));
+				assert(stringLength != 0);
+				char* tmpString = new char[stringLength];
+				streamIndex = streamedFile->Read(streamIndex, &tmpString, sizeof(tmpString));
+				m_stringTable.Add(String(tmpString));
+				delete[] tmpString;
+			}
+		}
+
+		{
+			int count = 0;
+			streamIndex = streamedFile->Read(streamIndex, &count, sizeof(count));
+			for (int index = 0; index < count; index++)
+			{
+				int stringLength = 0;
+				streamIndex = streamedFile->Read(streamIndex, &stringLength, sizeof(stringLength));
+				assert(stringLength != 0);
+				char* tmpString = new char[stringLength];
+				streamIndex = streamedFile->Read(streamIndex, &tmpString, sizeof(tmpString));
+				m_hostAPITable.Add(String(tmpString));
+				delete[] tmpString;
 			}
 		}
 	}

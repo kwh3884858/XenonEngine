@@ -351,12 +351,7 @@ namespace XenonEnigne
 
     void XenonScriptAssemblerMachine::UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone) const
     {
-/*        if (IsNewLine(currentChar) || currentChar == SymbolComma)
-        {
-            isShouldAdd = false;
-            isDone = true;
-        }
-        else*/ if (IsCharWhitespace(currentChar))
+        if (IsCharWhitespace(currentChar))
         {
             isShouldAdd = false;
             isDone = true;
@@ -1423,13 +1418,13 @@ namespace XenonEnigne
         return false;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, int& index) const
+    XenonEnigne::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, int& index) const
     {
         assert(index + 1 < tokenVector.Count());
         return tokenVector[++index];
     }
 
-    XenonScriptAssemblerMachine::Token* XenonScriptAssemblerMachine::PeekNextToken(const TokenVector& tokenVector, int& index) const
+    XenonEnigne::Token* XenonScriptAssemblerMachine::PeekNextToken(const TokenVector& tokenVector, int& index) const
     {
         assert(index + 1 < tokenVector.Count());
         return tokenVector[index+1];

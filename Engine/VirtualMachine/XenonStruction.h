@@ -1,14 +1,27 @@
 #pragma once
+#include "Algorithms/String.h"
+#include "Algorithms/Vector.h"
 namespace XenonEnigne
 {
-    struct XenonScriptAssemblerMachine::Token;
+    using Algorithm::String;
+    using Algorithm::Vector;
 
-    struct ScriptHeader
-    {
-        unsigned int m_globalDataSize = 0;
-        int m_mainFunctionEntryIndex = -1;
+    // Token
+    enum TokenType {
+        None = 0,
+        TokenType_IntergalIiteral,
+        TokenType_FloatIiteral,
+        TokenType_StringEntity,
+        TokenType_Identifier,
+        TokenType_Label,
+        TokenType_Function,
+        TokenType_HostAPI,
+        TokenType_Register,
+        TokenType_Keyword,
+        TokenType_Delimiter,
+        TokenTypeCount
     };
-    
+
     enum KeyWord :short
     {
         KeyWord_INT,
@@ -57,7 +70,36 @@ namespace XenonEnigne
         KeyWord_EXIT
     };
 
+    enum DelimiterWord
+    {
+        DelimiterWord_Colon = 0,          // A colon :
+        DelimiterWord_SemiColon,          // A SemiColon ;
+        DelimiterWord_OpenBracket,          // An openening bracket  [
+        DelimiterWord_CloseBracket,          // An closing bracket    ]
+        DelimiterWord_Comma,          // A comma,
+        DelimiterWord_OpenBrace,          // An openening curly brace { 
+        DelimiterWord_CloseBrace,          // An closing curly brace   }
 
+    };
+
+    struct Token
+    {
+        String m_character;
+        TokenType m_tokenType;
+        union
+        {
+            KeyWord m_keyword;
+            DelimiterWord m_delimiter;
+        };
+    };
+
+    struct ScriptHeader
+    {
+        unsigned int m_globalDataSize = 0;
+        int m_mainFunctionEntryIndex = -1;
+    };
+    
+    // Instruction
     enum InstructionOpType
     {
         InstructionOpType_None = 0,
@@ -99,7 +141,7 @@ namespace XenonEnigne
 
     struct FunctionElement
     {
-        XenonScriptAssemblerMachine::Token* m_functionToken = nullptr;
+        Token* m_functionToken = nullptr;
         int m_functionIndex = -1;
         int m_entryPoint = -1;
         int m_localStackSize = 0;
@@ -108,7 +150,7 @@ namespace XenonEnigne
 
     struct LabelElement
     {
-        XenonScriptAssemblerMachine::Token* m_token = nullptr;
+        Token* m_token = nullptr;
         unsigned int m_instructionStreamIndex = 0;
         FunctionElement* m_currentFunction = 0;
     };

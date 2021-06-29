@@ -91,10 +91,10 @@ namespace Algorithm
     template<typename T>
     bool Algorithm::Vector<T>::Clear()
     {
-        for (int i = 0; i < m_count; i++)
-        {
-            m_content[i] = 0;
-        }
+        //for (int i = 0; i < m_count; i++)
+        //{
+        //    m_content[i];
+        //}
         m_count = 0;
         return true;
     }

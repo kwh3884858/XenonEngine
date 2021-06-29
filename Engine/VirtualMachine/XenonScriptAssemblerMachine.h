@@ -46,46 +46,8 @@ namespace XenonEnigne
             LexerState_Comment
         };
 
-        enum TokenType {
-            None = 0,
-            TokenType_IntergalIiteral,
-            TokenType_FloatIiteral,
-            TokenType_StringEntity,
-            TokenType_Identifier,
-            TokenType_Label,
-            TokenType_Function,
-            TokenType_HostAPI,
-            TokenType_Register,
-            TokenType_Keyword,
-            TokenType_Delimiter,
-            TokenTypeCount
-        };
-
         static constexpr int keywordStringCount = 8;
         static const TypeString<int> keyWordString[keywordStringCount];
-
-        enum DelimiterWord
-        {
-            DelimiterWord_Colon = 0,          // A colon :
-            DelimiterWord_SemiColon,          // A SemiColon ;
-            DelimiterWord_OpenBracket,          // An openening bracket  [
-            DelimiterWord_CloseBracket,          // An closing bracket    ]
-            DelimiterWord_Comma,          // A comma,
-            DelimiterWord_OpenBrace,          // An openening curly brace { 
-            DelimiterWord_CloseBrace,          // An closing curly brace   }
-            
-        };
-
-        struct Token
-        {
-            String m_character;
-            TokenType m_tokenType;
-            union
-            {
-                KeyWord m_keyword;
-                DelimiterWord m_delimiter;
-            };
-        };
 
         struct DelimiterSymbol
         {
