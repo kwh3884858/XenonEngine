@@ -99,7 +99,108 @@ namespace XenonEnigne
 		}
 	}
 
-	//bool XenonVirtualMachine::Laxer(const char* const content, Token** const tokens)
+    void XenonVirtualMachine::RunScript()
+    {
+        assert(m_scriptHeader.m_mainFunctionEntryIndex < 0);
+
+        Value* globalData = nullptr;
+        if (m_scriptHeader.m_globalDataSize > 0)
+        {
+            globalData = new Value[m_scriptHeader.m_globalDataSize];
+        }
+
+        for (int i = 0; i < m_instructionList.Count(); i++)
+        {
+            Instruction* instruction = m_instructionList[i];
+            switch (instruction->m_opCode)
+            {
+            default:
+                break;
+            case KeyWord_INT:
+            {
+                for (int opIndex = 0;opIndex < instruction->m_opCount; opIndex++)
+                {
+
+                }
+            }
+                break;
+            case KeyWord_FLOAT:
+                break;
+            case KeyWord_MOV:
+                break;
+            case KeyWord_ADD:
+                break;
+            case KeyWord_SUB:
+                break;
+            case KeyWord_MUL:
+                break;
+            case KeyWord_DIV:
+                break;
+            case KeyWord_MOD:
+                break;
+            case KeyWord_EXP:
+                break;
+            case KeyWord_NEG:
+                break;
+            case KeyWord_INC:
+                break;
+            case KeyWord_DEC:
+                break;
+            case KeyWord_AND:
+                break;
+            case KeyWord_OR:
+                break;
+            case KeyWord_XOR:
+                break;
+            case KeyWord_NOT:
+                break;
+            case KeyWord_SHL:
+                break;
+            case KeyWord_SHR:
+                break;
+            case KeyWord_CONCAT:
+                break;
+            case KeyWord_GETCHAR:
+                break;
+            case KeyWord_SETCHAR:
+                break;
+            case KeyWord_JMP:
+                break;
+            case KeyWord_JE:
+                break;
+            case KeyWord_JNE:
+                break;
+            case KeyWord_JG:
+                break;
+            case KeyWord_JL:
+                break;
+            case KeyWord_JGE:
+                break;
+            case KeyWord_JLE:
+                break;
+            case KeyWord_PUSH:
+                break;
+            case KeyWord_POP:
+                break;
+            case KeyWord_FUNC:
+                break;
+            case KeyWord_PARAM:
+                break;
+            case KeyWord_CALL:
+                break;
+            case KeyWord_RET:
+                break;
+            case KeyWord_CALLHOST:
+                break;
+            case KeyWord_PAUSE:
+                break;
+            case KeyWord_EXIT:
+                break;
+            }
+        }
+    }
+
+    //bool XenonVirtualMachine::Laxer(const char* const content, Token** const tokens)
 	//{
 	//    unsigned int index = 0;
 	//    char currentChar = content[index];

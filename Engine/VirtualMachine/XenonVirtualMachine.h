@@ -17,7 +17,7 @@ namespace Algorithm
 namespace XenonEnigne
 {
     using Algorithm::String;
-
+/*
     const char Op_Char_Left_Bracket = '(';
     const char Op_Char_Right_Bracket = ')';
     const char Op_Char_Slash = '/';
@@ -39,9 +39,17 @@ namespace XenonEnigne
         StateDoubleQuote,       // "
         State
     };
+*/
     class XenonVirtualMachine : public CrossPlatform::XenonManager<XenonVirtualMachine>
     {
-
+        struct Value 
+        {
+            union
+            {
+                int m_interalValue;
+                float m_floatValue;
+            };
+        };
     public:
         virtual bool Initialize()override;
         virtual bool Shutdown()override { return true; }
@@ -56,6 +64,8 @@ namespace XenonEnigne
         Vector<LabelElement*> m_labelTable;
         Vector<String> m_stringTable;
         Vector<String> m_hostAPITable;
+
+        
     };
 
 }
