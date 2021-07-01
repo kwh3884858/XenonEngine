@@ -56,6 +56,7 @@ namespace XenonEnigne
         executableFilePath.Append("Main.xex");
         StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);
         m_xvm->LoadScript(streamedFile);
+        m_xvm->RunScript();
     }
 
 }

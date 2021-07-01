@@ -103,7 +103,7 @@ namespace XenonEnigne
     enum InstructionOpType
     {
         InstructionOpType_None = 0,
-        InstructionOpType_InteralLiteral,           // Integer literal value
+        InstructionOpType_IntegerLiteral,           // Integer literal value
         InstructionOpType_FloatLiteral,           // Floating-point literal value
         InstructionOpType_StringIndex,           // String literal value
         InstructionOpType_AbsoluteStackIndex,           // Absolute array index
@@ -119,7 +119,7 @@ namespace XenonEnigne
         InstructionOpType m_type = InstructionOpType::InstructionOpType_None;                                  // Type
         union                                        // The value
         {
-            int m_interalLiteral;                    // Integer literal
+            int m_integerLiteral;                    // Integer literal
             float m_floatLiteral;                    // Float literal
             int m_stringTableIndex;                  // String table index
             int m_stackIndex;                        // Stack index

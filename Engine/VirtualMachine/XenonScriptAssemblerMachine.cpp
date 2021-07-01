@@ -278,7 +278,7 @@ namespace XenonEnigne
                 //}
                 //else
                 //{
-                    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_interalLiteral));
+                    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_integerLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_integerLiteral));
                 //}
             }
         }
@@ -741,7 +741,7 @@ namespace XenonEnigne
                 {
                 case KeyWord_INT:
                 {
-                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpType_InteralLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
+                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpType_IntegerLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
                     if (!result)
                     {
                         BuildTableError(currentToken, index);
@@ -995,7 +995,7 @@ namespace XenonEnigne
                     assert(currentToken->m_tokenType == TokenType::TokenType_Keyword);
 
                     InstructionOpType variable = (currentToken->m_keyword == KeyWord::KeyWord_INT) ?
-                        InstructionOpType::InstructionOpType_InteralLiteral : InstructionOpType::InstructionOpType_FloatLiteral;
+                        InstructionOpType::InstructionOpType_IntegerLiteral : InstructionOpType::InstructionOpType_FloatLiteral;
 
                     currentToken = MoveToNextToken(*tokenVector, index);
                     assert(currentToken->m_tokenType == TokenType::TokenType_Identifier);
@@ -1050,8 +1050,8 @@ namespace XenonEnigne
                         break;
                     case TokenType_IntergalIiteral:
                     {
-                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_InteralLiteral;
-                        currentInstrction->m_ops[parameterIndex]->m_interalLiteral = currentToken->m_character.ToInt();
+                        currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_IntegerLiteral;
+                        currentInstrction->m_ops[parameterIndex]->m_integerLiteral = currentToken->m_character.ToInt();
                     }
                     break;
                     case TokenType_FloatIiteral:
@@ -1216,8 +1216,8 @@ namespace XenonEnigne
                         currentInstrction->m_opCode = KeyWord::KeyWord_EXIT;
                         currentInstrction->m_opCount = 1;
                         InstructionOp* const op = new InstructionOp();
-                        op->m_type = InstructionOpType::InstructionOpType_InteralLiteral;
-                        op->m_interalLiteral = 0;
+                        op->m_type = InstructionOpType::InstructionOpType_IntegerLiteral;
+                        op->m_integerLiteral = 0;
                         currentInstrction->m_ops.Add(op);
                     }
                     else

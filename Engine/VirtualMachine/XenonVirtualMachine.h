@@ -57,6 +57,8 @@ namespace XenonEnigne
         bool LoadScript(Algorithm::StreamingVector<char>* streamedFile);
         void RunScript();
     private:
+        int ResolveOpAsInteger(int instructionIndex, int opIndex)const;
+        int ResolveOpAsFloat(int instructionIndex, int opIndex)const;
         //bool Laxer(const char* const content, Token** const tokens);
         ScriptHeader m_scriptHeader;
         Vector<Instruction*> m_instructionList;

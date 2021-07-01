@@ -41,7 +41,7 @@ namespace XenonEnigne
 			{
 				m_instructionList[index]->m_ops.Add(new InstructionOp);
 				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex], sizeof(m_instructionList[index]->m_ops[opIndex]));
-				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex]->m_interalLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_interalLiteral));
+				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex]->m_integerLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_integerLiteral));
 			}
 		}
 
@@ -109,19 +109,17 @@ namespace XenonEnigne
             globalData = new Value[m_scriptHeader.m_globalDataSize];
         }
 
-        for (int i = 0; i < m_instructionList.Count(); i++)
+        for (int index = 0; index < m_instructionList.Count(); index++)
         {
-            Instruction* instruction = m_instructionList[i];
+            Instruction* instruction = m_instructionList[index];
             switch (instruction->m_opCode)
             {
             default:
                 break;
             case KeyWord_INT:
             {
-                for (int opIndex = 0;opIndex < instruction->m_opCount; opIndex++)
-                {
-
-                }
+                //InstructionOpType opType = m_instructionList[index]->m_ops[0]->m_type;
+                //InstructionOpType opType = m_instructionList[index]->m_ops[1]->m_type;
             }
                 break;
             case KeyWord_FLOAT:
@@ -199,6 +197,52 @@ namespace XenonEnigne
             }
         }
     }
+
+	int XenonVirtualMachine::ResolveOpAsInteger(int instructionIndex, int opIndex) const
+	{
+		assert(instructionIndex < m_instructionList.Count());
+		assert(opIndex < m_instructionList[instructionIndex]->m_ops.Count());
+
+		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
+		{
+		case XenonEnigne::InstructionOpType_None:
+			break;
+		case XenonEnigne::InstructionOpType_IntegerLiteral:
+		{
+			return m_instructionList[instructionIndex]->m_ops[opIndex]->m_integerLiteral;
+		}
+			break;
+		case XenonEnigne::InstructionOpType_FloatLiteral:
+			break;
+		case XenonEnigne::InstructionOpType_StringIndex:
+			break;
+		case XenonEnigne::InstructionOpType_AbsoluteStackIndex:
+		{
+			if (true)
+			{
+
+			}
+		}
+			break;
+		case XenonEnigne::InstructionOpType_RelativeStackIndex:
+			break;
+		case XenonEnigne::InstructionOpType_InstructionIndex:
+			break;
+		case XenonEnigne::InstructionOpType_FunctionIndex:
+			break;
+		case XenonEnigne::InstructionOpType_HostAPICallIndex:
+			break;
+		case XenonEnigne::InstructionOpType_Register:
+			break;
+		default:
+			break;
+		}
+	}
+
+	int XenonVirtualMachine::ResolveOpAsFloat(int instructionIndex, int opIndex) const
+	{
+		return 0;
+	}
 
     //bool XenonVirtualMachine::Laxer(const char* const content, Token** const tokens)
 	//{
