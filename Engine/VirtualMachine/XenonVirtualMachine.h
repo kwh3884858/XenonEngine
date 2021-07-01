@@ -59,6 +59,7 @@ namespace XenonEnigne
     private:
         int ResolveOpAsInteger(int instructionIndex, int opIndex)const;
         int ResolveOpAsFloat(int instructionIndex, int opIndex)const;
+        String ResolveOpAsString(int instructionIndex, int opIndex)const;
         //bool Laxer(const char* const content, Token** const tokens);
         ScriptHeader m_scriptHeader;
         Vector<Instruction*> m_instructionList;

@@ -205,43 +205,56 @@ namespace XenonEnigne
 
 		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
 		{
-		case XenonEnigne::InstructionOpType_None:
-			break;
 		case XenonEnigne::InstructionOpType_IntegerLiteral:
 		{
 			return m_instructionList[instructionIndex]->m_ops[opIndex]->m_integerLiteral;
 		}
-			break;
-		case XenonEnigne::InstructionOpType_FloatLiteral:
-			break;
-		case XenonEnigne::InstructionOpType_StringIndex:
-			break;
-		case XenonEnigne::InstructionOpType_AbsoluteStackIndex:
-		{
-			if (true)
-			{
-
-			}
-		}
-			break;
-		case XenonEnigne::InstructionOpType_RelativeStackIndex:
-			break;
-		case XenonEnigne::InstructionOpType_InstructionIndex:
-			break;
-		case XenonEnigne::InstructionOpType_FunctionIndex:
-			break;
-		case XenonEnigne::InstructionOpType_HostAPICallIndex:
-			break;
-		case XenonEnigne::InstructionOpType_Register:
-			break;
 		default:
-			break;
+		{
+			assert(true == false);
+			return 0;
+		}
 		}
 	}
 
 	int XenonVirtualMachine::ResolveOpAsFloat(int instructionIndex, int opIndex) const
 	{
-		return 0;
+		assert(instructionIndex < m_instructionList.Count());
+		assert(opIndex < m_instructionList[instructionIndex]->m_ops.Count());
+
+		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
+		{
+		case XenonEnigne::InstructionOpType_FloatLiteral:
+		{
+			return m_instructionList[instructionIndex]->m_ops[opIndex]->m_floatLiteral;
+		}
+		default:
+		{
+			assert(true == false);
+			return 0;
+		}
+		}
+	}
+
+	String XenonVirtualMachine::ResolveOpAsString(int instructionIndex, int opIndex) const
+	{
+		assert(instructionIndex < m_instructionList.Count());
+		assert(opIndex < m_instructionList[instructionIndex]->m_ops.Count());
+
+		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
+		{
+		case XenonEnigne::InstructionOpType_FloatLiteral:
+		{
+			int stringIndex =m_instructionList[instructionIndex]->m_ops[opIndex]->m_stringTableIndex;
+			assert(stringIndex < m_stringTable.Count());
+			return m_stringTable[stringIndex];
+		}
+		default:
+		{
+			assert(true == false);
+			return 0;
+		}
+		}
 	}
 
     //bool XenonVirtualMachine::Laxer(const char* const content, Token** const tokens)
