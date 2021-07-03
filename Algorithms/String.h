@@ -25,18 +25,19 @@ namespace Algorithm
         friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
 
         StringBase();
-         StringBase(const StringBase& value);
-         StringBase(const T* value, unsigned int size);
-         StringBase(const T* value);
+        StringBase(const StringBase& value);
+        StringBase(const T* value, unsigned int size);
+        StringBase(const T* value);
+        StringBase(T value);
         ~StringBase();
 
-        T operator[](int index) const;
-        T operator[](unsigned int index) const;
+        T& operator[](int index);
+        const T& operator[](int index) const;
+        T& operator[](unsigned int index);
+        const T& operator[](unsigned int index) const;
         StringBase<T>& operator=(const StringBase<T>& rhs);
         StringBase<T>& operator=(const T* rhs);
-         //bool operator==(const T* rhs)const;
-         bool operator==(const StringBase<T>& rhs)const;
-        //bool operator!=(const T* rhs)const;
+        bool operator==(const StringBase<T>& rhs)const;
         bool operator!=(const StringBase<T>& rhs)const;
 
         void Add(T value);
@@ -84,18 +85,36 @@ namespace Algorithm
     }
 
     template<typename T>
+    inline StringBase<T>::StringBase(T value)
+    {
+        m_string.Add(value);
+    }
+
+    template<typename T>
     Algorithm::StringBase<T>::~StringBase()
     {
     }
 
     template<typename T>
-    T Algorithm::StringBase<T>::operator[](int index)const
+    inline T& StringBase<T>::operator[](int index)
+    {
+        return const_cast<T&>(const_cast<const StringBase<T>*>(this)[index]);
+    }
+
+    template<typename T>
+    inline const T& Algorithm::StringBase<T>::operator[](int index)const
     {
         return m_string[index];
     }
 
     template<typename T>
-    inline T StringBase<T>::operator[](unsigned int index)const
+    inline T& StringBase<T>::operator[](unsigned int index)
+    {
+        return const_cast<T&>(const_cast<const StringBase<T>*>(this)[index]);
+    }
+
+    template<typename T>
+    inline const T& StringBase<T>::operator[](unsigned int index)const
     {
         return m_string[index];
     }

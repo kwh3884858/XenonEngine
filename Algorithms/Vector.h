@@ -29,11 +29,12 @@ namespace Algorithm
 
         bool IsExist(const T& element)const;
 
-		T& operator[](int index)const;
+		T& operator[](int index);
+		const T& operator[](int index)const;
 		Vector<T>& operator=(const Vector& rhs);
 
 		//For Algorithm
-		bool Swap(const int lhs, const int rhs);
+		//bool Swap(const int lhs, const int rhs);
 		T* Begin();
         const T* Begin()const;
         T* End();
@@ -179,7 +180,13 @@ namespace Algorithm
     }
 
 	template<typename T>
-	inline T& Vector<T>::operator[](int index) const
+	inline T& Vector<T>::operator[](int index)
+	{
+		return const_cast<T&>(const_cast<const Vector<T>*>(this)[index]);
+	}
+
+	template<typename T>
+	inline const T& Vector<T>::operator[](int index) const
 	{
         assert(index >= 0 && index < m_count);
 		return m_content[index];

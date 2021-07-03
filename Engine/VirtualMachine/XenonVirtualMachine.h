@@ -44,6 +44,11 @@ namespace XenonEnigne
     {
         struct Value 
         {
+            enum ValuType
+            {
+                Interal,
+                Float
+            };
             union
             {
                 int m_interalValue;
@@ -57,8 +62,10 @@ namespace XenonEnigne
         bool LoadScript(Algorithm::StreamingVector<char>* streamedFile);
         void RunScript();
     private:
+        InstructionOp* GetInstructionByStackIndex(int index)const;
+        InstructionOp* ResolveInstructionOp(int instructionIndex, int opIndex)const;
         int ResolveOpAsInteger(int instructionIndex, int opIndex)const;
-        int ResolveOpAsFloat(int instructionIndex, int opIndex)const;
+        float ResolveOpAsFloat(int instructionIndex, int opIndex)const;
         String ResolveOpAsString(int instructionIndex, int opIndex)const;
         //bool Laxer(const char* const content, Token** const tokens);
         ScriptHeader m_scriptHeader;
@@ -68,7 +75,8 @@ namespace XenonEnigne
         Vector<String> m_stringTable;
         Vector<String> m_hostAPITable;
 
-        
+        Vector<Value*> m_localStack;
+        Vector<Value*> m_glabalStack;
     };
 
 }

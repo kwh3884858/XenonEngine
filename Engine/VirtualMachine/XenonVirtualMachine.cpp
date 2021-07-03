@@ -125,56 +125,313 @@ namespace XenonEnigne
             case KeyWord_FLOAT:
                 break;
             case KeyWord_MOV:
-                break;
             case KeyWord_ADD:
-                break;
             case KeyWord_SUB:
-                break;
             case KeyWord_MUL:
-                break;
             case KeyWord_DIV:
-                break;
             case KeyWord_MOD:
-                break;
             case KeyWord_EXP:
+			case KeyWord_AND:
+			case KeyWord_OR:
+			case KeyWord_XOR:
+			case KeyWord_SHL:
+			case KeyWord_SHR:
+			{
+				InstructionOp* op0 = ResolveInstructionOp(index, 0);
+				InstructionOp* op1 = ResolveInstructionOp(index, 1);
+
+				switch (instruction->m_opCode)
+				{
+				case KeyWord_MOV:
+				{
+					if (op0 == op1)
+					{
+						break;
+					}
+					*op0 = *op1;
+				}
+				break;
+				case KeyWord_ADD:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type==InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral += op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						op0->m_floatLiteral += op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_SUB:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral -= op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						op0->m_floatLiteral -= op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_MUL:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral *= op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						op0->m_floatLiteral *= op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_DIV:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral /= op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						op0->m_floatLiteral /= op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_MOD:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral %= op1->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_EXP:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral = (int)pow (op0->m_integerLiteral, op1->m_integerLiteral);
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						op0->m_floatLiteral = (float)pow(op0->m_integerLiteral, op1->m_integerLiteral);
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_AND:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral &= op1->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_OR:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral |= op1->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_XOR:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral ^= op1->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_SHL:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral <<= op1->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_SHR:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op0->m_integerLiteral >>= op1->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+
+				}
+			}
                 break;
             case KeyWord_NEG:
-                break;
             case KeyWord_INC:
-                break;
             case KeyWord_DEC:
-                break;
-            case KeyWord_AND:
-                break;
-            case KeyWord_OR:
-                break;
-            case KeyWord_XOR:
-                break;
             case KeyWord_NOT:
+			{
+				InstructionOp* op = ResolveInstructionOp(index, 0);
+				switch (instruction->m_opCode)
+				{
+				case KeyWord_NEG:
+				{
+					if (op->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op->m_integerLiteral = -op->m_integerLiteral;
+					}
+					else if (op->m_type == InstructionOpType_FloatLiteral)
+					{
+						op->m_floatLiteral = -op->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_INC:
+				{
+					if (op->m_type == InstructionOpType_IntegerLiteral)
+					{
+						++op->m_integerLiteral ;
+					}
+					else if (op->m_type == InstructionOpType_FloatLiteral)
+					{
+						++op->m_floatLiteral ;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_DEC: {
+					if (op->m_type == InstructionOpType_IntegerLiteral)
+					{
+						--op->m_integerLiteral ;
+					}
+					else if (op->m_type == InstructionOpType_FloatLiteral)
+					{
+						--op->m_floatLiteral ;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_NOT: {
+					if (op->m_type == InstructionOpType_IntegerLiteral)
+					{
+						op->m_integerLiteral = ~op->m_integerLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				default:
+					break;
+				}
+			}
                 break;
-            case KeyWord_SHL:
-                break;
-            case KeyWord_SHR:
-                break;
+
             case KeyWord_CONCAT:
+			{
+				InstructionOp* op0 = ResolveInstructionOp(index, 0);
+				InstructionOp* op1 = ResolveInstructionOp(index, 1);
+
+				if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
+				{
+					String newString = m_stringTable[op0->m_stackIndex];
+					newString.Append(m_stringTable[op1->m_stackIndex]);
+					op0->m_stringTableIndex = m_stringTable.Count();
+					m_stringTable.Add(newString);
+				}
+			}
                 break;
             case KeyWord_GETCHAR:
+			{
+				InstructionOp* op0 = ResolveInstructionOp(index, 0);
+				InstructionOp* op1 = ResolveInstructionOp(index, 1);
+				InstructionOp* op2 = ResolveInstructionOp(index, 2);
+				if (op0->m_type == InstructionOpType_StringIndex 
+					&& op1->m_type == InstructionOpType_StringIndex
+					&& op2->m_type == InstructionOpType_IntegerLiteral)
+				{
+					String searchedString = m_stringTable[op1->m_stackIndex];
+					char character = searchedString[op2->m_integerLiteral];
+					String newStirng(character);
+					op0->m_stringTableIndex = m_stringTable.Count();
+					m_stringTable.Add(newStirng);
+				}
+			}
                 break;
             case KeyWord_SETCHAR:
+			{
+				InstructionOp* op0 = ResolveInstructionOp(index, 0);
+				InstructionOp* op1 = ResolveInstructionOp(index, 1);
+				InstructionOp* op2 = ResolveInstructionOp(index, 2);
+				if (op0->m_type == InstructionOpType_StringIndex)
+				{
+
+				}
+			}
                 break;
             case KeyWord_JMP:
                 break;
             case KeyWord_JE:
-                break;
             case KeyWord_JNE:
-                break;
             case KeyWord_JG:
-                break;
             case KeyWord_JL:
-                break;
             case KeyWord_JGE:
-                break;
             case KeyWord_JLE:
+			{
+
+			}
                 break;
             case KeyWord_PUSH:
                 break;
@@ -198,6 +455,43 @@ namespace XenonEnigne
         }
     }
 
+	InstructionOp* XenonVirtualMachine::GetInstructionByStackIndex(int index)const
+	{
+		int realIndex = index < 0 ? -index + 1 : index;
+		if (index <0)
+		{
+			m_localStack[realIndex];
+		}
+		else
+		{
+			m_glabalStack[realIndex];
+		}
+	}
+
+	InstructionOp* XenonVirtualMachine::ResolveInstructionOp(int instructionIndex, int opIndex) const
+	{
+		assert(instructionIndex < m_instructionList.Count());
+		assert(opIndex < m_instructionList[instructionIndex]->m_ops.Count());
+
+		InstructionOp* op = m_instructionList[instructionIndex]->m_ops[opIndex];
+		switch (op->m_type)
+		{
+		case InstructionOpType_AbsoluteStackIndex:
+		{
+			return GetInstructionByStackIndex(op->m_stackIndex);
+		}
+			break;
+		case InstructionOpType_RelativeStackIndex:
+		{
+			InstructionOp* relativeOp = GetInstructionByStackIndex(op->m_offsetIndex);
+			assert(relativeOp->m_type == InstructionOpType_IntegerLiteral);
+			return GetInstructionByStackIndex(op->m_stackIndex + relativeOp->m_integerLiteral);
+		}
+			break;
+		}
+		return nullptr;
+	}
+
 	int XenonVirtualMachine::ResolveOpAsInteger(int instructionIndex, int opIndex) const
 	{
 		assert(instructionIndex < m_instructionList.Count());
@@ -217,7 +511,7 @@ namespace XenonEnigne
 		}
 	}
 
-	int XenonVirtualMachine::ResolveOpAsFloat(int instructionIndex, int opIndex) const
+	float XenonVirtualMachine::ResolveOpAsFloat(int instructionIndex, int opIndex) const
 	{
 		assert(instructionIndex < m_instructionList.Count());
 		assert(opIndex < m_instructionList[instructionIndex]->m_ops.Count());

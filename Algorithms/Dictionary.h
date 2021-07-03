@@ -200,7 +200,7 @@ namespace Algorithm
 		Node* node;;
 
 		Stack<Node*> stack;
-		stack.push(mRoot);
+		stack.Push(mRoot);
 
 		int currentPos = 0;
 		while (stack.count() != 0)
@@ -209,11 +209,11 @@ namespace Algorithm
 
 			if (node->mLeft != nullptr)
 			{
-				stack.push(node->mLeft);
+				stack.Push(node->mLeft);
 			}
 			if (node->mRight != nullptr)
 			{
-				stack.push(node->mRight);
+				stack.Push(node->mRight);
 			}
 
 			keyArray[currentPos] = node->mKey;

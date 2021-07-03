@@ -6,22 +6,22 @@ namespace Algorithm {
 	class Stack
 	{
 	private:
-		static const int DEFAULTCAPACITY;
+		static const int DEFAULTCapacity;
 	public:
 		Stack();
 		~Stack();
 
-		void push(const T& value);
-		T pop();
-		void clear();
+		void Push(const T& value);
+		T Pop();
+		void Clear();
 
-		int count()const;
-		int capacity()const;
+		int Count()const;
+		int Capacity()const;
 
 	private:
-		bool initialize(int size);
-		bool reallocation();
-		bool isCapacityEnough()const;
+		bool Initialize(int size);
+		bool Reallocation();
+		bool IsCapacityEnough()const;
 
 		T* mStack;
 		int mCount;
@@ -31,7 +31,7 @@ namespace Algorithm {
 	//-------------------define
 	
 	template<typename T>
-	const int Stack<T>::DEFAULTCAPACITY = 1;
+	const int Stack<T>::DEFAULTCapacity = 1;
 	
 	template<typename T>
 	inline Stack<T>::Stack()
@@ -41,21 +41,21 @@ namespace Algorithm {
 		mCapacity = 0;
 		mStack = nullptr;
 
-		initialize(DEFAULTCAPACITY);
+		Initialize(DEFAULTCapacity);
 	}
 
 	template<typename T>
 	inline Stack<T>::~Stack()
 	{
-		clear();
+		Clear();
 	}
 
 	template<typename T>
-	inline void Stack<T>::push(const T & value)
+	inline void Stack<T>::Push(const T & value)
 	{
-		if (isCapacityEnough() == false)
+		if (IsCapacityEnough() == false)
 		{
-			reallocation();
+			Reallocation();
 		}
 
 		mStack[mCount] = value;
@@ -65,7 +65,7 @@ namespace Algorithm {
 	}
 
 	template<typename T>
-	inline T Stack<T>::pop()
+	inline T Stack<T>::Pop()
 	{
 		if (mCount <= 0)
 		{
@@ -80,7 +80,7 @@ namespace Algorithm {
 	}
 
 	template<typename T>
-	inline void Stack<T>::clear()
+	inline void Stack<T>::Clear()
 	{
 		if (mStack != nullptr)
 		{
@@ -96,19 +96,19 @@ namespace Algorithm {
 	}
 
 	template<typename T>
-	inline int Stack<T>::count() const
+	inline int Stack<T>::Count() const
 	{
 		return mCount;
 	}
 
 	template<typename T>
-	inline int Stack<T>::capacity() const
+	inline int Stack<T>::Capacity() const
 	{
 		return mCapacity;
 	}
 
 	template<typename T>
-	inline bool Stack<T>::initialize(int size)
+	inline bool Stack<T>::Initialize(int size)
 	{
 		if (size <= 0)
 		{
@@ -125,7 +125,7 @@ namespace Algorithm {
 	}
 
 	template<typename T>
-	inline bool Stack<T>::reallocation()
+	inline bool Stack<T>::Reallocation()
 	{
 		if (mCapacity == 0)
 		{
@@ -149,7 +149,7 @@ namespace Algorithm {
 	}
 
 	template<typename T>
-	inline bool Stack<T>::isCapacityEnough() const
+	inline bool Stack<T>::IsCapacityEnough() const
 	{
 		return mCount < mCapacity;
 	}
