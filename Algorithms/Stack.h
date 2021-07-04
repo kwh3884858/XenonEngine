@@ -18,6 +18,9 @@ namespace Algorithm {
 		int Count()const;
 		int Capacity()const;
 
+		T& operator[](int index);
+		const T& operator[](int index)const;
+
 	private:
 		bool Initialize(int size);
 		bool Reallocation();
@@ -105,6 +108,19 @@ namespace Algorithm {
 	inline int Stack<T>::Capacity() const
 	{
 		return mCapacity;
+	}
+
+	template<typename T>
+	inline T& Stack<T>::operator[](int index)
+	{
+		return const_cast<T&>(const_cast<const Stack<T>*>(this)[index]);
+	}
+
+	template<typename T>
+	inline const T& Stack<T>::operator[](int index) const
+	{
+		assert(index >= 0 && index < m_count);
+		return m_content[index];
 	}
 
 	template<typename T>

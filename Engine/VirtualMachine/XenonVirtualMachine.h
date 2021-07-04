@@ -7,6 +7,7 @@
 #include "CrossPlatform/XenonManager.h"
 #include "Engine/VirtualMachine/XenonStruction.h"
 #include "Algorithms/String.h"
+#include "Algorithms/Stack.h"
 
 namespace Algorithm
 {
@@ -17,6 +18,7 @@ namespace Algorithm
 namespace XenonEnigne
 {
     using Algorithm::String;
+    using Algorithm::Stack;
 /*
     const char Op_Char_Left_Bracket = '(';
     const char Op_Char_Right_Bracket = ')';
@@ -64,6 +66,8 @@ namespace XenonEnigne
     private:
         InstructionOp* GetInstructionByStackIndex(int index)const;
         InstructionOp* ResolveInstructionOp(int instructionIndex, int opIndex)const;
+        void PushFrame(int size);
+        void PopFrame(int size);
         int ResolveOpAsInteger(int instructionIndex, int opIndex)const;
         float ResolveOpAsFloat(int instructionIndex, int opIndex)const;
         String ResolveOpAsString(int instructionIndex, int opIndex)const;
@@ -75,8 +79,9 @@ namespace XenonEnigne
         Vector<String> m_stringTable;
         Vector<String> m_hostAPITable;
 
-        Vector<Value*> m_localStack;
-        Vector<Value*> m_glabalStack;
+        Stack<InstructionOp> m_localStack;
+        int m_localCurrentFrameIndex;
+        Stack<InstructionOp> m_glabalStack;
     };
 
 }

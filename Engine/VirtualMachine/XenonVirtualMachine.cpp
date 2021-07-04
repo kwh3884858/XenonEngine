@@ -5,6 +5,8 @@
 
 #include "Algorithms/Vector.h"
 #include "Algorithms/StreamingVector.h"
+
+#include <cstdio>
 namespace XenonEnigne
 {
 	using Algorithm::Vector;
@@ -109,8 +111,9 @@ namespace XenonEnigne
             globalData = new Value[m_scriptHeader.m_globalDataSize];
         }
 
-        for (int index = 0; index < m_instructionList.Count(); index++)
+        for (int index = 0; index < m_instructionList.Count(); )
         {
+			int currentIndex = index;
             Instruction* instruction = m_instructionList[index];
             switch (instruction->m_opCode)
             {
@@ -137,8 +140,8 @@ namespace XenonEnigne
 			case KeyWord_SHL:
 			case KeyWord_SHR:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(index, 0);
-				InstructionOp* op1 = ResolveInstructionOp(index, 1);
+				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
+				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
 
 				switch (instruction->m_opCode)
 				{
@@ -312,7 +315,7 @@ namespace XenonEnigne
             case KeyWord_DEC:
             case KeyWord_NOT:
 			{
-				InstructionOp* op = ResolveInstructionOp(index, 0);
+				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
 				switch (instruction->m_opCode)
 				{
 				case KeyWord_NEG:
@@ -381,8 +384,8 @@ namespace XenonEnigne
 
             case KeyWord_CONCAT:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(index, 0);
-				InstructionOp* op1 = ResolveInstructionOp(index, 1);
+				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
+				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
 
 				if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
 				{
@@ -395,9 +398,9 @@ namespace XenonEnigne
                 break;
             case KeyWord_GETCHAR:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(index, 0);
-				InstructionOp* op1 = ResolveInstructionOp(index, 1);
-				InstructionOp* op2 = ResolveInstructionOp(index, 2);
+				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
+				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
+				InstructionOp* op2 = ResolveInstructionOp(currentIndex, 2);
 				if (op0->m_type == InstructionOpType_StringIndex 
 					&& op1->m_type == InstructionOpType_StringIndex
 					&& op2->m_type == InstructionOpType_IntegerLiteral)
@@ -412,16 +415,26 @@ namespace XenonEnigne
                 break;
             case KeyWord_SETCHAR:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(index, 0);
-				InstructionOp* op1 = ResolveInstructionOp(index, 1);
-				InstructionOp* op2 = ResolveInstructionOp(index, 2);
-				if (op0->m_type == InstructionOpType_StringIndex)
+				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
+				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
+				InstructionOp* op2 = ResolveInstructionOp(currentIndex, 2);
+				if (op0->m_type == InstructionOpType_StringIndex
+					&& op1->m_type == InstructionOpType_IntegerLiteral
+					&& op2->m_type == InstructionOpType_StringIndex)
 				{
-
+					char character = m_stringTable[op2->m_stackIndex][0];
+					m_stringTable[op0->m_stackIndex][op1->m_integerLiteral] = character;
 				}
 			}
                 break;
             case KeyWord_JMP:
+			{
+				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
+				if (op->m_type == InstructionOpType_InstructionIndex)
+				{
+					currentIndex = op->m_instructionIndex;
+				}
+			}
                 break;
             case KeyWord_JE:
             case KeyWord_JNE:
@@ -430,34 +443,224 @@ namespace XenonEnigne
             case KeyWord_JGE:
             case KeyWord_JLE:
 			{
+				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
+				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
+				InstructionOp* op2 = ResolveInstructionOp(currentIndex, 2);
 
+				bool isShouldJump = false;
+				switch (instruction->m_opCode)
+				{
+				case KeyWord_JE:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						isShouldJump = op0->m_integerLiteral == op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						isShouldJump = op0->m_floatLiteral == op1->m_floatLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
+					{
+						if (op0->m_stringTableIndex == op1->m_stringTableIndex)
+						{
+							isShouldJump = true;
+						}
+						String lhs = ResolveOpAsString(currentIndex, 0);
+						String rhs = ResolveOpAsString(currentIndex, 1);
+						if (lhs == rhs)
+						{
+							isShouldJump = true;
+						}
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_JNE:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						isShouldJump = op0->m_integerLiteral != op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						isShouldJump = op0->m_floatLiteral != op1->m_floatLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
+					{
+						if (op0->m_stringTableIndex != op1->m_stringTableIndex)
+						{
+							isShouldJump = true;
+						}
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_JG:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						isShouldJump = op0->m_integerLiteral > op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						isShouldJump = op0->m_floatLiteral > op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_JL:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						isShouldJump = op0->m_integerLiteral < op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						isShouldJump = op0->m_floatLiteral < op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_JGE:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						isShouldJump = op0->m_integerLiteral >= op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						isShouldJump = op0->m_floatLiteral >= op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				case KeyWord_JLE:
+				{
+					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					{
+						isShouldJump = op0->m_integerLiteral <= op1->m_integerLiteral;
+					}
+					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					{
+						isShouldJump = op0->m_floatLiteral <= op1->m_floatLiteral;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+				break;
+				}
+				if (isShouldJump)
+				{
+					if (op2->m_type == InstructionOpType_InstructionIndex)
+					{
+						currentIndex = op2->m_instructionIndex;
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
 			}
                 break;
             case KeyWord_PUSH:
+			{
+				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
+				m_localStack.Push(*op);
+			}
                 break;
             case KeyWord_POP:
+			{
+				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
+				*op = m_localStack.Pop();
+			}
                 break;
             case KeyWord_FUNC:
                 break;
             case KeyWord_PARAM:
                 break;
             case KeyWord_CALL:
+			{
+				InstructionOp returnAddress;
+				returnAddress.m_type = InstructionOpType_InstructionIndex;
+				returnAddress.m_instructionIndex = currentIndex +1;
+				m_localStack.Push(returnAddress);
+
+				InstructionOp* functionOp = ResolveInstructionOp(currentIndex, 0);
+				FunctionElement* function = m_functionTable[functionOp->m_stackIndex];
+				PushFrame(function->m_localStackSize);
+				m_localStack.Push(*functionOp);
+
+				currentIndex = function->m_entryPoint;
+			}
                 break;
             case KeyWord_RET:
+			{
+				InstructionOp functionOp = m_localStack.Pop();
+				FunctionElement* function = m_functionTable[functionOp.m_stackIndex];
+				PopFrame(function->m_localStackSize);
+
+				InstructionOp returnAddress = m_localStack.Pop();
+				assert(returnAddress.m_type == InstructionOpType_InstructionIndex);
+				currentIndex = returnAddress.m_instructionIndex;
+			}
                 break;
             case KeyWord_CALLHOST:
+			{
+				InstructionOp* hostAPI = ResolveInstructionOp(currentIndex, 0);
+				if (m_hostAPITable[hostAPI->m_hostAPICallIndex] == "DebugPrint")
+				{
+					InstructionOp op1 = m_localStack.Pop();
+					InstructionOp op2 = m_localStack.Pop();
+					if (op1.m_type == InstructionOpType_StringIndex && op2.m_type == InstructionOpType_IntegerLiteral)
+					{
+						char tmp[200];
+						m_stringTable[op1.m_stringTableIndex].CString(tmp);
+						printf("%s", tmp);
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
+			}
                 break;
             case KeyWord_PAUSE:
                 break;
             case KeyWord_EXIT:
                 break;
             }
+			if (currentIndex == index)
+			{
+				index++;
+			}
+			else
+			{
+				index = currentIndex;
+			}
         }
     }
 
 	InstructionOp* XenonVirtualMachine::GetInstructionByStackIndex(int index)const
 	{
-		int realIndex = index < 0 ? -index + 1 : index;
+		int realIndex = index < 0 ? m_localCurrentFrameIndex - index - 1 : index;
 		if (index <0)
 		{
 			m_localStack[realIndex];
@@ -490,6 +693,21 @@ namespace XenonEnigne
 			break;
 		}
 		return nullptr;
+	}
+
+	void XenonVirtualMachine::PushFrame(int size)
+	{
+		m_localStack.Push(InstructionOp());
+		m_localCurrentFrameIndex += size;
+	}
+
+	void XenonVirtualMachine::PopFrame(int size)
+	{
+		for (int i = 0; i < size; i++)
+		{
+			m_localStack.Pop();
+		}
+		m_localCurrentFrameIndex -= size;
 	}
 
 	int XenonVirtualMachine::ResolveOpAsInteger(int instructionIndex, int opIndex) const
@@ -537,7 +755,7 @@ namespace XenonEnigne
 
 		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
 		{
-		case XenonEnigne::InstructionOpType_FloatLiteral:
+		case XenonEnigne::InstructionOpType_StringIndex:
 		{
 			int stringIndex =m_instructionList[instructionIndex]->m_ops[opIndex]->m_stringTableIndex;
 			assert(stringIndex < m_stringTable.Count());
@@ -546,7 +764,7 @@ namespace XenonEnigne
 		default:
 		{
 			assert(true == false);
-			return 0;
+			return String("Error");
 		}
 		}
 	}
