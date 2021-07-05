@@ -26,9 +26,9 @@ namespace Algorithm {
 		bool Reallocation();
 		bool IsCapacityEnough()const;
 
-		T* mStack;
-		int mCount;
-		int mCapacity;
+		T* m_stack;
+		int m_count;
+		int m_capacity;
 	};
 
 	//-------------------define
@@ -40,9 +40,9 @@ namespace Algorithm {
 	inline Stack<T>::Stack()
 	{
 
-		mCount = 0;
-		mCapacity = 0;
-		mStack = nullptr;
+		m_count = 0;
+		m_capacity = 0;
+		m_stack = nullptr;
 
 		Initialize(DEFAULTCapacity);
 	}
@@ -61,23 +61,20 @@ namespace Algorithm {
 			Reallocation();
 		}
 
-		mStack[mCount] = value;
+		m_stack[m_count] = value;
 		
-		mCount++;
+		m_count++;
 
 	}
 
 	template<typename T>
 	inline T Stack<T>::Pop()
 	{
-		if (mCount <= 0)
-		{
-			return nullptr;
-		}
+        assert(m_count > 0);
 
-		T t = mStack[mCount - 1];
+		T t = m_stack[m_count - 1];
 
-		mCount--;
+		m_count--;
 
 		return t;
 	}
@@ -85,42 +82,42 @@ namespace Algorithm {
 	template<typename T>
 	inline void Stack<T>::Clear()
 	{
-		if (mStack != nullptr)
+		if (m_stack != nullptr)
 		{
-			for (int i = 0; i < mCount; i++)
-			{
-				mStack[i] = nullptr;
-			}
+			//for (int i = 0; i < m_count; i++)
+			//{
+			//	m_stack[i] = nullptr;
+			//}
 
-			delete mStack;
-			mStack = nullptr;
-			mCount = 0;
+			delete m_stack;
+			m_stack = nullptr;
+			m_count = 0;
 		}
 	}
 
 	template<typename T>
 	inline int Stack<T>::Count() const
 	{
-		return mCount;
+		return m_count;
 	}
 
 	template<typename T>
 	inline int Stack<T>::Capacity() const
 	{
-		return mCapacity;
+		return m_capacity;
 	}
 
 	template<typename T>
 	inline T& Stack<T>::operator[](int index)
 	{
-		return const_cast<T&>(const_cast<const Stack<T>*>(this)[index]);
+		return const_cast<T&>(static_cast<const Stack<T>&>(*this)[index]);
 	}
 
 	template<typename T>
 	inline const T& Stack<T>::operator[](int index) const
 	{
 		assert(index >= 0 && index < m_count);
-		return m_content[index];
+		return m_stack[index];
 	}
 
 	template<typename T>
@@ -131,11 +128,11 @@ namespace Algorithm {
 			return false;
 		}
 
-		mCapacity = size;
+		m_capacity = size;
 
-		mCount = 0;
+		m_count = 0;
 
-		mStack = new T[mCapacity];
+		m_stack = new T[m_capacity];
 
 		return true;
 	}
@@ -143,23 +140,23 @@ namespace Algorithm {
 	template<typename T>
 	inline bool Stack<T>::Reallocation()
 	{
-		if (mCapacity == 0)
+		if (m_capacity == 0)
 		{
 			return false;
 		}
 
-		mCapacity = 2 * mCapacity;
+		m_capacity = 2 * m_capacity;
 
-		T* newContent = new T[mCapacity];
+		T* newContent = new T[m_capacity];
 
-		for (int i = 0; i < mCount; i++)
+		for (int i = 0; i < m_count; i++)
 		{
-			newContent[i] = mStack[i];
+			newContent[i] = m_stack[i];
 		}
 
-		delete[] mStack;
+		delete[] m_stack;
 
-		mStack = newContent;
+		m_stack = newContent;
 
 		return true;
 	}
@@ -167,7 +164,7 @@ namespace Algorithm {
 	template<typename T>
 	inline bool Stack<T>::IsCapacityEnough() const
 	{
-		return mCount < mCapacity;
+		return m_count < m_capacity;
 	}
 
 }
