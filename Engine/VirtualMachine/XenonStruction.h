@@ -63,9 +63,10 @@ namespace XenonEnigne
         KeyWord_FUNC,
         KeyWord_PARAM,
         KeyWord_CALL,
-        KeyWord_RET,
+        KeyWord_RETURNVALUE,
         KeyWord_CALLHOST,
 
+        KeyWord_RETURN,
         KeyWord_PAUSE,
         KeyWord_EXIT
     };
@@ -126,7 +127,7 @@ namespace XenonEnigne
             int m_instructionIndex;                  // Instruction index
             int m_funcIndex;                         // Function index
             int m_hostAPICallIndex;                  // Host API Call index
-            int m_reg;                               // Register code
+            int m_register;                               // Register code
         };
         int m_offsetIndex;                           // Index of the offset
     };

@@ -64,8 +64,8 @@ namespace XenonEnigne
         bool LoadScript(Algorithm::StreamingVector<char>* streamedFile);
         void RunScript();
     private:
-        InstructionOp* GetInstructionByStackIndex(int index)const;
-        InstructionOp* ResolveInstructionOp(int instructionIndex, int opIndex)const;
+        const InstructionOp& GetInstructionByStackIndex(int index)const;
+        const InstructionOp& ResolveInstructionOp(int instructionIndex, int opIndex)const;
         void PushFrame(int size);
         void PopFrame(int size);
         int ResolveOpAsInteger(int instructionIndex, int opIndex)const;
@@ -79,6 +79,7 @@ namespace XenonEnigne
         Vector<String> m_stringTable;
         Vector<String> m_hostAPITable;
 
+        Instruction m_returnValue;
         Stack<InstructionOp> m_localStack;
         int m_localCurrentFrameIndex;
         Stack<InstructionOp> m_glabalStack;

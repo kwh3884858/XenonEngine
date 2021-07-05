@@ -269,6 +269,7 @@ namespace XenonEnigne
         {
             executeStream.Add(&m_instructionList[index]->m_opCode, sizeof(m_instructionList[index]->m_opCode));
             unsigned int opCount = m_instructionList[index]->m_opCount;
+            executeStream.Add(&opCount, sizeof(opCount));
             for (int opIndex = 0; opIndex < opCount; opIndex++)
             {
                 executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_type, sizeof(m_instructionList[index]->m_ops[opIndex]->m_type));
@@ -278,8 +279,9 @@ namespace XenonEnigne
                 //}
                 //else
                 //{
-                    executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_integerLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_integerLiteral));
+                executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_integerLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_integerLiteral));
                 //}
+                executeStream.Add(&m_instructionList[index]->m_ops[opIndex]->m_offsetIndex, sizeof(m_instructionList[index]->m_ops[opIndex]->m_offsetIndex));
             }
         }
 
@@ -620,6 +622,10 @@ namespace XenonEnigne
                 {
                     token->m_tokenType = TokenType::TokenType_Keyword;
                     token->m_keyword = m_instructionLookupList[i]->m_opType;
+                    if (token->m_keyword == KeyWord::KeyWord_RETURNVALUE)
+                    {
+                        token->m_tokenType = TokenType::TokenType_Register;
+                    }
                     break;
                 }
             }
@@ -883,11 +889,10 @@ namespace XenonEnigne
                     break;
                 case KeyWord_CALL:
                     break;
-                case KeyWord_RET:
+                case KeyWord_RETURNVALUE:
                     break;
                 case KeyWord_CALLHOST:
                 {
-
                 }
                     break;
                 case KeyWord_PAUSE:
@@ -943,6 +948,7 @@ namespace XenonEnigne
         char errorToken[64];
         token->m_character.CString(errorToken);
         printf("Fetal Error: Parsing Error\n Character %c In the index %d \n", errorToken, index);
+        assert(true == false);
     }
 
     bool XenonScriptAssemblerMachine::CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction *>& instructionStream)
@@ -1078,7 +1084,7 @@ namespace XenonEnigne
                     case TokenType::TokenType_Register:
                     {
                         currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_Register;
-                        currentInstrction->m_ops[parameterIndex]->m_floatLiteral = 0;
+                        currentInstrction->m_ops[parameterIndex]->m_register = 0;
                     }
                     break;
                     case TokenType::TokenType_Identifier:
@@ -1222,7 +1228,7 @@ namespace XenonEnigne
                     }
                     else
                     {
-                        currentInstrction->m_opCode = KeyWord::KeyWord_EXIT;
+                        currentInstrction->m_opCode = KeyWord::KeyWord_RETURN;
                         currentInstrction->m_opCount = 0;
                     }
                     currentFunction = nullptr;
@@ -1297,29 +1303,34 @@ namespace XenonEnigne
 
     bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize)
     {
-        Token* token = (*tokenVector)[++refIndex];
-        if (!token || token->m_tokenType != TokenType::TokenType_Identifier)
+        Token* symbolToken = MoveToNextToken(*tokenVector, refIndex);
+        if (!symbolToken || symbolToken->m_tokenType != TokenType::TokenType_Identifier)
         {
+            BuildTableError(symbolToken, refIndex);
             return false;
         }
 
         int size = 1;
-        token = (*tokenVector)[++refIndex];
-        if (!token || token->m_tokenType == TokenType::TokenType_Delimiter)
+        Token* peekToken = PeekNextToken(*tokenVector, refIndex);
+        if (!peekToken || peekToken->m_tokenType == TokenType::TokenType_Delimiter)
         {
+            Token* token = MoveToNextToken(*tokenVector, refIndex);
             if (!token || token->m_delimiter != DelimiterWord::DelimiterWord_OpenBracket)
             {
+                BuildTableError(token, refIndex);
                 return false;
             }
-            token = (*tokenVector)[++refIndex];
+            token = MoveToNextToken(*tokenVector, refIndex);
             if (!token || token->m_tokenType != TokenType::TokenType_IntergalIiteral)
             {
+                BuildTableError(token, refIndex);
                 return false;
             }
             size = token->m_character.ToInt();
-            token = (*tokenVector)[++refIndex];
+            token = MoveToNextToken(*tokenVector, refIndex);
             if (!token || token->m_delimiter != DelimiterWord::DelimiterWord_OpenBracket)
             {
+                BuildTableError(token, refIndex);
                 return false;
             }
         }
@@ -1336,7 +1347,7 @@ namespace XenonEnigne
 
         SymbolElement* symbol = new SymbolElement;
         symbol->m_variableType = tokenType;
-        symbol->m_symbolToken = currentToken;
+        symbol->m_symbolToken = symbolToken;
         symbol->m_size = size;
         symbol->m_stackIndex = stackIndex;
         symbol->m_functionIndex = functionElement->m_functionIndex;

@@ -91,10 +91,11 @@ FUNC,30,0
 PARAM,31,0
 CALL,32,1
 function
-RET,33,0
+_RETURNVALUE,33,0
 CALLHOST,34,1
 hostAPI
-PAUSE,35,1
-int,float,identifier,register
+RETURN,35,0
 EXIT,36,1
 int,float,string,identifier,register
+PAUSE,37,1
+int,float,identifier,register

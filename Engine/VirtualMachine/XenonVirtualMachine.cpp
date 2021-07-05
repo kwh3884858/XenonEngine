@@ -42,8 +42,9 @@ namespace XenonEnigne
 			for (int opIndex = 0; opIndex < m_instructionList[index]->m_opCount; opIndex++)
 			{
 				m_instructionList[index]->m_ops.Add(new InstructionOp);
-				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex], sizeof(m_instructionList[index]->m_ops[opIndex]));
+				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex]->m_type, sizeof(m_instructionList[index]->m_ops[opIndex]->m_type));
 				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex]->m_integerLiteral, sizeof(m_instructionList[index]->m_ops[opIndex]->m_integerLiteral));
+				streamIndex = streamedFile->Read(streamIndex, &m_instructionList[index]->m_ops[opIndex]->m_offsetIndex, sizeof(m_instructionList[index]->m_ops[opIndex]->m_offsetIndex));
 			}
 		}
 
@@ -79,8 +80,8 @@ namespace XenonEnigne
 				streamIndex = streamedFile->Read(streamIndex, &stringLength, sizeof(stringLength));
 				assert(stringLength != 0);
 				char* tmpString = new char[stringLength];
-				streamIndex = streamedFile->Read(streamIndex, &tmpString, sizeof(tmpString));
-				m_stringTable.Add(String(tmpString));
+				streamIndex = streamedFile->Read(streamIndex, tmpString, stringLength);
+				m_stringTable.Add(String(tmpString, stringLength));
 				delete[] tmpString;
 			}
 		}
@@ -94,8 +95,8 @@ namespace XenonEnigne
 				streamIndex = streamedFile->Read(streamIndex, &stringLength, sizeof(stringLength));
 				assert(stringLength != 0);
 				char* tmpString = new char[stringLength];
-				streamIndex = streamedFile->Read(streamIndex, &tmpString, sizeof(tmpString));
-				m_hostAPITable.Add(String(tmpString));
+				streamIndex = streamedFile->Read(streamIndex, tmpString, stringLength);
+				m_hostAPITable.Add(String(tmpString, stringLength));
 				delete[] tmpString;
 			}
 		}
@@ -140,29 +141,29 @@ namespace XenonEnigne
 			case KeyWord_SHL:
 			case KeyWord_SHR:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
-				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
+                InstructionOp& op0 = const_cast<InstructionOp&>(ResolveInstructionOp(currentIndex, 0));
+				const InstructionOp& op1 = ResolveInstructionOp(currentIndex, 1);
 
 				switch (instruction->m_opCode)
 				{
 				case KeyWord_MOV:
 				{
-					if (op0 == op1)
+					if (&op0 == &op1)
 					{
 						break;
 					}
-					*op0 = *op1;
+					op0 = op1;
 				}
 				break;
 				case KeyWord_ADD:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type==InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type==InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral += op1->m_integerLiteral;
+						op0.m_integerLiteral += op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						op0->m_floatLiteral += op1->m_floatLiteral;
+						op0.m_floatLiteral += op1.m_floatLiteral;
 					}
 					else
 					{
@@ -172,13 +173,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_SUB:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral -= op1->m_integerLiteral;
+						op0.m_integerLiteral -= op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						op0->m_floatLiteral -= op1->m_floatLiteral;
+						op0.m_floatLiteral -= op1.m_floatLiteral;
 					}
 					else
 					{
@@ -188,13 +189,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_MUL:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral *= op1->m_integerLiteral;
+						op0.m_integerLiteral *= op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						op0->m_floatLiteral *= op1->m_floatLiteral;
+						op0.m_floatLiteral *= op1.m_floatLiteral;
 					}
 					else
 					{
@@ -204,13 +205,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_DIV:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral /= op1->m_integerLiteral;
+						op0.m_integerLiteral /= op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						op0->m_floatLiteral /= op1->m_floatLiteral;
+						op0.m_floatLiteral /= op1.m_floatLiteral;
 					}
 					else
 					{
@@ -220,9 +221,9 @@ namespace XenonEnigne
 				break;
 				case KeyWord_MOD:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral %= op1->m_integerLiteral;
+						op0.m_integerLiteral %= op1.m_integerLiteral;
 					}
 					else
 					{
@@ -232,13 +233,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_EXP:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral = (int)pow (op0->m_integerLiteral, op1->m_integerLiteral);
+						op0.m_integerLiteral = (int)pow (op0.m_integerLiteral, op1.m_integerLiteral);
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						op0->m_floatLiteral = (float)pow(op0->m_integerLiteral, op1->m_integerLiteral);
+						op0.m_floatLiteral = (float)pow(op0.m_integerLiteral, op1.m_integerLiteral);
 					}
 					else
 					{
@@ -248,9 +249,9 @@ namespace XenonEnigne
 				break;
 				case KeyWord_AND:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral &= op1->m_integerLiteral;
+						op0.m_integerLiteral &= op1.m_integerLiteral;
 					}
 					else
 					{
@@ -260,9 +261,9 @@ namespace XenonEnigne
 				break;
 				case KeyWord_OR:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral |= op1->m_integerLiteral;
+						op0.m_integerLiteral |= op1.m_integerLiteral;
 					}
 					else
 					{
@@ -272,9 +273,9 @@ namespace XenonEnigne
 				break;
 				case KeyWord_XOR:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral ^= op1->m_integerLiteral;
+						op0.m_integerLiteral ^= op1.m_integerLiteral;
 					}
 					else
 					{
@@ -284,9 +285,9 @@ namespace XenonEnigne
 				break;
 				case KeyWord_SHL:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral <<= op1->m_integerLiteral;
+						op0.m_integerLiteral <<= op1.m_integerLiteral;
 					}
 					else
 					{
@@ -296,9 +297,9 @@ namespace XenonEnigne
 				break;
 				case KeyWord_SHR:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op0->m_integerLiteral >>= op1->m_integerLiteral;
+						op0.m_integerLiteral >>= op1.m_integerLiteral;
 					}
 					else
 					{
@@ -315,18 +316,18 @@ namespace XenonEnigne
             case KeyWord_DEC:
             case KeyWord_NOT:
 			{
-				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
+				InstructionOp& op = const_cast<InstructionOp&>( ResolveInstructionOp(currentIndex, 0));
 				switch (instruction->m_opCode)
 				{
 				case KeyWord_NEG:
 				{
-					if (op->m_type == InstructionOpType_IntegerLiteral)
+					if (op.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op->m_integerLiteral = -op->m_integerLiteral;
+						op.m_integerLiteral = -op.m_integerLiteral;
 					}
-					else if (op->m_type == InstructionOpType_FloatLiteral)
+					else if (op.m_type == InstructionOpType_FloatLiteral)
 					{
-						op->m_floatLiteral = -op->m_floatLiteral;
+						op.m_floatLiteral = -op.m_floatLiteral;
 					}
 					else
 					{
@@ -336,13 +337,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_INC:
 				{
-					if (op->m_type == InstructionOpType_IntegerLiteral)
+					if (op.m_type == InstructionOpType_IntegerLiteral)
 					{
-						++op->m_integerLiteral ;
+						++op.m_integerLiteral ;
 					}
-					else if (op->m_type == InstructionOpType_FloatLiteral)
+					else if (op.m_type == InstructionOpType_FloatLiteral)
 					{
-						++op->m_floatLiteral ;
+						++op.m_floatLiteral ;
 					}
 					else
 					{
@@ -351,13 +352,13 @@ namespace XenonEnigne
 				}
 				break;
 				case KeyWord_DEC: {
-					if (op->m_type == InstructionOpType_IntegerLiteral)
+					if (op.m_type == InstructionOpType_IntegerLiteral)
 					{
-						--op->m_integerLiteral ;
+						--op.m_integerLiteral ;
 					}
-					else if (op->m_type == InstructionOpType_FloatLiteral)
+					else if (op.m_type == InstructionOpType_FloatLiteral)
 					{
-						--op->m_floatLiteral ;
+						--op.m_floatLiteral ;
 					}
 					else
 					{
@@ -366,9 +367,9 @@ namespace XenonEnigne
 				}
 				break;
 				case KeyWord_NOT: {
-					if (op->m_type == InstructionOpType_IntegerLiteral)
+					if (op.m_type == InstructionOpType_IntegerLiteral)
 					{
-						op->m_integerLiteral = ~op->m_integerLiteral;
+						op.m_integerLiteral = ~op.m_integerLiteral;
 					}
 					else
 					{
@@ -384,55 +385,55 @@ namespace XenonEnigne
 
             case KeyWord_CONCAT:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
-				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
+				InstructionOp& op0 = const_cast<InstructionOp&>(ResolveInstructionOp(currentIndex, 0));
+				const InstructionOp& op1 = ResolveInstructionOp(currentIndex, 1);
 
-				if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
+				if (op0.m_type == InstructionOpType_StringIndex && op1.m_type == InstructionOpType_StringIndex)
 				{
-					String newString = m_stringTable[op0->m_stackIndex];
-					newString.Append(m_stringTable[op1->m_stackIndex]);
-					op0->m_stringTableIndex = m_stringTable.Count();
+					String newString = m_stringTable[op0.m_stackIndex];
+					newString.Append(m_stringTable[op1.m_stackIndex]);
+					op0.m_stringTableIndex = m_stringTable.Count();
 					m_stringTable.Add(newString);
 				}
 			}
                 break;
             case KeyWord_GETCHAR:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
-				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
-				InstructionOp* op2 = ResolveInstructionOp(currentIndex, 2);
-				if (op0->m_type == InstructionOpType_StringIndex 
-					&& op1->m_type == InstructionOpType_StringIndex
-					&& op2->m_type == InstructionOpType_IntegerLiteral)
+				InstructionOp& op0 = const_cast<InstructionOp&>(ResolveInstructionOp(currentIndex, 0));
+				const InstructionOp& op1 = ResolveInstructionOp(currentIndex, 1);
+				const InstructionOp& op2 = ResolveInstructionOp(currentIndex, 2);
+				if (op0.m_type == InstructionOpType_StringIndex 
+					&& op1.m_type == InstructionOpType_StringIndex
+					&& op2.m_type == InstructionOpType_IntegerLiteral)
 				{
-					String searchedString = m_stringTable[op1->m_stackIndex];
-					char character = searchedString[op2->m_integerLiteral];
+					String searchedString = m_stringTable[op1.m_stackIndex];
+					char character = searchedString[op2.m_integerLiteral];
 					String newStirng(character);
-					op0->m_stringTableIndex = m_stringTable.Count();
+					op0.m_stringTableIndex = m_stringTable.Count();
 					m_stringTable.Add(newStirng);
 				}
 			}
                 break;
             case KeyWord_SETCHAR:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
-				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
-				InstructionOp* op2 = ResolveInstructionOp(currentIndex, 2);
-				if (op0->m_type == InstructionOpType_StringIndex
-					&& op1->m_type == InstructionOpType_IntegerLiteral
-					&& op2->m_type == InstructionOpType_StringIndex)
+				InstructionOp& op0 = const_cast<InstructionOp&>(ResolveInstructionOp(currentIndex, 0));
+				const InstructionOp& op1 = ResolveInstructionOp(currentIndex, 1);
+				const InstructionOp& op2 = ResolveInstructionOp(currentIndex, 2);
+				if (op0.m_type == InstructionOpType_StringIndex
+					&& op1.m_type == InstructionOpType_IntegerLiteral
+					&& op2.m_type == InstructionOpType_StringIndex)
 				{
-					char character = m_stringTable[op2->m_stackIndex][0];
-					m_stringTable[op0->m_stackIndex][op1->m_integerLiteral] = character;
+					char character = m_stringTable[op2.m_stackIndex][0];
+					m_stringTable[op0.m_stackIndex][op1.m_integerLiteral] = character;
 				}
 			}
                 break;
             case KeyWord_JMP:
 			{
-				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
-				if (op->m_type == InstructionOpType_InstructionIndex)
+				const InstructionOp& op = ResolveInstructionOp(currentIndex, 0);
+				if (op.m_type == InstructionOpType_InstructionIndex)
 				{
-					currentIndex = op->m_instructionIndex;
+					currentIndex = op.m_instructionIndex;
 				}
 			}
                 break;
@@ -443,26 +444,26 @@ namespace XenonEnigne
             case KeyWord_JGE:
             case KeyWord_JLE:
 			{
-				InstructionOp* op0 = ResolveInstructionOp(currentIndex, 0);
-				InstructionOp* op1 = ResolveInstructionOp(currentIndex, 1);
-				InstructionOp* op2 = ResolveInstructionOp(currentIndex, 2);
+				const InstructionOp& op0 = ResolveInstructionOp(currentIndex, 0);
+				const InstructionOp& op1 = ResolveInstructionOp(currentIndex, 1);
+				const InstructionOp& op2 = ResolveInstructionOp(currentIndex, 2);
 
 				bool isShouldJump = false;
 				switch (instruction->m_opCode)
 				{
 				case KeyWord_JE:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						isShouldJump = op0->m_integerLiteral == op1->m_integerLiteral;
+						isShouldJump = op0.m_integerLiteral == op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						isShouldJump = op0->m_floatLiteral == op1->m_floatLiteral;
+						isShouldJump = op0.m_floatLiteral == op1.m_floatLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
+					else if (op0.m_type == InstructionOpType_StringIndex && op1.m_type == InstructionOpType_StringIndex)
 					{
-						if (op0->m_stringTableIndex == op1->m_stringTableIndex)
+						if (op0.m_stringTableIndex == op1.m_stringTableIndex)
 						{
 							isShouldJump = true;
 						}
@@ -481,17 +482,17 @@ namespace XenonEnigne
 				break;
 				case KeyWord_JNE:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						isShouldJump = op0->m_integerLiteral != op1->m_integerLiteral;
+						isShouldJump = op0.m_integerLiteral != op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						isShouldJump = op0->m_floatLiteral != op1->m_floatLiteral;
+						isShouldJump = op0.m_floatLiteral != op1.m_floatLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_StringIndex && op1->m_type == InstructionOpType_StringIndex)
+					else if (op0.m_type == InstructionOpType_StringIndex && op1.m_type == InstructionOpType_StringIndex)
 					{
-						if (op0->m_stringTableIndex != op1->m_stringTableIndex)
+						if (op0.m_stringTableIndex != op1.m_stringTableIndex)
 						{
 							isShouldJump = true;
 						}
@@ -504,13 +505,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_JG:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						isShouldJump = op0->m_integerLiteral > op1->m_integerLiteral;
+						isShouldJump = op0.m_integerLiteral > op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						isShouldJump = op0->m_floatLiteral > op1->m_floatLiteral;
+						isShouldJump = op0.m_floatLiteral > op1.m_floatLiteral;
 					}
 					else
 					{
@@ -520,13 +521,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_JL:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						isShouldJump = op0->m_integerLiteral < op1->m_integerLiteral;
+						isShouldJump = op0.m_integerLiteral < op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						isShouldJump = op0->m_floatLiteral < op1->m_floatLiteral;
+						isShouldJump = op0.m_floatLiteral < op1.m_floatLiteral;
 					}
 					else
 					{
@@ -536,13 +537,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_JGE:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						isShouldJump = op0->m_integerLiteral >= op1->m_integerLiteral;
+						isShouldJump = op0.m_integerLiteral >= op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						isShouldJump = op0->m_floatLiteral >= op1->m_floatLiteral;
+						isShouldJump = op0.m_floatLiteral >= op1.m_floatLiteral;
 					}
 					else
 					{
@@ -552,13 +553,13 @@ namespace XenonEnigne
 				break;
 				case KeyWord_JLE:
 				{
-					if (op0->m_type == InstructionOpType_IntegerLiteral && op1->m_type == InstructionOpType_IntegerLiteral)
+					if (op0.m_type == InstructionOpType_IntegerLiteral && op1.m_type == InstructionOpType_IntegerLiteral)
 					{
-						isShouldJump = op0->m_integerLiteral <= op1->m_integerLiteral;
+						isShouldJump = op0.m_integerLiteral <= op1.m_integerLiteral;
 					}
-					else if (op0->m_type == InstructionOpType_FloatLiteral && op1->m_type == InstructionOpType_FloatLiteral)
+					else if (op0.m_type == InstructionOpType_FloatLiteral && op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						isShouldJump = op0->m_floatLiteral <= op1->m_floatLiteral;
+						isShouldJump = op0.m_floatLiteral <= op1.m_floatLiteral;
 					}
 					else
 					{
@@ -569,9 +570,9 @@ namespace XenonEnigne
 				}
 				if (isShouldJump)
 				{
-					if (op2->m_type == InstructionOpType_InstructionIndex)
+					if (op2.m_type == InstructionOpType_InstructionIndex)
 					{
-						currentIndex = op2->m_instructionIndex;
+						currentIndex = op2.m_instructionIndex;
 					}
 					else
 					{
@@ -582,19 +583,15 @@ namespace XenonEnigne
                 break;
             case KeyWord_PUSH:
 			{
-				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
-				m_localStack.Push(*op);
+				const InstructionOp& op = ResolveInstructionOp(currentIndex, 0);
+				m_localStack.Push(op);
 			}
                 break;
             case KeyWord_POP:
 			{
-				InstructionOp* op = ResolveInstructionOp(currentIndex, 0);
-				*op = m_localStack.Pop();
+				InstructionOp& op = const_cast<InstructionOp&>(ResolveInstructionOp(currentIndex, 0));
+				op = m_localStack.Pop();
 			}
-                break;
-            case KeyWord_FUNC:
-                break;
-            case KeyWord_PARAM:
                 break;
             case KeyWord_CALL:
 			{
@@ -603,29 +600,18 @@ namespace XenonEnigne
 				returnAddress.m_instructionIndex = currentIndex +1;
 				m_localStack.Push(returnAddress);
 
-				InstructionOp* functionOp = ResolveInstructionOp(currentIndex, 0);
-				FunctionElement* function = m_functionTable[functionOp->m_stackIndex];
+				const InstructionOp& functionOp = ResolveInstructionOp(currentIndex, 0);
+				FunctionElement* function = m_functionTable[functionOp.m_stackIndex];
 				PushFrame(function->m_localStackSize);
-				m_localStack.Push(*functionOp);
+				m_localStack.Push(functionOp);
 
 				currentIndex = function->m_entryPoint;
 			}
                 break;
-            case KeyWord_RET:
-			{
-				InstructionOp functionOp = m_localStack.Pop();
-				FunctionElement* function = m_functionTable[functionOp.m_stackIndex];
-				PopFrame(function->m_localStackSize);
-
-				InstructionOp returnAddress = m_localStack.Pop();
-				assert(returnAddress.m_type == InstructionOpType_InstructionIndex);
-				currentIndex = returnAddress.m_instructionIndex;
-			}
-                break;
             case KeyWord_CALLHOST:
 			{
-				InstructionOp* hostAPI = ResolveInstructionOp(currentIndex, 0);
-				if (m_hostAPITable[hostAPI->m_hostAPICallIndex] == "DebugPrint")
+				const InstructionOp& hostAPI = ResolveInstructionOp(currentIndex, 0);
+				if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "DebugPrint")
 				{
 					InstructionOp op1 = m_localStack.Pop();
 					InstructionOp op2 = m_localStack.Pop();
@@ -644,7 +630,31 @@ namespace XenonEnigne
                 break;
             case KeyWord_PAUSE:
                 break;
+            case KeyWord_RETURN:
+            {
+                InstructionOp functionOp = m_localStack.Pop();
+                FunctionElement* function = m_functionTable[functionOp.m_stackIndex];
+                PopFrame(function->m_localStackSize);
+
+                InstructionOp returnAddress = m_localStack.Pop();
+                assert(returnAddress.m_type == InstructionOpType_InstructionIndex);
+                currentIndex = returnAddress.m_instructionIndex;
+
+            }
+                break;
             case KeyWord_EXIT:
+            {
+                const InstructionOp& exitValue = ResolveInstructionOp(currentIndex, 0);
+                printf("File Exit: [ %d ]", exitValue.m_integerLiteral);
+            }
+                break;
+            case KeyWord_FUNC:
+            case KeyWord_PARAM:
+            case KeyWord_RETURNVALUE:
+            default:
+            {
+                assert(true == false);
+            }
                 break;
             }
 			if (currentIndex == index)
@@ -658,20 +668,20 @@ namespace XenonEnigne
         }
     }
 
-	InstructionOp* XenonVirtualMachine::GetInstructionByStackIndex(int index)const
+	const InstructionOp& XenonVirtualMachine::GetInstructionByStackIndex(int index)const
 	{
 		int realIndex = index < 0 ? m_localCurrentFrameIndex - index - 1 : index;
 		if (index <0)
 		{
-			m_localStack[realIndex];
+            return m_localStack[realIndex];
 		}
 		else
 		{
-			m_glabalStack[realIndex];
+            return m_glabalStack[realIndex];
 		}
 	}
 
-	InstructionOp* XenonVirtualMachine::ResolveInstructionOp(int instructionIndex, int opIndex) const
+    const InstructionOp& XenonVirtualMachine::ResolveInstructionOp(int instructionIndex, int opIndex) const
 	{
 		assert(instructionIndex < m_instructionList.Count());
 		assert(opIndex < m_instructionList[instructionIndex]->m_ops.Count());
@@ -686,13 +696,18 @@ namespace XenonEnigne
 			break;
 		case InstructionOpType_RelativeStackIndex:
 		{
-			InstructionOp* relativeOp = GetInstructionByStackIndex(op->m_offsetIndex);
-			assert(relativeOp->m_type == InstructionOpType_IntegerLiteral);
-			return GetInstructionByStackIndex(op->m_stackIndex + relativeOp->m_integerLiteral);
+			const InstructionOp& relativeOp = GetInstructionByStackIndex(op->m_offsetIndex);
+			assert(relativeOp.m_type == InstructionOpType_IntegerLiteral);
+			return GetInstructionByStackIndex(op->m_stackIndex + relativeOp.m_integerLiteral);
 		}
 			break;
+        case InstructionOpType_Register:
+        {
+            return m_returnValue;
+        }
+            break;
 		}
-		return nullptr;
+		return *op;
 	}
 
 	void XenonVirtualMachine::PushFrame(int size)
