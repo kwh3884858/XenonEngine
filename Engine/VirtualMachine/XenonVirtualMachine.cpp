@@ -118,8 +118,6 @@ namespace XenonEnigne
             Instruction* instruction = m_instructionList[index];
             switch (instruction->m_opCode)
             {
-            default:
-                break;
             case KeyWord_INT:
             {
                 //InstructionOpType opType = m_instructionList[index]->m_ops[0]->m_type;
