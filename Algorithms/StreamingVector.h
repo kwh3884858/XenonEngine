@@ -57,7 +57,7 @@ namespace Algorithm
 
         int readSpace = size * count;
         assert(readSpace != 0);
-        assert(index + readSpace <= m_capacity);
+        assert(index + readSpace <= m_count);
 
         memcpy(pdata, m_content + index, readSpace);
         index += readSpace;
