@@ -98,7 +98,7 @@ namespace Algorithm
     template<typename T>
     inline T& StringBase<T>::operator[](int index)
     {
-        return const_cast<T&>(const_cast<const StringBase<T>*>(this)[index]);
+        return const_cast<T&>(static_cast<const StringBase<T>&>(*this)[index]);
     }
 
     template<typename T>
@@ -110,7 +110,7 @@ namespace Algorithm
     template<typename T>
     inline T& StringBase<T>::operator[](unsigned int index)
     {
-        return const_cast<T&>(const_cast<const StringBase<T>*>(this)[index]);
+        return const_cast<T&>(static_cast<const StringBase<T>&>(*this)[index]);
     }
 
     template<typename T>

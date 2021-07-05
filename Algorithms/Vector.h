@@ -182,7 +182,7 @@ namespace Algorithm
 	template<typename T>
 	inline T& Vector<T>::operator[](int index)
 	{
-		return const_cast<T&>(const_cast<const Vector<T>*>(this)[index]);
+        return const_cast<T&>(static_cast<const Vector<T>&>(*this)[index]);
 	}
 
 	template<typename T>
