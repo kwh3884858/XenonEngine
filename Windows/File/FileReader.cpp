@@ -4,7 +4,7 @@
 #include "Algorithms/StreamingVector.h"
 
 #include <fstream>
-#include <iostream> // For std::cerr
+#include <iostream> // For std::cerr, std::ios::beg
 #include <assert.h>
 #include <windows.h>
 
@@ -68,24 +68,21 @@ namespace File
         char fileNameA[MAX_PATH];
         fileName.CString(fileNameA);
 
-        fins.open(fileNameA);
+        fins.open(fileNameA, std::ios::in | std::ios::binary | std::ios::ate);
 
         // If it could not open the file then exit.
         if (fins.good())
         {
             fins >> std::noskipws;
-            char charBuffer = '\0';
+            int fileSize = fins.tellg();
+            char* memoryBlock = new char[fileSize];
+            fins.seekg(0, std::ios::beg);
+            fins.read(memoryBlock, fileSize);
+            streamedFile->Replace(memoryBlock, fileSize);
 
-            while (true)
-            {
-                fins >> charBuffer;
-                if (fins.eof())
-                {
-                    break;
-                }
-                streamedFile->Add(&charBuffer,sizeof(charBuffer));
-            }
             fins.close();
+            delete memoryBlock;
+            memoryBlock = nullptr;
         }
         else
         {
