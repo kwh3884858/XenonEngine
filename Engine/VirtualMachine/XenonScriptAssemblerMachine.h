@@ -72,7 +72,7 @@ namespace XenonEnigne
         };
 
         // Operand Type Bitfield Flags 
-        typedef long long OpBitfiledFlag;
+        typedef unsigned long long OpBitfiledFlag;
         const OpBitfiledFlag OP_FLAG_TYPE_NONE = 0;
 
         struct InstructionLookup

@@ -191,7 +191,7 @@ namespace XenonEnigne
                     assert(result == true);
                     assert(typeFlag != 0);
                     OpBitfiledFlag currentFlag = instrction->m_opFlags[currentTokenOpCount];
-                    currentFlag |= (typeFlag << 1);
+                    currentFlag |= (1 << typeFlag );
                     instrction->m_opFlags[currentTokenOpCount] = currentFlag;
                 }
                 break;
@@ -803,8 +803,6 @@ namespace XenonEnigne
                             return false;
                         }
                     }
-
-                    instructionStreamCount++;
                 }
                 break;
                 case KeyWord_PARAM:
@@ -831,74 +829,10 @@ namespace XenonEnigne
                     currentFunction->m_parameterCount++;
                 }
                 break;
-                case KeyWord_MOV:
-                    break;
-                case KeyWord_ADD:
-                    break;
-                case KeyWord_SUB:
-                    break;
-                case KeyWord_MUL:
-                    break;
-                case KeyWord_DIV:
-                    break;
-                case KeyWord_MOD:
-                    break;
-                case KeyWord_EXP:
-                    break;
-                case KeyWord_NEG:
-                    break;
-                case KeyWord_INC:
-                    break;
-                case KeyWord_DEC:
-                    break;
-                case KeyWord_AND:
-                    break;
-                case KeyWord_OR:
-                    break;
-                case KeyWord_XOR:
-                    break;
-                case KeyWord_NOT:
-                    break;
-                case KeyWord_SHL:
-                    break;
-                case KeyWord_SHR:
-                    break;
-                case KeyWord_CONCAT:
-                    break;
-                case KeyWord_GETCHAR:
-                    break;
-                case KeyWord_SETCHAR:
-                    break;
-                case KeyWord_JMP:
-                    break;
-                case KeyWord_JE:
-                    break;
-                case KeyWord_JNE:
-                    break;
-                case KeyWord_JG:
-                    break;
-                case KeyWord_JL:
-                    break;
-                case KeyWord_JGE:
-                    break;
-                case KeyWord_JLE:
-                    break;
-                case KeyWord_PUSH:
-                    break;
-                case KeyWord_POP:
-                    break;
-                case KeyWord_CALL:
-                    break;
-                case KeyWord_RETURNVALUE:
-                    break;
-                case KeyWord_CALLHOST:
+                default:
                 {
+                    instructionStreamCount++;
                 }
-                    break;
-                case KeyWord_PAUSE:
-                    break;
-                case KeyWord_EXIT:
-                    break;
                 }
             }
             break;
@@ -939,6 +873,7 @@ namespace XenonEnigne
             break;
             }
         }
+
         assert(currentFunction == nullptr);
         return true;
     }
@@ -979,6 +914,7 @@ namespace XenonEnigne
             {
                 //Token *token = MoveToNextToken(*tokenVector, index);
                 FunctionElement*const functionElement = GetFunctionByName(currentToken->m_character);
+                assert(functionElement != nullptr);
                 if (functionElement)
                 {
                     currentFunction = functionElement;
@@ -1024,7 +960,15 @@ namespace XenonEnigne
                     }
                 }
                 break;
-                case KeyWord::KeyWord_FUNC:
+                case KeyWord_RETURNVALUE:
+                {
+                    assert(true == false);
+                    continue; 
+                }
+                break;
+                case KeyWord_INT:
+                case KeyWord_FLOAT:
+                case KeyWord_FUNC:
                     continue;
                 }
 
@@ -1044,10 +988,22 @@ namespace XenonEnigne
                 {
                     currentToken = MoveToNextToken(*tokenVector, index);
 
-                    if (!((currentInstructionLookup->m_opFlags[parameterIndex] & (currentToken->m_tokenType << 1)) > 0))
+                    switch (currentToken->m_tokenType)
                     {
-                        CreateInstructionListError(currentToken, index);
-                        return false;
+                    case TokenType_IntergalIiteral:
+                    case TokenType_FloatIiteral:
+                    case TokenType_StringEntity:
+                    case TokenType_Register:
+                    case TokenType_Keyword:
+                    case TokenType_Delimiter:
+                    case TokenTypeCount:
+                    {
+                        if (currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType) == 0)
+                        {
+                            CreateInstructionListError(currentToken, index);
+                            return false;
+                        }
+                    }
                     }
 
                     switch (currentToken->m_tokenType)
@@ -1129,19 +1085,19 @@ namespace XenonEnigne
                                 currentInstrction->m_ops[parameterIndex]->m_stackIndex = symbolElement->m_stackIndex;
                             }
                         }
-                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::TokenType_Function <<1) > 0 &&
+                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  1 << TokenType::TokenType_Function) > 0 &&
                             functionElement != nullptr)
                         {
                             currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_FunctionIndex;
                             currentInstrction->m_ops[parameterIndex]->m_stackIndex = functionElement->m_functionIndex;
                         }
-                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::TokenType_Label << 1) > 0 &&
+                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] & 1 << TokenType::TokenType_Label ) > 0 &&
                             labelElement != nullptr)
                         {
                             currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_InstructionIndex;
                             currentInstrction->m_ops[parameterIndex]->m_stackIndex = labelElement->m_instructionStreamIndex;
                         }
-                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] &  TokenType::TokenType_HostAPI << 1) > 0)
+                        else if ((currentInstructionLookup->m_opFlags[parameterIndex] & 1 << TokenType::TokenType_HostAPI ) > 0)
                         {
                             currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_HostAPICallIndex;
                             int indexOfHostAPI = m_hostAPITable.IndexOf(currentToken->m_character);
@@ -1162,8 +1118,6 @@ namespace XenonEnigne
                         }
                     }
                     break;
-                    case TokenType_Label:
-                        break;
                     case TokenType_Function:
                     {
                         currentInstrction->m_ops[parameterIndex]->m_type = InstructionOpType::InstructionOpType_FunctionIndex;
@@ -1178,14 +1132,29 @@ namespace XenonEnigne
                             return false;
                         }
                     }
-                    break;
-                    case TokenType_HostAPI:
-                        break;
+                    break;                    
                     case TokenType_Delimiter:
+                    {
+                        if (parameterIndex < currentInstrction->m_opCount - 1)
+                        {
+                            Token* delimiterToken = MoveToNextToken(*tokenVector, index);
+                            assert(delimiterToken->m_tokenType == TokenType_Delimiter && delimiterToken->m_delimiter == DelimiterWord_Comma);
+                        }
+                        else 
+                        {
+                            CreateInstructionListError(currentToken, index);
+                            return false;
+                        }
+                    }
                         break;
                     case TokenTypeCount:
-                        break;
+                    case TokenType_Label:
+                    case TokenType_HostAPI:
                     default:
+                    {
+                        CreateInstructionListError(currentToken, index);
+                        return false;
+                    }
                         break;
 
                     }
@@ -1215,7 +1184,6 @@ namespace XenonEnigne
                 case DelimiterWord_CloseBrace:
                 {
                     currentInstrction = new Instruction;
-                    currentInstrction->m_opCount = currentInstructionLookup->m_opCount;
 
                     if (currentFunction->m_functionIndex == m_scriptHeader.m_mainFunctionEntryIndex)
                     {
@@ -1254,6 +1222,7 @@ namespace XenonEnigne
         char errorToken[64];
         token->m_character.CString(errorToken);
         printf("Fetal Error: Parsing Create Instruction List Error\n Character %c In the index %d \n", errorToken, index);
+        assert(true == false);
     }
 
     void XenonScriptAssemblerMachine::PrintAssemblerState(XenonFile*const xenonFile) const

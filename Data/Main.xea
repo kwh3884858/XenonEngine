@@ -65,7 +65,7 @@ FUNC Main
 		PUSH		"Returning Pi to the host..."
 		CALLHOST	DebugPrint
 		
-		MOV		_RetVal, 3.14159
+		MOV		_RETURNVALUE, 3.14159
 	}
 	
 	; ---- Function to be invoked and run alongside a host application loop

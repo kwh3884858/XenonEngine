@@ -118,14 +118,6 @@ namespace XenonEnigne
             Instruction* instruction = m_instructionList[index];
             switch (instruction->m_opCode)
             {
-            case KeyWord_INT:
-            {
-                //InstructionOpType opType = m_instructionList[index]->m_ops[0]->m_type;
-                //InstructionOpType opType = m_instructionList[index]->m_ops[1]->m_type;
-            }
-                break;
-            case KeyWord_FLOAT:
-                break;
             case KeyWord_MOV:
             case KeyWord_ADD:
             case KeyWord_SUB:
@@ -646,6 +638,8 @@ namespace XenonEnigne
                 printf("File Exit: [ %d ]", exitValue.m_integerLiteral);
             }
                 break;
+            case KeyWord_INT:
+            case KeyWord_FLOAT:
             case KeyWord_FUNC:
             case KeyWord_PARAM:
             case KeyWord_RETURNVALUE:
