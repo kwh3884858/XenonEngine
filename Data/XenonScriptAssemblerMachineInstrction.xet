@@ -95,7 +95,7 @@ _RETURNVALUE,33,0
 CALLHOST,34,1
 hostAPI
 RETURN,35,0
-EXIT,36,1
-int,float,string,identifier,register
-PAUSE,37,1
+PAUSE,36,1
 int,float,identifier,register
+EXIT,37,1
+int,float,string,identifier,register
