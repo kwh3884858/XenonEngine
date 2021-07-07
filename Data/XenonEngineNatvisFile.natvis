@@ -15,7 +15,17 @@
             </ArrayItems>
         </Expand>
     </Type>
-
+    <Type Name="Algorithm::Stack&lt;*&gt;">
+        <DisplayString>{{size = {m_count}}}</DisplayString>
+        <Expand>
+            <Item Name="[size]">m_count</Item>
+            <Item Name="[capacity]">m_capacity</Item>
+            <ArrayItems>
+                <Size>m_count</Size>
+                <ValuePointer>m_stack</ValuePointer>
+            </ArrayItems>
+        </Expand>
+    </Type>
     <!--<Type Name="Algorithm::StringBase&lt;*&gt;">
         <DisplayString>{{size = {m_count}}}</DisplayString>
         <Expand>
