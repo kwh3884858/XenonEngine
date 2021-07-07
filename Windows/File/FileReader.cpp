@@ -110,10 +110,10 @@ namespace File
         }
         else
         {
-            assert(true == false);
             fouts.close();
             printf("FIle Cannot Open!");
             std::cerr << "Error: " << strerror(errno);
+            assert(true == false);
             return false;
         }
 

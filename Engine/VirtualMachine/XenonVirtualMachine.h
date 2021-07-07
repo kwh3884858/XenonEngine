@@ -62,7 +62,7 @@ namespace XenonEnigne
         virtual bool Shutdown()override { return true; }
 
         bool LoadScript(Algorithm::StreamingVector<char>* streamedFile);
-        void RunScript();
+        bool RunScript();
     private:
         const InstructionOp& GetInstructionByStackIndex(int index) const;
         const InstructionOp& ResolveInstructionOp(int instructionIndex, int opIndex) const;
@@ -81,7 +81,7 @@ namespace XenonEnigne
 
         InstructionOp m_returnValue;
         Stack<InstructionOp> m_localStack;
-        int m_localCurrentFrameIndex;
+        int m_currentFrameTopIndex = 0;
         Stack<InstructionOp> m_glabalStack;
     };
 

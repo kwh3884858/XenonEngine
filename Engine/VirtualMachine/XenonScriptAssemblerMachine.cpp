@@ -302,7 +302,7 @@ namespace XenonEnigne
             {
                 executeStream.Add(&m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
                 executeStream.Add(&m_functionTable[index]->m_entryPoint, sizeof(m_functionTable[index]->m_entryPoint));
-                executeStream.Add(&m_functionTable[index]->m_localStackSize, sizeof(m_functionTable[index]->m_localStackSize));
+                executeStream.Add(&m_functionTable[index]->m_localDataSize, sizeof(m_functionTable[index]->m_localDataSize));
                 executeStream.Add(&m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
             }
         }
@@ -729,7 +729,8 @@ namespace XenonEnigne
 
                     LabelElement* const label = new LabelElement;
                     label->m_token = currentToken;
-                    label->m_instructionStreamIndex = instructionStreamCount;
+                    // Function return instruction will lead counter always bigger 1 than real instruction number.
+                    label->m_instructionStreamIndex = instructionStreamCount - 1;
                     label->m_currentFunction = currentFunction;
                     m_labelTable.Add(label);
                 }
@@ -803,6 +804,8 @@ namespace XenonEnigne
                             return false;
                         }
                     }
+
+                    instructionStreamCount++;
                 }
                 break;
                 case KeyWord_PARAM:
@@ -829,6 +832,8 @@ namespace XenonEnigne
                     currentFunction->m_parameterCount++;
                 }
                 break;
+                case KeyWord_RETURNVALUE:
+                    break;
                 default:
                 {
                     instructionStreamCount++;
@@ -944,7 +949,7 @@ namespace XenonEnigne
 
                     currentFunctionParamCount++;
                     assert(currentFunctionParamCount <= currentFunction->m_parameterCount);
-                    int stackIndex = -(Local_Stack_Start_Index + currentFunction->m_localStackSize + currentFunctionParamCount);
+                    int stackIndex = -(Local_Stack_Start_Index + currentFunction->m_localDataSize + currentFunctionParamCount + Function_Return_Index_Space);
 
                     assert(currentFunction != nullptr);
                     if (currentFunction)
@@ -984,7 +989,7 @@ namespace XenonEnigne
 
                 m_instructionList.Add(currentInstrction);
 
-                for (int parameterIndex = 0; parameterIndex < currentInstrction->m_opCount; parameterIndex++)
+                for (int parameterIndex = 0; parameterIndex < currentInstrction->m_opCount;)
                 {
                     currentToken = MoveToNextToken(*tokenVector, index);
 
@@ -1135,10 +1140,9 @@ namespace XenonEnigne
                     break;                    
                     case TokenType_Delimiter:
                     {
-                        if (parameterIndex < currentInstrction->m_opCount - 1)
+                        if (parameterIndex < currentInstrction->m_opCount)
                         {
-                            Token* delimiterToken = MoveToNextToken(*tokenVector, index);
-                            assert(delimiterToken->m_tokenType == TokenType_Delimiter && delimiterToken->m_delimiter == DelimiterWord_Comma);
+                            assert(currentToken->m_tokenType == TokenType_Delimiter && currentToken->m_delimiter == DelimiterWord_Comma);
                         }
                         else 
                         {
@@ -1155,9 +1159,27 @@ namespace XenonEnigne
                         CreateInstructionListError(currentToken, index);
                         return false;
                     }
-                        break;
-
                     }
+
+                    switch (currentToken->m_tokenType)
+                    {
+                    case TokenType_IntergalIiteral:
+                    case TokenType_FloatIiteral:
+                    case TokenType_StringEntity:
+                    case TokenType_Register:
+                    case TokenType_Identifier:
+                    case TokenType_Function:
+                    case TokenType_HostAPI:
+                    {
+                        parameterIndex++;
+                    }
+                    break;
+                    default:
+                    {
+                        assert(currentToken->m_tokenType == TokenType_Delimiter);
+                    }
+                    }
+
                 }
             }
             break;
@@ -1307,7 +1329,7 @@ namespace XenonEnigne
         int stackIndex = 0;
         if (functionElement)
         {
-            stackIndex = -(Local_Stack_Start_Index + functionElement->m_localStackSize);
+            stackIndex = -(Local_Stack_Start_Index + functionElement->m_localDataSize);
         }
         else
         {
@@ -1324,7 +1346,7 @@ namespace XenonEnigne
         m_symbolTable.Add(symbol);
         if (functionElement)
         {
-            functionElement->m_localStackSize += size;
+            functionElement->m_localDataSize += size;
         }
         else
         {

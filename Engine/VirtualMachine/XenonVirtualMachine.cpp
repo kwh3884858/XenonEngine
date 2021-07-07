@@ -56,7 +56,7 @@ namespace XenonEnigne
 				m_functionTable.Add(new FunctionElement);
 				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
 				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_entryPoint, sizeof(m_functionTable[index]->m_entryPoint));
-				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_localStackSize, sizeof(m_functionTable[index]->m_localStackSize));
+				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_localDataSize, sizeof(m_functionTable[index]->m_localDataSize));
 				streamIndex = streamedFile->Read(streamIndex, &m_functionTable[index]->m_parameterCount, sizeof(m_functionTable[index]->m_parameterCount));
 			}
 		}
@@ -102,9 +102,9 @@ namespace XenonEnigne
 		}
 	}
 
-    void XenonVirtualMachine::RunScript()
-    {
-        assert(m_scriptHeader.m_mainFunctionEntryIndex < 0);
+    bool XenonVirtualMachine::RunScript()
+{
+        assert(m_scriptHeader.m_mainFunctionEntryIndex >= 0);
 
         Value* globalData = nullptr;
         if (m_scriptHeader.m_globalDataSize > 0)
@@ -592,10 +592,12 @@ namespace XenonEnigne
 
 				const InstructionOp& functionOp = ResolveInstructionOp(currentIndex, 0);
 				FunctionElement* function = m_functionTable[functionOp.m_stackIndex];
-				PushFrame(function->m_localStackSize);
+				PushFrame(function->m_localDataSize);
 				m_localStack.Push(functionOp);
 
 				currentIndex = function->m_entryPoint;
+
+                m_currentFrameTopIndex = m_localStack.Count();
 			}
                 break;
             case KeyWord_CALLHOST:
@@ -609,7 +611,7 @@ namespace XenonEnigne
 					{
 						char tmp[200];
 						m_stringTable[op1.m_stringTableIndex].CString(tmp);
-						printf("%s", tmp);
+						printf("%s\n", tmp);
 					}
 					else
 					{
@@ -623,19 +625,25 @@ namespace XenonEnigne
             case KeyWord_RETURN:
             {
                 InstructionOp functionOp = m_localStack.Pop();
+                assert(functionOp.m_type == InstructionOpType_FunctionIndex);
+                assert(functionOp.m_funcIndex >= 0);
                 FunctionElement* function = m_functionTable[functionOp.m_stackIndex];
-                PopFrame(function->m_localStackSize);
+                PopFrame(function->m_localDataSize);
 
                 InstructionOp returnAddress = m_localStack.Pop();
                 assert(returnAddress.m_type == InstructionOpType_InstructionIndex);
                 currentIndex = returnAddress.m_instructionIndex;
 
+                PopFrame(function->m_parameterCount);
+
+                m_currentFrameTopIndex = m_localStack.Count();
             }
                 break;
             case KeyWord_EXIT:
             {
                 const InstructionOp& exitValue = ResolveInstructionOp(currentIndex, 0);
-                printf("File Exit: [ %d ]", exitValue.m_integerLiteral);
+                printf("File Exit: [ %d ]\n", exitValue.m_integerLiteral);
+                return true;
             }
                 break;
             case KeyWord_INT:
@@ -658,13 +666,16 @@ namespace XenonEnigne
 				index = currentIndex;
 			}
         }
+
+        return false;
     }
 
 	const InstructionOp& XenonVirtualMachine::GetInstructionByStackIndex(int index)const
 	{
-		int realIndex = index < 0 ? m_localCurrentFrameIndex - index - 1 : index;
+		int realIndex = index < 0 ? m_currentFrameTopIndex + index : index;
 		if (index <0)
 		{
+            
             return m_localStack[realIndex];
 		}
 		else
@@ -704,8 +715,10 @@ namespace XenonEnigne
 
 	void XenonVirtualMachine::PushFrame(int size)
 	{
-		m_localStack.Push(InstructionOp());
-		m_localCurrentFrameIndex += size;
+        for (int i = 0; i < size; i++)
+        {
+            m_localStack.Push(InstructionOp());
+        }
 	}
 
 	void XenonVirtualMachine::PopFrame(int size)
@@ -714,7 +727,6 @@ namespace XenonEnigne
 		{
 			m_localStack.Pop();
 		}
-		m_localCurrentFrameIndex -= size;
 	}
 
 	int XenonVirtualMachine::ResolveOpAsInteger(int instructionIndex, int opIndex) const
