@@ -21,7 +21,10 @@
 
 #include "Engine/FileManager/FileManager.h"
 #include "Windows/File/FileReader.h"
+
+#include "Engine/IO/InputSystem.h"
 #include "Windows/Input/DirectXInput.h"
+
 //
 //using MathLab::Vector3f;
 
@@ -149,12 +152,13 @@ void MainWindow::Initialize()
     m_fileReader = new File::FileReader;
     XenonEnigne::FileManager::Get().SetFileReader(m_fileReader);
 
-    WindowInput::DirectXInputConfig* inputConfig = new WindowInput::DirectXInputConfig();
-    inputConfig->m_hwnd = GetHwnd();
-    inputConfig->m_mainInstance = mhInstance;
+    WindowInput::DirectXInputConfig inputConfig;
+    inputConfig.m_hwnd = GetHwnd();
+    inputConfig.m_mainInstance = mhInstance;
     m_directInput = new WindowInput::DirectXInput;
-    m_directInput->SetConfig(inputConfig);
+    m_directInput->SetConfig(&inputConfig);
     m_directInput->Initialize();
+    XenonEnigne::InputSystem::Get().SetFileReader(m_directInput);
 }
 
 void MainWindow::Shutdown()
@@ -163,6 +167,9 @@ void MainWindow::Shutdown()
 
     XenonEnigne::FileManager::Get().Shutdown();
     Primitive::Primitive2D::Get().Shutdown();
+
+    delete m_directInput;
+    m_directInput = nullptr;
 
     delete m_fileReader;
     m_fileReader = nullptr;
@@ -242,8 +249,8 @@ void MainWindow::Run()
             m_directInput->Update();
             Gameplay::GameplayMain();
             m_directXDrawSurface->Unlock();
-            m_zBuffer->Unlock();           
-           bool result = m_windowDrawer->Draw(m_directXDrawSurface);
+            m_zBuffer->Unlock();
+            bool result = m_windowDrawer->Draw(m_directXDrawSurface);
         }
     }
     Gameplay::GameplayShutdown();

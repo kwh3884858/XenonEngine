@@ -10,6 +10,7 @@
 //#include <objbase.h> //need this one for GUIDS
 #include <dinput.h>
 #include "Mathlab/Vector2f.h"
+#include "CrossPlatform/Interface/IInput.h"
 
 namespace WindowInput {
     using MathLab::Vector2f;
@@ -19,10 +20,8 @@ namespace WindowInput {
         HWND m_hwnd;
         HINSTANCE m_mainInstance;
     };
-    const unsigned char RightButton = 0;
-    const unsigned char LeftButton = 1;
 
-    class DirectXInput
+    class DirectXInput:public CrossPlatform::IInput
     {
     public:
         DirectXInput();
@@ -33,9 +32,9 @@ namespace WindowInput {
         void Update();
         void ShutDown();
 
-        bool GetKeyDown(unsigned char keyCode)const;
-        Vector2f GetMouseMove()const;
-        bool GetMouseButton(unsigned char mouseCode)const;
+        virtual bool GetKeyDown(unsigned char keyCode)const override;
+        virtual Vector2f GetMouseMove()const override;
+        virtual bool GetMouseButton(unsigned char mouseCode)const override;
 
     private:
         LPDIRECTINPUT8 lpdi = nullptr;

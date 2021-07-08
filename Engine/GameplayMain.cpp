@@ -1,6 +1,8 @@
 #include "Engine/GameplayMain.h"
 
 #include "Engine/Primitive/Primitive2D.h"
+#include "Engine/IO/InputSystem.h"
+#include "CrossPlatform/Interface/IInput.h"
 #include "CrossPlatform/Database.h"
 #include "CrossPlatform/SColorRGBA.h"
 
@@ -22,6 +24,7 @@ namespace Gameplay {
     using Primitive::Primitive2D;
 
     using XenonEnigne::XenonCompiler;
+    using XenonEnigne::InputSystem;
 
     Polygon2D* tmpPolygon;
     Polygon2D* tmpRectangle;
@@ -86,6 +89,19 @@ namespace Gameplay {
             j = 400;
         }
 
+        if (InputSystem::Get().GetKeyDown('a'))
+        {
+            printf("key a pressed \n");
+        }
+        if (InputSystem::Get().GetKeyDown('d'))
+        {
+            printf("key d pressed \n");
+        }
+        bool pos = InputSystem::Get().GetMouseButton(CrossPlatform::IInput::LeftButton);
+        if (pos)
+        {
+            printf("!!!!\n");
+        }
 
     }
 

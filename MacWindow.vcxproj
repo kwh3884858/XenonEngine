@@ -119,6 +119,7 @@
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
+    <ClCompile Include="Engine\IO\InputSystem.cpp" />
     <ClCompile Include="Engine\Physics\Physics2D.cpp" />
     <ClCompile Include="Engine\Primitive\Primitive2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
@@ -158,11 +159,13 @@
     <ClInclude Include="CrossPlatform\Database.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
+    <ClInclude Include="CrossPlatform\Interface\IInput.h" />
     <ClInclude Include="CrossPlatform\XenonFile.h" />
     <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h" />
     <ClInclude Include="Engine\Component\BoxCollider2D.h" />
     <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />
+    <ClInclude Include="Engine\IO\InputSystem.h" />
     <ClInclude Include="Engine\Physics\Force2D.h" />
     <ClInclude Include="Engine\Physics\Physics2D.h" />
     <ClInclude Include="CrossPlatform\Polygon2D.h" />

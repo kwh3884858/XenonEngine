@@ -72,6 +72,10 @@ namespace WindowInput {
     {
         HRESULT result;
         result = lpdikey->GetDeviceState(sizeof(m_keyState), (LPVOID)m_keyState);
+        if (m_keyState['a'])
+        {
+            assert(true == false);
+        }
         assert(result == DI_OK);
         while(result == DIERR_INPUTLOST)
         {
@@ -128,7 +132,7 @@ namespace WindowInput {
 
     bool DirectXInput::GetKeyDown(unsigned char keyCode) const
     {
-        return m_keyState[keyCode] & 0x80;
+        return m_keyState[keyCode] & 0x80 != 0;
     }
 
     Vector2f DirectXInput::GetMouseMove() const
@@ -138,7 +142,7 @@ namespace WindowInput {
 
     bool DirectXInput::GetMouseButton(unsigned char mouseCode) const
     {
-        return m_mouseState.rgbButtons[mouseCode] & 0x80;
+        return m_mouseState.rgbButtons[mouseCode] & 0x80 != 0;
     }
 
     char joystickName[80];
