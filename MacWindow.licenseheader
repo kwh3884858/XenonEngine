@@ -4,7 +4,7 @@ extensions: .cs .cpp .h
 //  %Project%
 //
 //  Created by %UserName% on %CurrentYear%-%CurrentMonth%-%CurrentDay%.
-//  Copyright (c) 2018 %UserName%. All rights reserved.
+//  Copyright (c) 2021 %UserName%. All rights reserved.
 extensions: .aspx .ascx
 <%-- 
 Copyright (c) 2011 rubicon IT GmbH

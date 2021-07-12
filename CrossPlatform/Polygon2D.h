@@ -8,19 +8,6 @@
 #include "MathLab/Vector2f.h"
 #include "CrossPlatform/SColorRGBA.h"
 namespace CrossPlatform {
-    //class Vertex2Df
-    //{
-    //public:
-    //    float x = 0;
-    //    float y = 0;
-
-    //};
-
-    //class Vertex2Di {
-    //public:
-    //    int x = 0;
-    //    int y = 0;
-    //};
 
     class Polygon2D 
     {

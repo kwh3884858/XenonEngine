@@ -15,7 +15,7 @@ namespace Algorithm
     class StreamingVector;
 }
 
-namespace XenonEnigne
+namespace XenonEngine
 {
     using Algorithm::String;
     using Algorithm::Stack;

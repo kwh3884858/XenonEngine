@@ -14,22 +14,22 @@ namespace XenonEngine
         enum IComponentType :int
         {
             None,
-            Transform,
-            Polygon2D,
-            Shader,
-            Collider2D,
-            Rigidbody2D,
-            Script,
-            Input
+            ComponentType_Transform,
+            ComponentType_Render2D,
+            ComponentType_Shader,
+            ComponentType_Collider2D,
+            ComponentType_Rigidbody2D,
+            ComponentType_Personality,
+            ComponentType_Script,
+            ComponentType_Input
         };
-        IComponent(IComponentType type, GameObject* gameobject) :
-            m_type(type),
+        IComponent( GameObject* gameobject) :
             m_gameobject(gameobject)
         {
         }
         virtual ~IComponent() {};
 
-        IComponentType GetComponentType() { return m_type; }
+        virtual IComponentType GetComponentType() const = 0;
 
         //DO NOT reference other component
         virtual bool Start() { return true; }
@@ -38,11 +38,14 @@ namespace XenonEngine
 
         GameObject* GetGameObject() { return m_gameobject; }
 
+        static IComponentType m_type;
     protected:
-        IComponentType m_type = IComponentType::None;
+        
         GameObject* m_gameobject = nullptr;
 
     };
+
+    __declspec(selectany) IComponent::IComponentType IComponent::m_type = IComponent::IComponentType::None;
 
     typedef IComponent::IComponentType ComponentType;
 }

@@ -23,6 +23,8 @@ namespace XenonEngine
         return m_radius;
     }
 
+    ComponentType CircleCollider2D::m_type = ComponentType::ComponentType_Collider2D;
+
     const float CircleCollider2D::PI = 3.1415926f;
 
 }

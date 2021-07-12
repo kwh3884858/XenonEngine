@@ -5,7 +5,7 @@
 #include "Algorithms/StreamingVector.h"
 #include <cassert>
 
-namespace XenonEnigne 
+namespace XenonEngine 
 {
     using Algorithm::StreamingVector;
 
@@ -41,6 +41,14 @@ namespace XenonEnigne
         delimiterListFile = nullptr;
         assert(result == true);
 
+        Recompile();
+    }
+
+    void XenonCompiler::Recompile() 
+    {
+        String applicationPath = FileManager::Get().GetApplicationPath();
+        int pos = applicationPath.Find("XenonEngine.exe");
+
         String assemblerPath = applicationPath.Substring(0, pos);
         assemblerPath.Append("Main.xea");
         XenonFile*  assemblerFile = FileManager::Get().ReadFile(assemblerPath);
@@ -56,7 +64,7 @@ namespace XenonEnigne
         executableFilePath.Append("Main.xex");
         StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);
         m_xvm->LoadScript(streamedFile);
-        result = m_xvm->RunScript();
+        bool result = m_xvm->RunScript();
         assert(result == true);
     }
 

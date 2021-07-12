@@ -4,7 +4,7 @@
 #include "Algorithms/Vector.h"
 #include "Algorithms/StreamingVector.h"
 
-namespace XenonEnigne {
+namespace XenonEngine {
 
     using CrossPlatform::IFileReader;
     using CrossPlatform::XenonFile;

@@ -18,7 +18,7 @@ namespace XenonEngine
         };
 
         Collider2D(GameObject* gameobject, ColliderType colliderType) :
-            IComponent(ComponentType::Collider2D, gameobject),
+            IComponent(gameobject),
             m_colliderType(colliderType)
         {}
         virtual ~Collider2D()override {};

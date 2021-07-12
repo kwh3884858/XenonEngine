@@ -35,8 +35,13 @@ namespace WindowInput {
         virtual bool GetKeyDown(unsigned char keyCode)const override;
         virtual Vector2f GetMouseMove()const override;
         virtual bool GetMouseButton(unsigned char mouseCode)const override;
+        virtual Vector2f GetAxisRaw()const override;
+        virtual Vector2f GetAxis()const override;
+        virtual bool GetStickButton(unsigned buttonCode)const override;
 
     private:
+        void InitializeKeyboardCode()const;
+
         LPDIRECTINPUT8 lpdi = nullptr;
         LPDIRECTINPUTDEVICE8 lpdikey = nullptr;
         LPDIRECTINPUTDEVICE8 lpdiMouse = nullptr;

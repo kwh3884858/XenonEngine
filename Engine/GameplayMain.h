@@ -12,5 +12,4 @@ namespace Gameplay {
     void GameplayShutdown();
 
     void Donut();
-    void DrawPolygon(const CrossPlatform::Polygon2D& polygon);
 }

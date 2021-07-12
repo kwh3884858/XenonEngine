@@ -23,7 +23,7 @@ namespace Algorithm
     typedef StringBase<char> String;
 }
 
-namespace XenonEnigne {
+namespace XenonEngine {
     class FileManager : public CrossPlatform::XenonManager<FileManager>
     {
     public:

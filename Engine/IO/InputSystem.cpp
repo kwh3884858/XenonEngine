@@ -1,7 +1,7 @@
 #include "InputSystem.h"
 #include "CrossPlatform/Interface/IInput.h"
 
-namespace XenonEnigne
+namespace XenonEngine
 {
     using MathLab::Vector2f;
 
@@ -29,6 +29,21 @@ namespace XenonEnigne
     bool InputSystem::GetMouseButton(unsigned char mouseCode) const
     {
         return m_input->GetMouseButton(mouseCode);
+    }
+
+    Vector2f InputSystem::GetAxisRaw() const
+    {
+        return m_input->GetAxisRaw();
+    }
+
+    MathLab::Vector2f InputSystem::GetAxis() const
+    {
+        return m_input->GetAxis();
+    }
+
+    bool InputSystem::GetStickButton(unsigned buttonCode) const
+    {
+        return m_input->GetStickButton(buttonCode);
     }
 
 }

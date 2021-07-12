@@ -6,7 +6,7 @@ namespace CrossPlatform {
     class IInput;
 }
 
-namespace XenonEnigne {
+namespace XenonEngine {
     class InputSystem :public CrossPlatform::XenonManager<InputSystem>
     {
     public:
@@ -17,6 +17,9 @@ namespace XenonEnigne {
         bool GetKeyDown(unsigned char keyCode)const;
         MathLab::Vector2f GetMouseMove()const;
         bool GetMouseButton(unsigned char mouseCode)const;
+        MathLab::Vector2f GetAxisRaw()const;
+        MathLab::Vector2f GetAxis()const;
+        bool GetStickButton(unsigned buttonCode)const;
     private:
         CrossPlatform::IInput* m_input;
     };

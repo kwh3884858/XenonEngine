@@ -150,7 +150,7 @@ void MainWindow::Initialize()
     Primitive::Primitive2D::Get().SetConfig(&primitive2DConfig);
 
     m_fileReader = new File::FileReader;
-    XenonEnigne::FileManager::Get().SetFileReader(m_fileReader);
+    XenonEngine::FileManager::Get().SetFileReader(m_fileReader);
 
     WindowInput::DirectXInputConfig inputConfig;
     inputConfig.m_hwnd = GetHwnd();
@@ -158,14 +158,14 @@ void MainWindow::Initialize()
     m_directInput = new WindowInput::DirectXInput;
     m_directInput->SetConfig(&inputConfig);
     m_directInput->Initialize();
-    XenonEnigne::InputSystem::Get().SetFileReader(m_directInput);
+    XenonEngine::InputSystem::Get().SetFileReader(m_directInput);
 }
 
 void MainWindow::Shutdown()
 {
     m_directInput->ShutDown();
 
-    XenonEnigne::FileManager::Get().Shutdown();
+    XenonEngine::FileManager::Get().Shutdown();
     Primitive::Primitive2D::Get().Shutdown();
 
     delete m_directInput;

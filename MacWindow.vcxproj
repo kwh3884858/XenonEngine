@@ -116,9 +116,11 @@
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
+    <ClCompile Include="Engine\Component\Render2D.cpp" />
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
+    <ClCompile Include="Engine\GameObjectWorld.cpp" />
     <ClCompile Include="Engine\IO\InputSystem.cpp" />
     <ClCompile Include="Engine\Physics\Physics2D.cpp" />
     <ClCompile Include="Engine\Primitive\Primitive2D.cpp" />
@@ -134,6 +136,7 @@
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
     <ClCompile Include="Windows\Input\DirectXInput.cpp" />
+    <ClCompile Include="CrossPlatform\XenonKey.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
     <ClCompile Include="mathlab\MathLib.cpp" />
     <ClCompile Include="MathLab\Vector2i.cpp" />
@@ -162,9 +165,13 @@
     <ClInclude Include="CrossPlatform\Interface\IInput.h" />
     <ClInclude Include="CrossPlatform\XenonFile.h" />
     <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h" />
+    <ClInclude Include="CrossPlatform\XenonKey.h" />
     <ClInclude Include="Engine\Component\BoxCollider2D.h" />
     <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />
+    <ClInclude Include="Engine\Component\PlayerPersonality.h" />
+    <ClInclude Include="Engine\Component\Render2D.h" />
+    <ClInclude Include="Engine\GameObjectWorld.h" />
     <ClInclude Include="Engine\IO\InputSystem.h" />
     <ClInclude Include="Engine\Physics\Force2D.h" />
     <ClInclude Include="Engine\Physics\Physics2D.h" />
@@ -219,6 +226,7 @@
     <ClInclude Include="CrossPlatform\Interface\DrawerType.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\Main.xea" />
     <None Include="MacWindow.licenseheader" />
     <None Include="README.md" />
   </ItemGroup>

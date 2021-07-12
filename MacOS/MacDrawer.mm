@@ -7,11 +7,13 @@
 //
 
 #include "MacDrawer.h"
+#include "CrossPlatform/Interface/IInput.h"
 
 const char LEFT = 1;
 const char RIGHT = 2;
 const char DOWN = 4;
 const char UP = 8;
+unsigned char CrossPlatform::XKeyA = DIK_A;
 
 MacDrawer::MacDrawer(){
     fprintf(stdout, "Controller is still null!");

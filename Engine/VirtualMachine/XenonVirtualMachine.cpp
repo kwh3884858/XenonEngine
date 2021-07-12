@@ -1,13 +1,17 @@
 #include "Engine/VirtualMachine/XenonVirtualMachine.h"
 
 #include "Engine/FileManager/FileManager.h"
+#include "Engine/GameObjectWorld.h"
+#include "Engine/GameObject.h"
+#include "Engine/Component/PlayerPersonality.h"
+
 #include "CrossPlatform/XenonFile.h"
 
 #include "Algorithms/Vector.h"
 #include "Algorithms/StreamingVector.h"
 
 #include <cstdio>
-namespace XenonEnigne
+namespace XenonEngine
 {
 	using Algorithm::Vector;
 	using CrossPlatform::XenonFile;
@@ -617,6 +621,19 @@ namespace XenonEnigne
 					{
 						assert(true == false);
 					}
+				}else if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "SetVelocity")
+				{
+                    InstructionOp op1 = m_localStack.Pop();
+                    if (op1.m_type == InstructionOpType_FloatLiteral)
+                    {
+                        XenonEngine::GameObject* player = GameObjectWorld::Get().GetGameObject("Player");
+                        XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
+                        personlity->SetVelocity(op1.m_floatLiteral);
+                    }
+                    else
+                    {
+                        assert(true == false);
+                    }
 				}
 			}
                 break;
@@ -736,7 +753,7 @@ namespace XenonEnigne
 
 		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
 		{
-		case XenonEnigne::InstructionOpType_IntegerLiteral:
+		case XenonEngine::InstructionOpType_IntegerLiteral:
 		{
 			return m_instructionList[instructionIndex]->m_ops[opIndex]->m_integerLiteral;
 		}
@@ -755,7 +772,7 @@ namespace XenonEnigne
 
 		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
 		{
-		case XenonEnigne::InstructionOpType_FloatLiteral:
+		case XenonEngine::InstructionOpType_FloatLiteral:
 		{
 			return m_instructionList[instructionIndex]->m_ops[opIndex]->m_floatLiteral;
 		}
@@ -774,7 +791,7 @@ namespace XenonEnigne
 
 		switch (m_instructionList[instructionIndex]->m_ops[opIndex]->m_type)
 		{
-		case XenonEnigne::InstructionOpType_StringIndex:
+		case XenonEngine::InstructionOpType_StringIndex:
 		{
 			int stringIndex =m_instructionList[instructionIndex]->m_ops[opIndex]->m_stringTableIndex;
 			assert(stringIndex < m_stringTable.Count());

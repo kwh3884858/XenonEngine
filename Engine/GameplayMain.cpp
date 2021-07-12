@@ -3,6 +3,7 @@
 #include "Engine/Primitive/Primitive2D.h"
 #include "Engine/IO/InputSystem.h"
 #include "CrossPlatform/Interface/IInput.h"
+#include "CrossPlatform/XenonKey.h"
 #include "CrossPlatform/Database.h"
 #include "CrossPlatform/SColorRGBA.h"
 
@@ -14,7 +15,10 @@
 #include "CrossPlatform/Polygon2D.h"
 
 #include "Engine/VirtualMachine/XenonCompiler.h"
-
+#include "Engine/GameObjectWorld.h"
+#include "Engine/GameObject.h"
+#include "Engine/Component/Render2D.h"
+#include "Engine/Component/PlayerPersonality.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -23,92 +27,82 @@ namespace Gameplay {
     using CrossPlatform::Polygon2D;
     using Primitive::Primitive2D;
 
-    using XenonEnigne::XenonCompiler;
-    using XenonEnigne::InputSystem;
+    using XenonEngine::XenonCompiler;
+    using XenonEngine::InputSystem;
 
-    Polygon2D* tmpPolygon;
-    Polygon2D* tmpRectangle;
+    using XenonEngine::Render2D;
+    using XenonEngine::Render2DConfig;
+
+    using XenonEngine::GameObject;
+    using XenonEngine::GameObjectWorld;
+    using XenonEngine::PlayerPersonality;
+    using XenonEngine::ComponentType;
+
+    GameObject* player;
+    Polygon2D* heroPolygon;
+
+    XenonCompiler* compiler = nullptr;
     void GameplayInitialize()
     {
-        int numOfVertex = 3;
-        Vector2f* vertexList = new Vector2f[numOfVertex];
-        vertexList[0] = Vector2f(100, 100);
-        vertexList[1] = Vector2f(10, -100);
-        vertexList[2] = Vector2f(-50, -10);
-        tmpPolygon = new Polygon2D(Polygon2D::EState::Enable, Vector2f(100, 100), Vector2f(0, 0), CrossPlatform::WHITE, numOfVertex, vertexList);
+        GameObjectWorld::Get().Initialize();
 
-         numOfVertex = 4;
-        Vector2f* vertexList2 = new Vector2f[numOfVertex];
-        vertexList2[0] = Vector2f(100, 100);
-        vertexList2[1] = Vector2f(20, -100);
-        vertexList2[2] = Vector2f(-60, -60);
-        vertexList2[3] = Vector2f(-80, -10);
-        tmpRectangle = new Polygon2D(Polygon2D::EState::Enable, Vector2f(100, 100), Vector2f(0, 0), CrossPlatform::RED, numOfVertex, vertexList2);
-        //printf("(%u, %u)\n", vertexList2[0].x, vertexList2[0].y);
-        //printf("(%u, %u)\n", vertexList2[1].x, vertexList2[1].y);
-        //printf("(%u, %u)\n", vertexList2[2].x, vertexList2[2].y);
-        //printf("(%u, %u)\n", vertexList2[3].x, vertexList2[3].y);
+        int numOfVertex = 4;
+        Vector2f* heroVertex = new Vector2f[numOfVertex];
+        heroVertex[0] = Vector2f(10, 0);
+        heroVertex[1] = Vector2f(10, 20);
+        heroVertex[2] = Vector2f(-10, 20);
+        heroVertex[3] = Vector2f(-10, 0);
+        heroPolygon = new Polygon2D(Polygon2D::EState::Enable, Vector2f(100, 100), Vector2f(0, 0), CrossPlatform::WHITE, numOfVertex, heroVertex);
 
-        XenonCompiler compiler;
-        compiler.Initialize();
+        player = new GameObject("Player");
+        GameObjectWorld::Get().AddGameObject(player);
+
+        Render2DConfig render2DConfig;
+        render2DConfig.m_polygon2D = heroPolygon;
+        Render2D* render2D = new Render2D(player);
+        render2D->SetConfig(&render2DConfig);
+        player->AddComponent(render2D);
+
+        PlayerPersonality* personality = new PlayerPersonality(player);
+        player->AddComponent(personality);
+
+        compiler = new XenonCompiler;
+        compiler->Initialize();
     }
 
     void GameplayMain()
     {
-        //printf("/////////////Line///////////////");
-        //Primitive2D::get().DrawLine(Vector2i(10, 10), Vector2i(200, 10),CrossPlatform::WHITE);
+        if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
+            InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))
+        {
+            printf("Recompile");
+            compiler->Recompile();
+        }
+
         unsigned int width = Database::Get().engineConfig.m_width;
         unsigned int height = Database::Get().engineConfig.m_height;
-        //for (int i = 0 ;i < height; i++)
-        //{
-        //    Primitive2D::get().DrawPixel(i, i);
-        //}
 
-        //Primitive2D::get().DrawLine(Vector2i(500, 200),Vector2i(10, 10) ,CrossPlatform::BLUE);
-        //Primitive2D::get().DrawLine(Vector2i(10, 50), Vector2i(500, 200), CrossPlatform::GREEN);
-        //Primitive2D::get().DrawLine(Vector2i(90, 90), Vector2i(700, 599), CrossPlatform::RED);
-        
-        //printf("/////////////////Donut////////////////////");
-        //Donut();
-        static int i = 50;
-        static int j = 400;
-        tmpPolygon->m_position = Vector2f(i,i);
-        tmpRectangle->m_position = Vector2f(j,j);
-
-        DrawPolygon(*tmpPolygon);
-        DrawPolygon(*tmpRectangle);
-        
-        ++i;
-        if (i==400)
+        Vector2f axis = InputSystem::Get().GetAxis();
+        if (MathLab::abs( axis.x ) > 0.1f)
         {
-            i = 150;
+            PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
+            float velocity = personlity->GetVelocity();
+            heroPolygon->m_position += Vector2f(axis.x * velocity, 0);
         }
-        j--;
-        if (j ==100)
+        if (InputSystem::Get().GetStickButton(0))
         {
-            j = 400;
+
         }
 
-        if (InputSystem::Get().GetKeyDown('a'))
-        {
-            printf("key a pressed \n");
-        }
-        if (InputSystem::Get().GetKeyDown('d'))
-        {
-            printf("key d pressed \n");
-        }
-        bool pos = InputSystem::Get().GetMouseButton(CrossPlatform::IInput::LeftButton);
-        if (pos)
-        {
-            printf("!!!!\n");
-        }
-
+        Render2D* render2D = player->GetComponent<Render2D>();
+        render2D->Update();
     }
 
     void GameplayShutdown()
     {
-        delete tmpPolygon;
-        delete tmpRectangle;
+        delete compiler;
+
+        GameObjectWorld::Get().Shutdown();
     }
 
     void Donut()
@@ -213,20 +207,5 @@ namespace Gameplay {
         tmpdegree += 1;
     }
 
-    void DrawPolygon(const CrossPlatform::Polygon2D& polygon)
-    {
-        assert(polygon.m_numberOfVertex >= 3);
-        for (int i = 1; i < polygon.m_numberOfVertex - 1;i++)
-        {
-            Primitive2D::Get().DrawTriangle(
-                polygon.m_position + polygon.m_vertexList[0],
-                polygon.m_position + polygon.m_vertexList[i],
-                polygon.m_position + polygon.m_vertexList[i + 1],
-                polygon.m_color
-            );
-        }
-        //Primitive2D::get().DrawTriangle(Vector2f(10, 50), Vector2f(100, 200), Vector2f(500, 400));
-
-    }
 
 }

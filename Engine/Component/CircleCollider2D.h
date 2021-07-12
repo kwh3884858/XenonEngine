@@ -20,10 +20,13 @@ namespace XenonEngine
         CircleCollider2D(GameObject* gameobject) :
             Collider2D(gameobject, ColliderType::Circle) {}
         virtual ~CircleCollider2D()override;
+        virtual ComponentType GetComponentType() const override { return m_type; };
 
         void SetConfig(const CircleCollider2DConfig*const config);
         virtual float GetArea()const override;
         virtual float GetRadius()const override;
+
+        static ComponentType m_type;
     private:
         float m_radius;
     };

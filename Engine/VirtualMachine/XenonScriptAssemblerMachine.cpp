@@ -4,7 +4,7 @@
 #include "Engine/FileManager/FileManager.h"
 #include <stdio.h>  // printf
 
-namespace XenonEnigne
+namespace XenonEngine
 {
     using Algorithm::StreamingVector;
 
@@ -137,9 +137,9 @@ namespace XenonEnigne
             {
                 switch (currentState)
                 {
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_Start:
+                case XenonEngine::XenonScriptAssemblerMachine::InstructionState_Start:
                     break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_Mnomonic:
+                case XenonEngine::XenonScriptAssemblerMachine::InstructionState_Mnomonic:
                 {
                     instrction = new InstructionLookup;
                     instrction->m_mnemonic = tmpString;
@@ -147,13 +147,13 @@ namespace XenonEnigne
                     m_instructionLookupList.Add(instrction);
                 }
                 break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_OpType:
+                case XenonEngine::XenonScriptAssemblerMachine::InstructionState_OpType:
                 {
                     instrction->m_opType = static_cast<KeyWord>(tmpString.ToInt());
                     currentState = InstructionState::InstructionState_OpCount;
                 }
                 break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_OpCount:
+                case XenonEngine::XenonScriptAssemblerMachine::InstructionState_OpCount:
                 {
                     instrction->m_opCount = tmpString.ToInt();
                     tokenOpAmount = instrction->m_opCount;
@@ -172,7 +172,7 @@ namespace XenonEnigne
                     }
                 }
                 break;
-                case XenonEnigne::XenonScriptAssemblerMachine::InstructionState_OpTypeList:
+                case XenonEngine::XenonScriptAssemblerMachine::InstructionState_OpTypeList:
                 {
                     if (currentTokenOpCount >= tokenOpAmount)
                     {
@@ -243,6 +243,8 @@ namespace XenonEnigne
 
     void XenonScriptAssemblerMachine::Compiler(const XenonFile* const xenonFile)
     {
+        ClearData();
+
         TokenVector* tokens = nullptr;
         tokens = Lexer(xenonFile);
         assert(tokens != nullptr);
@@ -364,7 +366,7 @@ namespace XenonEnigne
         }
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimiterSymbol)
+    XenonEngine::XenonScriptAssemblerMachine::DelimiterSymbolState XenonScriptAssemblerMachine::CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimiterSymbol)
     {
         switch (currentState)
         {
@@ -388,7 +390,7 @@ namespace XenonEnigne
         return currentState;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::GetNextToken(const XenonFile * const xenonFile, int& refCurrentIndex, Token* const token) const
+    XenonEngine::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::GetNextToken(const XenonFile * const xenonFile, int& refCurrentIndex, Token* const token) const
     {
         char currentCharacter = '\0';
         bool isShouldAddCharacter = true;
@@ -596,7 +598,7 @@ namespace XenonEnigne
         return lexerState;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::TokenError(LexerState state, char character, unsigned int index, int lineCountForDebug) const
+    XenonEngine::XenonScriptAssemblerMachine::LexerState XenonScriptAssemblerMachine::TokenError(LexerState state, char character, unsigned int index, int lineCountForDebug) const
     {
         printf("Fetal Error: Lexer Error\n Character %c From State %d is undefined\n In the index %d and line %d", character, state, index, lineCountForDebug);
         return LexerState::LexerState_Error;
@@ -658,6 +660,19 @@ namespace XenonEnigne
         }
         break;
         }
+    }
+
+    void XenonScriptAssemblerMachine::ClearData()
+    {
+        m_scriptHeader.m_globalDataSize = 0;
+        m_scriptHeader.m_mainFunctionEntryIndex = -1;
+
+        m_symbolTable.Clear();
+        m_functionTable.Clear();
+        m_labelTable.Clear();
+        m_stringTable.Clear();
+        m_hostAPITable.Clear();
+        m_instructionLookupList.Clear();
     }
 
     XenonScriptAssemblerMachine::TokenVector* XenonScriptAssemblerMachine::Lexer(const XenonFile * const xenonFile) const
@@ -1420,19 +1435,19 @@ namespace XenonEnigne
         return false;
     }
 
-    XenonEnigne::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, int& index) const
+    XenonEngine::Token* XenonScriptAssemblerMachine::MoveToNextToken(const TokenVector& tokenVector, int& index) const
     {
         assert(index + 1 < tokenVector.Count());
         return tokenVector[++index];
     }
 
-    XenonEnigne::Token* XenonScriptAssemblerMachine::PeekNextToken(const TokenVector& tokenVector, int& index) const
+    XenonEngine::Token* XenonScriptAssemblerMachine::PeekNextToken(const TokenVector& tokenVector, int& index) const
     {
         assert(index + 1 < tokenVector.Count());
         return tokenVector[index+1];
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::SymbolElement*const XenonScriptAssemblerMachine::GetSymbolByName(const String& symbolName) const
+    XenonEngine::XenonScriptAssemblerMachine::SymbolElement*const XenonScriptAssemblerMachine::GetSymbolByName(const String& symbolName) const
     {
         for (int i = 0; i < m_symbolTable.Count(); i++)
         {
@@ -1444,7 +1459,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    XenonEnigne::FunctionElement*const XenonScriptAssemblerMachine::GetFunctionByName(const String& functionName) const
+    XenonEngine::FunctionElement*const XenonScriptAssemblerMachine::GetFunctionByName(const String& functionName) const
     {
         for (int i = 0; i < m_functionTable.Count(); i++)
         {
@@ -1456,7 +1471,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    XenonEnigne::LabelElement*const XenonScriptAssemblerMachine::GetLabelByName(const String& labelName)
+    XenonEngine::LabelElement*const XenonScriptAssemblerMachine::GetLabelByName(const String& labelName)
     {
         for (int i = 0; i < m_labelTable.Count(); i++)
         {
@@ -1468,7 +1483,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    XenonEnigne::XenonScriptAssemblerMachine::InstructionLookup*const XenonScriptAssemblerMachine::GetInstructionByKeyword(const KeyWord& keyword) const
+    XenonEngine::XenonScriptAssemblerMachine::InstructionLookup*const XenonScriptAssemblerMachine::GetInstructionByKeyword(const KeyWord& keyword) const
     {
         for (int i = 0; i < m_instructionLookupList.Count(); i++)
         {
@@ -1480,7 +1495,7 @@ namespace XenonEnigne
         return nullptr;
     }
 
-    const XenonEnigne::TypeString<int> XenonScriptAssemblerMachine::keyWordString[keywordStringCount] =
+    const XenonEngine::TypeString<int> XenonScriptAssemblerMachine::keyWordString[keywordStringCount] =
     {
         {"int",  TokenType::TokenType_IntergalIiteral},
         {"float", TokenType::TokenType_FloatIiteral},

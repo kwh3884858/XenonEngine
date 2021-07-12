@@ -16,8 +16,9 @@ namespace XenonEngine
         friend class Rigidbody2D;
 
         Transform2D(GameObject* gameobject) :
-            IComponent(ComponentType::Transform, gameobject){}
+            IComponent(gameobject){}
         virtual ~Transform2D()override;
+        virtual ComponentType GetComponentType() const override { return m_type; };
 
         //void SetPosition(Vector2f position) { m_position = position; }
         //void SetRotation(float rotation) { m_orientation = rotation; }
@@ -26,6 +27,8 @@ namespace XenonEngine
 
         float GetOrientation()const { return m_orientation; }
         void AddRotation(float rotation) { m_orientation += rotation; }
+
+        static ComponentType m_type;
     private:
         bool m_isModified = false;
         Vector2f m_position;

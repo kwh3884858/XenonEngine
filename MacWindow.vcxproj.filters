@@ -114,6 +114,15 @@
     <ClCompile Include="Engine\IO\InputSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CrossPlatform\XenonKey.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\Render2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\GameObjectWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -326,10 +335,23 @@
     <ClInclude Include="CrossPlatform\Interface\IInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CrossPlatform\XenonKey.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Render2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\PlayerPersonality.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GameObjectWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
     <None Include="MacWindow.licenseheader" />
+    <None Include="Data\Main.xea" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Windows\Resources\ScaffoldLogo.ico">

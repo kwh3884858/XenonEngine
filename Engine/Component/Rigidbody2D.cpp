@@ -15,7 +15,7 @@ namespace XenonEngine
     using XenonPhysics::Force2D;
     
     Rigidbody2D::Rigidbody2D(GameObject* gameobject, bool isStatic, float mass, float inertia) :
-        IComponent(ComponentType::Rigidbody2D, gameobject),
+        IComponent(gameobject),
         mIsStatic(isStatic),
         m_mass(mass),
         m_inertia(inertia),
@@ -45,7 +45,7 @@ namespace XenonEngine
         Vector2f dv = a * deltaTime;
         m_velocity += dv;
         Vector2f ds = m_velocity * deltaTime;
-        Transform2D* transform = m_gameobject->GetComponent<Transform2D>(ComponentType::Transform);
+        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
         assert(transform != nullptr);
         transform->AddPosition(ds);
 
@@ -94,7 +94,7 @@ namespace XenonEngine
         float projectedArea = 1;
         float radius = 0;
 
-        XenonEngine::Collider2D* collider = m_gameobject->GetComponent<XenonEngine::Collider2D>(ComponentType::Collider2D);
+        XenonEngine::Collider2D* collider = m_gameobject->GetComponent<XenonEngine::Collider2D>();
         if (collider != nullptr)
         {
             projectedArea = collider->GetArea();
@@ -141,12 +141,14 @@ namespace XenonEngine
         //No moment since line of action is through center of gravity
         sumOfForces += m_forces;
 
-        Transform2D* transform = m_gameobject->GetComponent<Transform2D>(ComponentType::Transform);
+        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
         assert(transform != nullptr);
         //Convert forces from model spece to world space
         m_forces = MathLab::Rotate2D(sumOfForces, transform->GetOrientation());
         m_moments = sumOfMoments;
         
     }
+
+    ComponentType Rigidbody2D::m_type = ComponentType::ComponentType_Rigidbody2D;
 
 }

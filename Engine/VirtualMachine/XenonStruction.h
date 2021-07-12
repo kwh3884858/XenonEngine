@@ -1,7 +1,7 @@
 #pragma once
 #include "Algorithms/String.h"
 #include "Algorithms/Vector.h"
-namespace XenonEnigne
+namespace XenonEngine
 {
     using Algorithm::String;
     using Algorithm::Vector;

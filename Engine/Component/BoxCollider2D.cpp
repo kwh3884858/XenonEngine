@@ -24,4 +24,6 @@ namespace XenonEngine
         return m_size.Magnitude();
     }
 
+    ComponentType BoxCollider2D::m_type = ComponentType::ComponentType_Collider2D;
+
 }

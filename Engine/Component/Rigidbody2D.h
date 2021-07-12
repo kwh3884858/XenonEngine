@@ -25,6 +25,7 @@ namespace XenonEngine
 
         Rigidbody2D(GameObject* gameobject, bool isStatic, float mass, float inertia);
         virtual ~Rigidbody2D() override;
+        virtual ComponentType GetComponentType() const override { return m_type; };
 
         bool FixedUpdate(float deltaTime);     //One time step
 
@@ -34,6 +35,8 @@ namespace XenonEngine
         void SetVelocity(Vector2f velocity) { m_velocity = velocity; }
         float GetMass()const { return m_mass; }
         bool GetIsStatic()const { return mIsStatic; }
+
+        static ComponentType m_type;
     private:
         //Aggregates forces acting on rigidbody
         void CalculateForcesAndMoments(double deltaTime);

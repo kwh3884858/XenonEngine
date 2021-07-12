@@ -14,11 +14,6 @@ namespace XenonEngine
 
     }
 
-    const char*const GameObject::GetName() const
-    {
-        return m_name;
-    }
-
     void GameObject::Start()
     {
         for (int i = 0; i < m_components.Count(); i++)

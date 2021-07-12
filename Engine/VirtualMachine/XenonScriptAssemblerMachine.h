@@ -9,7 +9,7 @@
 #include "Algorithms/TypeString.h"
 #include "Engine/VirtualMachine/XenonStruction.h"
 
-namespace XenonEnigne
+namespace XenonEngine
 {
     using Algorithm::Vector;
     using CrossPlatform::XenonFile;
@@ -115,6 +115,7 @@ namespace XenonEnigne
         LexerState TokenError(LexerState state, char character, unsigned int index, int lineCountForDebug)const;
         void DetermineTokenType(Token* const token, LexerState currentState)const;
 
+        void ClearData();
         TokenVector* Lexer(const XenonFile * const xenonFile)const;
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);

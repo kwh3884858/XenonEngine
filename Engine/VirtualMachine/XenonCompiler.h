@@ -5,7 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 
-namespace XenonEnigne {
+namespace XenonEngine {
     class XenonScriptAssemblerMachine;
     class XenonVirtualMachine;
 
@@ -16,6 +16,7 @@ namespace XenonEnigne {
         ~XenonCompiler();
 
         void Initialize();
+        void Recompile();
 
     private:
         XenonScriptAssemblerMachine* m_xsam;
