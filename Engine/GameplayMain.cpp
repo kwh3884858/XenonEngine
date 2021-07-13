@@ -23,6 +23,7 @@
 #include "Engine/Component/Render2D.h"
 #include "Engine/Component/PlayerPersonality.h"
 #include "Engine/Component/Rigidbody2D.h"
+#include "Engine/Component/BoxCollider2D.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -44,9 +45,12 @@ namespace Gameplay {
     using XenonEngine::Transform2D;
     using XenonEngine::PlayerPersonality;
     using XenonEngine::Rigidbody2D;
+    using XenonEngine::BoxCollider2D;
+    using XenonEngine::BoxCollider2DConfig;
     using XenonEngine::ComponentType;
 
     GameObject* player;
+    GameObject* ground;
     Physics2D* physics2D;
 
     XenonCompiler* compiler = nullptr;
@@ -56,34 +60,71 @@ namespace Gameplay {
 
         physics2D = new Physics2D;
 
-        int numOfVertex = 4;
-        Vector2f* heroVertex = new Vector2f[numOfVertex];
-        heroVertex[0] = Vector2f(10, 0);
-        heroVertex[1] = Vector2f(10, 20);
-        heroVertex[2] = Vector2f(-10, 20);
-        heroVertex[3] = Vector2f(-10, 0);
-        Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
 
-        player = new GameObject("Player");
-        GameObjectWorld::Get().AddGameObject(player);
+        {
+            player = new GameObject("Player");
+            GameObjectWorld::Get().AddGameObject(player);
 
-        Transform2D* transform = new Transform2D(player);
-        transform->AddPosition(Vector2f(100, 100));
-        player->AddComponent(transform);
+            Transform2D* transform = new Transform2D(player);
+            transform->AddPosition(Vector2f(400, 300));
+            player->AddComponent(transform);
 
-        Render2DConfig render2DConfig;
-        render2DConfig.m_polygon2D = heroPolygon;
-        Render2D* render2D = new Render2D(player);
-        render2D->SetConfig(&render2DConfig);
-        player->AddComponent(render2D);
+            int numOfVertex = 4;
+            Vector2f* heroVertex = new Vector2f[numOfVertex];
+            heroVertex[0] = Vector2f(10, 0);
+            heroVertex[1] = Vector2f(10, 20);
+            heroVertex[2] = Vector2f(-10, 20);
+            heroVertex[3] = Vector2f(-10, 0);
+            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
+            Render2DConfig render2DConfig;
+            render2DConfig.m_polygon2D = heroPolygon;
+            Render2D* render2D = new Render2D(player);
+            render2D->SetConfig(&render2DConfig);
+            player->AddComponent(render2D);
 
-        PlayerPersonality* personality = new PlayerPersonality(player);
-        player->AddComponent(personality);
+            PlayerPersonality* personality = new PlayerPersonality(player);
+            player->AddComponent(personality);
 
-        Rigidbody2D* const rigid = new Rigidbody2D(player, false, 5, 10);
-        physics2D->AddRigidbody2D(rigid);
-        player->AddComponent(rigid);
+            Rigidbody2D* const rigid = new Rigidbody2D(player, false, 5, 10);
+            physics2D->AddRigidbody2D(rigid);
+            player->AddComponent(rigid);
 
+            BoxCollider2D* collider = new BoxCollider2D(player);
+            BoxCollider2DConfig boxCollider2DConfig;
+            boxCollider2DConfig.m_isTrigger = false;
+            boxCollider2DConfig.m_size = Vector2f(20, 20);
+            collider->SetConfig(&boxCollider2DConfig);
+            player->AddComponent(collider);
+        }
+
+        {
+            ground = new GameObject("Ground");
+
+            Transform2D* transform = new Transform2D(ground);
+            transform->AddPosition(Vector2f(400, 100));
+            ground->AddComponent(transform);
+
+            BoxCollider2D* collider = new BoxCollider2D(ground);
+            BoxCollider2DConfig boxCollider2DConfig;
+            boxCollider2DConfig.m_isTrigger = false;
+            boxCollider2DConfig.m_size = Vector2f(400, 40);
+            ground->AddComponent(collider);
+
+            int numOfVertex = 4;
+            Vector2f* heroVertex = new Vector2f[numOfVertex];
+            heroVertex[0] = Vector2f(200, -10);
+            heroVertex[1] = Vector2f(200, 10);
+            heroVertex[2] = Vector2f(-200, 10);
+            heroVertex[3] = Vector2f(-200, -10);
+            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
+            Render2DConfig render2DConfig;
+            render2DConfig.m_polygon2D = heroPolygon;
+            Render2D* render2D = new Render2D(ground);
+            render2D->SetConfig(&render2DConfig);
+            ground->AddComponent(render2D);
+
+
+        }
         compiler = new XenonCompiler;
         compiler->Initialize();
     }
@@ -104,7 +145,7 @@ namespace Gameplay {
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_R))
         {
             printf("Respawn Player\n");
-            transform->SetPosition(Vector2f( 400, 300));
+            transform->SetPosition(Vector2f(400, 300));
         }
 
         unsigned int width = Database::Get().engineConfig.m_width;
@@ -138,9 +179,14 @@ namespace Gameplay {
         }
 
         physics2D->FixedUpdate();
-
-        Render2D* render2D = player->GetComponent<Render2D>();
-        render2D->Update();
+        {
+            Render2D* render2D = player->GetComponent<Render2D>();
+            render2D->Update();
+        }
+        {
+            Render2D* render2D = ground->GetComponent<Render2D>();
+            render2D->Update();
+        }
     }
 
     void GameplayShutdown()
