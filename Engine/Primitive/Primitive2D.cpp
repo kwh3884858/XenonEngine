@@ -112,19 +112,19 @@ namespace Primitive
 
     void Primitive2D::DrawPolygon(const Polygon2D& polygon2D) const
     {
-        if (polygon2D.m_state == Polygon2D::EState::Enable)
-        {
-            int index;
-            for (index = 0; index < polygon2D.m_numberOfVertex - 1; index++)
-            {
-                DrawLine(polygon2D.m_position + polygon2D.m_vertexList[index],
-                    polygon2D.m_position + polygon2D.m_vertexList[index + 1],
-                    polygon2D.m_color);
-            }
-            DrawLine(polygon2D.m_position + polygon2D.m_vertexList[polygon2D.m_numberOfVertex - 1],
-                polygon2D.m_position + polygon2D.m_vertexList[0],
-                polygon2D.m_color);
-        }
+        //if (polygon2D.m_state == Polygon2D::EState::Enable)
+        //{
+        //    int index;
+        //    for (index = 0; index < polygon2D.m_numberOfVertex - 1; index++)
+        //    {
+        //        DrawLine(polygon2D.m_position + polygon2D.m_vertexList[index],
+        //            polygon2D.m_position + polygon2D.m_vertexList[index + 1],
+        //            polygon2D.m_color);
+        //    }
+        //    DrawLine(polygon2D.m_position + polygon2D.m_vertexList[polygon2D.m_numberOfVertex - 1],
+        //        polygon2D.m_position + polygon2D.m_vertexList[0],
+        //        polygon2D.m_color);
+        //}
     }
 
     void Primitive2D::DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const

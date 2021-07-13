@@ -36,7 +36,7 @@ namespace XenonEngine
         virtual bool Update() { return true; }
         virtual bool Destroy() { return true; }
 
-        GameObject* GetGameObject() { return m_gameobject; }
+        GameObject* GetGameObject()const { return m_gameobject; }
 
         static IComponentType m_type;
     protected:

@@ -42,8 +42,8 @@ namespace XenonPhysics
 
         bool FixedUpdate();
 
-        bool AddRigidbody2D(const Rigidbody2D*const rigidbody);
-        bool RemoveRigidbody2D(const Rigidbody2D* const rigidbody);
+        bool AddRigidbody2D( Rigidbody2D*const rigidbody);
+        bool RemoveRigidbody2D( Rigidbody2D* const rigidbody);
 
     private:
          const float TIMESTEP = 0.1f;

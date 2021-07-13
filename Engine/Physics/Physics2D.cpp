@@ -131,9 +131,32 @@ namespace XenonPhysics
                     memcpy(mDynamicRigidbodys[j], &body2, sizeof(Rigidbody2D));
                 }
             }
-
         }
         return true;
+    }
+
+    bool Physics2D::AddRigidbody2D( Rigidbody2D*const rigidbody)
+    {
+        if (rigidbody->IsStatic())
+        {
+            return  mStaticRigidbodys.Add(rigidbody);
+        }
+        else
+        {
+            return mDynamicRigidbodys.Add(rigidbody);
+        }
+    }
+
+    bool Physics2D::RemoveRigidbody2D( Rigidbody2D* const rigidbody)
+    {
+        if (rigidbody->IsStatic())
+        {
+            return mStaticRigidbodys.Remove(rigidbody);
+        }
+        else
+        {
+            return  mDynamicRigidbodys.Remove(rigidbody);
+        }
     }
 
     Physics2D::CollisionInfo Physics2D::CheckForCollision(Rigidbody2D* body1, Rigidbody2D* body2)
@@ -312,7 +335,7 @@ namespace XenonPhysics
         Vector2f dynamicBodyVelocity;
         Rigidbody2D* staticBody  = info.m_collisionBody1;
         Rigidbody2D* dynamicBody  = info.m_collisionBody2;
-        if (staticBody->GetIsStatic() == true)
+        if (staticBody->IsStatic() == true)
         {
             if (staticBody->GetGameObject()->GetComponent<Collider2D>()->IsTrigger() == true)
             {

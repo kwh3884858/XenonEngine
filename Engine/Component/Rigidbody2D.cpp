@@ -147,6 +147,10 @@ namespace XenonEngine
         m_forces = MathLab::Rotate2D(sumOfForces, transform->GetOrientation());
         m_moments = sumOfMoments;
         
+        if (m_isSimulateGravity)
+        {
+            m_forces += m_gravity;
+        }
     }
 
     ComponentType Rigidbody2D::m_type = ComponentType::ComponentType_Rigidbody2D;

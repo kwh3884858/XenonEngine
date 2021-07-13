@@ -3,6 +3,7 @@
 #include "Engine/Primitive/Primitive2D.h"
 #include "Engine/IO/InputSystem.h"
 #include "Engine/Physics/Physics2D.h"
+#include "Engine/Physics/Force2D.h"
 #include "Engine/VirtualMachine/XenonCompiler.h"
 
 #include "CrossPlatform/Interface/IInput.h"
@@ -18,9 +19,10 @@
 
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
+#include "Engine/Component/Transform2D.h"
 #include "Engine/Component/Render2D.h"
 #include "Engine/Component/PlayerPersonality.h"
-
+#include "Engine/Component/Rigidbody2D.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -31,22 +33,28 @@ namespace Gameplay {
 
     using XenonEngine::XenonCompiler;
     using XenonEngine::InputSystem;
+    using XenonPhysics::Physics2D;
+    using XenonPhysics::Force2D;
 
     using XenonEngine::Render2D;
     using XenonEngine::Render2DConfig;
 
     using XenonEngine::GameObject;
     using XenonEngine::GameObjectWorld;
+    using XenonEngine::Transform2D;
     using XenonEngine::PlayerPersonality;
+    using XenonEngine::Rigidbody2D;
     using XenonEngine::ComponentType;
 
     GameObject* player;
-    Polygon2D* heroPolygon;
+    Physics2D* physics2D;
 
     XenonCompiler* compiler = nullptr;
     void GameplayInitialize()
     {
         GameObjectWorld::Get().Initialize();
+
+        physics2D = new Physics2D;
 
         int numOfVertex = 4;
         Vector2f* heroVertex = new Vector2f[numOfVertex];
@@ -54,10 +62,14 @@ namespace Gameplay {
         heroVertex[1] = Vector2f(10, 20);
         heroVertex[2] = Vector2f(-10, 20);
         heroVertex[3] = Vector2f(-10, 0);
-        heroPolygon = new Polygon2D(Polygon2D::EState::Enable, Vector2f(100, 100), Vector2f(0, 0), CrossPlatform::WHITE, numOfVertex, heroVertex);
+        Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
 
         player = new GameObject("Player");
         GameObjectWorld::Get().AddGameObject(player);
+
+        Transform2D* transform = new Transform2D(player);
+        transform->AddPosition(Vector2f(100, 100));
+        player->AddComponent(transform);
 
         Render2DConfig render2DConfig;
         render2DConfig.m_polygon2D = heroPolygon;
@@ -68,7 +80,9 @@ namespace Gameplay {
         PlayerPersonality* personality = new PlayerPersonality(player);
         player->AddComponent(personality);
 
-
+        Rigidbody2D* const rigid = new Rigidbody2D(player, false, 5, 10);
+        physics2D->AddRigidbody2D(rigid);
+        player->AddComponent(rigid);
 
         compiler = new XenonCompiler;
         compiler->Initialize();
@@ -76,11 +90,21 @@ namespace Gameplay {
 
     void GameplayMain()
     {
+        PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
+        Transform2D* transform = player->GetComponent<Transform2D>();
+
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))
         {
-            printf("Recompile");
+            printf("Recompile\n");
             compiler->Recompile();
+        }
+
+        if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
+            InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_R))
+        {
+            printf("Respawn Player\n");
+            transform->SetPosition(Vector2f( 400, 300));
         }
 
         unsigned int width = Database::Get().engineConfig.m_width;
@@ -88,7 +112,7 @@ namespace Gameplay {
 
         float xAxisDelta = 0;
         Vector2f axis = InputSystem::Get().GetAxis();
-        if (MathLab::abs( axis.x ) > 0.1f)
+        if (MathLab::abs(axis.x) > 0.1f)
         {
             xAxisDelta = axis.x;
         }
@@ -100,11 +124,20 @@ namespace Gameplay {
         {
             xAxisDelta = 1;
         }
-        PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
+
         float velocity = personlity->GetVelocity();
-        heroPolygon->m_position += Vector2f(xAxisDelta * velocity, 0);
+        transform->AddPosition(Vector2f(xAxisDelta * velocity, 0));
 
+        Rigidbody2D* rigid = player->GetComponent<Rigidbody2D>();
+        if (InputSystem::Get().GetStickButton(0) || InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_SPACE))
+        {
+            Force2D jumpForce;
+            jumpForce.fvalue = personlity->GetJumpForce();
+            jumpForce.m_forceDirection = Vector2f(0, 1);
+            rigid->AddForce(jumpForce);
+        }
 
+        physics2D->FixedUpdate();
 
         Render2D* render2D = player->GetComponent<Render2D>();
         render2D->Update();
@@ -198,7 +231,7 @@ namespace Gameplay {
 
                 // Z buffer
                 //float curretZBuffer = m_windowDrawer->GetFrameBuffer()->GetZBuffer(screenX, screenY);
-                float curretZBuffer = static_cast<float>(Primitive2D::Get().GetZbuffer(Vector2i( screenX, screenY)));
+                float curretZBuffer = static_cast<float>(Primitive2D::Get().GetZbuffer(Vector2i(screenX, screenY)));
 
                 if (curretZBuffer < reciprocalOfZ)
                 {
@@ -209,7 +242,7 @@ namespace Gameplay {
                         L *= 255; //scale up to 255
                         L += 20;
                         L = MathLab::clamp(L, 0.0f, 255.0f);
-                        Primitive2D::Get().SetZBuffer(Vector2i( screenX, screenY), static_cast<unsigned int>(reciprocalOfZ));
+                        Primitive2D::Get().SetZBuffer(Vector2i(screenX, screenY), static_cast<unsigned int>(reciprocalOfZ));
                         Primitive2D::Get().DrawPixel(screenX, screenY, CrossPlatform::SColorRGBA(L, L, L));
                     }
                 }

@@ -58,7 +58,7 @@ namespace XenonEngine
                 return static_cast<T*>(m_components[i]);
             }
         }
-        assert(true == false);
+
         return nullptr;
     }
 

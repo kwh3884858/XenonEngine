@@ -33,8 +33,9 @@ namespace XenonEngine
 
         Vector2f GetVelocity()const { return m_velocity; }
         void SetVelocity(Vector2f velocity) { m_velocity = velocity; }
+        void SetMass(float mass) { m_mass = m_mass; }
         float GetMass()const { return m_mass; }
-        bool GetIsStatic()const { return mIsStatic; }
+        bool IsStatic()const { return mIsStatic; }
 
         static ComponentType m_type;
     private:
@@ -54,6 +55,7 @@ namespace XenonEngine
 
         float m_speed;
 
+        bool m_isSimulateGravity = true;
         Vector2f m_gravity; // Simulation gravity, default value is (0, mass * gravity acceleration)
 
         Vector2f m_forces;

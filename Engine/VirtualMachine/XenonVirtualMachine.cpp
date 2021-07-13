@@ -4,6 +4,7 @@
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/PlayerPersonality.h"
+#include "Engine/Component/Rigidbody2D.h"
 
 #include "CrossPlatform/XenonFile.h"
 
@@ -621,7 +622,8 @@ namespace XenonEngine
 					{
 						assert(true == false);
 					}
-				}else if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "SetVelocity")
+				}
+                else if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "SetVelocity")
 				{
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
@@ -635,6 +637,34 @@ namespace XenonEngine
                         assert(true == false);
                     }
 				}
+                else if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "SetJumpForce")
+                {
+                    InstructionOp op1 = m_localStack.Pop();
+                    if (op1.m_type == InstructionOpType_FloatLiteral)
+                    {
+                        XenonEngine::GameObject* player = GameObjectWorld::Get().GetGameObject("Player");
+                        XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
+                        personlity->SetJumpForce(op1.m_floatLiteral);
+                    }
+                    else
+                    {
+                        assert(true == false);
+                    }
+                }
+                else if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "SetMass")
+                {
+                    InstructionOp op1 = m_localStack.Pop();
+                    if (op1.m_type == InstructionOpType_FloatLiteral)
+                    {
+                        XenonEngine::GameObject* player = GameObjectWorld::Get().GetGameObject("Player");
+                        XenonEngine::Rigidbody2D* rigid = player->GetComponent<XenonEngine::Rigidbody2D>();
+                        rigid->SetMass(op1.m_floatLiteral);
+                    }
+                    else
+                    {
+                        assert(true == false);
+                    }
+                }
 			}
                 break;
             case KeyWord_PAUSE:
