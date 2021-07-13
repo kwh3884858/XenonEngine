@@ -1,5 +1,5 @@
 FUNC Main
 {
-	PUSH 1.0
+	PUSH 5.0
 	CALLHOST SetVelocity
 }

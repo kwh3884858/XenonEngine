@@ -20,6 +20,7 @@ namespace XenonEngine
     void XenonCompiler::Initialize()
     {
         m_xsam = new XenonScriptAssemblerMachine;
+        m_xvm = new XenonVirtualMachine;
 
         String applicationPath = FileManager::Get().GetApplicationPath();
         int pos = applicationPath.Find("XenonEngine.exe");
@@ -44,7 +45,13 @@ namespace XenonEngine
         Recompile();
     }
 
-    void XenonCompiler::Recompile() 
+    void XenonCompiler::Shutdown()
+    {
+        delete m_xsam;
+        delete m_xvm;
+    }
+
+    void XenonCompiler::Recompile()
     {
         String applicationPath = FileManager::Get().GetApplicationPath();
         int pos = applicationPath.Find("XenonEngine.exe");
@@ -57,9 +64,6 @@ namespace XenonEngine
         delete assemblerFile;
         assemblerFile = nullptr;
 
-        delete m_xsam;
-
-        m_xvm = new XenonVirtualMachine;
         String executableFilePath = applicationPath.Substring(0, pos);
         executableFilePath.Append("Main.xex");
         StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);

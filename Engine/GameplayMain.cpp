@@ -2,23 +2,25 @@
 
 #include "Engine/Primitive/Primitive2D.h"
 #include "Engine/IO/InputSystem.h"
+#include "Engine/Physics/Physics2D.h"
+#include "Engine/VirtualMachine/XenonCompiler.h"
+
 #include "CrossPlatform/Interface/IInput.h"
 #include "CrossPlatform/XenonKey.h"
 #include "CrossPlatform/Database.h"
 #include "CrossPlatform/SColorRGBA.h"
+#include "CrossPlatform/Polygon2D.h"
 
 #include "MathLab/Vector3.h"
 #include "MathLab/MathLib.h"
 #include "MathLab/MathLabDefinition.h"
 #include <cmath> // sin, cos
 
-#include "CrossPlatform/Polygon2D.h"
-
-#include "Engine/VirtualMachine/XenonCompiler.h"
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/Render2D.h"
 #include "Engine/Component/PlayerPersonality.h"
+
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -66,6 +68,8 @@ namespace Gameplay {
         PlayerPersonality* personality = new PlayerPersonality(player);
         player->AddComponent(personality);
 
+
+
         compiler = new XenonCompiler;
         compiler->Initialize();
     }
@@ -82,17 +86,25 @@ namespace Gameplay {
         unsigned int width = Database::Get().engineConfig.m_width;
         unsigned int height = Database::Get().engineConfig.m_height;
 
+        float xAxisDelta = 0;
         Vector2f axis = InputSystem::Get().GetAxis();
         if (MathLab::abs( axis.x ) > 0.1f)
         {
-            PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
-            float velocity = personlity->GetVelocity();
-            heroPolygon->m_position += Vector2f(axis.x * velocity, 0);
+            xAxisDelta = axis.x;
         }
-        if (InputSystem::Get().GetStickButton(0))
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_A))
         {
-
+            xAxisDelta = -1;
         }
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_D))
+        {
+            xAxisDelta = 1;
+        }
+        PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
+        float velocity = personlity->GetVelocity();
+        heroPolygon->m_position += Vector2f(xAxisDelta * velocity, 0);
+
+
 
         Render2D* render2D = player->GetComponent<Render2D>();
         render2D->Update();

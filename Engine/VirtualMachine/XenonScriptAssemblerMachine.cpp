@@ -672,7 +672,7 @@ namespace XenonEngine
         m_labelTable.Clear();
         m_stringTable.Clear();
         m_hostAPITable.Clear();
-        m_instructionLookupList.Clear();
+        m_instructionList.Clear();
     }
 
     XenonScriptAssemblerMachine::TokenVector* XenonScriptAssemblerMachine::Lexer(const XenonFile * const xenonFile) const

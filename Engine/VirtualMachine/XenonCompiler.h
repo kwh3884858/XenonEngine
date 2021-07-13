@@ -16,6 +16,7 @@ namespace XenonEngine {
         ~XenonCompiler();
 
         void Initialize();
+        void Shutdown();
         void Recompile();
 
     private:
