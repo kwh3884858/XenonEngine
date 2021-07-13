@@ -16,6 +16,6 @@ namespace CrossPlatform
         int m_minX = 0;
         int m_minY = 0;
         int m_maxX = 800;
-        int m_maxY = 600;
+        int m_maxY = 599;
     };
 }
