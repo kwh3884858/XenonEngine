@@ -1,7 +1,7 @@
-## introduction
+# Introduction
 A free game contains easy-modified editor with soft render.
 
-# New Features
+## New Features
 - Xenon Assembler Language is added.
 - Xenon Assembler Virtual Machine is added.
 - Xenon Input System is ready.
