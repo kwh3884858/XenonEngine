@@ -47,6 +47,7 @@ namespace MathLab {
         Vector2& operator=(const Vector2& value);
         Vector2& operator+=(const Vector2& value);
         Vector2& operator-=(const Vector2& value);
+        Vector2& operator*=(T value);
 
         Vector2 operator*(T value)const;
         Vector2 operator/(T value)const;
@@ -127,12 +128,21 @@ namespace MathLab {
         return *this;
     }
 
+
     template<typename T>
-    Vector2<T> MathLab::Vector2<T>::operator*(T value)const
+    Vector2& MathLab::Vector2<T>::operator*=(T value)
     {
         Vector2<T> vector(*this);
         vector.x *= value;
         vector.y *= value;
+        return vector;
+    }
+
+    template<typename T>
+    Vector2<T> MathLab::Vector2<T>::operator*(T value)const
+    {
+        Vector2<T> vector(*this);
+        vector *= value;
         return vector;
     }
 
