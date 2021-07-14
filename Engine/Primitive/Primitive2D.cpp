@@ -201,12 +201,12 @@ namespace Primitive
         Vector2f rightDelta = p2 - buttom;
         Vector2f rightIndex = buttom;
         Vector2f rightStep(0, Y_AXIS_STEP);
-        rightStep.x = (float)(rightDelta.x > 0 ? 1 : -1) * MathLab::abs(rightDelta.x / rightDelta.y);
+        rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p1 - buttom;
         Vector2f leftIndex = buttom;
         Vector2f leftStep(0, Y_AXIS_STEP);
-        leftStep.x = (float)(leftDelta.x > 0 ? 1 : -1) * MathLab::abs(leftDelta.x / leftDelta.y);
+        leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::abs(leftDelta.x / leftDelta.y);
 
         if (buttom.y < m_minDrawPosition.y)
         {
@@ -271,12 +271,12 @@ namespace Primitive
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
         Vector2f rightStep(0, -Y_AXIS_STEP);
-        rightStep.x = rightDelta.x > 0 ? 1 : -1 * MathLab::abs(rightDelta.x / rightDelta.y);
+        rightStep.x =( rightDelta.x > 0 ? 1.0f : -1.0f )* MathLab::abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p2 - top;
         Vector2f leftIndex = top;
         Vector2f leftStep(0, -Y_AXIS_STEP);
-        leftStep.x = leftDelta.x > 0 ? 1 : -1 * MathLab::abs(leftDelta.x / leftDelta.y);
+        leftStep.x =( leftDelta.x > 0 ? 1.0f : -1.0f )* MathLab::abs(leftDelta.x / leftDelta.y);
 
         if (top.y > m_maxDrawPosition.y)
         {
