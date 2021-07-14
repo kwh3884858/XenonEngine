@@ -36,6 +36,11 @@ namespace XenonEngine
 
     bool Rigidbody2D::FixedUpdate(float deltaTime)
     {
+        if (mIsStatic)
+        {
+            return true;
+        }
+
         CalculateForcesAndMoments(deltaTime);
 
         //Integrate linear equation of motion
@@ -70,8 +75,20 @@ namespace XenonEngine
 
     bool Rigidbody2D::AddForce(const XenonPhysics::Force2D& force)
     {
+        if (mIsStatic)
+        {
+            assert(true == false);
+            return true;
+        }
         m_forces += force.m_forceDirection * force.fvalue;
         return true;
+    }
+
+    bool Rigidbody2D::AddLocalForce(const XenonPhysics::Force2D& force)
+    {        
+        //Convert forces from model spece to world space
+        Force2D globalForce = MathLab::Rotate2D(force, transform->GetOrientation());
+        AddForce(globalForce);
     }
 
     void Rigidbody2D::CalculateForcesAndMoments(double deltaTime)
@@ -139,12 +156,11 @@ namespace XenonEngine
 
         //Now add the propulsion thrust
         //No moment since line of action is through center of gravity
-        sumOfForces += m_forces;
 
         Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
         assert(transform != nullptr);
-        //Convert forces from model spece to world space
-        m_forces = MathLab::Rotate2D(sumOfForces, transform->GetOrientation());
+
+        m_forces += sumOfForces;
         m_moments = sumOfMoments;
         
         if (m_isSimulateGravity)

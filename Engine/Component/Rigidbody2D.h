@@ -28,7 +28,6 @@ namespace XenonEngine
         virtual ComponentType GetComponentType() const override { return m_type; };
 
         bool FixedUpdate(float deltaTime);     //One time step
-
         bool AddForce(const XenonPhysics::Force2D& force);
 
         Vector2f GetVelocity()const { return m_velocity; }
