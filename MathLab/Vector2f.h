@@ -130,7 +130,7 @@ namespace MathLab {
 
 
     template<typename T>
-    Vector2& MathLab::Vector2<T>::operator*=(T value)
+    Vector2<T>& MathLab::Vector2<T>::operator*=(T value)
     {
         Vector2<T> vector(*this);
         vector.x *= value;
