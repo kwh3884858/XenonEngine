@@ -29,6 +29,7 @@ namespace XenonEngine
 
         bool FixedUpdate(float deltaTime);     //One time step
         bool AddForce(const XenonPhysics::Force2D& force);
+        bool AddLocalForce(const XenonPhysics::Force2D& force);
 
         Vector2f GetVelocity()const { return m_velocity; }
         void SetVelocity(Vector2f velocity) { m_velocity = velocity; }
@@ -38,6 +39,7 @@ namespace XenonEngine
 
         static ComponentType m_type;
     private:
+        bool AddForce(const Vector2f& force);
         //Aggregates forces acting on rigidbody
         void CalculateForcesAndMoments(double deltaTime);
 
