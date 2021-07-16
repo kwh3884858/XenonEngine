@@ -10,6 +10,7 @@
 
 namespace XenonEngine
 {
+    class GameObject;
     class Rigidbody2D;
     class Collider2D;
     class CircleCollider2D;
@@ -19,7 +20,11 @@ namespace XenonPhysics
 {
     using MathLab::Vector2f;
     using Algorithm::Vector;
+    using XenonEngine::GameObject;
     using XenonEngine::Rigidbody2D;
+    using XenonEngine::Collider2D;
+    using XenonEngine::CircleCollider2D;
+    using XenonEngine::BoxCollider2D;
 
     class Physics2D
     {
@@ -37,22 +42,19 @@ namespace XenonPhysics
             Vector2f m_collisionNormalVec;
             Vector2f m_relativeVelocityVec;
 
-            //static
+            // Static Object
             union {
-                Rigidbody2D* m_collisionBody1 = nullptr;
-                Collider2D* m_collider1; = nullptr;
+                Rigidbody2D* m_rigidbody1 = nullptr;
+                Collider2D* m_collider1 = nullptr;
             };
-            Rigidbody2D* m_collisionBody2 = nullptr; //dynamic
+            Rigidbody2D* m_rigidbody2 = nullptr; //dynamic
         };
 
         Physics2D();
         ~Physics2D();
 
         bool FixedUpdate();
-
-        bool AddRigidbody2D(Rigidbody2D*const rigidbody);
-        bool AddCollider2D(Collider2D*const collider);
-        bool RemoveRigidbody2D(Rigidbody2D* const rigidbody);
+        bool AddGameObject(GameObject* const gameobject);
 
     private:
         static const float TIMESTEP;
@@ -61,17 +63,25 @@ namespace XenonPhysics
         static const float CollisionTolerance;        //collision tolerance
         static const float CoefficientOfRestitution;
 
+        bool AddRigidbody2D(Rigidbody2D*const rigidbody);
+        bool AddCollider2D(Collider2D*const collider);
+        bool RemoveRigidbody2D(Rigidbody2D* const rigidbody);
+
         CollisionInfo CheckForCollision(Rigidbody2D* body1, Rigidbody2D* body2);
         CollisionInfo CheckForCollisionCircleAndCircle(Rigidbody2D* body1, Rigidbody2D* body2);
-        CollisionType CheckForCollisionCircleAndCircle(CircleCollider2D* body1Collider, CircleCollider2D* body2Collider, Vector2f v1, Vector2f v2);
         CollisionInfo CheckForCollisionCircleAndBox(Rigidbody2D* ball, Rigidbody2D* plane);
-        CollisionInfo CheckForCollisionCircleAndBox(CircleCollider2D* ballCollider, BoxCollider2D* boxCollider, Vector2f ballVelocity, Vector2f boxVelocity);
+        CollisionInfo CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box1);
+
+        CollisionInfo CheckForCollisionColliderAndRigidbody(Collider2D* collider, Rigidbody2D* rigidBody);
+        CollisionInfo CheckForCollisionCircleAndCircleByCollider(CircleCollider2D* body1Collider, CircleCollider2D* body2Collider, Vector2f circleVelocity1, Vector2f circleVelocity2);
+        CollisionInfo CheckForCollisionCircleAndBoxByCollider(CircleCollider2D* ballCollider, BoxCollider2D* boxCollider, Vector2f ballVelocity, Vector2f boxVelocity);
+        CollisionInfo CheckForCollisionBoxAndBoxByCollider(BoxCollider2D* boxCollider1, BoxCollider2D* boxCollider2, Vector2f boxVelocity1, Vector2f boxVelocity2);
 
         void ApplyImpulse(CollisionInfo info);
         void ApplyImpulseCollider(CollisionInfo info);
         void ApplyImpulseStaic(CollisionInfo info);
 
-        Vector<Rigidbody2D*> mDynamicRigidbodys;
+        Vector<Rigidbody2D*> m_dynamicRigidbodys;
         Vector<Rigidbody2D*> mStaticRigidbodys;
         Vector<Collider2D*> m_colliders;
     };

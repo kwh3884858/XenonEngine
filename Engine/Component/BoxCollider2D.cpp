@@ -21,7 +21,7 @@ namespace XenonEngine
 
     float BoxCollider2D::GetRadius() const
     {
-        return m_size.Magnitude();
+        return m_size.Magnitude() / 2;
     }
 
     ComponentType BoxCollider2D::m_type = ComponentType::ComponentType_Collider2D;

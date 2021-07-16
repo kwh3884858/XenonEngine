@@ -60,10 +60,8 @@ namespace Gameplay {
 
         physics2D = new Physics2D;
 
-
         {
             player = new GameObject("Player");
-            GameObjectWorld::Get().AddGameObject(player);
 
             Transform2D* transform = new Transform2D(player);
             transform->AddPosition(Vector2f(400, 300));
@@ -86,7 +84,6 @@ namespace Gameplay {
             player->AddComponent(personality);
 
             Rigidbody2D* const rigid = new Rigidbody2D(player, false, 5, 10);
-            physics2D->AddRigidbody2D(rigid);
             player->AddComponent(rigid);
 
             BoxCollider2D* collider = new BoxCollider2D(player);
@@ -95,6 +92,9 @@ namespace Gameplay {
             boxCollider2DConfig.m_size = Vector2f(20, 20);
             collider->SetConfig(&boxCollider2DConfig);
             player->AddComponent(collider);
+
+            physics2D->AddGameObject(player);
+            GameObjectWorld::Get().AddGameObject(player);
         }
 
         {
@@ -123,7 +123,7 @@ namespace Gameplay {
             render2D->SetConfig(&render2DConfig);
             ground->AddComponent(render2D);
 
-
+            physics2D->AddGameObject(ground);
         }
         compiler = new XenonCompiler;
         compiler->Initialize();
