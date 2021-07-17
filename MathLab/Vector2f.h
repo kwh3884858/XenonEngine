@@ -9,6 +9,7 @@
 #define VectorStruct_h
 
 #include <math.h> // For sqrt
+#include "MathLab/MathLabDefinition.h"
 //#include <stdio.h>
 namespace MathLab {
 
@@ -51,6 +52,8 @@ namespace MathLab {
 
         Vector2 operator*(T value)const;
         Vector2 operator/(T value)const;
+
+        bool operator==(const Vector2& value);
 
         T Dot(const Vector2& vec)const;
         T Cross(const Vector2& vec)const;
@@ -153,6 +156,12 @@ namespace MathLab {
         vector.x /= value;
         vector.y /= value;
         return vector;
+    }
+
+    template<typename T>
+    bool MathLab::Vector2<T>::operator==(const Vector2& value)
+    {
+        return MathLab(this->x - value.x) < EPSILON && MathLab(this->y - value.y) < EPSILON;
     }
 
     template<typename T>

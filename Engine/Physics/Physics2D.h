@@ -43,11 +43,10 @@ namespace XenonPhysics
             Vector2f m_relativeVelocityVec;
 
             // Static Object
-            union {
-                Rigidbody2D* m_rigidbody1 = nullptr;
-                Collider2D* m_collider1;
-            };
+            Rigidbody2D* m_rigidbody1 = nullptr;
+            Collider2D* m_collider1 = nullptr;
             Rigidbody2D* m_rigidbody2 = nullptr; //dynamic
+            Collider2D* m_collider2 = nullptr;
         };
 
         Physics2D();
@@ -85,4 +84,4 @@ namespace XenonPhysics
         Vector<Rigidbody2D*> mStaticRigidbodys;
         Vector<Collider2D*> m_colliders;
     };
-} 
+}
