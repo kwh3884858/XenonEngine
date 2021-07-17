@@ -105,10 +105,10 @@ namespace XenonEngine
         typedef Vector<Token*> TokenVector;
 
         void InstructionError(InstructionState state, char character, int index, int lineISize)const;
-        void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
+        //void UpdateInstuctionCharacter(char currentCharacter, bool& isShouldAdd, bool& isDone)const;
         void UpdateCharacter(char currentChar, bool& isShouldAdd, bool& isDone)const;
         DelimiterSymbolState CreateDelimiterList(DelimiterSymbolState currentState, const String& tmpString, DelimiterSymbol*& delimitSymbol);
-        void DetermineCharacterType(char c)const;
+        //void DetermineCharacterType(char c)const;
 
         LexerState GetNextToken(const XenonFile * const xenonFile, int& refCurrentIndex, Token* const token)const;
         LexerState DetermineLexerState(LexerState lexerState, char character, unsigned int index, bool& isShouldAddCharacter, bool& isTokenDone, int& refLineCountForDebug)const;
