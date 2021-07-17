@@ -515,9 +515,7 @@ namespace XenonPhysics
 
         Transform2D* box1Transform = boxCollider1->GetGameObject()->GetComponent<Transform2D>();
         Transform2D* box2Transform = boxCollider2->GetGameObject()->GetComponent<Transform2D>();
-        Vector2f relativePositionVector =
-            box1Transform->GetPosition() -
-            box2Transform->GetPosition();
+        Vector2f relativePositionVector = box1Transform->GetPosition() - box2Transform->GetPosition();
 
         float s = relativePositionVector.Magnitude() - sumOfRaidus;
         if (s > CollisionTolerance)
@@ -551,30 +549,27 @@ namespace XenonPhysics
 
         for (int i = 0; i < 4; i++)
         {
-            for (int j = 0; < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 if (box1InWorld[i] == box2InWorld[j])
                 {
                     info.m_collisionType = CollisionType::IsCollision;
-                    Rigidbody2D* boxRigidbody1 = body1Collider->GetGameObject()->GetComponent<Rigidbody2D>();
+                    Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
                     if (boxRigidbody1)
                     {
                         info.m_rigidbody1 = boxRigidbody1;
                     }
-                    else
-                    {
-                        info.m_collider1 = boxCollider1;
-                    }
-
-                    Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent() < Rigidbody2D > ();
+                    info.m_collider1 = boxCollider1;
+                    Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
                     if (boxRigidbody2)
                     {
                         info.m_rigidbody1 = boxRigidbody2;
                     }
-                    else
-                    {
-                        info.m_collider2 = boxCollider2;
-                    }
+                    info.m_collider2 = boxCollider2;
+                    info.m_collisionNormalVec  = relativePositionVector;
+                    Vector2f collisionPoint1 = box1InWorld[i] - box1Transform->GetPosition();
+                    Vector2f collisionPoint2 = box1InWorld[i] - box2Transform->GetPosition();
+                    
                 }
             }
         }
