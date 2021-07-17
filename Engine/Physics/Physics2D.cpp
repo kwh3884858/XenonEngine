@@ -372,18 +372,31 @@ namespace XenonPhysics
 
         ColliderType type1 = collider->GetColliderType();
         ColliderType type2 = rigidBodyCollider->GetColliderType();
+        Vector2f velocity = rigidBody->GetVelocity();
 
         if (type1 == ColliderType::Circle && type2 == ColliderType::Circle)
         {
-            info = CheckForCollisionCircleAndCircleByCollider(collider, rigidBodyCollider);
+            CircleCollider2D* fixedCollider = static_cast<CircleCollider2D*>( collider);
+            CircleCollider2D* dynamicCollider = static_cast<CircleCollider2D*>( rigidBodyCollider);
+            info = CheckForCollisionCircleAndCircleByCollider(fixedCollider, dynamicCollider, Vector2f::Zero, velocity);
         }
         else if (type1 == ColliderType::Circle &&type2 == ColliderType::Box)
         {
-            info = CheckForCollisionCircleAndBoxByCollider(collider, rigidBodyCollider);
+            CircleCollider2D* fixedCollider = static_cast<CircleCollider2D*>(collider);
+            BoxCollider2D* dynamicCollider = static_cast<BoxCollider2D*>(rigidBodyCollider);
+            info = CheckForCollisionCircleAndBoxByCollider(fixedCollider, dynamicCollider, Vector2f::Zero, velocity);
         }
         else if (type1 == ColliderType::Box && type2 == ColliderType::Circle)
         {
-            info = CheckForCollisionCircleAndBoxByCollider(rigidBodyCollider, collider);
+            BoxCollider2D* fixedCollider = static_cast<BoxCollider2D*>(collider);
+            CircleCollider2D* dynamicCollider = static_cast<CircleCollider2D*>(rigidBodyCollider);
+            info = CheckForCollisionCircleAndBoxByCollider(dynamicCollider, fixedCollider);
+        }
+        else if (type1 == Collider2D::Box && type2 == Collider2D::Box)
+        {
+            BoxCollider2D* fixedCollider = static_cast<BoxCollider2D*>(collider);
+            BoxCollider2D* dynamicCollider = static_cast<BoxCollider2D*>(rigidBodyCollider);
+            info = CheckForCollisionBoxAndBoxByCollider(fixedCollider, dynamicCollider,Vector2f::Zero, velocity);
         }
         else
         {
@@ -413,8 +426,8 @@ namespace XenonPhysics
 
         refInfo.m_collisionNormalVec = relativePositionVector.Normalize();
 
-        Vector2f circleVelocity1 = body1->GetVelocity();
-        Vector2f circleVelocity2 = body2->GetVelocity();
+        Vector2f circleVelocity1 = circleVelocity1;
+        Vector2f circleVelocity2 = circleVelocity2;
         refInfo.m_relativeVelocityVec = circleVelocity1 - circleVelocity2;
 
         float rvn = refInfo.m_collisionNormalVec.Dot(refInfo.m_relativeVelocityVec);
@@ -454,8 +467,8 @@ namespace XenonPhysics
         /*
         Our code will first test which edge of the rectangle is closest to the circle,
         then see if there is a collision using the Pythagorean Theorem.
-        Let’s create a temporary variable for the square’s closest X/Y edges.
-        We’ll set them as the circle’s position to start:
+        Letï¿½s create a temporary variable for the squareï¿½s closest X/Y edges.
+        Weï¿½ll set them as the circleï¿½s position to start:
         */
         Vector2f closestToCircle = circlePosition;
         if (closestToCircle.x < boxMinPoint.x) closestToCircle.x = boxMinPoint.x;
@@ -465,7 +478,7 @@ namespace XenonPhysics
 
         /*
         Now that we know which edges to check,
-        we run the Pythagorean Theorem code using the circle’s center and the two edges we found above:
+        we run the Pythagorean Theorem code using the circleï¿½s center and the two edges we found above:
         */
         float distX = circlePosition.x - closestToCircle.x;
         float distY = circlePosition.y - closestToCircle.y;
