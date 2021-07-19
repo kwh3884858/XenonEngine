@@ -32,6 +32,8 @@ namespace XenonEngine
         bool AddLocalForce(const XenonPhysics::Force2D& force);
 
         Vector2f GetVelocity()const { return m_velocity; }
+        Vector2f GetLocalVelocity()const { return m_localVelocity; }
+        float GetAngularVelocity()const { return m_localAngularVelocity; }
         void SetVelocity(Vector2f velocity) { m_velocity = velocity; }
         void SetMass(float mass) { m_mass = m_mass; }
         float GetMass()const { return m_mass; }

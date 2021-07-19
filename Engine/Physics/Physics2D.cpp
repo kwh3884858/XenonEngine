@@ -566,11 +566,41 @@ namespace XenonPhysics
                         info.m_rigidbody1 = boxRigidbody2;
                     }
                     info.m_collider2 = boxCollider2;
-                    info.m_collisionNormalVec  = relativePositionVector;
+                    info.m_collisionNormalVec = relativePositionVector;
                     Vector2f collisionPoint1 = box1InWorld[i] - box1Transform->GetPosition();
                     Vector2f collisionPoint2 = box1InWorld[i] - box2Transform->GetPosition();
-                    
+                    Vector2f tangentOfangularVelocity1(-collisionPoint1.y * boxRigidbody1->GetAngularVelocity(), -collisionPoint1.x * boxRigidbody1->GetAngularVelocity());
+                    Vector2f tangentOfangularVelocity2(-collisionPoint2.y * boxRigidbody2->GetAngularVelocity(), -collisionPoint2.x * boxRigidbody2->GetAngularVelocity());
+                    Vector2f velocity1 = tangentOfangularVelocity1 + boxRigidbody1->GetLocalVelocity();
+                    Vector2f velocity2 = tangentOfangularVelocity2 + boxRigidbody2->GetLocalVelocity();
+                    velocity1 = MathLab::Rotate2D(velocity1, box1Transform->GetOrientation());
+                    velocity2 = MathLab::Rotate2D(velocity2, box2Transform->GetOrientation());
+                    info.m_relativeVelocityVec = velocity1 - velocity2;
                 }
+            }
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                Vector2f edge;
+                if (j ==0)
+                {
+                    edge = box2InWorld[0] - box2InWorld[1];
+                }
+                else if (j == 1)
+                {
+                    edge = box2InWorld[3] - box2InWorld[1];
+                }
+                else if (j == 3)
+                {
+                    edge = box2InWorld[2] - box2InWorld[3];
+                }
+                else if (j == )
+                {
+                }
+                Vector2f edge = 
             }
         }
 
