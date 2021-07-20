@@ -551,31 +551,41 @@ namespace XenonPhysics
         {
             for (int j = 0; j < 4; j++)
             {
+                Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
+                Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
+
+                Vector2f velocity1(0, 0);
+                if (boxRigidbody1)
+                {
+                    Vector2f collisionPoint1 = box1InWorld[i] - box1Transform->GetPosition();
+                    Vector2f tangentOfangularVelocity1(-collisionPoint1.y *  boxRigidbody1->GetAngularVelocity(), -collisionPoint1.x * boxRigidbody1->GetAngularVelocity());
+                    velocity1 = tangentOfangularVelocity1 + boxRigidbody1->GetLocalVelocity() ;
+                    velocity1 = MathLab::Rotate2D(velocity1, box1Transform->GetOrientation());
+                }
+                Vector2f velocity2(0, 0);
+                if (boxRigidbody2)
+                {
+                    Vector2f collisionPoint2 = box1InWorld[i] - box2Transform->GetPosition();
+                    Vector2f tangentOfangularVelocity2(-collisionPoint2.y * boxRigidbody2->GetAngularVelocity(), -collisionPoint2.x * boxRigidbody2->GetAngularVelocity());
+                    velocity2 = tangentOfangularVelocity2 + boxRigidbody2->GetLocalVelocity() ;
+                    velocity2 = MathLab::Rotate2D(velocity2, box2Transform->GetOrientation());
+                }
+                Vector2f relativeVelocityVector = velocity1 - velocity2;
                 if (box1InWorld[i] == box2InWorld[j])
                 {
                     info.m_collisionType = CollisionType::IsCollision;
-                    Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
                     if (boxRigidbody1)
                     {
                         info.m_rigidbody1 = boxRigidbody1;
                     }
                     info.m_collider1 = boxCollider1;
-                    Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
                     if (boxRigidbody2)
                     {
                         info.m_rigidbody1 = boxRigidbody2;
                     }
                     info.m_collider2 = boxCollider2;
                     info.m_collisionNormalVec = relativePositionVector;
-                    Vector2f collisionPoint1 = box1InWorld[i] - box1Transform->GetPosition();
-                    Vector2f collisionPoint2 = box1InWorld[i] - box2Transform->GetPosition();
-                    Vector2f tangentOfangularVelocity1(-collisionPoint1.y * boxRigidbody1->GetAngularVelocity(), -collisionPoint1.x * boxRigidbody1->GetAngularVelocity());
-                    Vector2f tangentOfangularVelocity2(-collisionPoint2.y * boxRigidbody2->GetAngularVelocity(), -collisionPoint2.x * boxRigidbody2->GetAngularVelocity());
-                    Vector2f velocity1 = tangentOfangularVelocity1 + boxRigidbody1->GetLocalVelocity();
-                    Vector2f velocity2 = tangentOfangularVelocity2 + boxRigidbody2->GetLocalVelocity();
-                    velocity1 = MathLab::Rotate2D(velocity1, box1Transform->GetOrientation());
-                    velocity2 = MathLab::Rotate2D(velocity2, box2Transform->GetOrientation());
-                    info.m_relativeVelocityVec = velocity1 - velocity2;
+                    info.m_relativeVelocityVec = relativeVelocityVector;
                 }
             }
         }
@@ -591,16 +601,46 @@ namespace XenonPhysics
                 }
                 else if (j == 1)
                 {
-                    edge = box2InWorld[3] - box2InWorld[1];
+                    edge = box2InWorld[1] - box2InWorld[3];
                 }
                 else if (j == 3)
                 {
-                    edge = box2InWorld[2] - box2InWorld[3];
+                    edge = box2InWorld[3] - box2InWorld[2];
                 }
-                else if (j == )
+                else if (j == 2)
                 {
+                    edge = box2InWorld[2] - box2InWorld[0];
                 }
-                Vector2f edge = 
+                edge = edge.Normalize();
+
+                Vector2f edgeToVertex = box1InWorld[i] - box2InWorld[j];
+                Vector2f distanceFromVertexToEdge = (edgeToVertex*edge)*edge;
+                float distance = distanceFromVertexToEdge.Magnitude();
+
+                Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
+                Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
+                Vector2f velocity1(0, 0);
+                if (boxRigidbody1)
+                {
+                    Vector2f collisionPoint1 = box1InWorld[i] - box1Transform->GetPosition();
+                    Vector2f tangentOfangularVelocity1(-collisionPoint1.y *  boxRigidbody1->GetAngularVelocity(), -collisionPoint1.x * boxRigidbody1->GetAngularVelocity());
+                    velocity1 = tangentOfangularVelocity1 + boxRigidbody1->GetLocalVelocity();
+                    velocity1 = MathLab::Rotate2D(velocity1, box1Transform->GetOrientation());
+                }
+                Vector2f velocity2(0, 0);
+                if (boxRigidbody2)
+                {
+                    Vector2f collisionPoint2 = box1InWorld[i] - box2Transform->GetPosition();
+                    Vector2f tangentOfangularVelocity2(-collisionPoint2.y * boxRigidbody2->GetAngularVelocity(), -collisionPoint2.x * boxRigidbody2->GetAngularVelocity());
+                    velocity2 = tangentOfangularVelocity2 + boxRigidbody2->GetLocalVelocity();
+                    velocity2 = MathLab::Rotate2D(velocity2, box2Transform->GetOrientation());
+                }
+                Vector2f relativeVelocityVector = velocity1 - velocity2;
+
+                if ()
+                {
+                    
+                }
             }
         }
 
