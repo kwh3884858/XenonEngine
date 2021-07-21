@@ -1,3 +1,8 @@
+//  Physics2D.cpp
+//  XenonEngine
+//
+//  Created by whkong on 2021-7-20.
+//  Copyright (c) 2021 whkong. All rights reserved.
 #include "Physics2D.h"
 
 #include "Engine\GameObject.h"
@@ -5,6 +10,7 @@
 #include "Engine\Component\Transform2D.h"
 #include "Engine\Component\CircleCollider2D.h"
 #include "Engine\Component\Rigidbody2D.h"
+#include "MathLab\Vector3.h"
 
 #include <cassert>
 namespace XenonPhysics
@@ -16,6 +22,7 @@ namespace XenonPhysics
     using XenonEngine::CircleCollider2D;
     using XenonEngine::Rigidbody2D;
     using XenonEngine::ComponentType;
+    using XenonEngine::Vector3f;
     using ColliderType = Collider2D::ColliderType;
 
     Physics2D::Physics2D()
@@ -547,6 +554,7 @@ namespace XenonPhysics
         box2InWorld[3].x = box2Pos.x + box2extent.x;
         box2InWorld[3].y = box2Pos.y - box2extent.y;
 
+        // Vertex and Vertex
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -571,7 +579,7 @@ namespace XenonPhysics
                     velocity2 = MathLab::Rotate2D(velocity2, box2Transform->GetOrientation());
                 }
                 Vector2f relativeVelocityVector = velocity1 - velocity2;
-                if (box1InWorld[i] == box2InWorld[j])
+                if ((box1InWorld[i] - box2InWorld[j]).Magnitude() < Physics2D::CollisionTolerance)
                 {
                     info.m_collisionType = CollisionType::IsCollision;
                     if (boxRigidbody1)
@@ -590,6 +598,7 @@ namespace XenonPhysics
             }
         }
 
+        // Vertex and Edge
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -611,11 +620,14 @@ namespace XenonPhysics
                 {
                     edge = box2InWorld[2] - box2InWorld[0];
                 }
-                edge = edge.Normalize();
+                Vector2f edgeNormal = edge.Normalize();
 
-                Vector2f edgeToVertex = box1InWorld[i] - box2InWorld[j];
-                Vector2f distanceFromVertexToEdge = (edgeToVertex*edge)*edge;
-                float distance = distanceFromVertexToEdge.Magnitude();
+                Vector2f edgeVertexToCollisionVertex = box1InWorld[i] - box2InWorld[j];
+                Vector2f vertexProjectile = (edgeVertexToCollisionVertex*edgeNormal)*edgeNormal;
+
+                float zAxisOfMoment = edgeNormal.Cross(edgeVertexToCollisionVertex);
+                Vector2f collisionNormal(-zAxisOfMoment * edgeNormal.y, zAxisOfMoment * edgeNormal.x);
+                collisionNormal = collisionNormal.Normalize();
 
                 Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
                 Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
@@ -637,35 +649,62 @@ namespace XenonPhysics
                 }
                 Vector2f relativeVelocityVector = velocity1 - velocity2;
 
-                if ()
+                if (vertexProjectile.Magnitude() > 0.0f &&
+                    vertexProjectile.Magnitude() < edge.Magnitude() &&
+                    zAxisOfMoment < Physics2D::CollisionTolerance &&
+                    relativeVelocityVector.Dot( collisionNormal ) < 0)
                 {
-                    
+                    info.m_collisionType = CollisionType::IsCollision;
+                    if (boxRigidbody1)
+                    {
+                        info.m_rigidbody1 = boxRigidbody1;
+                    }
+                    info.m_collider1 = boxCollider1;
+                    if (boxRigidbody2)
+                    {
+                        info.m_rigidbody1 = boxRigidbody2;
+                    }
+                    info.m_collider2 = boxCollider2;
+                    info.m_collisionNormalVec = collisionNormal;
+                    info.m_relativeVelocityVec = relativeVelocityVector;
                 }
             }
         }
 
-        info.m_collisionNormalVec = relativePositionVector.Normalize();
-
-        Vector2f circleVelocity1 = body1->GetVelocity();
-        Vector2f circleVelocity2 = body2->GetVelocity();
-        info.m_relativeVelocityVec = circleVelocity1 - circleVelocity2;
-
-        float rvn = info.m_collisionNormalVec.Dot(info.m_relativeVelocityVec);
-
-        // They are approaching each other
-        if (s <= CollisionTolerance && rvn < 0.0f)
+        // inter penetrate
+        for (int i = 0; i < 4; i++)
         {
-            info.m_collisionType = CollisionType::IsCollision;
+            bool isPentrate = true;
+            for (int j = 0; j < 4; j++)
+            {
+                Vector2f edge;
+                if (j == 0)
+                {
+                    edge = box2InWorld[0] - box2InWorld[1];
+                }
+                else if (j == 1)
+                {
+                    edge = box2InWorld[1] - box2InWorld[3];
+                }
+                else if (j == 3)
+                {
+                    edge = box2InWorld[3] - box2InWorld[2];
+                }
+                else if (j == 2)
+                {
+                    edge = box2InWorld[2] - box2InWorld[0];
+                }
+                Vector2f edgeToVertex = box2InWorld[j] - box1InWorld[i];
+                if (edge.Dot(edgeToVertex) < 0)
+                {
+                    isPentrate = false;
+                }
+            }
+            if (isPentrate)
+            {
+                info.m_collisionType = CollisionType::Penetrating;
+            }
         }
-        else if (s < -CollisionTolerance)
-        {
-            info.m_collisionType = CollisionType::Penetrating;
-        }
-        else
-        {
-            info.m_collisionType = CollisionType::NoCollision;
-        }
-
         return info;
     }
 
