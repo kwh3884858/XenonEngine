@@ -69,7 +69,7 @@ namespace XenonPhysics
         CollisionInfo CheckForCollision(Rigidbody2D* body1, Rigidbody2D* body2);
         CollisionInfo CheckForCollisionCircleAndCircle(Rigidbody2D* body1, Rigidbody2D* body2);
         CollisionInfo CheckForCollisionCircleAndBox(Rigidbody2D* ball, Rigidbody2D* plane);
-        CollisionInfo CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box1);
+        CollisionInfo CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box2);
 
         CollisionInfo CheckForCollisionColliderAndRigidbody(Collider2D* collider, Rigidbody2D* rigidBody);
         CollisionInfo CheckForCollisionCircleAndCircleByCollider(CircleCollider2D* body1Collider, CircleCollider2D* body2Collider, Vector2f circleVelocity1, Vector2f circleVelocity2);

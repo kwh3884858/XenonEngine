@@ -10,7 +10,7 @@
 #include "Engine\Component\Transform2D.h"
 #include "Engine\Component\CircleCollider2D.h"
 #include "Engine\Component\Rigidbody2D.h"
-#include "MathLab\Vector3.h"
+#include "MathLab\MathLib.h"
 
 #include <cassert>
 namespace XenonPhysics
@@ -22,7 +22,7 @@ namespace XenonPhysics
     using XenonEngine::CircleCollider2D;
     using XenonEngine::Rigidbody2D;
     using XenonEngine::ComponentType;
-    using XenonEngine::Vector3f;
+    using MathLab::Vector3f;
     using ColliderType = Collider2D::ColliderType;
 
     Physics2D::Physics2D()
@@ -195,7 +195,7 @@ namespace XenonPhysics
                         memcpy(m_colliders[colliderIndex], &tmpBoxCollider, sizeof(BoxCollider2D));
                         break;
                     default:
-                        assert(true == false)
+                        assert(true == false);
                     }
                     memcpy(m_dynamicRigidbodys[rigidbodyIndex], &tmpBody2, sizeof(Rigidbody2D));
                 }
@@ -277,17 +277,17 @@ namespace XenonPhysics
 
         if (type1 == ColliderType::Circle && type2 == ColliderType::Circle)
         {
-            info.m_collisionType = CheckForCollisionCircleAndCircle(body1, body2);
+            info = CheckForCollisionCircleAndCircle(body1, body2);
         }
 
         else if (type1 == ColliderType::Circle &&type2 == ColliderType::Box)
         {
-            info.m_collisionType = CheckForCollisionCircleAndBox(body1, body2);
+            info = CheckForCollisionCircleAndBox(body1, body2);
         }
 
         else if (type1 == ColliderType::Box && type2 == ColliderType::Circle)
         {
-            info.m_collisionType = CheckForCollisionCircleAndBox(body2, body1);
+            info = CheckForCollisionCircleAndBox(body2, body1);
             // TODO
             //if (collisionType.m_collisionType == CollisionType::IsCollision && mCollisionBody1 != nullptr && mCollisionBody2 != nullptr)
             //{
@@ -296,6 +296,10 @@ namespace XenonPhysics
                         memcpy(mCollisionBody1, mCollisionBody2, sizeof(Rigidbody2D));
                         memcpy(mCollisionBody2, &tempRigidbody, sizeof(Rigidbody2D));*/
                         //}
+        }
+        else if (type1 == ColliderType::Box && type2 == ColliderType::Box)
+        {
+            info = CheckForCollisionBoxAndBox(body1, body2);
         }
         else
         {
@@ -315,7 +319,9 @@ namespace XenonPhysics
         CircleCollider2D* body1Collider = static_cast<CircleCollider2D*>(collider1);
         CircleCollider2D* body2Collider = static_cast<CircleCollider2D*>(collider2);
 
-        CollisionInfo info = CheckForCollisionCircleAndCircleByCollider(body1Collider, body2Collider);
+        Vector2f circle1Velocity = body1->GetVelocity();
+        Vector2f circle2Velocity = body2->GetVelocity();
+        CollisionInfo info = CheckForCollisionCircleAndCircleByCollider(body1Collider, body2Collider, circle1Velocity, circle2Velocity);
         if (info.m_collisionType == CollisionType::IsCollision)
         {
             info.m_rigidbody1 = body1;
@@ -344,20 +350,20 @@ namespace XenonPhysics
         return info;
     }
 
-    Physics2D::CollisionInfo Physics2D::CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box1)
+    Physics2D::CollisionInfo Physics2D::CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box2)
     {
-        Collider2D* collider1 = body1->GetGameObject()->GetComponent<Collider2D>();
-        Collider2D* collider2 = body2->GetGameObject()->GetComponent<Collider2D>();
+        Collider2D* collider1 = box1->GetGameObject()->GetComponent<Collider2D>();
+        Collider2D* collider2 = box2->GetGameObject()->GetComponent<Collider2D>();
         assert(collider1->GetColliderType() == ColliderType::Box);
         assert(collider2->GetColliderType() == ColliderType::Box);
         BoxCollider2D* body1Collider = static_cast<BoxCollider2D*>(collider1);
         BoxCollider2D* body2Collider = static_cast<BoxCollider2D*>(collider2);
 
-        CollisionInfo info = CheckForCollisionBoxAndBoxByCollider(body1Collider, body2Collider);
+        CollisionInfo info = CheckForCollisionBoxAndBoxByCollider(body1Collider, body2Collider, box1->GetVelocity(), box2->GetVelocity());
         if (info.m_collisionType == CollisionType::IsCollision)
         {
-            info.m_rigidbody1 = body1;
-            info.m_rigidbody2 = body2;
+            info.m_rigidbody1 = box1;
+            info.m_rigidbody2 = box2;
         }
 
         return info;
@@ -397,7 +403,7 @@ namespace XenonPhysics
         {
             BoxCollider2D* fixedCollider = static_cast<BoxCollider2D*>(collider);
             CircleCollider2D* dynamicCollider = static_cast<CircleCollider2D*>(rigidBodyCollider);
-            info = CheckForCollisionCircleAndBoxByCollider(dynamicCollider, fixedCollider);
+            info = CheckForCollisionCircleAndBoxByCollider(dynamicCollider, fixedCollider, Vector2f::Zero, velocity);
         }
         else if (type1 == Collider2D::Box && type2 == Collider2D::Box)
         {
@@ -432,18 +438,17 @@ namespace XenonPhysics
 
         float s = relativePositionVector.Magnitude() - sumOfRaidus;
 
-        refInfo.m_collisionNormalVec = relativePositionVector.Normalize();
+        Vector2f collisionNormalVec = relativePositionVector.Normalize();
+        Vector2f relativeVelocityVec = circleVelocity1 - circleVelocity2;
 
-        Vector2f circleVelocity1 = circleVelocity1;
-        Vector2f circleVelocity2 = circleVelocity2;
-        refInfo.m_relativeVelocityVec = circleVelocity1 - circleVelocity2;
-
-        float rvn = refInfo.m_collisionNormalVec.Dot(refInfo.m_relativeVelocityVec);
+        float rvn = collisionNormalVec.Dot(relativeVelocityVec);
 
         // They are approaching each other
         if (s <= CollisionTolerance && rvn < 0.0f)
         {
             refInfo.m_collisionType = CollisionType::IsCollision;
+            refInfo.m_collisionNormalVec = collisionNormalVec;
+            refInfo.m_relativeVelocityVec = relativeVelocityVec;
         }
         else if (s < -CollisionTolerance)
         {
@@ -567,7 +572,7 @@ namespace XenonPhysics
                 {
                     Vector2f collisionPoint1 = box1InWorld[i] - box1Transform->GetPosition();
                     Vector2f tangentOfangularVelocity1(-collisionPoint1.y *  boxRigidbody1->GetAngularVelocity(), -collisionPoint1.x * boxRigidbody1->GetAngularVelocity());
-                    velocity1 = tangentOfangularVelocity1 + boxRigidbody1->GetLocalVelocity() ;
+                    velocity1 = tangentOfangularVelocity1 + boxRigidbody1->GetLocalVelocity();
                     velocity1 = MathLab::Rotate2D(velocity1, box1Transform->GetOrientation());
                 }
                 Vector2f velocity2(0, 0);
@@ -575,7 +580,7 @@ namespace XenonPhysics
                 {
                     Vector2f collisionPoint2 = box1InWorld[i] - box2Transform->GetPosition();
                     Vector2f tangentOfangularVelocity2(-collisionPoint2.y * boxRigidbody2->GetAngularVelocity(), -collisionPoint2.x * boxRigidbody2->GetAngularVelocity());
-                    velocity2 = tangentOfangularVelocity2 + boxRigidbody2->GetLocalVelocity() ;
+                    velocity2 = tangentOfangularVelocity2 + boxRigidbody2->GetLocalVelocity();
                     velocity2 = MathLab::Rotate2D(velocity2, box2Transform->GetOrientation());
                 }
                 Vector2f relativeVelocityVector = velocity1 - velocity2;
@@ -604,7 +609,7 @@ namespace XenonPhysics
             for (int j = 0; j < 4; j++)
             {
                 Vector2f edge;
-                if (j ==0)
+                if (j == 0)
                 {
                     edge = box2InWorld[0] - box2InWorld[1];
                 }
@@ -652,7 +657,7 @@ namespace XenonPhysics
                 if (vertexProjectile.Magnitude() > 0.0f &&
                     vertexProjectile.Magnitude() < edge.Magnitude() &&
                     zAxisOfMoment < Physics2D::CollisionTolerance &&
-                    relativeVelocityVector.Dot( collisionNormal ) < 0)
+                    relativeVelocityVector.Dot(collisionNormal) < 0)
                 {
                     info.m_collisionType = CollisionType::IsCollision;
                     if (boxRigidbody1)
@@ -732,8 +737,18 @@ namespace XenonPhysics
 
     void Physics2D::ApplyImpulseCollider(CollisionInfo info)
     {
-        Collider2D* collider = info.m_collider1;
-        Rigidbody2D* dynamicBody = info.m_rigidbody2;
+        Collider2D* collider = nullptr;
+        Rigidbody2D* dynamicBody = nullptr;
+        if (info.m_rigidbody1 != nullptr && info.m_collider2 != nullptr)
+        {
+            dynamicBody = info.m_rigidbody1;
+            collider = info.m_collider2;
+        }
+        else if (info.m_collider1 != nullptr && info.m_rigidbody2 != nullptr)
+        {
+            collider = info.m_collider1;
+            dynamicBody = m_rigidbody2;
+        }
         assert(collider != nullptr && dynamicBody != nullptr);
         if (collider->IsTrigger() == true)
         {
