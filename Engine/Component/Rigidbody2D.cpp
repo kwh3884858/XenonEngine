@@ -133,7 +133,7 @@ namespace XenonEngine
 
         float localSpeed = m_localVelocity.Magnitude();
         
-        if (localSpeed > 0.0f)
+        if (m_isEnableAirDrag && localSpeed > 0.0f)
         {
             Vector2f normalizedVelocity = m_velocity.Normalize();
             Vector2f dragVector = -normalizedVelocity;

@@ -46,6 +46,7 @@ namespace XenonEngine
         void CalculateForcesAndMoments(double deltaTime);
 
         bool mIsStatic = false;
+        bool m_isEnableAirDrag = false;
         bool mIsModified = false;
 
         float m_mass;
