@@ -74,26 +74,29 @@ namespace MathLab {
 
 
     template<typename T>
-    Vector2<T>::Vector2() {
+    Vector2<T>::Vector2() 
+    {
         x = 0;
         y = 0;
     }
 
     template<typename T>
-    Vector2<T>::Vector2(T ax, T ay) {
+    Vector2<T>::Vector2(T ax, T ay) 
+    {
         x = ax;
         y = ay;
     }
 
     template<typename T>
-    Vector2<T>::Vector2(const Vector2& para) {
+    Vector2<T>::Vector2(const Vector2& para) 
+    {
         this->x = para.x;
         this->y = para.y;
     }
 
     template<typename T>
-    Vector2<T>::~Vector2() {
-
+    Vector2<T>::~Vector2() 
+    {
     }
 
     template<typename T>
@@ -184,14 +187,16 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2) {
+    Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2) 
+    {
         Vector2<T> vector(v1);
         vector += v2;
         return  vector;
     }
 
     template<typename T>
-    Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2) {
+    Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2)
+    {
         Vector2<T> vector(v1);
         vector -= v2;
         return  vector;
@@ -212,7 +217,8 @@ namespace MathLab {
     }
 
     template<typename T>
-    bool LessY(const Vector2<T>& origin, const Vector2<T>& compare) {
+    bool LessY(const Vector2<T>& origin, const Vector2<T>& compare) 
+    {
         return origin.y < compare.y;
     }
 
