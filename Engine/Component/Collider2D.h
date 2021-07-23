@@ -22,12 +22,15 @@ namespace XenonEngine
             m_colliderType(colliderType)
         {}
         virtual ~Collider2D()override {};
+        virtual ComponentType GetComponentType() const override { return m_type; };
 
         bool IsTrigger() const { return mIsTrigger; }
         ColliderType GetColliderType() const { return m_colliderType; }
 
         virtual float GetArea()const = 0;
         virtual float GetRadius()const = 0;
+
+        static ComponentType m_type;
     protected:
         bool mIsModified = false;
         bool mIsTrigger = false;
