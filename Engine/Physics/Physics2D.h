@@ -72,9 +72,9 @@ namespace XenonPhysics
         CollisionInfo CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box2);
 
         CollisionInfo CheckForCollisionColliderAndRigidbody(Collider2D* collider, Rigidbody2D* rigidBody);
-        CollisionInfo CheckForCollisionCircleAndCircleByCollider(CircleCollider2D* body1Collider, CircleCollider2D* body2Collider, Vector2f circleVelocity1, Vector2f circleVelocity2);
-        CollisionInfo CheckForCollisionCircleAndBoxByCollider(CircleCollider2D* ballCollider, BoxCollider2D* boxCollider, Vector2f ballVelocity, Vector2f boxVelocity);
-        CollisionInfo CheckForCollisionBoxAndBoxByCollider(BoxCollider2D* boxCollider1, BoxCollider2D* boxCollider2, Vector2f boxVelocity1, Vector2f boxVelocity2);
+        CollisionInfo CheckForCollisionCircleAndCircleByCollider(CircleCollider2D* body1Collider, CircleCollider2D* body2Collider, Vector2f circleVelocity1, Vector2f circleVelocity2)const;
+        CollisionInfo CheckForCollisionCircleAndBoxByCollider(CircleCollider2D* ballCollider, BoxCollider2D* boxCollider, Vector2f ballVelocity, Vector2f boxVelocity)const;
+        CollisionInfo CheckForCollisionBoxAndBoxByCollider(BoxCollider2D* boxCollider1, BoxCollider2D* boxCollider2, Vector2f boxVelocity1, Vector2f boxVelocity2)const;
 
         void ApplyImpulse(CollisionInfo info);
         void ApplyImpulseCollider(CollisionInfo info);
