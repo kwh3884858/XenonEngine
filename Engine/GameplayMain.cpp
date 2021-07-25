@@ -69,10 +69,10 @@ namespace Gameplay {
 
             int numOfVertex = 4;
             Vector2f* heroVertex = new Vector2f[numOfVertex];
-            heroVertex[0] = Vector2f(10, 0);
-            heroVertex[1] = Vector2f(10, 20);
-            heroVertex[2] = Vector2f(-10, 20);
-            heroVertex[3] = Vector2f(-10, 0);
+            heroVertex[0] = Vector2f(10, -10);
+            heroVertex[1] = Vector2f(10, 10);
+            heroVertex[2] = Vector2f(-10, 10);
+            heroVertex[3] = Vector2f(-10, -10);
             Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
             Render2DConfig render2DConfig;
             render2DConfig.m_polygon2D = heroPolygon;
@@ -107,7 +107,8 @@ namespace Gameplay {
             BoxCollider2D* collider = new BoxCollider2D(ground);
             BoxCollider2DConfig boxCollider2DConfig;
             boxCollider2DConfig.m_isTrigger = false;
-            boxCollider2DConfig.m_size = Vector2f(400, 40);
+            boxCollider2DConfig.m_size = Vector2f(400, 20);
+            collider->SetConfig(&boxCollider2DConfig);
             ground->AddComponent(collider);
 
             int numOfVertex = 4;
@@ -133,7 +134,13 @@ namespace Gameplay {
     {
         PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
         Transform2D* transform = player->GetComponent<Transform2D>();
+        Rigidbody2D* rigid = player->GetComponent<Rigidbody2D>();
 
+        static bool shouldPrintPlayerData = true;
+        if (shouldPrintPlayerData)
+        {
+            printf("( %f , %f ) \n", transform->GetPosition().x, transform->GetPosition().y);
+        }
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))
         {
@@ -146,6 +153,7 @@ namespace Gameplay {
         {
             printf("Respawn Player\n");
             transform->SetPosition(Vector2f(400, 300));
+            rigid->SetVelocity(Vector2f(0, 0));
         }
 
         unsigned int width = Database::Get().engineConfig.m_width;
@@ -169,7 +177,7 @@ namespace Gameplay {
         float velocity = personlity->GetVelocity();
         transform->AddPosition(Vector2f(xAxisDelta * velocity, 0));
 
-        Rigidbody2D* rigid = player->GetComponent<Rigidbody2D>();
+
         if (InputSystem::Get().GetStickButton(0) || InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_SPACE))
         {
             Force2D jumpForce;
@@ -187,6 +195,7 @@ namespace Gameplay {
             Render2D* render2D = ground->GetComponent<Render2D>();
             render2D->Update();
         }
+
     }
 
     void GameplayShutdown()

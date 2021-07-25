@@ -38,48 +38,54 @@ namespace XenonPhysics
     {
         float deltaTime = TIMESTEP;
 
-        CollisionInfo collisionInfo;
+        //CollisionInfo collisionInfo;
 
         int count = 0;
 
         //Delta time must bigger than 0
-        if (deltaTime <= EPSILON)
-        {
-            return true;
-        }
+        assert(deltaTime > EPSILON);
 
         //Update position
         for (int i = 0; i < m_dynamicRigidbodys.Count(); i++)
         {
+            m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
             m_dynamicRigidbodys[i]->FixedUpdate(deltaTime);
         }
 
         //Check collision
         bool tryAgain = true;
-        Rigidbody2D tmpBody1(nullptr, true, 0, 0);
-        Rigidbody2D tmpBody2(nullptr, true, 0, 0);
-        BoxCollider2D tmpBoxCollider(nullptr);
-        CircleCollider2D tmpCircleCollider(nullptr);
+        //Rigidbody2D tmpBody1(nullptr, true, 0, 0);
+        //Rigidbody2D tmpBody2(nullptr, true, 0, 0);
+        //BoxCollider2D tmpBoxCollider(nullptr);
+        //CircleCollider2D tmpCircleCollider(nullptr);
 
         // For dynamic and dynamic
         for (int i = 0; i < m_dynamicRigidbodys.Count() - 1; i++) {
             for (int j = i + 1; j < m_dynamicRigidbodys.Count(); j++)
             {
+                deltaTime = TIMESTEP;
                 while (tryAgain && deltaTime > MINDELTATIME)
                 {
                     tryAgain = false;
-                    memcpy(&tmpBody1, m_dynamicRigidbodys[i], sizeof(Rigidbody2D));
-                    memcpy(&tmpBody2, m_dynamicRigidbodys[j], sizeof(Rigidbody2D));
+                    //memcpy(&tmpBody1, m_dynamicRigidbodys[i], sizeof(Rigidbody2D));
+                    //memcpy(&tmpBody2, m_dynamicRigidbodys[j], sizeof(Rigidbody2D));
 
-                    collisionInfo.m_rigidbody1 = nullptr;
-                    collisionInfo.m_rigidbody2 = nullptr;
+                    //collisionInfo.m_rigidbody1 = nullptr;
+                    //collisionInfo.m_rigidbody2 = nullptr;
 
-                    collisionInfo = CheckForCollision(&tmpBody1, &tmpBody2);
-
+                    CollisionInfo collisionInfo = CheckForCollision(m_dynamicRigidbodys[i], m_dynamicRigidbodys[j]);
+                    assert(collisionInfo.m_rigidbody1 != collisionInfo.m_rigidbody2);
+                    assert(collisionInfo.m_collider1 != collisionInfo.m_collider2);
                     if (collisionInfo.m_collisionType == CollisionType::Penetrating)
                     {
                         deltaTime /= 2;
                         tryAgain = true;
+                        m_dynamicRigidbodys[i]->FallbackUpdate();
+                        m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
+                        m_dynamicRigidbodys[i]->FixedUpdate(deltaTime);
+                        m_dynamicRigidbodys[j]->FallbackUpdate();
+                        m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
+                        m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
                     }
                     else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
                     {
@@ -91,11 +97,11 @@ namespace XenonPhysics
                 }
                 tryAgain = true;
 
-                if (collisionInfo.m_collisionType != CollisionType::Penetrating)
-                {
-                    memcpy(m_dynamicRigidbodys[i], &tmpBody1, sizeof(Rigidbody2D));
-                    memcpy(m_dynamicRigidbodys[j], &tmpBody2, sizeof(Rigidbody2D));
-                }
+                //if (collisionInfo.m_collisionType != CollisionType::Penetrating)
+                //{
+                //    memcpy(m_dynamicRigidbodys[i], &tmpBody1, sizeof(Rigidbody2D));
+                //    memcpy(m_dynamicRigidbodys[j], &tmpBody2, sizeof(Rigidbody2D));
+                //}
             }
         }
 
@@ -104,21 +110,26 @@ namespace XenonPhysics
         {
             for (int j = 0; j < m_dynamicRigidbodys.Count(); j++)
             {
+                deltaTime = TIMESTEP;
                 while (tryAgain && deltaTime > MINDELTATIME)
                 {
                     tryAgain = false;
-                    memcpy(&tmpBody1, mStaticRigidbodys[i], sizeof(Rigidbody2D));
-                    memcpy(&tmpBody2, m_dynamicRigidbodys[j], sizeof(Rigidbody2D));
+                    //memcpy(&tmpBody1, mStaticRigidbodys[i], sizeof(Rigidbody2D));
+                    //memcpy(&tmpBody2, m_dynamicRigidbodys[j], sizeof(Rigidbody2D));
 
-                    collisionInfo.m_rigidbody1 = nullptr;
-                    collisionInfo.m_rigidbody2 = nullptr;
+                    //collisionInfo.m_rigidbody1 = nullptr;
+                    //collisionInfo.m_rigidbody2 = nullptr;
 
-                    collisionInfo = CheckForCollision(&tmpBody1, &tmpBody2);
-
+                    CollisionInfo collisionInfo = CheckForCollision(mStaticRigidbodys[i], m_dynamicRigidbodys[j]);
+                    assert(collisionInfo.m_rigidbody1 != collisionInfo.m_rigidbody2);
+                    assert(collisionInfo.m_collider1 != collisionInfo.m_collider2);
                     if (collisionInfo.m_collisionType == CollisionType::Penetrating)
                     {
                         deltaTime /= 2;
                         tryAgain = true;
+                        m_dynamicRigidbodys[j]->FallbackUpdate();
+                        m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
+                        m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
                     }
                     else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
                     {
@@ -130,11 +141,11 @@ namespace XenonPhysics
                 }
                 tryAgain = true;
 
-                if (collisionInfo.m_collisionType != CollisionType::Penetrating)
-                {
-                    memcpy(mStaticRigidbodys[i], &tmpBody1, sizeof(Rigidbody2D));
-                    memcpy(m_dynamicRigidbodys[j], &tmpBody2, sizeof(Rigidbody2D));
-                }
+                //if (collisionInfo.m_collisionType != CollisionType::Penetrating)
+                //{
+                //    memcpy(mStaticRigidbodys[i], &tmpBody1, sizeof(Rigidbody2D));
+                //    memcpy(m_dynamicRigidbodys[j], &tmpBody2, sizeof(Rigidbody2D));
+                //}
             }
         }
 
@@ -143,63 +154,99 @@ namespace XenonPhysics
         {
             for (int colliderIndex = 0; colliderIndex < m_colliders.Count(); colliderIndex++)
             {
+                deltaTime = TIMESTEP;
+                CollisionInfo collisionInfo;
                 while (tryAgain && deltaTime > MINDELTATIME)
                 {
                     tryAgain = false;
-                    collisionInfo.m_rigidbody1 = nullptr;
-                    collisionInfo.m_rigidbody2 = nullptr;
-                    memcpy(&tmpBody2, m_dynamicRigidbodys[rigidbodyIndex], sizeof(Rigidbody2D));
+
+                    //memcpy(&tmpBody2, m_dynamicRigidbodys[rigidbodyIndex], sizeof(Rigidbody2D));
 
                     ColliderType colliderType = m_colliders[colliderIndex]->GetColliderType();
                     switch (colliderType)
                     {
                     case ColliderType::Box:
                     {
-                        memcpy(&tmpBoxCollider, m_colliders[colliderIndex], sizeof(BoxCollider2D));
-                        collisionInfo = CheckForCollisionColliderAndRigidbody(&tmpBoxCollider, &tmpBody2);
+ /*                       memcpy(&tmpBoxCollider, m_colliders[colliderIndex], sizeof(BoxCollider2D));*/
+                        BoxCollider2D* boxCollider = static_cast<BoxCollider2D*>( m_colliders[colliderIndex]);
+                        collisionInfo = CheckForCollisionColliderAndRigidbody(boxCollider, m_dynamicRigidbodys[rigidbodyIndex]);
                     }
                     break;
                     case ColliderType::Circle:
                     {
-                        memcpy(&tmpCircleCollider, m_colliders[colliderIndex], sizeof(CircleCollider2D));
-                        collisionInfo = CheckForCollisionColliderAndRigidbody(&tmpCircleCollider, &tmpBody2);
+                        CircleCollider2D* circleCollider = static_cast<CircleCollider2D*>(m_colliders[colliderIndex]);
+                        //memcpy(&tmpCircleCollider, m_colliders[colliderIndex], sizeof(CircleCollider2D));
+                        collisionInfo = CheckForCollisionColliderAndRigidbody(circleCollider, m_dynamicRigidbodys[rigidbodyIndex]);
                     }
                     break;
                     default:
                         assert(true == false);
                     }
-
+                    assert(collisionInfo.m_rigidbody1 != collisionInfo.m_rigidbody2);
+                    assert(collisionInfo.m_collider1 != collisionInfo.m_collider2);
                     if (collisionInfo.m_collisionType == CollisionType::Penetrating)
                     {
                         deltaTime /= 2;
                         tryAgain = true;
+                        m_dynamicRigidbodys[rigidbodyIndex]->FallbackUpdate();
+                        m_dynamicRigidbodys[rigidbodyIndex]->PreFixedUpdate(deltaTime);
+                        m_dynamicRigidbodys[rigidbodyIndex]->FixedUpdate(deltaTime);
                     }
                     else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
                     {
-                        if (collisionInfo.m_rigidbody1 != nullptr && collisionInfo.m_rigidbody2 != nullptr)
-                        {
-                            ApplyImpulseCollider(collisionInfo);
-                        }
+                        ApplyImpulseCollider(collisionInfo);
                     }
                 }
                 tryAgain = true;
 
-                if (collisionInfo.m_collisionType != CollisionType::Penetrating)
+                if (collisionInfo.m_collisionType == CollisionType::Penetrating)
                 {
-                    ColliderType colliderType = m_colliders[colliderIndex]->GetColliderType();
-                    switch (colliderType)
+                    Rigidbody2D* dynamicBody = m_dynamicRigidbodys[rigidbodyIndex];
+                    // Low speed to make it stop
+                    if (dynamicBody->GetVelocity().Magnitude() * Physics2D::TIMESTEP < 1.0f)
                     {
-                    case ColliderType::Box:
-                        memcpy(m_colliders[colliderIndex], &tmpBoxCollider, sizeof(BoxCollider2D));
-                        break;
-                    case ColliderType::Circle:
-                        memcpy(m_colliders[colliderIndex], &tmpBoxCollider, sizeof(BoxCollider2D));
-                        break;
-                    default:
-                        assert(true == false);
+                        Vector2f velocityNormal = dynamicBody->GetVelocity().Normalize();
+                        dynamicBody->FallbackUpdate();
+                        dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+
+                        Rigidbody2D::FixedUpdateData& currentData = dynamicBody->GetCurrentUpdataData();
+                        float relatedForce = currentData.m_sumOfForces.Dot(velocityNormal);
+                        currentData.m_sumOfForces += -velocityNormal * MathLab::abs(relatedForce);
+
+                        Rigidbody2D::FixedUpdateData& lastData = dynamicBody->GetLastUpdataData();
+                        lastData.m_velocity = Vector2f::Zero;
+
+                        dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
                     }
-                    memcpy(m_dynamicRigidbodys[rigidbodyIndex], &tmpBody2, sizeof(Rigidbody2D));
+                    else
+                    {
+                        float impulse = dynamicBody->GetVelocity().Magnitude() * (1 + CoefficientOfRestitution) * dynamicBody->GetMass();
+                        XenonPhysics::Force2D force2D;
+                        force2D.m_forceDirection = -dynamicBody->GetVelocity().Normalize();
+                        force2D.fvalue = impulse / Physics2D::TIMESTEP;
+
+                        dynamicBody->FallbackUpdate();
+                        dynamicBody->AddForce(force2D);
+                        dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                        dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
+                    }
                 }
+                //if (collisionInfo.m_collisionType != CollisionType::Penetrating)
+                //{
+                //    ColliderType colliderType = m_colliders[colliderIndex]->GetColliderType();
+                //    switch (colliderType)
+                //    {
+                //    case ColliderType::Box:
+                //        memcpy(m_colliders[colliderIndex], &tmpBoxCollider, sizeof(BoxCollider2D));
+                //        break;
+                //    case ColliderType::Circle:
+                //        memcpy(m_colliders[colliderIndex], &tmpBoxCollider, sizeof(BoxCollider2D));
+                //        break;
+                //    default:
+                //        assert(true == false);
+                //    }
+                //    memcpy(m_dynamicRigidbodys[rigidbodyIndex], &tmpBody2, sizeof(Rigidbody2D));
+                //}
             }
         }
         return true;
@@ -393,7 +440,7 @@ namespace XenonPhysics
         {
             BoxCollider2D* fixedCollider = static_cast<BoxCollider2D*>(collider);
             BoxCollider2D* dynamicCollider = static_cast<BoxCollider2D*>(rigidBodyCollider);
-            info = CheckForCollisionBoxAndBoxByCollider(fixedCollider, dynamicCollider, Vector2f::Zero, velocity);
+            info = CheckForCollisionBoxAndBoxByCollider(dynamicCollider,fixedCollider, velocity, Vector2f::Zero );
         }
         else
         {
@@ -516,37 +563,37 @@ namespace XenonPhysics
         Vector2f box1extent = boxCollider1->GetSize() / 2;
         Vector2f box2extent = boxCollider2->GetSize() / 2;
         // Top left, Top right, Button left, Button right
-        Vector2f box1InWorld[4];
-        box1InWorld[0].x = box1Pos.x - box1extent.x;
-        box1InWorld[0].y = box1Pos.y + box1extent.y;
-        box1InWorld[1].x = box1Pos.x + box1extent.x;
-        box1InWorld[1].y = box1Pos.y + box1extent.y;
-        box1InWorld[2].x = box1Pos.x - box1extent.x;
-        box1InWorld[2].y = box1Pos.y - box1extent.y;
-        box1InWorld[3].x = box1Pos.x - box1extent.x;
-        box1InWorld[3].y = box1Pos.y + box1extent.y;
-        Vector2f box2InWorld[4];
-        box2InWorld[0].x = box2Pos.x - box2extent.x;
-        box2InWorld[0].y = box2Pos.y + box2extent.y;
-        box2InWorld[1].x = box2Pos.x + box2extent.x;
-        box2InWorld[1].y = box2Pos.y + box2extent.y;
-        box2InWorld[2].x = box2Pos.x - box2extent.x;
-        box2InWorld[2].y = box2Pos.y - box2extent.y;
-        box2InWorld[3].x = box2Pos.x + box2extent.x;
-        box2InWorld[3].y = box2Pos.y - box2extent.y;
+        Rectangle box1InWorld;
+        box1InWorld.m_topLeft.x = box1Pos.x - box1extent.x;
+        box1InWorld.m_topLeft.y = box1Pos.y + box1extent.y;
+        box1InWorld.m_topRight.x = box1Pos.x + box1extent.x;
+        box1InWorld.m_topRight.y = box1Pos.y + box1extent.y;
+        box1InWorld.m_bottomLeft.x = box1Pos.x - box1extent.x;
+        box1InWorld.m_bottomLeft.y = box1Pos.y - box1extent.y;
+        box1InWorld.m_bottomRight.x = box1Pos.x + box1extent.x;
+        box1InWorld.m_bottomRight.y = box1Pos.y - box1extent.y;
+        Rectangle box2InWorld;
+        box2InWorld.m_topLeft.x = box2Pos.x - box2extent.x;
+        box2InWorld.m_topLeft.y = box2Pos.y + box2extent.y;
+        box2InWorld.m_topRight.x = box2Pos.x + box2extent.x;
+        box2InWorld.m_topRight.y = box2Pos.y + box2extent.y;
+        box2InWorld.m_bottomLeft.x = box2Pos.x - box2extent.x;
+        box2InWorld.m_bottomLeft.y = box2Pos.y - box2extent.y;
+        box2InWorld.m_bottomRight.x = box2Pos.x + box2extent.x;
+        box2InWorld.m_bottomRight.y = box2Pos.y - box2extent.y;
 
         Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
         Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
-        if (boxRigidbody1)
-        {
-            info.m_rigidbody1 = boxRigidbody1;
-        }
-        info.m_collider1 = boxCollider1;
-        if (boxRigidbody2)
-        {
-            info.m_rigidbody1 = boxRigidbody2;
-        }
-        info.m_collider2 = boxCollider2;
+        //if (boxRigidbody1)
+        //{
+        //    info.m_rigidbody1 = boxRigidbody1;
+        //}
+        //info.m_collider1 = boxCollider1;
+        //if (boxRigidbody2)
+        //{
+        //    info.m_rigidbody2 = boxRigidbody2;
+        //}
+        //info.m_collider2 = boxCollider2;
 
         // Vertex and Vertex
         for (int i = 0; i < 4; i++)
@@ -630,7 +677,7 @@ namespace XenonPhysics
 
                 if (vertexProjectile.Magnitude() > 0.0f &&
                     vertexProjectile.Magnitude() < edge.Magnitude() &&
-                    zAxisOfMoment < Physics2D::CollisionTolerance &&
+                    MathLab::abs( zAxisOfMoment) < Physics2D::CollisionTolerance &&
                     relativeVelocityVector.Dot(collisionNormal) < 0)
                 {
                     info.m_collisionType = CollisionType::IsCollision;
@@ -641,40 +688,67 @@ namespace XenonPhysics
         }
 
         // inter penetrate
+        bool isPentrate = true;
         for (int i = 0; i < 4; i++)
         {
-            bool isPentrate = true;
-            for (int j = 0; j < 4; j++)
-            {
-                Vector2f edge;
-                if (j == 0)
-                {
-                    edge = box2InWorld[0] - box2InWorld[1];
-                }
-                else if (j == 1)
-                {
-                    edge = box2InWorld[1] - box2InWorld[3];
-                }
-                else if (j == 3)
-                {
-                    edge = box2InWorld[3] - box2InWorld[2];
-                }
-                else if (j == 2)
-                {
-                    edge = box2InWorld[2] - box2InWorld[0];
-                }
-                Vector2f edgeToVertex = box2InWorld[j] - box1InWorld[i];
-                if (edge.Dot(edgeToVertex) < 0)
-                {
-                    isPentrate = false;
-                }
-            }
+            isPentrate = CheckPointIsInBox(box1InWorld[i], box2InWorld);
             if (isPentrate)
             {
                 info.m_collisionType = CollisionType::Penetrating;
+                return info;
+            }
+            isPentrate = CheckPointIsInBox(box2InWorld[i], box1InWorld);
+            if (isPentrate)
+            {
+                info.m_collisionType = CollisionType::Penetrating;
+                return info;
             }
         }
+
         return info;
+    }
+
+    bool Physics2D::CheckPointIsInBox(const Vector2f& point, const Rectangle& box) const
+    {
+        bool isPentrate = true;
+        for (int j = 0; j < 4; j++)
+        {
+            Vector2f edge;
+            Vector2f edgeToVertex;
+            if (j == 0)
+            {
+                edge = box.m_topLeft - box.m_topRight;
+                edgeToVertex = box.m_topLeft - point;
+            }
+            else if (j == 1)
+            {
+                edge = box.m_topRight - box.m_bottomRight;
+                edgeToVertex = box.m_topRight - point;
+            }
+            else if (j == 3)
+            {
+                edge = box.m_bottomRight - box.m_bottomLeft;
+                edgeToVertex = box.m_bottomRight - point;
+            }
+            else if (j == 2)
+            {
+                edge = box.m_bottomLeft - box.m_topLeft;
+                edgeToVertex = box.m_bottomLeft - point;
+            }
+            if (edge.Dot(edgeToVertex) < 0)
+            {
+                isPentrate = false;
+                break;
+            }
+        }
+        if (isPentrate)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -720,11 +794,29 @@ namespace XenonPhysics
         }
         else
         {
-            float impulse = info.m_relativeVelocityVec.Dot(info.m_collisionNormalVec) * (1 + CoefficientOfRestitution) * dynamicBody->GetMass();
-            XenonPhysics::Force2D force2D;
-            force2D.m_forceDirection = info.m_collisionNormalVec;
-            force2D.fvalue = impulse / Physics2D::TIMESTEP;
-            dynamicBody->AddForce(force2D);
+            // Low speed to make it stop
+            if (dynamicBody->GetVelocity().Magnitude() * Physics2D::TIMESTEP < 1.0f)
+            {
+                dynamicBody->FallbackUpdate();
+                dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                Rigidbody2D::FixedUpdateData& updateData = dynamicBody->GetLastUpdataData();
+                float relatedForce = updateData.m_sumOfForces.Dot(-info.m_collisionNormalVec);
+                updateData.m_sumOfForces += info.m_collisionNormalVec * MathLab::abs(relatedForce);
+                dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
+            }
+            else
+            {
+                float impulse = -info.m_relativeVelocityVec.Dot(info.m_collisionNormalVec) * (1 + CoefficientOfRestitution) * dynamicBody->GetMass();
+                XenonPhysics::Force2D force2D;
+                force2D.m_forceDirection = info.m_collisionNormalVec;
+                force2D.fvalue = impulse / Physics2D::TIMESTEP;
+
+                dynamicBody->FallbackUpdate();
+                dynamicBody->AddForce(force2D);
+                dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
+            }
+
         }
     }
 
@@ -784,7 +876,7 @@ namespace XenonPhysics
     const float Physics2D::TIMESTEP = 0.1f;
     const float Physics2D::MINDELTATIME = 0.02f;
     const float Physics2D::EPSILON = 0.01f;
-    const float Physics2D::CollisionTolerance = 0.1f;
-    const float Physics2D::CoefficientOfRestitution = 0.8f;
+    const float Physics2D::CollisionTolerance = 0.2f;
+    const float Physics2D::CoefficientOfRestitution = 0.5f;
 
 }

@@ -10,7 +10,7 @@ namespace XenonPhysics
     const float PI = 3.1415926f;
 
     const float AirDensity = 1.2f;
-    const float Gravity = -9.87f;
+    const float Gravity = -20.0f /*-9.87f*/;
 
     const float LinearDragCofficient = 0.6f;
     const float AngularDragCoefficient = 1.25f;

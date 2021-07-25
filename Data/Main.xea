@@ -2,8 +2,8 @@ FUNC Main
 {
 	PUSH 8.0
 	CALLHOST SetVelocity
-	PUSH 200.0
+	PUSH 100.0
 	CALLHOST SetJumpForce
-	PUSH 10.0
+	PUSH 1.0
 	CALLHOST SetMass
 }

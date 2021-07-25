@@ -19,19 +19,38 @@ namespace XenonEngine
         mIsStatic(isStatic),
         m_mass(mass),
         m_inertia(inertia),
-        m_inertiaInverse(1/m_inertia),
-        m_velocity(Vector2f::Zero),
-        m_localVelocity(Vector2f::Zero),
-        m_localAngularVelocity(0),
-        m_speed(0),
-        m_gravity(Vector2f(0, m_mass * XenonPhysics::Gravity)),
-        m_forces(Vector2f::Zero),
-        m_moments(0)
+        m_inertiaInverse(1/m_inertia)
     {
     }
 
     Rigidbody2D::~Rigidbody2D()
     {
+    }
+
+    const Rigidbody2D::FixedUpdateData& Rigidbody2D::PreFixedUpdate(float deltaTime)
+    {
+        FixedUpdateData newUpdateData;
+        // When collision is happen, only accept collision impulse.
+        //if (m_isCollision)
+        //{
+        //    m_isCollision = false;
+        //    newUpdateData.m_forces = m_currentData.m_forces;
+        //    newUpdateData.m_moments = m_currentData.m_moments;
+        //}
+        //else
+        //{
+        newUpdateData.m_addedForces = m_addedForces;
+        m_addedForces = Vector2f::Zero;
+        newUpdateData.m_addedMoments = m_addedMoments;
+        m_addedMoments = 0;
+        CalculateForcesAndMoments(newUpdateData, deltaTime);
+
+        m_lastFrameFixedUpdateData = m_currentData;
+        m_currentData = newUpdateData;
+        m_isAllowPullBack = true;
+
+        return m_currentData;
+        //}
     }
 
     bool Rigidbody2D::FixedUpdate(float deltaTime)
@@ -40,35 +59,28 @@ namespace XenonEngine
         {
             return true;
         }
+        CalculateRigidbodyByUpdateData(m_currentData, deltaTime);
+        AffectGameobjectInWorld(m_currentData);
+        return true;
+    }
 
-        CalculateForcesAndMoments(deltaTime);
-
-        //Integrate linear equation of motion
-        Vector2f a = m_forces / m_mass;
-
-        //form local to world space
-        Vector2f dv = a * deltaTime;
-        m_velocity += dv;
-        Vector2f ds = m_velocity * deltaTime;
+    bool Rigidbody2D::FallbackUpdate()
+    {
+        if (!m_isAllowPullBack)
+        {
+            return false;
+        }
         Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
         assert(transform != nullptr);
-        transform->AddPosition(ds);
+        transform->AddPosition(-m_currentData.m_deltaDistance);
+        transform->AddRotation(-m_currentData.m_deltaRotation);
 
-        //Calculate the angular velocity of the airplane in local space
-        //angular acceleration
-        float aa = m_moments * m_inertiaInverse;
-        float dav = aa * deltaTime;
-        m_localAngularVelocity += dav;
-        float dr = MathLab::DegreeToRadians(m_localAngularVelocity) * deltaTime ;
-        transform->AddRotation(dr);
-
-        //Misc. calculation
-        m_speed = m_velocity.Magnitude();
-        m_localVelocity = MathLab::Rotate2D(m_velocity, -transform->GetOrientation()); 
+        m_currentData = m_lastFrameFixedUpdateData;
+        m_isAllowPullBack = false;
 
         //Reset force
-        m_forces = Vector2f::Zero;
-        m_moments = 0;
+        m_addedForces = m_currentData.m_addedForces;
+        m_addedMoments = m_currentData.m_addedMoments;
 
         return true;
     }
@@ -98,11 +110,11 @@ namespace XenonEngine
     
     bool Rigidbody2D::AddForce(const Vector2f& force)
     {
-        m_forces += force;
+        m_addedForces += force;
         return true;
     }
 
-    void Rigidbody2D::CalculateForcesAndMoments(double deltaTime)
+    Rigidbody2D::FixedUpdateData& Rigidbody2D::CalculateForcesAndMoments(FixedUpdateData& currentData, double deltaTime)
     {
         assert(m_gameobject != nullptr);
 
@@ -119,32 +131,26 @@ namespace XenonEngine
             //linear motion of the craft,
             //plus the velocity at each element due to
             //the rotation of the craft
-        float projectedArea = 1;
-        float radius = 0;
-
-        XenonEngine::Collider2D* collider = m_gameobject->GetComponent<XenonEngine::Collider2D>();
-        if (collider != nullptr)
-        {
-            projectedArea = collider->GetArea();
-            radius = collider->GetRadius();
-        }
-
-        Vector2f tagent (0, radius);
-
-        float localSpeed = m_localVelocity.Magnitude();
-        
+        float localSpeed = m_currentData.m_localVelocity.Magnitude();
         if (m_isEnableAirDrag && localSpeed > 0.0f)
         {
-            Vector2f normalizedVelocity = m_velocity.Normalize();
+            float projectedArea = 1;
+            float radius = 0;
+            XenonEngine::Collider2D* collider = m_gameobject->GetComponent<XenonEngine::Collider2D>();
+            if (collider != nullptr)
+            {
+                projectedArea = collider->GetArea();
+                radius = collider->GetRadius();
+            }
+            Vector2f tagent(0, radius);
+            Vector2f normalizedVelocity = m_currentData.m_velocity.Normalize();
             Vector2f dragVector = -normalizedVelocity;
-
             //Determine the resultant force on the element
             float tmp = 0.5f * XenonPhysics::AirDensity * localSpeed * localSpeed * projectedArea * XenonPhysics::LinearDragCofficient;
             Vector2f resultant = dragVector * tmp;
 
             //Keep a running total of these resultant forces
             sumOfForces += resultant;
-
             //Calculate the moment, keep a running total of these resultant moments
             sumOfMoments += tagent.Cross(resultant);
         }
@@ -165,15 +171,51 @@ namespace XenonEngine
         }
         */
 
-        //Now add the propulsion thrust
-        //No moment since line of action is through center of gravity
-        m_forces += sumOfForces;
-        m_moments = sumOfMoments;
-        
         if (m_isSimulateGravity)
         {
-            m_forces += m_gravity;
+            sumOfForces += Vector2f(0, m_mass * XenonPhysics::Gravity);
         }
+        //Now add the propulsion thrust
+        //No moment since line of action is through center of gravity
+        currentData.m_sumOfForces = currentData.m_addedForces + sumOfForces;
+        currentData.m_sumOfMoments = currentData.m_addedMoments + sumOfMoments;
+        return currentData;
+    }
+
+    void Rigidbody2D::CalculateRigidbodyByUpdateData( FixedUpdateData& currentData, double deltaTime) const
+    {
+        //Integrate linear equation of motion
+        Vector2f acceleration = currentData.m_sumOfForces / m_mass;
+        //form local to world space
+        Vector2f dv = acceleration * deltaTime;
+        currentData.m_velocity = m_lastFrameFixedUpdateData.m_velocity + dv;
+        currentData.m_deltaDistance = currentData.m_velocity * deltaTime;
+
+        //Calculate the angular velocity of the airplane in local space
+        //angular acceleration
+        float aa = currentData.m_sumOfMoments * m_inertiaInverse;
+        float dav = aa * deltaTime;
+        currentData.m_localAngularVelocity = m_lastFrameFixedUpdateData.m_localAngularVelocity + dav;
+        currentData.m_deltaRotation = MathLab::DegreeToRadians(currentData.m_localAngularVelocity) * deltaTime;
+
+        //Misc. calculation
+        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
+        assert(transform != nullptr);
+        currentData.m_speed = currentData.m_velocity.Magnitude();
+        currentData.m_localVelocity = MathLab::Rotate2D(currentData.m_velocity, -(transform->GetOrientation() + currentData.m_deltaRotation));
+
+    }
+
+    void Rigidbody2D::AffectGameobjectInWorld(const FixedUpdateData& data)
+    {
+        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
+        assert(transform != nullptr);
+        transform->AddPosition(data.m_deltaDistance);
+        transform->AddRotation(data.m_deltaRotation);
+
+        //m_lastFrameFixedUpdateData = m_currentData;
+        //m_currentData = data;
+        //m_isAllowPullBack = true;
     }
 
     ComponentType Rigidbody2D::m_type = ComponentType::ComponentType_Rigidbody2D;
