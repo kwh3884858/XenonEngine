@@ -17,6 +17,7 @@
 #include "MathLab/MathLabDefinition.h"
 #include <cmath> // sin, cos
 
+#include "Engine/GameObjectWorldManager.h"
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform2D.h"
@@ -42,6 +43,7 @@ namespace Gameplay {
 
     using XenonEngine::GameObject;
     using XenonEngine::GameObjectWorld;
+    using XenonEngine::GameObjectWorldManager;
     using XenonEngine::Transform2D;
     using XenonEngine::PlayerPersonality;
     using XenonEngine::Rigidbody2D;
@@ -51,12 +53,15 @@ namespace Gameplay {
 
     GameObject* player;
     GameObject* ground;
+    GameObject* bullet;
     Physics2D* physics2D;
+    GameObjectWorld* world;
 
     XenonCompiler* compiler = nullptr;
     void GameplayInitialize()
     {
-        GameObjectWorld::Get().Initialize();
+        GameObjectWorldManager::Get().Initialize();
+        world = GameObjectWorldManager::Get().CreateGameWorld("Shooting2D");
 
         physics2D = new Physics2D;
 
@@ -94,7 +99,7 @@ namespace Gameplay {
             player->AddComponent(collider);
 
             physics2D->AddGameObject(player);
-            GameObjectWorld::Get().AddGameObject(player);
+            world->AddGameObject(player);
         }
 
         {
@@ -125,6 +130,34 @@ namespace Gameplay {
             ground->AddComponent(render2D);
 
             physics2D->AddGameObject(ground);
+            world->AddGameObject(ground);
+        }
+
+        {
+            bullet = new GameObject("Bullet");
+
+            Transform2D* transform = new Transform2D(bullet);
+            bullet->AddComponent(transform);
+
+            BoxCollider2D* collider = new BoxCollider2D(bullet);
+            BoxCollider2DConfig boxCollider2DConfig;
+            boxCollider2DConfig.m_isTrigger = false;
+            boxCollider2DConfig.m_size = Vector2f(2, 2);
+            collider->SetConfig(&boxCollider2DConfig);
+            bullet->AddComponent(collider);
+
+            int numOfVertex = 4;
+            Vector2f* heroVertex = new Vector2f[numOfVertex];
+            heroVertex[0] = Vector2f(1, -1);
+            heroVertex[1] = Vector2f(1, 1);
+            heroVertex[2] = Vector2f(-1, 1);
+            heroVertex[3] = Vector2f(-1, -1);
+            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::YELLOW, numOfVertex, heroVertex);
+            Render2DConfig render2DConfig;
+            render2DConfig.m_polygon2D = heroPolygon;
+            Render2D* render2D = new Render2D(bullet);
+            render2D->SetConfig(&render2DConfig);
+            bullet->AddComponent(render2D);
         }
         compiler = new XenonCompiler;
         compiler->Initialize();
@@ -187,14 +220,7 @@ namespace Gameplay {
         }
 
         physics2D->FixedUpdate();
-        {
-            Render2D* render2D = player->GetComponent<Render2D>();
-            render2D->Update();
-        }
-        {
-            Render2D* render2D = ground->GetComponent<Render2D>();
-            render2D->Update();
-        }
+        world->Update();
 
     }
 
@@ -202,7 +228,7 @@ namespace Gameplay {
     {
         delete compiler;
 
-        GameObjectWorld::Get().Shutdown();
+        GameObjectWorldManager::Get().Shutdown();
     }
 
     void Donut()

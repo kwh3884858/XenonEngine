@@ -1,36 +1,59 @@
 #include "GameObjectWorld.h"
-#include "Engine/GameObject.h"
+#include "GameObject.h"
+#include "Engine/Component/Render2D.h"
 
 namespace XenonEngine
 {
-
-    bool GameObjectWorld::Initialize()
+    GameObjectWorld::GameObjectWorld(const Algorithm::String& worldName)
     {
-        return true;
-    }
 
-    bool GameObjectWorld::Shutdown()
-    {
-        for (int i = 0; i < m_world.Count(); i++)
-        {
-            delete m_world[i];
-        }
-        return true;
     }
 
     GameObjectWorld::~GameObjectWorld()
     {
-
+        for (int i = 0; i < m_worldObjects.Count(); i++)
+        {
+            delete m_worldObjects[i];
+        }
     }
 
-    XenonEngine::GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& GameObjectName) const
+    void GameObjectWorld::AddGameObject(GameObject* const gameobject)
     {
-        for (int i = 0; i < m_world.Count(); i++)
+        GameObject* sameNameObject = GetGameObject(gameobject->GetName());
+        if (sameNameObject == nullptr)
         {
-            if (m_world[i]->GetName() == GameObjectName)
+            m_worldObjects.Add(gameobject);
+        }
+        else
+        {
+            assert(true == false);
+        }
+         
+    }
+
+    GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& GameObjectName) const
+    {
+        for (int i = 0; i < m_worldObjects.Count(); i++)
+        {
+            if (m_worldObjects[i]->GetName() == GameObjectName)
             {
-                return m_world[i];
+                return m_worldObjects[i];
             }
+        }
+        return nullptr;
+    }
+
+    void GameObjectWorld::Update()
+    {
+        RenderUpdate();
+    }
+
+    void GameObjectWorld::RenderUpdate()
+    {
+        for (int i = 0; i < m_worldObjects.Count(); i++)
+        {
+            Render2D* render2D = m_worldObjects[i]->GetComponent<Render2D>();
+            render2D->Update();
         }
     }
 

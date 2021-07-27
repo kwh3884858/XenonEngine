@@ -1,6 +1,7 @@
 #include "Engine/VirtualMachine/XenonVirtualMachine.h"
 
 #include "Engine/FileManager/FileManager.h"
+#include "Engine/GameObjectWorldManager.h"
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/PlayerPersonality.h"
@@ -628,7 +629,8 @@ namespace XenonEngine
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
                     {
-                        XenonEngine::GameObject* player = GameObjectWorld::Get().GetGameObject("Player");
+                        XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+                        XenonEngine::GameObject* player = world->GetGameObject("Player");
                         XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
                         personlity->SetVelocity(op1.m_floatLiteral);
                     }
@@ -642,7 +644,8 @@ namespace XenonEngine
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
                     {
-                        XenonEngine::GameObject* player = GameObjectWorld::Get().GetGameObject("Player");
+                        XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+                        XenonEngine::GameObject* player = world->GetGameObject("Player");
                         XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
                         personlity->SetJumpForce(op1.m_floatLiteral);
                     }
@@ -656,7 +659,8 @@ namespace XenonEngine
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
                     {
-                        XenonEngine::GameObject* player = GameObjectWorld::Get().GetGameObject("Player");
+                        XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+                        XenonEngine::GameObject* player = world->GetGameObject("Player");
                         XenonEngine::Rigidbody2D* rigid = player->GetComponent<XenonEngine::Rigidbody2D>();
                         rigid->SetMass(op1.m_floatLiteral);
                     }

@@ -1,32 +1,25 @@
-//  GameObejctWorld.h
-//  XenonEngine
-//
-//  Created by whkong on 2021-7-12.
-//  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
-#include "Algorithms/Vector.h"
 #include "Algorithms/String.h"
-#include "CrossPlatform/XenonManager.h"
-
+#include "Algorithms/Vector.h"
 namespace XenonEngine
 {
     class GameObject;
-
-    class GameObjectWorld :public CrossPlatform::XenonManager<GameObjectWorld>
+    class GameObjectWorld
     {
     public:
-        //initilize function, take the place of constructor
-        virtual bool Initialize()override;
+        GameObjectWorld(const Algorithm::String& worldName);
+        ~GameObjectWorld();
+        const GameObjectWorld& operator=(const GameObjectWorld& world) = delete;
 
-        //destroy function, take the  place of deconstructor
-        virtual bool Shutdown() override;
-        virtual ~GameObjectWorld() override;
-
-        void AddGameObject(GameObject* gameobject) { m_world.Add(gameobject); }
+        void AddGameObject(GameObject* const gameobject);
         GameObject* GetGameObject(const Algorithm::String& GameObjectName) const;
 
+        void Update();
     private:
-        Algorithm::Vector<GameObject*> m_world;
+        void RenderUpdate();
+
+        Algorithm::String m_worldName;
+        Algorithm::Vector<GameObject*> m_worldObjects;
     };
 
 }
