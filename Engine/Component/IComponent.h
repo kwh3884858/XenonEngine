@@ -32,6 +32,7 @@ namespace XenonEngine
         virtual IComponentType GetComponentType() const = 0;
 
         //DO NOT reference other component
+        virtual IComponent* Copy(GameObject*const gameObject) const = 0;
         virtual bool Start() { return true; }
         virtual bool Update() { return true; }
         virtual bool Destroy() { return true; }

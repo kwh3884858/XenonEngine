@@ -146,12 +146,15 @@ namespace Gameplay {
             collider->SetConfig(&boxCollider2DConfig);
             bullet->AddComponent(collider);
 
+            Rigidbody2D* const rigid = new Rigidbody2D(bullet, false, 5, 10);
+            bullet->AddComponent(rigid);
+
             int numOfVertex = 4;
             Vector2f* heroVertex = new Vector2f[numOfVertex];
-            heroVertex[0] = Vector2f(1, -1);
-            heroVertex[1] = Vector2f(1, 1);
-            heroVertex[2] = Vector2f(-1, 1);
-            heroVertex[3] = Vector2f(-1, -1);
+            heroVertex[0] = Vector2f(5, -5);
+            heroVertex[1] = Vector2f(5, 5);
+            heroVertex[2] = Vector2f(-5, 5);
+            heroVertex[3] = Vector2f(-5, -5);
             Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::YELLOW, numOfVertex, heroVertex);
             Render2DConfig render2DConfig;
             render2DConfig.m_polygon2D = heroPolygon;
@@ -166,13 +169,13 @@ namespace Gameplay {
     void GameplayMain()
     {
         PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
-        Transform2D* transform = player->GetComponent<Transform2D>();
+        Transform2D* playerTransform = player->GetComponent<Transform2D>();
         Rigidbody2D* rigid = player->GetComponent<Rigidbody2D>();
 
         static bool shouldPrintPlayerData = true;
         if (shouldPrintPlayerData)
         {
-            printf("( %f , %f ) \n", transform->GetPosition().x, transform->GetPosition().y);
+            printf("( %f , %f ) \n", playerTransform->GetPosition().x, playerTransform->GetPosition().y);
         }
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))
@@ -185,7 +188,7 @@ namespace Gameplay {
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_R))
         {
             printf("Respawn Player\n");
-            transform->SetPosition(Vector2f(400, 300));
+            playerTransform->SetPosition(Vector2f(400, 300));
             rigid->SetVelocity(Vector2f(0, 0));
         }
 
@@ -208,8 +211,7 @@ namespace Gameplay {
         }
 
         float velocity = personlity->GetVelocity();
-        transform->AddPosition(Vector2f(xAxisDelta * velocity, 0));
-
+        playerTransform->AddPosition(Vector2f(xAxisDelta * velocity, 0));
 
         if (InputSystem::Get().GetStickButton(0) || InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_SPACE))
         {
@@ -217,6 +219,20 @@ namespace Gameplay {
             jumpForce.fvalue = personlity->GetJumpForce();
             jumpForce.m_forceDirection = Vector2f(0, 1);
             rigid->AddForce(jumpForce);
+        }
+        if (InputSystem::Get().GetStickButton(3))
+        {
+            GameObject*  newbullet = bullet->Copy();
+            bullet = newbullet;
+            Transform2D* bulletTransform = newbullet->GetComponent<Transform2D>();
+            bulletTransform->SetPosition(Vector2f(400,400));
+            world->AddGameObject(newbullet);
+            physics2D->AddGameObject(newbullet);
+            Rigidbody2D* bulletRigid = newbullet->GetComponent<Rigidbody2D>();
+            Force2D jumpForce;
+            jumpForce.fvalue = personlity->GetJumpForce();
+            jumpForce.m_forceDirection = Vector2f(0, 1);
+            bulletRigid->AddForce(jumpForce);
         }
 
         physics2D->FixedUpdate();

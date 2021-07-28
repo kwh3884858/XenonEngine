@@ -19,6 +19,7 @@ namespace XenonEngine
     {
     public:
         GameObject(const char* name = "XenonGameObject");
+        GameObject* Copy()const;
         virtual ~GameObject();
 
         template<typename T>

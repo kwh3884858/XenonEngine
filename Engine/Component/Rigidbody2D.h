@@ -41,6 +41,7 @@ namespace XenonEngine
         Rigidbody2D(GameObject* gameobject, bool isStatic, float mass, float inertia);
         virtual ~Rigidbody2D() override;
         virtual ComponentType GetComponentType() const override { return m_type; };
+        virtual IComponent* Copy(GameObject*const gameObject)const override;
 
         const FixedUpdateData& PreFixedUpdate(float deltaTime);
         bool FixedUpdate(float deltaTime);     //One time step
@@ -67,13 +68,14 @@ namespace XenonEngine
         FixedUpdateData& CalculateForcesAndMoments(FixedUpdateData& currentData, double deltaTime);
         void CalculateRigidbodyByUpdateData( FixedUpdateData& currentData, double deltaTime)const;
         void AffectGameobjectInWorld(const FixedUpdateData& data);
-        bool mIsStatic = false;
+
         bool m_isEnableAirDrag = false;
         bool mIsModified = false;
         bool m_isSimulateGravity = true;
         //bool m_isCollision = false;
         //Vector2f m_gravity; // Simulation gravity, default value is (0, mass * gravity acceleration)
 
+        bool mIsStatic = false;
         float m_mass;
         float m_inertia;
         float m_inertiaInverse;

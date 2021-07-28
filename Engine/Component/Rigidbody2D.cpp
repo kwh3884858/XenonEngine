@@ -218,6 +218,18 @@ namespace XenonEngine
         //m_isAllowPullBack = true;
     }
 
+    XenonEngine::IComponent* Rigidbody2D::Copy(GameObject*const gameObject) const
+    {
+        Rigidbody2D* that = new Rigidbody2D(gameObject, mIsStatic,m_mass, m_inertia);
+        that->m_isEnableAirDrag = m_isEnableAirDrag;
+        that->mIsModified = mIsModified;
+        that->m_isSimulateGravity = m_isSimulateGravity;
+
+        that->m_addedForces = m_addedForces;
+        that->m_addedMoments = m_addedMoments;
+        return that;
+    }
+
     ComponentType Rigidbody2D::m_type = ComponentType::ComponentType_Rigidbody2D;
 
 }

@@ -13,6 +13,7 @@ namespace XenonEngine
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
+            m_worldObjects[i]->Destroy();
             delete m_worldObjects[i];
         }
     }

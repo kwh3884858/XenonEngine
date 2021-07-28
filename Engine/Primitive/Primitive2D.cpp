@@ -304,7 +304,7 @@ namespace Primitive
         {
             Vector2f left;
             Vector2f right;
-            while (leftIndex.y >= p1.y)
+            while (leftIndex.y > p1.y)
             {
                 leftIndex += leftStep;
                 rightIndex += rightStep;

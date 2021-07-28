@@ -116,6 +116,7 @@
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
+    <ClCompile Include="Engine\Component\PlayerPersonality.cpp" />
     <ClCompile Include="Engine\Component\Render2D.cpp" />
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />

@@ -16,6 +16,7 @@ namespace XenonEngine
             IComponent(gameobject) {}
         virtual ~PlayerPersonality()override {}
         virtual ComponentType GetComponentType() const override { return m_type; };
+        virtual IComponent* Copy(GameObject*const gameObject)const override;
 
         void SetVelocity(float velocity) { m_velocity = velocity; }
         const float GetVelocity()const { return m_velocity; }
@@ -30,6 +31,8 @@ namespace XenonEngine
         float m_velocity = 0;
         float m_jumpForce = 0;
     };
+
+
 
     __declspec(selectany) ComponentType PlayerPersonality::m_type = ComponentType::ComponentType_Personality;
 

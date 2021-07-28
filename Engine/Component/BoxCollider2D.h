@@ -25,6 +25,7 @@ namespace XenonEngine
             Collider2D(gameobject, ColliderType::Box) {}
         virtual ~BoxCollider2D()override;
         virtual ComponentType GetComponentType() const override { return m_type; };
+        virtual IComponent* Copy(GameObject*const gameObject)const override;
 
         void SetConfig(const BoxCollider2DConfig*const config);
         Vector2f GetSize()const { return m_size; }

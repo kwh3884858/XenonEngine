@@ -24,6 +24,15 @@ namespace XenonEngine
         return m_size.Magnitude() / 2;
     }
 
+    XenonEngine::IComponent* BoxCollider2D::Copy(GameObject*const gameObject) const
+    {
+        BoxCollider2D* that = new BoxCollider2D(gameObject);
+        that->m_size = m_size;
+        that->mIsModified = mIsModified;
+        that->mIsTrigger = mIsTrigger;
+        return that;
+    }
+
     ComponentType BoxCollider2D::m_type = ComponentType::ComponentType_Collider2D;
 
 }

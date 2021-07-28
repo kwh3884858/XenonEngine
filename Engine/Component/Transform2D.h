@@ -19,9 +19,8 @@ namespace XenonEngine
             IComponent(gameobject){}
         virtual ~Transform2D()override;
         virtual ComponentType GetComponentType() const override { return m_type; };
+        virtual IComponent* Copy(GameObject*const gameObject)const override;
 
-        //void SetPosition(Vector2f position) { m_position = position; }
-        //void SetRotation(float rotation) { m_orientation = rotation; }
         void AddPosition(const Vector2f& position) { m_position += position; }
         void SetPosition(const Vector2f& position) { m_position = position; }
         const Vector2f& GetPosition()const { return m_position; }

@@ -28,7 +28,8 @@ namespace XenonEngine
             IComponent(gameobject) {}
         virtual ~Render2D()override;
         virtual ComponentType GetComponentType() const override { return m_type; };
-        
+        virtual IComponent* Copy(GameObject*const gameObject)const override;
+
         void SetConfig(const Render2DConfig*const config);
         void Update()const;
 

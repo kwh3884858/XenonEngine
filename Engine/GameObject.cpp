@@ -4,9 +4,37 @@
 namespace XenonEngine
 {
 
-    GameObject::GameObject(const char* name /*= "XenonGameObject"*/):
+    GameObject::GameObject(const char* name /*= "XenonGameObject"*/) :
         m_name(name)
     {
+    }
+
+    GameObject* GameObject::Copy()const
+    {
+        GameObject* newGameObject = new GameObject("Untitled");
+        String oldName = m_name;
+        int pos = oldName.Find("_");
+        if (pos == -1)
+        {
+            oldName.Append("_0");
+            newGameObject->m_name = oldName;
+        }
+        else
+        {
+            const char& order = oldName[pos + 1];
+            int numOfGameObject = static_cast<int>(order);
+            ++numOfGameObject;
+            oldName = oldName.Substring(0, pos);
+            oldName.Append(static_cast<char>(numOfGameObject));
+            newGameObject->m_name = oldName;
+        }
+
+        for (int i = 0; i < m_components.Count(); i++)
+        {
+            IComponent* comp = m_components[i]->Copy(newGameObject);
+            newGameObject->AddComponent(comp);
+        }
+        return newGameObject;
     }
 
     GameObject::~GameObject()

@@ -21,6 +21,7 @@ namespace XenonEngine
             Collider2D(gameobject, ColliderType::Circle) {}
         virtual ~CircleCollider2D()override;
         virtual ComponentType GetComponentType() const override { return m_type; };
+        virtual IComponent* Copy(GameObject*const gameObject)const override;
 
         void SetConfig(const CircleCollider2DConfig*const config);
         virtual float GetArea()const override;

@@ -36,6 +36,13 @@ namespace XenonEngine
         }
     }
 
+    XenonEngine::IComponent* Render2D::Copy(GameObject*const gameObject) const
+    {
+        Render2D* that = new Render2D(gameObject);
+        that->m_polygon2D = m_polygon2D;
+        return that;
+    }
+
     ComponentType Render2D::m_type = ComponentType::ComponentType_Render2D;
 
 }
