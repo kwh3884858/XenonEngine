@@ -232,7 +232,7 @@ namespace Primitive
         {
             Vector2f left;
             Vector2f right;
-            while (leftIndex.y <= p1.y)
+            while (leftIndex.y < p1.y)
             {
                 left = leftIndex;
                 right = rightIndex;
@@ -243,7 +243,7 @@ namespace Primitive
                 if (leftIndex.x < m_minDrawPosition.x)
                 {
                     left.x = m_minDrawPosition.x;
-                    if (rightIndex.x < m_minDrawPosition.x)
+                    if (rightIndex.x <= m_minDrawPosition.x)
                     {
                         continue;
                     }
@@ -251,7 +251,7 @@ namespace Primitive
                 if (rightIndex.x > m_maxDrawPosition.x)
                 {
                     right.x = m_maxDrawPosition.x;
-                    if (leftIndex.x > m_maxDrawPosition.x)
+                    if (leftIndex.x >= m_maxDrawPosition.x)
                     {
                         continue;
                     }
@@ -314,7 +314,7 @@ namespace Primitive
                 if (leftIndex.x < m_minDrawPosition.x)
                 {
                     left.x = m_minDrawPosition.x;
-                    if (rightIndex.x < m_minDrawPosition.x)
+                    if (rightIndex.x <= m_minDrawPosition.x)
                     {
                         continue;
                     }
@@ -322,7 +322,7 @@ namespace Primitive
                 if (rightIndex.x > m_maxDrawPosition.x)
                 {
                     right.x = m_maxDrawPosition.x;
-                    if (leftIndex.x >m_maxDrawPosition.x)
+                    if (leftIndex.x >= m_maxDrawPosition.x)
                     {
                         continue;
                     }

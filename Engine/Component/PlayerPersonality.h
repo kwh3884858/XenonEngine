@@ -24,17 +24,16 @@ namespace XenonEngine
         void SetJumpForce(float force) { m_jumpForce = force; }
         const float GetJumpForce()const { return m_jumpForce; }
 
-        static ComponentType m_type;
+        void SetBulletForce(float force) { m_bulletForce = force; }
+        const float GetBulletForce()const { return m_bulletForce; }
 
+        static ComponentType m_type;
     private:
 
         float m_velocity = 0;
         float m_jumpForce = 0;
+        float m_bulletForce = 0;
     };
 
-
-
     __declspec(selectany) ComponentType PlayerPersonality::m_type = ComponentType::ComponentType_Personality;
-
-
 }

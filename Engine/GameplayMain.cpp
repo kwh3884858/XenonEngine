@@ -147,6 +147,7 @@ namespace Gameplay {
             bullet->AddComponent(collider);
 
             Rigidbody2D* const rigid = new Rigidbody2D(bullet, false, 5, 10);
+            rigid->SetGravity(false);
             bullet->AddComponent(rigid);
 
             int numOfVertex = 4;
@@ -166,6 +167,7 @@ namespace Gameplay {
         compiler->Initialize();
     }
 
+    bool isFaceRight = true;
     void GameplayMain()
     {
         PlayerPersonality* personlity = player->GetComponent<PlayerPersonality>();
@@ -210,6 +212,18 @@ namespace Gameplay {
             xAxisDelta = 1;
         }
 
+        if (MathLab::abs( xAxisDelta ) > EPSILON)
+        {
+            if (xAxisDelta > 0)
+            {
+                isFaceRight = true;
+            }
+            else
+            {
+                isFaceRight = false;
+            }
+        }
+
         float velocity = personlity->GetVelocity();
         playerTransform->AddPosition(Vector2f(xAxisDelta * velocity, 0));
 
@@ -225,13 +239,22 @@ namespace Gameplay {
             GameObject*  newbullet = bullet->Copy();
             bullet = newbullet;
             Transform2D* bulletTransform = newbullet->GetComponent<Transform2D>();
-            bulletTransform->SetPosition(Vector2f(400,400));
+            Vector2f bulletPos = playerTransform->GetPosition() + Vector2f( (isFaceRight ? 1 : -1) * 30, 0);
+            bulletTransform->SetPosition(bulletPos);
             world->AddGameObject(newbullet);
             physics2D->AddGameObject(newbullet);
             Rigidbody2D* bulletRigid = newbullet->GetComponent<Rigidbody2D>();
             Force2D jumpForce;
-            jumpForce.fvalue = personlity->GetJumpForce();
-            jumpForce.m_forceDirection = Vector2f(0, 1);
+            jumpForce.fvalue = personlity->GetBulletForce();
+            if (isFaceRight)
+            {
+                jumpForce.m_forceDirection = Vector2f(1, 0);
+            }
+            else
+            {
+                jumpForce.m_forceDirection = Vector2f(-1, 0);
+            }
+
             bulletRigid->AddForce(jumpForce);
         }
 

@@ -55,6 +55,7 @@ namespace XenonEngine
         void SetVelocity(Vector2f velocity) { m_currentData.m_velocity = velocity; }
         void SetMass(float mass) { m_mass = mass; }
         float GetMass()const { return m_mass; }
+        void SetGravity(bool isOpen) { m_isSimulateGravity = isOpen; }
         const Vector2f& GetForce()const { return m_addedForces; }
         //void SetCollision() { m_isCollision = true; }
         bool IsStatic()const { return mIsStatic; }

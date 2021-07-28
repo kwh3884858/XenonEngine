@@ -6,4 +6,6 @@ FUNC Main
 	CALLHOST SetJumpForce
 	PUSH 1.0
 	CALLHOST SetMass
+	PUSH 5000.0
+	CALLHOST SetBulletForce
 }

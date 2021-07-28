@@ -669,6 +669,21 @@ namespace XenonEngine
                         assert(true == false);
                     }
                 }
+				else if (m_hostAPITable[hostAPI.m_hostAPICallIndex] == "SetBulletForce")
+				{
+					InstructionOp op1 = m_localStack.Pop();
+					if (op1.m_type == InstructionOpType_FloatLiteral)
+					{
+						XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+						XenonEngine::GameObject* player = world->GetGameObject("Player");
+						XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
+						personlity->SetBulletForce(op1.m_floatLiteral);
+					}
+					else
+					{
+						assert(true == false);
+					}
+				}
 			}
                 break;
             case KeyWord_PAUSE:

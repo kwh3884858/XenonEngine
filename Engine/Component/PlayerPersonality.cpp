@@ -7,6 +7,7 @@ namespace XenonEngine
         PlayerPersonality* that = new PlayerPersonality(gameObject);
         that->m_velocity = m_velocity;
         that->m_jumpForce = m_jumpForce;
+        that->m_bulletForce = m_bulletForce;
         return that;
     }
 }
