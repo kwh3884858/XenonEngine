@@ -177,7 +177,7 @@ namespace Gameplay {
             heroVertex[1] = Vector2f(10, 10);
             heroVertex[2] = Vector2f(-10, 10);
             heroVertex[3] = Vector2f(-10, -10);
-            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
+            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::BLUE, numOfVertex, heroVertex);
             Render2DConfig render2DConfig;
             render2DConfig.m_polygon2D = heroPolygon;
             Render2D* render2D = new Render2D(enemy);
@@ -192,7 +192,7 @@ namespace Gameplay {
 
             BoxCollider2D* collider = new BoxCollider2D(enemy);
             BoxCollider2DConfig boxCollider2DConfig;
-            boxCollider2DConfig.m_isTrigger = false;
+            boxCollider2DConfig.m_isTrigger = true;
             boxCollider2DConfig.m_size = Vector2f(20, 20);
             collider->SetConfig(&boxCollider2DConfig);
             enemy->AddComponent(collider);
