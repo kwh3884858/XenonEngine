@@ -5,20 +5,16 @@ namespace Gameplay
 	class Enemy:public XenonEngine::GameObject
 	{
 	public:
-		Enemy();
-		~Enemy();
+		Enemy(const char* name);
+		virtual ~Enemy();
 
-	private:
+		virtual GameObject* Copy()const;
 		virtual void Start() override;
 		virtual void Update()override;
 		virtual void Destroy()override;
+	private:
+
 	};
 
-	Enemy::Enemy()
-	{
-	}
 
-	Enemy::~Enemy()
-	{
-	}
 }
