@@ -340,7 +340,7 @@ namespace XenonEngine
             }
         }
 
-        int pos = xenonFile->m_fileName.Find(".xea");
+        int pos = xenonFile->m_fileName.IndexOf(".xea");
         String outputFileName = xenonFile->m_fileName.Substring(0, pos);
         outputFileName.Append(".xex");
 

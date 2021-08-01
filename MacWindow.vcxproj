@@ -133,6 +133,7 @@
     <ClCompile Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Engine\VirtualMachine\XenonVirtualMachine.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonCompiler.h" />
     <ClInclude Include="Engine\Component\IComponent.h" />
+    <ClInclude Include="Gameplay\Enemy.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />
     <ClInclude Include="macos\MacDrawer.h" />

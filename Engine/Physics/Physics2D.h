@@ -54,7 +54,7 @@ namespace XenonPhysics
 
         bool FixedUpdate();
         bool AddGameObject(GameObject* const gameobject);
-
+        void RemoveGameObject(GameObject* const gameobject);
     private:
         struct Rectangle
         {
@@ -82,6 +82,7 @@ namespace XenonPhysics
         bool AddRigidbody2D(Rigidbody2D*const rigidbody);
         bool AddCollider2D(Collider2D*const collider);
         bool RemoveRigidbody2D(Rigidbody2D* const rigidbody);
+        bool RemoveCollider2D(Collider2D* const collider);
 
         CollisionInfo CheckForCollision(Rigidbody2D* body1, Rigidbody2D* body2);
         CollisionInfo CheckForCollisionCircleAndCircle(Rigidbody2D* body1, Rigidbody2D* body2);

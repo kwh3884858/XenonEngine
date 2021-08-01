@@ -8,10 +8,9 @@ namespace Gameplay
 		Enemy(const char* name);
 		virtual ~Enemy();
 
-		virtual GameObject* Copy()const;
+		virtual Enemy* Copy()const;
 		virtual void Start() override;
-		virtual void Update()override;
-		virtual void Destroy()override;
+		virtual void OnTrigger(GameObject* gameobject);
 	private:
 
 	};

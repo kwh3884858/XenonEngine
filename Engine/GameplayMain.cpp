@@ -2,7 +2,7 @@
 
 #include "Engine/Primitive/Primitive2D.h"
 #include "Engine/IO/InputSystem.h"
-#include "Engine/Physics/Physics2D.h"
+
 #include "Engine/Physics/Force2D.h"
 #include "Engine/VirtualMachine/XenonCompiler.h"
 
@@ -26,6 +26,8 @@
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
 
+#include "Gameplay/Enemy.h"
+
 namespace Gameplay {
     using MathLab::Vector3f;
     using MathLab::Vector2f;
@@ -35,7 +37,6 @@ namespace Gameplay {
 
     using XenonEngine::XenonCompiler;
     using XenonEngine::InputSystem;
-    using XenonPhysics::Physics2D;
     using XenonPhysics::Force2D;
 
     using XenonEngine::Render2D;
@@ -54,8 +55,8 @@ namespace Gameplay {
     GameObject* player;
     GameObject* ground;
     GameObject* bullet;
-    GameObject* enemy;
-    Physics2D* physics2D;
+    Enemy* enemy;
+
     GameObjectWorld* world;
 
     XenonCompiler* compiler = nullptr;
@@ -63,9 +64,6 @@ namespace Gameplay {
     {
         GameObjectWorldManager::Get().Initialize();
         world = GameObjectWorldManager::Get().CreateGameWorld("Shooting2D");
-
-        physics2D = new Physics2D;
-
         {
             player = new GameObject("Player");
 
@@ -99,7 +97,6 @@ namespace Gameplay {
             collider->SetConfig(&boxCollider2DConfig);
             player->AddComponent(collider);
 
-            physics2D->AddGameObject(player);
             world->AddGameObject(player);
         }
 
@@ -130,7 +127,6 @@ namespace Gameplay {
             render2D->SetConfig(&render2DConfig);
             ground->AddComponent(render2D);
 
-            physics2D->AddGameObject(ground);
             world->AddGameObject(ground);
         }
 
@@ -166,38 +162,7 @@ namespace Gameplay {
         }
 
         {
-            enemy = new GameObject("Enemy");
-            Transform2D* transform = new Transform2D(enemy);
-            transform->AddPosition(Vector2f(500, 300));
-            enemy->AddComponent(transform);
-
-            int numOfVertex = 4;
-            Vector2f* heroVertex = new Vector2f[numOfVertex];
-            heroVertex[0] = Vector2f(10, -10);
-            heroVertex[1] = Vector2f(10, 10);
-            heroVertex[2] = Vector2f(-10, 10);
-            heroVertex[3] = Vector2f(-10, -10);
-            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::BLUE, numOfVertex, heroVertex);
-            Render2DConfig render2DConfig;
-            render2DConfig.m_polygon2D = heroPolygon;
-            Render2D* render2D = new Render2D(enemy);
-            render2D->SetConfig(&render2DConfig);
-            enemy->AddComponent(render2D);
-
-            PlayerPersonality* personality = new PlayerPersonality(enemy);
-            enemy->AddComponent(personality);
-
-            Rigidbody2D* const rigid = new Rigidbody2D(enemy, false, 5, 10);
-            enemy->AddComponent(rigid);
-
-            BoxCollider2D* collider = new BoxCollider2D(enemy);
-            BoxCollider2DConfig boxCollider2DConfig;
-            boxCollider2DConfig.m_isTrigger = true;
-            boxCollider2DConfig.m_size = Vector2f(20, 20);
-            collider->SetConfig(&boxCollider2DConfig);
-            enemy->AddComponent(collider);
-
-            physics2D->AddGameObject(enemy);
+            enemy = new Enemy("Enemy");
             world->AddGameObject(enemy);
         }
         compiler = new XenonCompiler;
@@ -279,7 +244,6 @@ namespace Gameplay {
             Vector2f bulletPos = playerTransform->GetPosition() + Vector2f( (isFaceRight ? 1 : -1) * 30, 0);
             bulletTransform->SetPosition(bulletPos);
             world->AddGameObject(newbullet);
-            physics2D->AddGameObject(newbullet);
             Rigidbody2D* bulletRigid = newbullet->GetComponent<Rigidbody2D>();
             Force2D jumpForce;
             jumpForce.fvalue = personlity->GetBulletForce();
@@ -294,10 +258,7 @@ namespace Gameplay {
 
             bulletRigid->AddForce(jumpForce);
         }
-
-        physics2D->FixedUpdate();
         world->Update();
-
     }
 
     void GameplayShutdown()

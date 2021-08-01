@@ -13,7 +13,7 @@ namespace XenonEngine
     {
         GameObject* newGameObject = new GameObject("Untitled");
         String oldName = m_name;
-        int pos = oldName.Find("_");
+        int pos = oldName.IndexOf("_");
         if (pos == -1)
         {
             oldName.Append("_0");

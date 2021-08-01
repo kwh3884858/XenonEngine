@@ -23,7 +23,7 @@ namespace XenonEngine
         m_xvm = new XenonVirtualMachine;
 
         String applicationPath = FileManager::Get().GetApplicationPath();
-        int pos = applicationPath.Find("XenonEngine.exe");
+        int pos = applicationPath.IndexOf("XenonEngine.exe");
 
         String instructionPath = applicationPath.Substring(0, pos);
         instructionPath.Append("XenonScriptAssemblerMachineInstrction.xet");
@@ -54,7 +54,7 @@ namespace XenonEngine
     void XenonCompiler::Recompile()
     {
         String applicationPath = FileManager::Get().GetApplicationPath();
-        int pos = applicationPath.Find("XenonEngine.exe");
+        int pos = applicationPath.IndexOf("XenonEngine.exe");
 
         String assemblerPath = applicationPath.Substring(0, pos);
         assemblerPath.Append("Main.xea");

@@ -20,6 +20,7 @@ namespace Algorithm
 
 		bool Add(const T& element);
 		bool Remove(const T& element);
+		void Remove(int index);
         void Replace(const T*const content,unsigned int size);
         bool Clear();
 
@@ -114,20 +115,29 @@ namespace Algorithm
 	template<typename T>
 	bool Vector<T>::Remove(const T & element)
 	{
+		bool result = false;
 		for (int i = m_count - 1; i >= 0; i--)
 		{
 			if (m_content[i] == element) 
             {
-				m_content[i] = nullptr;
-				for (int j = i; j < m_count - 1; j++)
-				{
-					m_content[j] = m_content[j + 1];
-				}
-				m_content[m_count - 1] = nullptr;
-				m_count--;
+				Remove(i);
+				result = true;
 			}
 		}
-		return true;
+		return result;
+	}
+
+	template<typename T>
+	inline void Vector<T>::Remove(int index)
+	{
+		assert(index >= 0 && index < m_count);
+		m_content[index] = nullptr;
+		for (int j = index; j < m_count - 1; j++)
+		{
+			m_content[j] = m_content[j + 1];
+		}
+		m_content[m_count - 1] = nullptr;
+		m_count--;
 	}
 
     template<typename T>

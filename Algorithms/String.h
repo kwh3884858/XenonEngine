@@ -49,7 +49,8 @@ namespace Algorithm
         void Clear();
         const T* const Beign()const;
 
-        int Find(const StringBase& subString);
+        int IndexOf(const StringBase& subString);
+        bool Find(const StringBase& subString);
         void Append(const StringBase& subString);
         StringBase<T> Substring(unsigned int start, unsigned int end);
     private:
@@ -278,7 +279,7 @@ namespace Algorithm
 
 
     template<typename T>
-    int Algorithm::StringBase<T>::Find(const StringBase& subString)
+    int Algorithm::StringBase<T>::IndexOf(const StringBase& subString)
     {
         int character[265];
         int nonCharacterCount = 0;
@@ -340,6 +341,12 @@ namespace Algorithm
         }
         delete pOutDFA;
         return -1;
+    }
+
+    template<typename T>
+    inline bool StringBase<T>::Find(const StringBase& subString)
+    {
+        return IndexOf(subString) != -1;
     }
 
     template<typename T>

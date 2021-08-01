@@ -1,6 +1,10 @@
 #pragma once
 #include "Algorithms/String.h"
 #include "Algorithms/Vector.h"
+namespace XenonPhysics
+{
+    class Physics2D;
+}
 namespace XenonEngine
 {
     class GameObject;
@@ -14,12 +18,16 @@ namespace XenonEngine
         void AddGameObject(GameObject* const gameobject);
         GameObject* GetGameObject(const Algorithm::String& GameObjectName) const;
 
+        void Start();
         void Update();
+        void Destroy();
     private:
+        void ClearMarkForDelete();
         void RenderUpdate();
 
         Algorithm::String m_worldName;
         Algorithm::Vector<GameObject*> m_worldObjects;
+        XenonPhysics::Physics2D* m_physics2D;
     };
 
 }

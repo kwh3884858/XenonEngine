@@ -274,6 +274,24 @@ namespace XenonPhysics
         return false;
     }
 
+    void Physics2D::RemoveGameObject(GameObject* const gameobject)
+    {
+        Rigidbody2D* rigidbody = gameobject->GetComponent<Rigidbody2D>();
+        Collider2D* collider = gameobject->GetComponent<Collider2D>();
+        if (rigidbody != nullptr)
+        {
+            AddRigidbody2D(rigidbody);
+        }
+        else if (collider != nullptr)
+        {
+            AddCollider2D(collider);
+        }
+        else
+        {
+            assert(true == false);
+        }
+    }
+
     bool Physics2D::AddRigidbody2D(Rigidbody2D*const rigidbody)
     {
         if (rigidbody->IsStatic())
@@ -311,6 +329,22 @@ namespace XenonPhysics
         else
         {
             return  m_dynamicRigidbodys.Remove(rigidbody);
+        }
+    }
+
+    bool Physics2D::RemoveCollider2D(Collider2D* const collider)
+    {
+        Rigidbody2D* rigidbody = collider->GetGameObject()->GetComponent<Rigidbody2D>();
+        assert(rigidbody == nullptr);
+        if (rigidbody == nullptr)
+        {
+            m_colliders.Remove(collider);
+            return true;
+        }
+        else
+        {
+            assert(true == false);
+            return false;
         }
     }
 
