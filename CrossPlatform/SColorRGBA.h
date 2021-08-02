@@ -35,6 +35,6 @@ namespace CrossPlatform
     const SColorRGBA BLUE(255, 0, 0, 255);
     const SColorRGBA GREEN(0, 255, 0, 255);
     const SColorRGBA RED(0, 0, 255, 255);
-    const SColorRGBA YELLOW(0, 0, 128, 255);
+    const SColorRGBA YELLOW(0, 255, 255, 255);
 
 }
