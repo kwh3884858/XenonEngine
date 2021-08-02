@@ -87,7 +87,7 @@ namespace Gameplay {
             PlayerPersonality* personality = new PlayerPersonality(player);
             player->AddComponent(personality);
 
-            Rigidbody2D* const rigid = new Rigidbody2D(player, false, 5, 10);
+            Rigidbody2D* const rigid = new Rigidbody2D(player, true, 5, 10);
             player->AddComponent(rigid);
 
             BoxCollider2D* collider = new BoxCollider2D(player);
