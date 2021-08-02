@@ -24,7 +24,7 @@ namespace XenonEngine
             const char& order = oldName[pos + 1];
             int numOfGameObject = static_cast<int>(order);
             ++numOfGameObject;
-            oldName = oldName.Substring(0, pos);
+            oldName = oldName.Substring(0, pos + 1);
             oldName.Append(static_cast<char>(numOfGameObject));
             newGameObject->m_name = oldName;
         }
