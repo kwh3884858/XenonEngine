@@ -5,10 +5,11 @@
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
 #include "CrossPlatform/Polygon2D.h"
-
+#include "CrossPlatform/Interface/"
 #include "Engine/GameObjectWorldManager.h"
 
 #include "MathLab/Vector2f.h"
+#include "Gameplay/Bullet.h"
 
 namespace Gameplay
 {
@@ -66,7 +67,7 @@ namespace Gameplay
 
 	void Enemy::Update()
 	{
-		GameObject* gameobject = XenonEngine::GameObjectWorldManager::Get().GetCurrentWorld()->GetGameObject("Player");
+		GameObject* gameobject = GameObjectWorldManager::Get().GetCurrentWorld()->GetGameObject("Player");
 		if (gameobject!= nullptr)
 		{
 			Transform2D* tranform = GetComponent<Transform2D>();
@@ -75,6 +76,11 @@ namespace Gameplay
 			positionVector = positionVector.Normalize();
 			positionVector *= 20;
 			// New bullet
+            Bullet* bullet = new Bullet("Bullet");
+            Transform2D* transform = bullet->GetComponent<Transform2D>();
+            tranform->SetPosition(playerTransform->GetPosition() + positionVector);
+            GameObjectWorldManager::Get().GetCurrentWorld()->AddGameObject(bullet);
+
 		}
 	}
 

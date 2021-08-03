@@ -112,6 +112,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CrossPlatform\Interface\Source.cpp" />
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
@@ -129,10 +130,12 @@
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGBA.cpp" />
     <ClCompile Include="Engine\GameplayMain.cpp" />
+    <ClCompile Include="Engine\Timer\XenonTimer.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonCompiler.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Gameplay\Bullet.cpp" />
     <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
@@ -195,11 +198,13 @@
     <ClInclude Include="CrossPlatform\EngineConfig.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\GameplayMain.h" />
+    <ClInclude Include="Engine\Timer\XenonTimer.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonStruction.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonVirtualMachine.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonCompiler.h" />
     <ClInclude Include="Engine\Component\IComponent.h" />
+    <ClInclude Include="Gameplay\Bullet.h" />
     <ClInclude Include="Gameplay\Enemy.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />

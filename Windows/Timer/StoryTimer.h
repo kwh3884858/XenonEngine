@@ -22,21 +22,19 @@
 //}
 
 #include <Windows.h>
+#include "CrossPlatform/Interface/ITimer.h"
 
 namespace Timer {
-
-    class StoryTimer final
+    class StoryTimer final : public CrossPlatform::ITimer
     {
     public:
         StoryTimer();
         ~StoryTimer() = default;
 
-         DWORD GetTime();
+        virtual float GetTime() const override;
 
     private:
         void Update();
         DWORD m_currentTime;
     };
-
-
 }

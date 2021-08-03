@@ -25,7 +25,7 @@ namespace XenonEngine
 
         void Update();
         GameObjectWorld*const CreateGameWorld(const Algorithm::String& worldName);
-        GameObjectWorld*const  GetCurrentWorld() const;
+        GameObjectWorld*const GetCurrentWorld() const;
     private:
         GameObjectWorld* m_currentWorld = nullptr;
         Algorithm::Vector<GameObjectWorld*> m_worlds;
