@@ -176,7 +176,7 @@ namespace Gameplay {
         Transform2D* playerTransform = player->GetComponent<Transform2D>();
         Rigidbody2D* rigid = player->GetComponent<Rigidbody2D>();
 
-        static bool shouldPrintPlayerData = true;
+        static bool shouldPrintPlayerData = false;
         if (shouldPrintPlayerData)
         {
             printf("( %f , %f ) \n", playerTransform->GetPosition().x, playerTransform->GetPosition().y);
