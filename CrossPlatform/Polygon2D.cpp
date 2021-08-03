@@ -22,7 +22,7 @@ namespace CrossPlatform {
 
     Polygon2D::~Polygon2D()
     {
-        delete m_vertexList;
+        delete[] m_vertexList;
         m_vertexList = nullptr;
         m_numberOfVertex = 0;
     }
