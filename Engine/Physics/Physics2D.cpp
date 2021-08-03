@@ -78,35 +78,40 @@ namespace XenonPhysics
                     assert(collisionInfo.m_collider1 != collisionInfo.m_collider2);
 					assert(collisionInfo.m_collider1 != nullptr);
 					assert(collisionInfo.m_collider2 != nullptr);
-					if (collisionInfo.m_collider1 && collisionInfo.m_collider1->IsTrigger())
+					if (collisionInfo.m_collisionType != CollisionType::NoCollision)
 					{
-						collisionInfo.m_collider1->GetGameObject()->OnTrigger(collisionInfo.m_collider2->GetGameObject());
-					}
-					else if (collisionInfo.m_collider2&& collisionInfo.m_collider2->IsTrigger())
-					{
-						collisionInfo.m_collider2->GetGameObject()->OnTrigger(collisionInfo.m_collider1->GetGameObject())
-					}
-					else
-					{
-						if (collisionInfo.m_collisionType == CollisionType::Penetrating)
+						if (collisionInfo.m_collider1 && collisionInfo.m_collider1->IsTrigger())
 						{
-							deltaTime /= 2;
-							tryAgain = true;
-							m_dynamicRigidbodys[i]->FallbackUpdate();
-							m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
-							m_dynamicRigidbodys[i]->FixedUpdate(deltaTime);
-							m_dynamicRigidbodys[j]->FallbackUpdate();
-							m_dynamicRigidbodys[j]->PreFixedUpdate(deltaTime);
-							m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
+							collisionInfo.m_collider1->GetGameObject()->OnTrigger(collisionInfo.m_collider2->GetGameObject());
 						}
-						else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
+						else if (collisionInfo.m_collider2&& collisionInfo.m_collider2->IsTrigger())
 						{
-							if (collisionInfo.m_rigidbody1 != nullptr && collisionInfo.m_rigidbody2 != nullptr)
+							collisionInfo.m_collider2->GetGameObject()->OnTrigger(collisionInfo.m_collider1->GetGameObject());
+						}
+						else
+						{
+							if (collisionInfo.m_collisionType == CollisionType::Penetrating)
 							{
-								ApplyImpulse(collisionInfo);
+								deltaTime /= 2;
+								tryAgain = true;
+								m_dynamicRigidbodys[i]->FallbackUpdate();
+								m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
+								m_dynamicRigidbodys[i]->FixedUpdate(deltaTime);
+								m_dynamicRigidbodys[j]->FallbackUpdate();
+								m_dynamicRigidbodys[j]->PreFixedUpdate(deltaTime);
+								m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
+							}
+							else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
+							{
+								if (collisionInfo.m_rigidbody1 != nullptr && collisionInfo.m_rigidbody2 != nullptr)
+								{
+									ApplyImpulse(collisionInfo);
+								}
 							}
 						}
 					}
+
+					
                 }
                 tryAgain = true;
 
@@ -136,21 +141,37 @@ namespace XenonPhysics
                     CollisionInfo collisionInfo = CheckForCollision(mStaticRigidbodys[i], m_dynamicRigidbodys[j]);
                     assert(collisionInfo.m_rigidbody1 != collisionInfo.m_rigidbody2);
                     assert(collisionInfo.m_collider1 != collisionInfo.m_collider2);
-                    if (collisionInfo.m_collisionType == CollisionType::Penetrating)
-                    {
-                        deltaTime /= 2;
-                        tryAgain = true;
-                        m_dynamicRigidbodys[j]->FallbackUpdate();
-                        m_dynamicRigidbodys[j]->PreFixedUpdate(deltaTime);
-                        m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
-                    }
-                    else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
-                    {
-                        if (collisionInfo.m_rigidbody1 != nullptr && collisionInfo.m_rigidbody2 != nullptr)
-                        {
-                            ApplyImpulseStaic(collisionInfo);
-                        }
-                    }
+					assert(collisionInfo.m_collider1 != nullptr);
+					assert(collisionInfo.m_collider2 != nullptr);
+					if (collisionInfo.m_collisionType != CollisionType::NoCollision)
+					{
+						if (collisionInfo.m_collider1 && collisionInfo.m_collider1->IsTrigger())
+						{
+							collisionInfo.m_collider1->GetGameObject()->OnTrigger(collisionInfo.m_collider2->GetGameObject());
+						}
+						else if (collisionInfo.m_collider2&& collisionInfo.m_collider2->IsTrigger())
+						{
+							collisionInfo.m_collider2->GetGameObject()->OnTrigger(collisionInfo.m_collider1->GetGameObject());
+						}
+						else
+						{
+							if (collisionInfo.m_collisionType == CollisionType::Penetrating)
+							{
+								deltaTime /= 2;
+								tryAgain = true;
+								m_dynamicRigidbodys[j]->FallbackUpdate();
+								m_dynamicRigidbodys[j]->PreFixedUpdate(deltaTime);
+								m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
+							}
+							else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
+							{
+								if (collisionInfo.m_rigidbody1 != nullptr && collisionInfo.m_rigidbody2 != nullptr)
+								{
+									ApplyImpulseStaic(collisionInfo);
+								}
+							}
+						}
+					}
                 }
                 tryAgain = true;
 
@@ -293,11 +314,11 @@ namespace XenonPhysics
         Collider2D* collider = gameobject->GetComponent<Collider2D>();
         if (rigidbody != nullptr)
         {
-            AddRigidbody2D(rigidbody);
+            RemoveRigidbody2D(rigidbody);
         }
         else if (collider != nullptr)
         {
-            AddCollider2D(collider);
+            RemoveCollider2D(collider);
         }
         else
         {

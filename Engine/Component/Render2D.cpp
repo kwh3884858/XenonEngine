@@ -12,7 +12,6 @@ namespace XenonEngine
 
     Render2D::~Render2D()
     {
-        delete m_polygon2D;
     }
 
     void Render2D::SetConfig(const Render2DConfig*const config)
@@ -20,7 +19,7 @@ namespace XenonEngine
         m_polygon2D = config->m_polygon2D;
     }
 
-    void Render2D::Update() const
+	bool Render2D::Update()
     {
         assert(m_polygon2D->m_numberOfVertex >= 3);
         Transform2D* transform = GetGameObject()->GetComponent<Transform2D>();
@@ -34,7 +33,15 @@ namespace XenonEngine
                 m_polygon2D->m_color
             );
         }
+		return true;
     }
+
+	bool Render2D::Destroy()
+	{
+		delete m_polygon2D;
+		m_polygon2D = nullptr;
+		return true;
+	}
 
     XenonEngine::IComponent* Render2D::Copy(GameObject*const gameObject) const
     {

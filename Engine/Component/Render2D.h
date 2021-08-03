@@ -31,7 +31,8 @@ namespace XenonEngine
         virtual IComponent* Copy(GameObject*const gameObject)const override;
 
         void SetConfig(const Render2DConfig*const config);
-        void Update()const;
+		virtual bool Update() override;
+		virtual bool Destroy() override;
 
         static ComponentType m_type;
     private:

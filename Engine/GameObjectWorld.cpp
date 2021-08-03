@@ -25,16 +25,29 @@ namespace XenonEngine
     void GameObjectWorld::AddGameObject(GameObject* const gameobject)
     {
         GameObject* sameNameObject = GetGameObject(gameobject->GetName());
-        if (sameNameObject == nullptr)
-        {
-            gameobject->Start();
-            m_physics2D->AddGameObject(gameobject);
-            m_worldObjects.Add(gameobject);
-        }
-        else
-        {
-            assert(true == false);
-        }
+		if (sameNameObject != nullptr)
+		{
+			String oldName = gameobject->GetName();
+			int pos = oldName.IndexOf("_");
+			if (pos == -1)
+			{
+				oldName.Append("_0");
+				gameobject->SetName(oldName);
+			}
+			else
+			{
+				const char& order = oldName[pos + 1];
+				int numOfGameObject = static_cast<int>(order);
+				++numOfGameObject;
+				oldName = oldName.Substring(0, pos + 1);
+				oldName.Append(static_cast<char>(numOfGameObject));
+				gameobject->SetName(oldName);
+			}
+		}
+
+        gameobject->Start();
+        m_physics2D->AddGameObject(gameobject);
+        m_worldObjects.Add(gameobject);
     }
 
     GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& GameObjectName) const
@@ -62,8 +75,8 @@ namespace XenonEngine
         {
             if (m_worldObjects[i]->IsMarkForDelete())
             {
-                m_worldObjects[i]->Destroy();
                 m_physics2D->RemoveGameObject(m_worldObjects[i]);
+				m_worldObjects[i]->Destroy();
                 m_worldObjects.Remove(i);
                 i--;
             }

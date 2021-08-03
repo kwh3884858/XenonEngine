@@ -6,6 +6,8 @@
 #include "Engine/Component/BoxCollider2D.h"
 #include "CrossPlatform/Polygon2D.h"
 
+#include "Engine/GameObjectWorldManager.h"
+
 #include "MathLab/Vector2f.h"
 
 namespace Gameplay
@@ -60,6 +62,20 @@ namespace Gameplay
         boxCollider2DConfig.m_size = Vector2f(20, 20);
         collider->SetConfig(&boxCollider2DConfig);
         AddComponent(collider);
+	}
+
+	void Enemy::Update()
+	{
+		GameObject* gameobject = XenonEngine::GameObjectWorldManager::Get().GetCurrentWorld()->GetGameObject("Player");
+		if (gameobject!= nullptr)
+		{
+			Transform2D* tranform = GetComponent<Transform2D>();
+			Transform2D* playerTransform = gameobject->GetComponent<Transform2D>();
+			Vector2f positionVector = playerTransform->GetPosition() - tranform->GetPosition();
+			positionVector = positionVector.Normalize();
+			positionVector *= 20;
+			// New bullet
+		}
 	}
 
     void Enemy::OnTrigger(GameObject* gameobject)
