@@ -1,18 +1,19 @@
 #include "XenonTimer.h"
 namespace XenonEngine
 {
-	XenonTimer::XenonTimer() 
+	bool XenonTimer::Shutdown()
 	{
-
+		delete m_timer;
+		return true;
 	}
 
-	XenonTimer::~XenonTimer()
+	void XenonTimer::SetFileReader(CrossPlatform::ITimer * const timer)
 	{
+		m_timer = timer;
 	}
 
-	float XenonTimer::GetTime()
+	float XenonTimer::GetTime() const
 	{
-
+		return m_timer->GetTime();
 	}
-
 }

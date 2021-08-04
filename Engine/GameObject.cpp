@@ -50,13 +50,19 @@ namespace XenonEngine
         }
     }
 
-    void GameObject::Update()
-    {
-        for (int i = 0; i < m_components.Count(); i++)
-        {
-            m_components[i]->Update();
-        }
-    }
+	void GameObject::GameObjectUpdate()
+	{
+		for (int i = 0; i < m_components.Count(); i++)
+		{
+			m_components[i]->Update();
+		}
+		Update();
+	}
+
+	void GameObject::Update()
+	{
+
+	}
 
     void GameObject::Destroy()
     {

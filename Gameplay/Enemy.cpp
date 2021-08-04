@@ -5,8 +5,9 @@
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
 #include "CrossPlatform/Polygon2D.h"
-#include "CrossPlatform/Interface/"
+#include "Engine/Timer/XenonTimer.h"
 #include "Engine/GameObjectWorldManager.h"
+#include "Engine/GameObjectWorld.h"
 
 #include "MathLab/Vector2f.h"
 #include "Gameplay/Bullet.h"
@@ -70,17 +71,22 @@ namespace Gameplay
 		GameObject* gameobject = GameObjectWorldManager::Get().GetCurrentWorld()->GetGameObject("Player");
 		if (gameobject!= nullptr)
 		{
-			Transform2D* tranform = GetComponent<Transform2D>();
-			Transform2D* playerTransform = gameobject->GetComponent<Transform2D>();
-			Vector2f positionVector = playerTransform->GetPosition() - tranform->GetPosition();
-			positionVector = positionVector.Normalize();
-			positionVector *= 20;
-			// New bullet
-            Bullet* bullet = new Bullet("Bullet");
-            Transform2D* transform = bullet->GetComponent<Transform2D>();
-            tranform->SetPosition(playerTransform->GetPosition() + positionVector);
-            GameObjectWorldManager::Get().GetCurrentWorld()->AddGameObject(bullet);
 
+			float currentTime = XenonTimer::Get().GetTime();
+			if (currentTime - m_lastTime > 1.0f)
+			{
+				Transform2D* tranform = GetComponent<Transform2D>();
+				Transform2D* playerTransform = gameobject->GetComponent<Transform2D>();
+				Vector2f positionVector = playerTransform->GetPosition() - tranform->GetPosition();
+				positionVector = positionVector.Normalize();
+				positionVector *= 20;
+				// New bullet
+				Bullet* bullet = new Bullet("Bullet");
+				Transform2D* transform = bullet->GetComponent<Transform2D>();
+				tranform->SetPosition(playerTransform->GetPosition() + positionVector);
+				GameObjectWorldManager::Get().GetCurrentWorld()->AddGameObject(bullet);
+				m_lastTime = currentTime;
+			}
 		}
 	}
 

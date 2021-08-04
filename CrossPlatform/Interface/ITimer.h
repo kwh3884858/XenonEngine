@@ -4,6 +4,7 @@ namespace CrossPlatform {
     class ITimer
     {
     public:
-        virtual float GetTime()const = 0;
+		virtual ~ITimer() {};
+        virtual float GetTime() const = 0;
     };
 }

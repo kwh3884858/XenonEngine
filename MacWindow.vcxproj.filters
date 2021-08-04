@@ -135,9 +135,6 @@
     <ClCompile Include="Gameplay\Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CrossPlatform\Interface\Source.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Timer\XenonTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -375,6 +372,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Timer\XenonTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CrossPlatform\Interface\ITimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

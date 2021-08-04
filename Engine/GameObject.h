@@ -40,6 +40,7 @@ namespace XenonEngine
         void SetState(ObjectState state) { m_state = state; }
 
         virtual void Start();
+        virtual void GameObjectUpdate();
         virtual void Update();
         virtual void Destroy();
         virtual void OnTrigger(GameObject* gameobject) { return; }

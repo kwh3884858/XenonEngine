@@ -25,6 +25,8 @@
 #include "Engine/IO/InputSystem.h"
 #include "Windows/Input/DirectXInput.h"
 
+#include "Engine/Timer/XenonTimer.h"
+
 //
 //using MathLab::Vector3f;
 
@@ -39,6 +41,7 @@ using WindowSurface::DrawerSurface;
 using WindowSurface::DirectXDrawSurface;
 
 using CrossPlatform::Database;
+using CrossPlatform::ITimer;
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(nullptr)
@@ -159,12 +162,16 @@ void MainWindow::Initialize()
     m_directInput->SetConfig(&inputConfig);
     m_directInput->Initialize();
     XenonEngine::InputSystem::Get().SetFileReader(m_directInput);
+
+	Timer::StoryTimer* timer = new Timer::StoryTimer;
+	XenonEngine::XenonTimer::Get().SetFileReader(timer);
+
 }
 
 void MainWindow::Shutdown()
 {
     m_directInput->ShutDown();
-
+	XenonEngine::XenonTimer::Get().Shutdown();
     XenonEngine::FileManager::Get().Shutdown();
     Primitive::Primitive2D::Get().Shutdown();
 

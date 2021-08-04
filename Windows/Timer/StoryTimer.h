@@ -29,7 +29,7 @@ namespace Timer {
     {
     public:
         StoryTimer();
-        ~StoryTimer() = default;
+        virtual ~StoryTimer() override = default;
 
         virtual float GetTime() const override;
 

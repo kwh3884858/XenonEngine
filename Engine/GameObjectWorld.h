@@ -24,6 +24,7 @@ namespace XenonEngine
     private:
         void ClearMarkForDelete();
         void RenderUpdate();
+		void ObjectUpdate();
 
         Algorithm::String m_worldName;
         Algorithm::Vector<GameObject*> m_worldObjects;

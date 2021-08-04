@@ -66,6 +66,7 @@ namespace XenonEngine
     {
         ClearMarkForDelete();
         m_physics2D->FixedUpdate();
+		ObjectUpdate();
         RenderUpdate();
     }
 
@@ -91,5 +92,13 @@ namespace XenonEngine
             render2D->Update();
         }
     }
+
+	void GameObjectWorld::ObjectUpdate()
+	{
+		for (int i = 0; i < m_worldObjects.Count(); i++)
+		{
+			m_worldObjects[i]->GameObjectUpdate();
+		}
+	}
 
 }
