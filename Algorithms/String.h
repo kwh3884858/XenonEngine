@@ -142,23 +142,6 @@ namespace Algorithm
         return *this;
     }
 
-    //template<typename T>
-    //inline bool StringBase<T>::operator==(const T* rhs) const
-    //{
-    //    if (rhs[Count() + 1] != '\0')
-    //    {
-    //        return false;
-    //    }
-    //    for ( int i = 0; i < Count(); i++)
-    //    {
-    //        if (m_string[i] != rhs[i])
-    //        {
-    //            return false;
-    //        }
-    //    }
-    //    return true;
-    //}
-
     template<typename T>
     bool Algorithm::StringBase<T>::operator==(const StringBase<T>& rhs)const
     {
@@ -365,6 +348,69 @@ namespace Algorithm
         result.m_string.Replace(m_string.Begin() + start, end - start );
         return result;
     }
+
+
+	void MSD(const Vector<String>& pOutFileList)
+	{
+		Vector<String>& auxiliaryArray;
+		MSDStringSort(pOutFileList, 0, pOutFileList.Count() - 1, 0, auxiliaryArray);
+	}
+	int INSERT_SORT_THRESHOLD = 2;
+	enum {
+		MAX_CHARACTER = 256,
+		CHARACTER_OFFSET = 2,
+		TOTAL_LENGTH = MAX_CHARACTER + CHARACTER_OFFSET
+	};
+	void MSDStringSort(const Vector<String>& pOutFileList, int low, int high, int d, const Vector<String>& auxiliaryArray)
+	{
+		if (low + INSERT_SORT_THRESHOLD >= high)
+		{
+			InsertSort(pOutFileList, low, high, d);
+		}
+		else
+		{
+			int m_msdCharacterArray[MAX_CHARACTER];
+			memset(m_msdCharacterArray, 0, MAX_CHARACTER * sizeof(int));
+			for (int i = low; i <= high; i++)
+			{
+				int index = pOutFileList[d][i];
+				m_msdCharacterArray[index + 2] ++; //-1 ~ 255 => 1 ~ 257, total 258
+			}
+			for (int i = 1; i < TOTAL_LENGTH; i++)
+			{
+				m_msdCharacterArray[i] += m_msdCharacterArray[i - 1];
+			}
+			for (int i = low; i <= high; i++)
+			{
+				char character = CharAt(pOutFileList[i], d) + 1; //0 ~ 256, 0 means empty, 1 means 0
+				int index = m_msdCharacterArray[(int)character]++;
+				strcpy(auxiliaryArray[index], pOutFileList[i]);
+			}
+			for (int i = low; i <= high; i++)
+			{
+				strcpy(pOutFileList[i], auxiliaryArray[i - low]);
+			}
+			for (int i = 0; i < MAX_CHARACTER; i++)
+			{
+				MSDStringSort(pOutFileList, low + m_msdCharacterArray[i], low + m_msdCharacterArray[i + 1] - 1, d + 1, auxiliaryArray); // position of sub string array should start from the beginning position, low position, of array.
+			}
+		}
+	}
+
+	void StoryFileManager::InsertSort(char(*pOutFileList)[MAX_FOLDER_PATH], int low, int high, int d)
+	{
+		//if (d < strlen(pOutFileList[low]))
+		//{
+		for (int i = low + 1; i <= high; i++)
+		{
+			for (int j = i; j > low && pOutFileList[j][d] < pOutFileList[j - 1][d]; j--)
+			{
+				Exchange(pOutFileList, j, j - 1);
+			}
+		}
+		//}
+	}
+
 
     typedef StringBase<char> String;
 
