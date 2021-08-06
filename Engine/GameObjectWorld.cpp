@@ -2,10 +2,13 @@
 #include "GameObject.h"
 #include "Engine/Component/Render2D.h"
 #include "Engine/Physics/Physics2D.h"
-
+#include "Algorithms/StringSort.h"
 namespace XenonEngine
 {
     using XenonPhysics::Physics2D;
+	using Algorithm::String;
+	using Algorithm::MSD;
+	using Algorithm::Vector;
 
     GameObjectWorld::GameObjectWorld(const Algorithm::String& worldName)
     {
@@ -24,24 +27,25 @@ namespace XenonEngine
 
     void GameObjectWorld::AddGameObject(GameObject* const gameobject)
     {
-        GameObject* sameNameObject = GetGameObject(gameobject->GetName());
-		if (sameNameObject != nullptr)
+        Vector<String> sameNameObjects = GetGameObjectNameList(gameobject->GetName());
+		if (sameNameObjects.Count() > 0)
 		{
-			String oldName = gameobject->GetName();
-			int pos = oldName.IndexOf("_");
+			MSD(sameNameObjects);
+			String largestOrderName = sameNameObjects[sameNameObjects.Count() - 1];
+			int pos = largestOrderName.IndexOf("_");
 			if (pos == -1)
 			{
-				oldName.Append("_0");
-				gameobject->SetName(oldName);
+				largestOrderName.Append("_0");
+				gameobject->SetName(largestOrderName);
 			}
 			else
 			{
-				const char& order = oldName[pos + 1];
+				const char& order = largestOrderName[pos + 1];
 				int numOfGameObject = static_cast<int>(order);
 				++numOfGameObject;
-				oldName = oldName.Substring(0, pos + 1);
-				oldName.Append(static_cast<char>(numOfGameObject));
-				gameobject->SetName(oldName);
+				largestOrderName = largestOrderName.Substring(0, pos + 1);
+				largestOrderName.Append(static_cast<char>(numOfGameObject));
+				gameobject->SetName(largestOrderName);
 			}
 		}
 
@@ -50,17 +54,43 @@ namespace XenonEngine
         m_worldObjects.Add(gameobject);
     }
 
-    GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& GameObjectName) const
+    GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& gameObjectName) const
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
-            if (m_worldObjects[i]->GetName() == GameObjectName)
+            if (m_worldObjects[i]->GetName() == gameObjectName)
             {
                 return m_worldObjects[i];
             }
         }
         return nullptr;
     }
+
+	Vector<GameObject*> GameObjectWorld::GetGameObjectList(const Algorithm::String & gameObjectName) const
+	{
+		Vector<GameObject*> list;
+		for (int i = 0; i < m_worldObjects.Count(); i++)
+		{
+			if (m_worldObjects[i]->GetName().Find(gameObjectName))
+			{
+				list.Add( m_worldObjects[i]);
+			}
+		}
+		return list;
+	}
+
+	Vector<String> GameObjectWorld::GetGameObjectNameList(const Algorithm::String & gameObjectName) const
+	{
+		Vector<String> list;
+		for (int i = 0; i < m_worldObjects.Count(); i++)
+		{
+			if (m_worldObjects[i]->GetName().Find(gameObjectName))
+			{
+				list.Add(m_worldObjects[i]->GetName());
+			}
+		}
+		return list;
+	}
 
     void GameObjectWorld::Update()
     {

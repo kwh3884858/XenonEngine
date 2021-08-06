@@ -16,6 +16,8 @@ namespace Algorithm
 
     template<typename T>
     bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
+	template<typename T>
+	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs);
 
     template<typename T>
     class StringBase
@@ -23,7 +25,6 @@ namespace Algorithm
     public:
         template<typename T>
         friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
-
         StringBase();
         StringBase(const StringBase& value);
         StringBase(const T* value, unsigned int size);
@@ -49,8 +50,8 @@ namespace Algorithm
         void Clear();
         const T* const Beign()const;
 
-        int IndexOf(const StringBase& subString);
-        bool Find(const StringBase& subString);
+        int IndexOf(const StringBase& subString)const;
+        bool Find(const StringBase& subString)const;
         void Append(const StringBase& subString);
         StringBase<T> Substring(unsigned int start, unsigned int end);
     private:
@@ -260,9 +261,18 @@ namespace Algorithm
         return true;
     }
 
+	template<typename T>
+	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs)
+	{
+		String tmp(lhs);
+		lhs = rhs;
+		rhs = tmp;
+		return true;
+	}
+
 
     template<typename T>
-    int Algorithm::StringBase<T>::IndexOf(const StringBase& subString)
+    int Algorithm::StringBase<T>::IndexOf(const StringBase& subString)const
     {
         int character[265];
         int nonCharacterCount = 0;
@@ -327,7 +337,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    inline bool StringBase<T>::Find(const StringBase& subString)
+    inline bool StringBase<T>::Find(const StringBase& subString)const
     {
         return IndexOf(subString) != -1;
     }
@@ -349,69 +359,5 @@ namespace Algorithm
         return result;
     }
 
-
-	void MSD(const Vector<String>& pOutFileList)
-	{
-		Vector<String>& auxiliaryArray;
-		MSDStringSort(pOutFileList, 0, pOutFileList.Count() - 1, 0, auxiliaryArray);
-	}
-	int INSERT_SORT_THRESHOLD = 2;
-	enum {
-		MAX_CHARACTER = 256,
-		CHARACTER_OFFSET = 2,
-		TOTAL_LENGTH = MAX_CHARACTER + CHARACTER_OFFSET
-	};
-	void MSDStringSort(const Vector<String>& pOutFileList, int low, int high, int d, const Vector<String>& auxiliaryArray)
-	{
-		if (low + INSERT_SORT_THRESHOLD >= high)
-		{
-			InsertSort(pOutFileList, low, high, d);
-		}
-		else
-		{
-			int m_msdCharacterArray[MAX_CHARACTER];
-			memset(m_msdCharacterArray, 0, MAX_CHARACTER * sizeof(int));
-			for (int i = low; i <= high; i++)
-			{
-				int index = pOutFileList[d][i];
-				m_msdCharacterArray[index + 2] ++; //-1 ~ 255 => 1 ~ 257, total 258
-			}
-			for (int i = 1; i < TOTAL_LENGTH; i++)
-			{
-				m_msdCharacterArray[i] += m_msdCharacterArray[i - 1];
-			}
-			for (int i = low; i <= high; i++)
-			{
-				char character = CharAt(pOutFileList[i], d) + 1; //0 ~ 256, 0 means empty, 1 means 0
-				int index = m_msdCharacterArray[(int)character]++;
-				strcpy(auxiliaryArray[index], pOutFileList[i]);
-			}
-			for (int i = low; i <= high; i++)
-			{
-				strcpy(pOutFileList[i], auxiliaryArray[i - low]);
-			}
-			for (int i = 0; i < MAX_CHARACTER; i++)
-			{
-				MSDStringSort(pOutFileList, low + m_msdCharacterArray[i], low + m_msdCharacterArray[i + 1] - 1, d + 1, auxiliaryArray); // position of sub string array should start from the beginning position, low position, of array.
-			}
-		}
-	}
-
-	void StoryFileManager::InsertSort(char(*pOutFileList)[MAX_FOLDER_PATH], int low, int high, int d)
-	{
-		//if (d < strlen(pOutFileList[low]))
-		//{
-		for (int i = low + 1; i <= high; i++)
-		{
-			for (int j = i; j > low && pOutFileList[j][d] < pOutFileList[j - 1][d]; j--)
-			{
-				Exchange(pOutFileList, j, j - 1);
-			}
-		}
-		//}
-	}
-
-
-    typedef StringBase<char> String;
-
+	typedef StringBase<char> String;
 }

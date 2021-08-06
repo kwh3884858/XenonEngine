@@ -112,6 +112,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Algorithms\StringSort.cpp" />
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Algorithms\Dictionary.h" />
     <ClInclude Include="Algorithms\Iterator.h" />
     <ClInclude Include="Algorithms\StreamingVector.h" />
+    <ClInclude Include="Algorithms\StringSort.h" />
     <ClInclude Include="Algorithms\TypeString.h" />
     <ClInclude Include="Algorithms\Sort.h" />
     <ClInclude Include="Algorithms\Stack.h" />
