@@ -8,7 +8,7 @@ namespace XenonPhysics
     public:
 
         Vector2f m_forceDirection;
-        float fvalue;
+        float fvalue = 0.0f;
     };
 }
 

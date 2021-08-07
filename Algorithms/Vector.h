@@ -270,7 +270,7 @@ namespace Algorithm
     template<typename T>
     bool Algorithm::Vector<T>::InternalReplace(const T*const content, unsigned int size)
     {
-        memcpy(m_content, content, size);
+        memcpy(m_content, content, size * sizeof(T));
         m_count = size;
         return true;
     }

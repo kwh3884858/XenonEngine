@@ -27,25 +27,26 @@ namespace XenonEngine
 
     void GameObjectWorld::AddGameObject(GameObject* const gameobject)
     {
-        Vector<const String&> sameNameObjects = GetGameObjectNameList(gameobject->GetName());
+        Vector<const String*> sameNameObjects = GetGameObjectNameList(gameobject->GetName());
 		if (sameNameObjects.Count() > 0)
 		{
 			MSD(sameNameObjects);
-			String largestOrderName = sameNameObjects[sameNameObjects.Count() - 1];
-			int pos = largestOrderName.IndexOf("_");
+			const String* largestOrderName = sameNameObjects[sameNameObjects.Count() - 1];
+            String newName(*largestOrderName);
+			int pos = largestOrderName->IndexOf("_");
 			if (pos == -1)
 			{
-				largestOrderName.Append("_0");
-				gameobject->SetName(largestOrderName);
+                newName.Append("_0");
+				gameobject->SetName(newName);
 			}
 			else
 			{
-				const char& order = largestOrderName[pos + 1];
+				const char& order = newName[pos + 1];
 				int numOfGameObject = static_cast<int>(order);
 				++numOfGameObject;
-				largestOrderName = largestOrderName.Substring(0, pos + 1);
-				largestOrderName.Append(static_cast<char>(numOfGameObject));
-				gameobject->SetName(largestOrderName);
+                newName = newName.Substring(0, pos + 1);
+                newName.Append(static_cast<char>(numOfGameObject));
+				gameobject->SetName(newName);
 			}
 		}
 
@@ -79,14 +80,14 @@ namespace XenonEngine
 		return list;
 	}
 
-    Vector<const String&> GameObjectWorld::GetGameObjectNameList(const Algorithm::String & gameObjectName) const
+    Vector<const String*> GameObjectWorld::GetGameObjectNameList(const Algorithm::String & gameObjectName) const
 	{
-        Vector<const String&> list ;
+        Vector<const String*> list ;
 		for (int i = 0; i < m_worldObjects.Count(); i++)
 		{
 			if (m_worldObjects[i]->GetName().Find(gameObjectName))
 			{
-                const String& name = m_worldObjects[i]->GetName();
+                const String* name = &(m_worldObjects[i]->GetName());
 				list.Add(name);
 			}
 		}

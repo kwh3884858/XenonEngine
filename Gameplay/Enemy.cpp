@@ -8,6 +8,7 @@
 #include "Engine/Timer/XenonTimer.h"
 #include "Engine/GameObjectWorldManager.h"
 #include "Engine/GameObjectWorld.h"
+#include "Engine/Physics/Force2D.h"
 
 #include "MathLab/Vector2f.h"
 #include "Gameplay/Bullet.h"
@@ -17,6 +18,7 @@ namespace Gameplay
 	using namespace XenonEngine;
     using namespace CrossPlatform;
     using namespace MathLab;
+    using namespace XenonPhysics;
 
 	Enemy::Enemy(const char* name):
 		GameObject(name)
@@ -55,7 +57,7 @@ namespace Gameplay
         PlayerPersonality* personality = new PlayerPersonality(this);
         AddComponent(personality);
 
-        Rigidbody2D* const rigid = new Rigidbody2D(this, true, 5, 10);
+        Rigidbody2D* const rigid = new Rigidbody2D(this, false, 5, 10);
         AddComponent(rigid);
 
         BoxCollider2D* collider = new BoxCollider2D(this);
@@ -71,20 +73,24 @@ namespace Gameplay
 		GameObject* gameobject = GameObjectWorldManager::Get().GetCurrentWorld()->GetGameObject("Player");
 		if (gameobject!= nullptr)
 		{
-
 			float currentTime = XenonTimer::Get().GetTime();
-			if (currentTime - m_lastTime > 1.0f)
+			if (currentTime - m_lastTime > 5000.0f)
 			{
 				Transform2D* tranform = GetComponent<Transform2D>();
 				Transform2D* playerTransform = gameobject->GetComponent<Transform2D>();
 				Vector2f positionVector = playerTransform->GetPosition() - tranform->GetPosition();
-				positionVector = positionVector.Normalize();
-				positionVector *= 20;
+                Vector2f posVecNormal = positionVector.Normalize();
 				// New bullet
 				Bullet* bullet = new Bullet("Bullet");
-				Transform2D* transform = bullet->GetComponent<Transform2D>();
-				tranform->SetPosition(playerTransform->GetPosition() + positionVector);
-				GameObjectWorldManager::Get().GetCurrentWorld()->AddGameObject(bullet);
+                GameObjectWorldManager::Get().GetCurrentWorld()->AddGameObject(bullet);
+				Transform2D* bulletTransform = bullet->GetComponent<Transform2D>();
+                bulletTransform->SetPosition(tranform->GetPosition() + posVecNormal * 20);
+                Rigidbody2D* rigid = bullet->GetComponent<Rigidbody2D>();
+                Force2D jumpForce;
+                jumpForce.fvalue = 5000.0f;
+                jumpForce.m_forceDirection = posVecNormal;
+                rigid->AddForce(jumpForce);
+
 				m_lastTime = currentTime;
 			}
 		}

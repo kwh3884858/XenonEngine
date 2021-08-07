@@ -9,13 +9,14 @@ namespace Algorithm
 		TOTAL_LENGTH = MAX_CHARACTER + CHARACTER_OFFSET
 	};
 
-	void MSD(Vector<const String&> pOutFileList)
+	void MSD(Vector<const String*>& pOutFileList)
 	{
-		Vector<const String&> auxiliaryArray(pOutFileList.Count());
+		int count = pOutFileList.Count();
+		Vector<const String*> auxiliaryArray(pOutFileList);
 		MSDStringSort(pOutFileList, 0, pOutFileList.Count() - 1, 0, auxiliaryArray);
 	}
 
-	void MSDStringSort(Vector<const String&>& pOutFileList, int low, int high, int d, Vector<const String&>& auxiliaryArray)
+	void MSDStringSort(Vector<const String*>& pOutFileList, int low, int high, int d, Vector<const String*>& auxiliaryArray)
 	{
 		if (low + INSERT_SORT_THRESHOLD >= high)
 		{
@@ -23,21 +24,26 @@ namespace Algorithm
 		}
 		else
 		{
-			int m_msdCharacterArray[MAX_CHARACTER];
-			memset(m_msdCharacterArray, 0, MAX_CHARACTER * sizeof(int));
+			int msdCharacterArray[TOTAL_LENGTH];
+			memset(msdCharacterArray, 0, TOTAL_LENGTH * sizeof(int));
 			for (int i = low; i <= high; i++)
 			{
-				int index = pOutFileList[d][i];
-				m_msdCharacterArray[index + 2] ++; //-1 ~ 255 => 1 ~ 257, total 258
+				const String& currentString = *pOutFileList[i];
+				int index = CharAt(currentString, d);
+				//-1 means empty, character from 0 ~ 255 => 1 is empty, character from 2 ~ 257, total 258
+				msdCharacterArray[index + 2] ++;
 			}
 			for (int i = 1; i < TOTAL_LENGTH; i++)
 			{
-				m_msdCharacterArray[i] += m_msdCharacterArray[i - 1];
+				// Avaliable value from 1 is empty and 2 ~ 257 => 0 is empty index, 1 ~ 256 become character index
+				msdCharacterArray[i] += msdCharacterArray[i - 1]; 
 			}
 			for (int i = low; i <= high; i++)
 			{
-				char character = pOutFileList[i][d] + 1; //0 ~ 256, 0 means empty, 1 means 0
-				int index = m_msdCharacterArray[(int)character]++;
+				const String& currentString = *pOutFileList[i];
+				//0 ~ 256, 0 means empty, 1 means 0
+				char character = CharAt(currentString, d) + 1; 
+				int index = msdCharacterArray[(int)character]++;
 				auxiliaryArray[index] = pOutFileList[i];
 			}
 			for (int i = low; i <= high; i++)
@@ -46,23 +52,24 @@ namespace Algorithm
 			}
 			for (int i = 0; i < MAX_CHARACTER; i++)
 			{
-				MSDStringSort(pOutFileList, low + m_msdCharacterArray[i], low + m_msdCharacterArray[i + 1] - 1, d + 1, auxiliaryArray); // position of sub string array should start from the beginning position, low position, of array.
+				MSDStringSort(pOutFileList, low + msdCharacterArray[i], low + msdCharacterArray[i + 1] - 1, d + 1, auxiliaryArray); // position of sub string array should start from the beginning position, low position, of array.
 			}
 		}
 	}
 
-	void InsertSort(Vector<const String&>& pOutFileList, int low, int high, int d)
+	int CharAt(const String& conetnt, int d) 
 	{
-		assert(d >= 0 && d < pOutFileList[low].Count());
+		return d < conetnt.Count() ? conetnt[d] : -1;
+	}
+	void InsertSort(Vector<const String*>& pOutFileList, int low, int high, int d)
+	{
 		for (int i = low + 1; i <= high; i++)
 		{
-			for (int j = i; j > low && pOutFileList[j][d] < pOutFileList[j - 1][d]; j--)
+			for (int j = i; j > low && (*pOutFileList[j])[d] < (*pOutFileList[j - 1])[d]; j--)
 			{
-				const String& tmp = pOutFileList[j];
-				const const String& * iter = pOutFileList.Begin();
-				memcpy(pOutFileList[j], pOutFileList[j - 1], sizeof(const String&));
-				pOutFileList[j] =;
-				Swap(, pOutFileList[j - 1]);
+				const String* tmp = pOutFileList[j];
+				pOutFileList[j] = pOutFileList[j - 1];
+				pOutFileList[j - 1] = tmp;
 			}
 		}
 	}
