@@ -9,13 +9,13 @@ namespace Algorithm
 		TOTAL_LENGTH = MAX_CHARACTER + CHARACTER_OFFSET
 	};
 
-	void MSD(Vector<String>& pOutFileList)
+	void MSD(Vector<const String&> pOutFileList)
 	{
-		Vector<String> auxiliaryArray;
+		Vector<const String&> auxiliaryArray(pOutFileList.Count());
 		MSDStringSort(pOutFileList, 0, pOutFileList.Count() - 1, 0, auxiliaryArray);
 	}
 
-	void MSDStringSort(Vector<String>& pOutFileList, int low, int high, int d, Vector<String>& auxiliaryArray)
+	void MSDStringSort(Vector<const String&>& pOutFileList, int low, int high, int d, Vector<const String&>& auxiliaryArray)
 	{
 		if (low + INSERT_SORT_THRESHOLD >= high)
 		{
@@ -51,14 +51,18 @@ namespace Algorithm
 		}
 	}
 
-	void InsertSort(Vector<String>& pOutFileList, int low, int high, int d)
+	void InsertSort(Vector<const String&>& pOutFileList, int low, int high, int d)
 	{
 		assert(d >= 0 && d < pOutFileList[low].Count());
 		for (int i = low + 1; i <= high; i++)
 		{
 			for (int j = i; j > low && pOutFileList[j][d] < pOutFileList[j - 1][d]; j--)
 			{
-				Swap(pOutFileList[j], pOutFileList[j - 1]);
+				const String& tmp = pOutFileList[j];
+				const const String& * iter = pOutFileList.Begin();
+				memcpy(pOutFileList[j], pOutFileList[j - 1], sizeof(const String&));
+				pOutFileList[j] =;
+				Swap(, pOutFileList[j - 1]);
 			}
 		}
 	}

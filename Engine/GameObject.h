@@ -34,7 +34,7 @@ namespace XenonEngine
         template<typename T>
         bool RemoveComponent(T* type);
 
-        const String& const GetName()const { return m_name; }
+        const String& GetName()const { return m_name; }
         void SetName(const String& name) {  m_name = name; }
         bool IsMarkForDelete() { return m_state == ObjectState::MarkForDelete; }
         void SetState(ObjectState state) { m_state = state; }

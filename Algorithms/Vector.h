@@ -21,6 +21,7 @@ namespace Algorithm
 		bool Add(const T& element);
 		bool Remove(const T& element);
 		void Remove(int index);
+		bool Initialize(int size);
         void Replace(const T*const content,unsigned int size);
         bool Clear();
 
@@ -48,7 +49,6 @@ namespace Algorithm
 		int m_capacity;
 
 	private:
-		bool Initialize(int size);
 		bool Reallocation();
         bool InternalReplace(const T*const content, unsigned int size);
         bool Destory();

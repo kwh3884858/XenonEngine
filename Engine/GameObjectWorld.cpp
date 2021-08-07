@@ -27,7 +27,7 @@ namespace XenonEngine
 
     void GameObjectWorld::AddGameObject(GameObject* const gameobject)
     {
-        Vector<String> sameNameObjects = GetGameObjectNameList(gameobject->GetName());
+        Vector<const String&> sameNameObjects = GetGameObjectNameList(gameobject->GetName());
 		if (sameNameObjects.Count() > 0)
 		{
 			MSD(sameNameObjects);
@@ -79,14 +79,15 @@ namespace XenonEngine
 		return list;
 	}
 
-	Vector<String> GameObjectWorld::GetGameObjectNameList(const Algorithm::String & gameObjectName) const
+    Vector<const String&> GameObjectWorld::GetGameObjectNameList(const Algorithm::String & gameObjectName) const
 	{
-		Vector<String> list;
+        Vector<const String&> list ;
 		for (int i = 0; i < m_worldObjects.Count(); i++)
 		{
 			if (m_worldObjects[i]->GetName().Find(gameObjectName))
 			{
-				list.Add(m_worldObjects[i]->GetName());
+                const String& name = m_worldObjects[i]->GetName();
+				list.Add(name);
 			}
 		}
 		return list;

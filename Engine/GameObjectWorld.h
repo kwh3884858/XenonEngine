@@ -18,7 +18,7 @@ namespace XenonEngine
         void AddGameObject(GameObject* const gameobject);
         GameObject* GetGameObject(const Algorithm::String& gameObjectName) const;
 		Algorithm::Vector<GameObject*> GetGameObjectList(const Algorithm::String& gameObjectName)const;
-		Algorithm::Vector<Algorithm::String> GetGameObjectNameList(const Algorithm::String& gameObjectName)const;
+		Algorithm::Vector<const Algorithm::String&> GetGameObjectNameList(const Algorithm::String& gameObjectName)const;
 
         void Start();
         void Update();
