@@ -2,17 +2,17 @@
 #include "Engine/GameObject.h"
 namespace Gameplay
 {
-	class Bullet :public XenonEngine::GameObject
+	class Player :public XenonEngine::GameObject
 	{
 	public:
-		Bullet(const Algorithm::String& name);
-		virtual ~Bullet();
+		Player(const Algorithm::String& name);
+		virtual ~Player();
 
-		virtual Bullet* Copy() const;
+		virtual Player* Copy() const;
 		virtual void Start() override;
 		virtual void Update() override;
 		virtual void OnTrigger(GameObject* gameobject);
 	private:
-
+		bool isFaceRight = true;
 	};
 }

@@ -137,6 +137,7 @@
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Gameplay\Bullet.cpp" />
     <ClCompile Include="Gameplay\Enemy.cpp" />
+    <ClCompile Include="Gameplay\Player.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
@@ -208,6 +209,7 @@
     <ClInclude Include="Engine\Component\IComponent.h" />
     <ClInclude Include="Gameplay\Bullet.h" />
     <ClInclude Include="Gameplay\Enemy.h" />
+    <ClInclude Include="Gameplay\Player.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />
     <ClInclude Include="macos\MacDrawer.h" />

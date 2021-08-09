@@ -5,7 +5,7 @@ namespace Gameplay
 	class Enemy :public XenonEngine::GameObject
 	{
 	public:
-		Enemy(const char* name);
+		Enemy(const Algorithm::String& name);
 		virtual ~Enemy();
 
 		virtual Enemy* Copy() const;

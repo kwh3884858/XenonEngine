@@ -20,7 +20,7 @@ namespace Gameplay
     using namespace MathLab;
     using namespace XenonPhysics;
 
-	Enemy::Enemy(const char* name):
+	Enemy::Enemy(const String& name):
 		GameObject(name)
 	{
 	}

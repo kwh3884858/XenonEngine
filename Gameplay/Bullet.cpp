@@ -13,7 +13,7 @@ namespace Gameplay
 	using namespace CrossPlatform;
 	using namespace MathLab;
 
-	Bullet::Bullet(const char* name):
+	Bullet::Bullet(const String& name):
 		GameObject(name)
 	{
 	}
@@ -35,7 +35,7 @@ namespace Gameplay
 
 		BoxCollider2D* collider = new BoxCollider2D(this);
 		BoxCollider2DConfig boxCollider2DConfig;
-		boxCollider2DConfig.m_isTrigger = false;
+		boxCollider2DConfig.m_isTrigger = true;
 		boxCollider2DConfig.m_size = Vector2f(2, 2);
 		collider->SetConfig(&boxCollider2DConfig);
 		AddComponent(collider);
@@ -65,6 +65,10 @@ namespace Gameplay
 
 	void Bullet::OnTrigger(GameObject* gameobject)
 	{
-
+		String name = gameobject->GetName();
+		if (name.Find("Player"))
+		{
+			gameobject->SetState(ObjectState::MarkForDelete);
+		}
 	}
 }

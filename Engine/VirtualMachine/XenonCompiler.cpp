@@ -64,12 +64,20 @@ namespace XenonEngine
         delete assemblerFile;
         assemblerFile = nullptr;
 
-        String executableFilePath = applicationPath.Substring(0, pos);
-        executableFilePath.Append("Main.xex");
-        StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);
-        m_xvm->LoadScript(streamedFile);
-        bool result = m_xvm->RunScript();
-        assert(result == true);
+		RunScript();
     }
+
+	void XenonCompiler::RunScript()
+	{
+		String applicationPath = FileManager::Get().GetApplicationPath();
+		int pos = applicationPath.IndexOf("XenonEngine.exe");
+
+		String executableFilePath = applicationPath.Substring(0, pos);
+		executableFilePath.Append("Main.xex");
+		StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);
+		m_xvm->LoadScript(streamedFile);
+		bool result = m_xvm->RunScript();
+		assert(result == true);
+	}
 
 }

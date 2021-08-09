@@ -23,7 +23,7 @@ namespace XenonEngine
             Enable,
             MarkForDelete
         };
-        GameObject(const char* name = "XenonGameObject");
+        GameObject(const String& name);
         virtual GameObject* Copy()const;
         virtual ~GameObject();
 
@@ -39,14 +39,15 @@ namespace XenonEngine
         bool IsMarkForDelete() { return m_state == ObjectState::MarkForDelete; }
         void SetState(ObjectState state) { m_state = state; }
 
+		void GameObjectUpdate();
         virtual void Start();
-        virtual void GameObjectUpdate();
         virtual void Update();
         virtual void Destroy();
         virtual void OnTrigger(GameObject* gameobject) { return; }
     protected:
         
     private:
+		void CheckName(String& name)const;
         String m_name;
         ObjectState m_state;
         Vector<IComponent*> m_components;
