@@ -19,7 +19,7 @@ using MathLab::Vector2i;
 using MathLab::Vector2f;
 using CrossPlatform::Polygon2D;
 
-namespace Primitive {
+namespace XenonEngine {
     struct Primitive2DConfig {
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
@@ -27,7 +27,7 @@ namespace Primitive {
         Vector2f m_MaxDrawPosition;
     };
 
-    class Primitive2D :public CrossPlatform::XenonManager<Primitive2D>
+    class Graphic2D :public CrossPlatform::XenonManager<Graphic2D>
     {
     public:
         static constexpr char Clip_Code_Cneter = 0x0000;

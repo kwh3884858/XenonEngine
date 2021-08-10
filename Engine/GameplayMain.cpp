@@ -1,6 +1,6 @@
 #include "Engine/GameplayMain.h"
 
-#include "Engine/Primitive/Primitive2D.h"
+#include "Engine/Primitive/Graphic2D.h"
 
 #include "Engine/Physics/Force2D.h"
 #include "Engine/VirtualMachine/XenonCompiler.h"
@@ -34,7 +34,7 @@ namespace Gameplay {
     using MathLab::Vector2f;
     using CrossPlatform::Database;
     using CrossPlatform::Polygon2D;
-    using Primitive::Primitive2D;
+    using XenonEngine::Graphic2D;
 
     using XenonEngine::XenonCompiler;
     using XenonEngine::InputSystem;

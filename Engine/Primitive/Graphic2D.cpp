@@ -1,4 +1,4 @@
-﻿#include "Engine/Primitive/Primitive2D.h"
+﻿#include "Engine/Primitive/Graphic2D.h"
 #include "CrossPlatform/Interface/IDrawerSurface.h"
 
 #include "MathLab/MathLib.h"
@@ -12,9 +12,9 @@ using MathLab::Vector2f;
 //using MathLab::operator+;
 //using MathLab::operator-;
 
-namespace Primitive
+namespace XenonEngine
 {
-    void Primitive2D::SetConfig(const Primitive2DConfig*const config)
+    void Graphic2D::SetConfig(const Primitive2DConfig*const config)
     {
         m_drawerSurface = config->m_drawerSurface;
         m_zBuffer = config->m_zBuffer;
@@ -22,34 +22,34 @@ namespace Primitive
         m_maxDrawPosition = config->m_MaxDrawPosition;
     }
 
-    bool Primitive2D::Shutdown()
+    bool Graphic2D::Shutdown()
     {
         m_drawerSurface = nullptr;
         return true;
     }
 
-    void Primitive2D::DrawPixel(const Vector2i& pos, const SColorRGBA& rgba) const
+    void Graphic2D::DrawPixel(const Vector2i& pos, const SColorRGBA& rgba) const
     {
         DrawPixel(pos.x, pos.y, rgba);
     }
 
-    void Primitive2D::DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba) const
+    void Graphic2D::DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba) const
     {
         m_drawerSurface->DrawPixel(x, m_drawerSurface->GetHeight() - 1 - y, rgba);
         //printf("(%u, %u) color: (%u, %u, %u, %u)\n", x, y, rgba.GetR(), rgba.GetG(), rgba.GetB(), rgba.GetA());
     }
 
-    unsigned int Primitive2D::GetZbuffer(const Vector2i& pos) const
+    unsigned int Graphic2D::GetZbuffer(const Vector2i& pos) const
     {
         return m_zBuffer->GetPixel(pos.x, pos.y).ToRGBALittleEndian();
     }
 
-    void Primitive2D::SetZBuffer(const Vector2i& pos, unsigned int value)
+    void Graphic2D::SetZBuffer(const Vector2i& pos, unsigned int value)
     {
         m_zBuffer->DrawPixel(pos.x, pos.y, value);
     }
 
-    void Primitive2D::DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/)const
+    void Graphic2D::DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/)const
     {
         Vector2i startPos(lhs);
         Vector2i endPos(rhs);
@@ -105,12 +105,12 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Graphic2D::DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         DrawLine(Vector2i((int)lhs.x, (int)lhs.y), Vector2i((int)rhs.x, (int)rhs.y), rgba);
     }
 
-    void Primitive2D::DrawPolygon(const Polygon2D& polygon2D) const
+    void Graphic2D::DrawPolygon(const Polygon2D& polygon2D) const
     {
         //if (polygon2D.m_state == Polygon2D::EState::Enable)
         //{
@@ -127,7 +127,7 @@ namespace Primitive
         //}
     }
 
-    void Primitive2D::DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Graphic2D::DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         if ((p0.x == p1.x && p1.x == p2.x) || (p0.y == p1.y && p1.y == p2.y))
         {
@@ -181,7 +181,7 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::ClipLine(Vector2f& p0, Vector2f& p1) const
+    void Graphic2D::ClipLine(Vector2f& p0, Vector2f& p1) const
     {
         char p0Code = InternalClipCode(p0, m_minDrawPosition, m_maxDrawPosition);
         char p1Code = InternalClipCode(p1, m_minDrawPosition, m_maxDrawPosition);
@@ -190,7 +190,7 @@ namespace Primitive
         InternalClipPoint(p1Code, p1, p0);
     }
 
-    void Primitive2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         //verse-clock: buttom->p1->p2
         if (p1.x >p2.x)
@@ -261,7 +261,7 @@ namespace Primitive
         }
     }
 
-    void Primitive2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         //verse-clock: buttom->p1->p2
         if (p1.x < p2.x)
@@ -332,7 +332,7 @@ namespace Primitive
         }
     }
 
-    char Primitive2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
+    char Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
     {
         char clipCode = 0;
         if (point.x < minPosition.x)
@@ -356,7 +356,7 @@ namespace Primitive
         return clipCode;
     }
 
-    bool Primitive2D::InternalClipPoint(char clipCode, Vector2f& point, const Vector2f& anotherPoint) const
+    bool Graphic2D::InternalClipPoint(char clipCode, Vector2f& point, const Vector2f& anotherPoint) const
     {
         switch (clipCode)
         {
@@ -425,7 +425,7 @@ namespace Primitive
         return true;
     }
 
-    Vector2f Primitive2D::InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX) const
+    Vector2f Graphic2D::InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX) const
     {
         Vector2f newPoint(point);
         newPoint.x = clipX;
@@ -433,7 +433,7 @@ namespace Primitive
         return newPoint;
     }
 
-    Vector2f Primitive2D::InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY) const
+    Vector2f Graphic2D::InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY) const
     {
         Vector2f newPoint(point);
         newPoint.x = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (point.x - anontherPoint.x) + anontherPoint.x;

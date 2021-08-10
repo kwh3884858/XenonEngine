@@ -16,7 +16,7 @@
 #include <TCHAR.H>
 #include <assert.h>
 
-#include "Engine/Primitive/Primitive2D.h"
+#include "Engine/Primitive/Graphic2D.h"
 #include "Engine/GameplayMain.h"
 
 #include "Engine/FileManager/FileManager.h"
@@ -145,12 +145,12 @@ void MainWindow::Initialize()
     default:
         break;
     }
-    Primitive::Primitive2DConfig primitive2DConfig;
+	XenonEngine::Primitive2DConfig primitive2DConfig;
     primitive2DConfig.m_drawerSurface = m_directXDrawSurface;
     primitive2DConfig.m_zBuffer = m_zBuffer;
     primitive2DConfig.m_MinDrawPosition = Vector2f(Database::Get().engineConfig.m_minX, Database::Get().engineConfig.m_minY);
     primitive2DConfig.m_MaxDrawPosition = Vector2f(Database::Get().engineConfig.m_maxX, Database::Get().engineConfig.m_maxY);
-    Primitive::Primitive2D::Get().SetConfig(&primitive2DConfig);
+	XenonEngine::Graphic2D::Get().SetConfig(&primitive2DConfig);
 
     m_fileReader = new File::FileReader;
     XenonEngine::FileManager::Get().SetFileReader(m_fileReader);
@@ -173,7 +173,7 @@ void MainWindow::Shutdown()
     m_directInput->ShutDown();
 	XenonEngine::XenonTimer::Get().Shutdown();
     XenonEngine::FileManager::Get().Shutdown();
-    Primitive::Primitive2D::Get().Shutdown();
+	XenonEngine::Graphic2D::Get().Shutdown();
 
     delete m_directInput;
     m_directInput = nullptr;

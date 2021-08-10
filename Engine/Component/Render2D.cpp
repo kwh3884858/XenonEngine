@@ -1,6 +1,6 @@
 #include <cassert>
 #include "Render2D.h"
-#include "Engine/Primitive/Primitive2D.h"
+#include "Engine/Primitive/Graphic2D.h"
 #include "CrossPlatform/Polygon2D.h"
 
 #include "Engine/GameObject.h"
@@ -8,7 +8,7 @@
 
 namespace XenonEngine
 {
-    using Primitive::Primitive2D;
+    using XenonEngine::Graphic2D;
 
     Render2D::~Render2D()
     {
@@ -26,7 +26,7 @@ namespace XenonEngine
         assert(transform != nullptr);
         for (int i = 1; i < m_polygon2D->m_numberOfVertex - 1; i++)
         {
-            Primitive2D::Get().DrawTriangle(
+            Graphic2D::Get().DrawTriangle(
                 transform->GetPosition() + m_polygon2D->m_vertexList[0],
                 transform->GetPosition() + m_polygon2D->m_vertexList[i],
                 transform->GetPosition() + m_polygon2D->m_vertexList[i + 1],
