@@ -172,6 +172,7 @@
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
     <ClInclude Include="CrossPlatform\Interface\IInput.h" />
     <ClInclude Include="CrossPlatform\Interface\ITimer.h" />
+    <ClInclude Include="CrossPlatform\Polygon3D.h" />
     <ClInclude Include="CrossPlatform\XenonFile.h" />
     <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h" />
     <ClInclude Include="CrossPlatform\XenonKey.h" />

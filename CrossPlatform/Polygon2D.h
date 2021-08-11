@@ -25,6 +25,6 @@ namespace CrossPlatform {
         EState m_state = EState::Enable;
         SColorRGBA m_color;
         int m_numberOfVertex;
-        MathLab::Vector2f* m_vertexList;
+        MathLab::Vector2f* m_vertexList; 
     };
 }
