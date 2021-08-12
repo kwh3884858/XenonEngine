@@ -114,6 +114,7 @@
   <ItemGroup>
     <ClCompile Include="Algorithms\StringSort.cpp" />
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
+    <ClCompile Include="CrossPlatform\Polygon3D.cpp" />
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
