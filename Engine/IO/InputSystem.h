@@ -2,7 +2,8 @@
 #include "CrossPlatform/XenonManager.h"
 #include "MathLab/Vector2f.h"
 
-namespace CrossPlatform {
+namespace CrossPlatform
+{
     class IInput;
 }
 

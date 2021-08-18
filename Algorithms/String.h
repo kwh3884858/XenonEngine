@@ -264,7 +264,7 @@ namespace Algorithm
 	template<typename T>
 	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs)
 	{
-		String tmp(lhs);
+		StringBase tmp(lhs);
 		lhs = rhs;
 		rhs = tmp;
 		return true;

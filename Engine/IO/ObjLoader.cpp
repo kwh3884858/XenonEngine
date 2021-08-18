@@ -1,7 +1,7 @@
 #include "ObjLoader.h"
 #include <iostream>
 
-#include "Algorithms/String.h"
+
 namespace XenonEngine
 {
 	using Algorithm::String;

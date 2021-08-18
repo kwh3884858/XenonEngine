@@ -1,14 +1,10 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
 #include "CrossPlatform/Polygon3D.h"
+#include "Algorithms/String.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include "Library/tiny_obj_loader.h"
-
-namespace Algorithm
-{
-	class String;
-}
 
 namespace XenonEngine
 {
@@ -22,12 +18,4 @@ namespace XenonEngine
 	private:
 
 	};
-
-	ObjectLoader::ObjectLoader()
-	{
-	}
-
-	ObjectLoader::~ObjectLoader()
-	{
-	}
 }
