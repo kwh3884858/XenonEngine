@@ -1,12 +1,16 @@
 #include "ObjLoader.h"
+#include "CrossPlatform/Polygon3D.h"
 #include <iostream>
 
 
 namespace XenonEngine
 {
 	using Algorithm::String;
+	using CrossPlatform::Polygon3DPointer;
+	using CrossPlatform::Polygon3DVertex;
+	using CrossPlatform::Polygon3D;
 
-	CrossPlatform::Polygon3D ObjectLoader::LoadObj(Algorithm::String & fileName)
+	const Polygon3D* ObjectLoader::LoadObj(Algorithm::String & fileName)
 	{
 		std::string inputfile (fileName.Beign(), fileName.Count());
 		tinyobj::ObjReaderConfig reader_config;
@@ -24,11 +28,16 @@ namespace XenonEngine
 		if (!reader.Warning().empty()) {
 			std::cout << "TinyObjReader: " << reader.Warning();
 		}
-
 		auto& attrib = reader.GetAttrib();
 		auto& shapes = reader.GetShapes();
 		auto& materials = reader.GetMaterials();
-
+		Polygon3DVertex* verteces = new Polygon3DVertex[attrib.vertices.size()];
+		for (size_t i = 0; i < attrib.vertices.size(); i+=3)
+		{
+			attrib.vertices[i + 0];
+			attrib.vertices[i + 1];
+			attrib.vertices[i + 2];
+		}
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++) {
 			// Loop over faces(polygon)

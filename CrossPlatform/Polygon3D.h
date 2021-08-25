@@ -23,14 +23,33 @@ namespace CrossPlatform {
 	class Polygon3D
 	{
 	public:
-		Polygon3D(SColorRGBA color, int numOfPtr, Polygon3DPointer* vertexPointerList, int numOfVertex, MathLab::Vector2f* vertexList);
+		Polygon3D(SColorRGBA color, int numOfPtr, Polygon3DPointer* vertexPointerList, int numOfVertex, Polygon3DVertex* vertexList);
+		Polygon3D(const Polygon3D& that);
 		~Polygon3D();
 
 	private:
 		SColorRGBA m_color;
-		int m_numOfPtr;
-		Polygon3DPointer* m_vertexPointerList;
-		int m_numOfVertex;
-		Polygon3DVertex* m_vertexList;
+		int m_numOfPtr = 0;
+		Polygon3DPointer* m_vertexPointerList = nullptr;
+		int m_numOfVertex = 0;
+		Polygon3DVertex* m_vertexList = nullptr;
 	};
+
+	class Triangle
+	{
+	public:
+		Triangle();
+		~Triangle();
+
+	private:
+
+	};
+
+	Triangle::Triangle()
+	{
+	}
+
+	Triangle::~Triangle()
+	{
+	}
 }
