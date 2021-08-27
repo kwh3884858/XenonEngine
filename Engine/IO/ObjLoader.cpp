@@ -1,5 +1,6 @@
 #include "ObjLoader.h"
 #include "CrossPlatform/Polygon3D.h"
+#include "MathLab/Vector3.h"
 #include <iostream>
 
 
@@ -7,8 +8,8 @@ namespace XenonEngine
 {
 	using Algorithm::String;
 	using CrossPlatform::Polygon3DPointer;
-	using CrossPlatform::Polygon3DVertex;
 	using CrossPlatform::Polygon3D;
+	using MathLab::Vector3f;
 
 	const Polygon3D* ObjectLoader::LoadObj(Algorithm::String & fileName)
 	{
@@ -28,15 +29,40 @@ namespace XenonEngine
 		if (!reader.Warning().empty()) {
 			std::cout << "TinyObjReader: " << reader.Warning();
 		}
+
 		auto& attrib = reader.GetAttrib();
 		auto& shapes = reader.GetShapes();
 		auto& materials = reader.GetMaterials();
-		Polygon3DVertex* verteces = new Polygon3DVertex[attrib.vertices.size()];
+
+		int numOfVertex = attrib.vertices.size() / 3;
+		Vector3f* verteces = new Vector3f[attrib.vertices.size() / 3];
+		int numOfIndex = 0;
+		int* vertexPointerList = new int[attrib.vertices.size() / 3];
+
+		size_t vindex = 0;
 		for (size_t i = 0; i < attrib.vertices.size(); i+=3)
 		{
-			attrib.vertices[i + 0];
-			attrib.vertices[i + 1];
-			attrib.vertices[i + 2];
+			verteces[vindex].x = attrib.vertices[i + 0];
+			verteces[vindex].y = attrib.vertices[i + 1];
+			verteces[vindex].z = attrib.vertices[i + 2];
+			vindex++;
+		}
+		vindex = 0;
+		// Loop over shapes
+		for (size_t s = 0; s < shapes.size(); s++) 
+		{
+			// Loop over faces(polygon)
+			size_t index_offset = 0;
+			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) 
+			{
+				size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
+				for (size_t v = 0; v < fv; v++) 
+				{
+					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+					vertexPointerList[vindex++] = idx.vertex_index;
+				}
+				index_offset += fv;
+			}
 		}
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++) {
@@ -77,5 +103,7 @@ namespace XenonEngine
 				shapes[s].mesh.material_ids[f];
 			}
 		}
+
+		Polygon3D* polygon = new Polygon3D()
 	}
 }

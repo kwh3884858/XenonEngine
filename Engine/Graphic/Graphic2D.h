@@ -19,7 +19,7 @@ using MathLab::Vector2i;
 using MathLab::Vector2f;
 using CrossPlatform::Polygon2D;
 
-namespace XenonEngine {
+namespace Graphic {
     struct Primitive2DConfig {
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;

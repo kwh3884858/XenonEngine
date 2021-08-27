@@ -141,13 +141,16 @@
     <ClCompile Include="Gameplay\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Primitive\Graphic2D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CrossPlatform\Polygon3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\IO\ObjLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphic\Graphic2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Graphic\Graphic3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -392,13 +395,19 @@
     <ClInclude Include="Gameplay\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Primitive\Graphic2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CrossPlatform\Polygon3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\IO\ObjLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Camera\Camera3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphic\Graphic2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Graphic\Graphic3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
