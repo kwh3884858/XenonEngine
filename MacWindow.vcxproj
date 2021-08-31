@@ -119,7 +119,7 @@
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
     <ClCompile Include="Engine\Component\PlayerPersonality.cpp" />
-    <ClCompile Include="Engine\Component\Render2D.cpp" />
+    <ClCompile Include="Engine\Component\Mesh2D.cpp" />
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
@@ -184,7 +184,7 @@
     <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />
     <ClInclude Include="Engine\Component\PlayerPersonality.h" />
-    <ClInclude Include="Engine\Component\Render2D.h" />
+    <ClInclude Include="Engine\Component\Mesh2D.h" />
     <ClInclude Include="Engine\GameObjectWorld.h" />
     <ClInclude Include="Engine\GameObjectWorldManager.h" />
     <ClInclude Include="Engine\Graphic\Graphic3D.h" />

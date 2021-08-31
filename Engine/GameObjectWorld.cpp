@@ -1,6 +1,6 @@
 #include "GameObjectWorld.h"
 #include "GameObject.h"
-#include "Engine/Component/Render2D.h"
+#include "Engine/Component/Mesh2D.h"
 #include "Engine/Physics/Physics2D.h"
 #include "Algorithms/StringSort.h"
 namespace XenonEngine
@@ -120,7 +120,7 @@ namespace XenonEngine
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
-            Render2D* render2D = m_worldObjects[i]->GetComponent<Render2D>();
+            Mesh2D* render2D = m_worldObjects[i]->GetComponent<Mesh2D>();
             render2D->Update();
         }
     }

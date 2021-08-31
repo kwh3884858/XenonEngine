@@ -17,7 +17,7 @@
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform2D.h"
-#include "Engine/Component/Render2D.h"
+#include "Engine/Component/Mesh2D.h"
 #include "Engine/Component/PlayerPersonality.h"
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
@@ -40,8 +40,8 @@ namespace Gameplay {
     using XenonEngine::InputSystem;
     using XenonPhysics::Force2D;
 
-    using XenonEngine::Render2D;
-    using XenonEngine::Render2DConfig;
+    using XenonEngine::Mesh2D;
+    using XenonEngine::Mesh2DConfig;
 
     using XenonEngine::GameObject;
     using XenonEngine::GameObjectWorld;
@@ -86,9 +86,9 @@ namespace Gameplay {
             heroVertex[2] = Vector2f(-200, 10);
             heroVertex[3] = Vector2f(-200, -10);
             Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
-            Render2DConfig render2DConfig;
+            Mesh2DConfig render2DConfig;
             render2DConfig.m_polygon2D = heroPolygon;
-            Render2D* render2D = new Render2D(ground);
+            Mesh2D* render2D = new Mesh2D(ground);
             render2D->SetConfig(&render2DConfig);
             ground->AddComponent(render2D);
 

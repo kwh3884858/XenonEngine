@@ -15,7 +15,7 @@ namespace XenonEngine
         {
             None,
             ComponentType_Transform,
-            ComponentType_Render2D,
+            ComponentType_Mesh2D,
             ComponentType_Shader,
             ComponentType_Collider2D,
             ComponentType_Rigidbody2D,

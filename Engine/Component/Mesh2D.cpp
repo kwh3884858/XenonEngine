@@ -1,6 +1,6 @@
 #include <cassert>
-#include "Render2D.h"
-#include "Engine/Primitive/Graphic2D.h"
+#include "Mesh2D.h"
+#include "Engine/Graphic/Graphic2D.h"
 #include "CrossPlatform/Polygon2D.h"
 
 #include "Engine/GameObject.h"
@@ -8,18 +8,18 @@
 
 namespace XenonEngine
 {
-    using XenonEngine::Graphic2D;
+    using Graphic::Graphic2D;
 
-    Render2D::~Render2D()
+    Mesh2D::~Mesh2D()
     {
     }
 
-    void Render2D::SetConfig(const Render2DConfig*const config)
+    void Mesh2D::SetConfig(const Mesh2DConfig*const config)
     {
         m_polygon2D = config->m_polygon2D;
     }
 
-	bool Render2D::Update()
+	bool Mesh2D::Update()
     {
         assert(m_polygon2D->m_numberOfVertex >= 3);
         Transform2D* transform = GetGameObject()->GetComponent<Transform2D>();
@@ -36,20 +36,20 @@ namespace XenonEngine
 		return true;
     }
 
-	bool Render2D::Destroy()
+	bool Mesh2D::Destroy()
 	{
 		delete m_polygon2D;
 		m_polygon2D = nullptr;
 		return true;
 	}
 
-    XenonEngine::IComponent* Render2D::Copy(GameObject*const gameObject) const
+    XenonEngine::IComponent* Mesh2D::Copy(GameObject*const gameObject) const
     {
-        Render2D* that = new Render2D(gameObject);
+        Mesh2D* that = new Mesh2D(gameObject);
         that->m_polygon2D = m_polygon2D;
         return that;
     }
 
-    ComponentType Render2D::m_type = ComponentType::ComponentType_Render2D;
+    ComponentType Mesh2D::m_type = ComponentType::ComponentType_Mesh2D;
 
 }

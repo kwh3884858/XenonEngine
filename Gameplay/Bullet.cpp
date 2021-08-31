@@ -1,7 +1,7 @@
 #include "Bullet.h"
 #include "Engine/Component/Transform2D.h"
 #include "Engine/Component/PlayerPersonality.h"
-#include "Engine/Component/Render2D.h"
+#include "Engine/Component/Mesh2D.h"
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
 #include "CrossPlatform/Polygon2D.h"
@@ -51,9 +51,9 @@ namespace Gameplay
 		heroVertex[2] = Vector2f(-5, 5);
 		heroVertex[3] = Vector2f(-5, -5);
 		Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::YELLOW, numOfVertex, heroVertex);
-		Render2DConfig render2DConfig;
+		Mesh2DConfig render2DConfig;
 		render2DConfig.m_polygon2D = heroPolygon;
-		Render2D* render2D = new Render2D(this);
+		Mesh2D* render2D = new Mesh2D(this);
 		render2D->SetConfig(&render2DConfig);
 		AddComponent(render2D);
 	}
