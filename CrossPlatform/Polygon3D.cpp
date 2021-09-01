@@ -3,9 +3,9 @@
 
 namespace CrossPlatform 
 {
-	Polygon3D::Polygon3D(int numOfPtr, Polygon3DPointer* vertexPointerList, int numOfVertex, Polygon3DVertex* vertexList):
-		m_numOfIndex(numOfPtr),
-		m_vertexIndexList(vertexPointerList),
+	Polygon3D::Polygon3D(int numOfIndex, int* vertexIndexList, int numOfVertex, Vector3f * vertexList):
+		m_numOfIndex(numOfIndex),
+		m_vertexIndexList(vertexIndexList),
 		m_numOfVertex(numOfVertex),
 		m_vertexList(vertexList)
 	{
@@ -17,6 +17,17 @@ namespace CrossPlatform
 		m_vertexIndexList = that.m_vertexIndexList;
 		m_numOfVertex = that.m_numOfVertex;
 		m_vertexList = that.m_vertexList;
+	}
+
+	const Vector3f& Polygon3D::GetVertex(int index) const
+	{
+		assert(m_vertexIndexList != nullptr);
+		assert(m_vertexList != nullptr);
+		assert(index >= 0 && index < m_numOfIndex);
+		int vertexIndex = m_vertexIndexList[index];
+		assert(vertexIndex >= 0 && vertexIndex < m_numOfVertex);
+
+		return m_vertexList[vertexIndex];
 	}
 
 	Polygon3D::~Polygon3D()
