@@ -4,6 +4,10 @@
 #include "Vector3f.h"
 
 namespace MathLab {
+	template<typename T>
+	struct Quaternion;
+
+	typedef     Quaternion<float>      Quaternionf;
 
     template<typename T>
     class Quaternion
@@ -36,9 +40,9 @@ namespace MathLab {
     };
 
     template<typename T>
-    Quaternion operator*(const Quaternion& quaternion, float scale);
+    Quaternion<T> operator*(const Quaternion<T>& quaternion, float scale);
     template<typename T>
-    Quaternion operator*(float scale, const Quaternion& quaternion);
+    Quaternion<T> operator*(float scale, const Quaternion<T>& quaternion);
 
 
     template<typename T>
@@ -96,7 +100,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Quaternion MathLab::Quaternion<T>::operator=(const Quaternion& value)
+	Quaternion<T> MathLab::Quaternion<T>::operator=(const Quaternion& value)
     {
         if (this == &value)
         {
@@ -110,7 +114,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Quaternion MathLab::Quaternion<T>::operator+(const Quaternion& value)
+	Quaternion<T> MathLab::Quaternion<T>::operator+(const Quaternion& value)
     {
         m_w += value.m_w;
         m_x += value.m_x;
@@ -119,7 +123,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Quaternion MathLab::Quaternion<T>::operator-(const Quaternion& value)
+	Quaternion<T> MathLab::Quaternion<T>::operator-(const Quaternion& value)
     {
         m_w -= value.m_w;
         m_x -= value.m_x;
@@ -128,7 +132,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Quaternion MathLab::Quaternion<T>::operator*(const Quaternion& value)
+	Quaternion<T> MathLab::Quaternion<T>::operator*(const Quaternion& value)
     {
         m_w = m_w * value.m_w - m_x * value.m_x - m_y * value.m_y - m_z * value.m_z;
         m_x = m_w * value.m_x + m_x * value.m_w + m_y * value.m_z - m_z * value.m_y;
@@ -149,21 +153,21 @@ namespace MathLab {
     }
 
     template<typename T>
-    Quaternion MathLab::Quaternion<T>::ToConjugate() const
+	Quaternion<T> MathLab::Quaternion<T>::ToConjugate() const
     {
         Quaternion result(this->m_w, -this->m_x, -this->m_y, -this->m_z);
         return result;
     }
 
     template<typename T>
-    Quaternion operator*(const Quaternion& quaternion, float scale)
+	Quaternion<T> operator*(const Quaternion<T>& quaternion, float scale)
     {
         Quaternion result(quaternion.m_w*scale, quaternion.m_x *scale, quaternion.m_y*scale, quaternion.m_z*scale);
         return result;
     }
 
     template<typename T>
-    Quaternion operator*(float scale, const Quaternion& quaternion)
+	Quaternion<T> operator*(float scale, const Quaternion<T>& quaternion)
     {
         return quaternion * scale;
     }
