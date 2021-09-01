@@ -15,6 +15,6 @@ namespace XenonEngine {
         return transform;
     }
 
-    ComponentType Transform2D::m_type = ComponentType::ComponentType_Transform;
+    ComponentType Transform2D::m_type = ComponentType::ComponentType_Transform2D;
 
 }

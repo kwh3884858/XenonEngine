@@ -123,6 +123,7 @@
     <ClCompile Include="Engine\Component\Mesh2D.cpp" />
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
+    <ClCompile Include="Engine\Component\Transform3D.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
     <ClCompile Include="Engine\GameObjectWorld.cpp" />
     <ClCompile Include="Engine\GameObjectWorldManager.cpp" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Engine\Component\Mesh3D.h" />
     <ClInclude Include="Engine\Component\PlayerPersonality.h" />
     <ClInclude Include="Engine\Component\Mesh2D.h" />
+    <ClInclude Include="Engine\Component\Transform3D.h" />
     <ClInclude Include="Engine\GameObjectWorld.h" />
     <ClInclude Include="Engine\GameObjectWorldManager.h" />
     <ClInclude Include="Engine\Graphic\Graphic3D.h" />

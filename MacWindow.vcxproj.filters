@@ -156,6 +156,9 @@
     <ClCompile Include="Engine\Component\Mesh3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\Transform3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -414,6 +417,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Mesh3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\Transform3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
