@@ -45,4 +45,6 @@ namespace XenonEngine
 		return true;
 	}
 
+	ComponentType Mesh3D::m_type = ComponentType::ComponentType_Mesh3D;
+
 }
