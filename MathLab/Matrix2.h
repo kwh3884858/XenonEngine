@@ -5,7 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 
-#include "Vector2f.h"
+#include "Vector2.h"
 namespace MathLab {
 
     template<typename T>

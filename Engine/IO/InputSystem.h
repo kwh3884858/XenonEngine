@@ -1,6 +1,6 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 
 namespace CrossPlatform
 {

@@ -9,7 +9,7 @@
 //#define INITGUID
 //#include <objbase.h> //need this one for GUIDS
 #include <dinput.h>
-#include "Mathlab/Vector2f.h"
+#include "Mathlab/Vector2.h"
 #include "CrossPlatform/Interface/IInput.h"
 
 namespace WindowInput {

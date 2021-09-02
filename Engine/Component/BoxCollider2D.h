@@ -6,7 +6,7 @@
 #pragma once
 
 #include "Collider2D.h"
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 namespace XenonEngine
 {
     using MathLab::Vector2f;

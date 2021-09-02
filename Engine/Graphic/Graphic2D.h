@@ -5,8 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 
-#include "MathLab/Vector2i.h"
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 #include "CrossPlatform/XenonManager.h"
 #include "CrossPlatform/SColorRGBA.h"
 #include "CrossPlatform/Polygon2D.h"

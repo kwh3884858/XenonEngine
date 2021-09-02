@@ -12,7 +12,7 @@
 #define ViewStruct_h
 
 #include <stdio.h>
-#include "Vector2i.h"
+#include "Vector2.h"
 namespace MathLab{
 
 class ViewStruct {

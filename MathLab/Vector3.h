@@ -4,7 +4,7 @@
 //  Created by whkong on 2021-2-28.
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 namespace MathLab {
     template<typename T>
     struct Vector3;

@@ -10,7 +10,7 @@
 #define MathLib_hpp
 
 #include "MathLab/Vector3.h"
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 namespace MathLab{
 
     float DegreeToRadians(float degree);

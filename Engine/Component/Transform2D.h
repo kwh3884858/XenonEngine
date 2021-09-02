@@ -5,7 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "IComponent.h"
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 namespace XenonEngine
 {
     class Rigidbody2D;
