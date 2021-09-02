@@ -14,6 +14,13 @@ namespace XenonEngine
     {
     }
 
+	XenonEngine::IComponent* Mesh2D::Copy(GameObject*const gameObject) const
+	{
+		Mesh2D* that = new Mesh2D(gameObject);
+		that->m_polygon2D = m_polygon2D;
+		return that;
+	}
+
     void Mesh2D::SetConfig(const Mesh2DConfig*const config)
     {
         m_polygon2D = config->m_polygon2D;
@@ -42,13 +49,6 @@ namespace XenonEngine
 		m_polygon2D = nullptr;
 		return true;
 	}
-
-    XenonEngine::IComponent* Mesh2D::Copy(GameObject*const gameObject) const
-    {
-        Mesh2D* that = new Mesh2D(gameObject);
-        that->m_polygon2D = m_polygon2D;
-        return that;
-    }
 
     ComponentType Mesh2D::m_type = ComponentType::ComponentType_Mesh2D;
 
