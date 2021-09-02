@@ -150,7 +150,6 @@
     <ClCompile Include="CrossPlatform\XenonKey.cpp" />
     <ClCompile Include="Windows\MainWindow.cpp" />
     <ClCompile Include="mathlab\MathLib.cpp" />
-    <ClCompile Include="MathLab\Vector2i.cpp" />
     <ClCompile Include="mathlab\ViewStruct.cpp" />
     <ClCompile Include="Windows\main.cpp" />
     <ClCompile Include="Windows\Sound\DirectXSound.cpp" />
@@ -229,14 +228,13 @@
     <ClInclude Include="MathLab\Matrix2.h" />
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Quaternion.h" />
-    <ClInclude Include="MathLab\Vector2f.h" />
+    <ClInclude Include="MathLab\Vector2.h" />
     <ClInclude Include="MathLab\Vector3.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
     <ClInclude Include="Windows\Input\DirectXInput.h" />
     <ClInclude Include="Windows\MainWindow.h" />
     <ClInclude Include="mathlab\MathLib.h" />
-    <ClInclude Include="MathLab\Vector2i.h" />
     <ClInclude Include="mathlab\ViewStruct.h" />
     <ClInclude Include="Windows\BaseWindow.h" />
     <ClInclude Include="Windows\Resources\resource.h" />

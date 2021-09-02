@@ -16,6 +16,7 @@ namespace MathLab {
     template<typename T>
     struct Vector2;
 
+    typedef Vector2<int> Vector2i;
     typedef Vector2<float> Vector2f;
 
     template<typename T>

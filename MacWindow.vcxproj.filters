@@ -54,9 +54,6 @@
     <ClCompile Include="CrossPlatform\SColorRGB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MathLab\Vector2i.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Windows\File\FileReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -248,9 +245,6 @@
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MathLab\Vector2i.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CrossPlatform\EngineConfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -282,9 +276,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrossPlatform\Polygon2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MathLab\Vector2f.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Algorithms\String.h">
@@ -414,6 +405,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\Transform3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLab\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
