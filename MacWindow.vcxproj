@@ -143,6 +143,12 @@
     <ClCompile Include="Gameplay\Bullet.cpp" />
     <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="Gameplay\Player.cpp" />
+    <ClCompile Include="Library\imgui\imgui.cpp" />
+    <ClCompile Include="Library\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Library\imgui\imgui_impl_dx9.cpp" />
+    <ClCompile Include="Library\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Library\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
@@ -187,6 +193,7 @@
     <ClInclude Include="Engine\Component\PlayerPersonality.h" />
     <ClInclude Include="Engine\Component\Mesh2D.h" />
     <ClInclude Include="Engine\Component\Transform3D.h" />
+    <ClInclude Include="Engine\Editor\EditorGUI.h" />
     <ClInclude Include="Engine\GameObjectWorld.h" />
     <ClInclude Include="Engine\GameObjectWorldManager.h" />
     <ClInclude Include="Engine\Graphic\Graphic3D.h" />
@@ -219,6 +226,14 @@
     <ClInclude Include="Gameplay\Bullet.h" />
     <ClInclude Include="Gameplay\Enemy.h" />
     <ClInclude Include="Gameplay\Player.h" />
+    <ClInclude Include="Library\imgui\imconfig.h" />
+    <ClInclude Include="Library\imgui\imgui.h" />
+    <ClInclude Include="Library\imgui\imgui_impl_dx9.h" />
+    <ClInclude Include="Library\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Library\imgui\imgui_internal.h" />
+    <ClInclude Include="Library\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Library\imgui\imstb_textedit.h" />
+    <ClInclude Include="Library\imgui\imstb_truetype.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />
     <ClInclude Include="macos\MacDrawer.h" />
@@ -231,6 +246,7 @@
     <ClInclude Include="MathLab\Vector2.h" />
     <ClInclude Include="MathLab\Vector3.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
+    <ClInclude Include="Windows\Editor\EditorGUI.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
     <ClInclude Include="Windows\Input\DirectXInput.h" />
     <ClInclude Include="Windows\MainWindow.h" />
