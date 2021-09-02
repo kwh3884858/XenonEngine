@@ -1,12 +1,25 @@
+//  Graphic3D.h
+//  XenonEngine
+//
+//  Created by whkong on 2021-8-31.
+//  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
-namespace Graphic
+
+#include "CrossPlatform/XenonManager.h"
+
+namespace CrossPlatform 
 {
-	class Graphic3D
+	class Polygon3D;
+}
+namespace XenonEngine
+{
+	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
 	public:
-		Graphic3D();
-		~Graphic3D();
+		virtual bool Initialize() override { return true; }
+		virtual bool Shutdown() override { return true; }
 
+		void RenderPolygon3D(const CrossPlatform::Polygon3D& polygon)const;
 	private:
 
 	};

@@ -1,11 +1,4 @@
 #include "Graphic3D.h"
-namespace Graphic
+namespace XenonEngine
 {
-	Graphic3D::Graphic3D()
-	{
-	}
-
-	Graphic3D::~Graphic3D()
-	{
-	}
 }
