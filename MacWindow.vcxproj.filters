@@ -54,9 +54,6 @@
     <ClCompile Include="CrossPlatform\SColorRGB.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MathLab\Vector3f.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MathLab\Vector2i.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -249,9 +246,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CrossPlatform\Primitive\Vertex2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MathLab\Vector3f.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MathLab\Vector2i.h">

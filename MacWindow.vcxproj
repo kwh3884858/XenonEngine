@@ -144,7 +144,6 @@
     <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="Gameplay\Player.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
-    <ClCompile Include="MathLab\Vector3f.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
     <ClCompile Include="Windows\Input\DirectXInput.cpp" />
@@ -231,7 +230,6 @@
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Quaternion.h" />
     <ClInclude Include="MathLab\Vector2f.h" />
-    <ClInclude Include="MathLab\Vector3f.h" />
     <ClInclude Include="MathLab\Vector3.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
