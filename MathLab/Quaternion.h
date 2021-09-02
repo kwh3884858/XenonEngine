@@ -18,7 +18,7 @@ namespace MathLab {
 
         Quaternion();
         Quaternion(float w, float x, float y, float z);
-        Quaternion(const Quaternion& value);
+        Quaternion(const Vector3f& value);
         Quaternion(const Vector3<T>& normal, T degree);
         Quaternion(const Vector3<T>& Eular);
 
@@ -46,11 +46,11 @@ namespace MathLab {
 
 
     template<typename T>
-    MathLab::Quaternion<T>::Quaternion() :
+    MathLab::Quaternion<T>::Quaternion():
         m_w(0),
         m_x(0),
         m_y(0),
-        m_z(0),
+        m_z(0)
     {
     }
 
@@ -59,7 +59,7 @@ namespace MathLab {
         m_w(w),
         m_x(x),
         m_y(y),
-        m_z(z),
+        m_z(z)
     {
     }
 
