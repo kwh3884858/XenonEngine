@@ -8,7 +8,7 @@
 
 namespace XenonEngine
 {
-    using Graphic::Graphic2D;
+    using XenonEngine::Graphic2D;
 
     Mesh2D::~Mesh2D()
     {

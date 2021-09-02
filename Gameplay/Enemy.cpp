@@ -10,7 +10,7 @@
 #include "Engine/GameObjectWorld.h"
 #include "Engine/Physics/Force2D.h"
 
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 #include "Gameplay/Bullet.h"
 
 namespace Gameplay

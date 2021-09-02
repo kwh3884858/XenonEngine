@@ -2,7 +2,7 @@
 #include "CrossPlatform/Interface/IDrawerSurface.h"
 
 #include "MathLab/MathLib.h"
-#include "MathLab/Vector2f.h"
+#include "MathLab/Vector2.h"
 #include <cstdio>
 
 #include <assert.h>
@@ -12,7 +12,7 @@ using MathLab::Vector2f;
 //using MathLab::operator+;
 //using MathLab::operator-;
 
-namespace Graphic
+namespace XenonEngine
 {
     void Graphic2D::SetConfig(const Primitive2DConfig*const config)
     {

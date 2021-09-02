@@ -35,7 +35,7 @@ namespace XenonEngine
 		//		m_polygon2D->m_color
 		//	);
 		//}
-		//return true;
+		return true;
 	}
 
 	bool Mesh3D::Destroy()

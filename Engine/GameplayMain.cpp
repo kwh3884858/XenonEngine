@@ -1,6 +1,6 @@
 #include "Engine/GameplayMain.h"
 
-#include "Engine/Primitive/Graphic2D.h"
+#include "Engine/Graphic/Graphic2D.h"
 
 #include "Engine/Physics/Force2D.h"
 #include "Engine/VirtualMachine/XenonCompiler.h"
@@ -12,6 +12,7 @@
 
 #include "MathLab/Vector3.h"
 #include <cmath> // sin, cos
+#include <cstdio> // printf
 
 #include "Engine/GameObjectWorldManager.h"
 #include "Engine/GameObjectWorld.h"

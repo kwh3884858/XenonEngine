@@ -1,7 +1,6 @@
 #pragma once
 #include <cmath>
 #include "MathLib.h"
-#include "Vector3f.h"
 
 namespace MathLab {
 	template<typename T>
@@ -18,7 +17,7 @@ namespace MathLab {
 
         Quaternion();
         Quaternion(float w, float x, float y, float z);
-        Quaternion(const Vector3f& value);
+        Quaternion(const Quaternion& value);
         Quaternion(const Vector3<T>& normal, T degree);
         Quaternion(const Vector3<T>& Eular);
 
@@ -63,14 +62,14 @@ namespace MathLab {
     {
     }
 
-    template<typename T>
-    MathLab::Quaternion<T>::Quaternion(const Quaternion& value)
-    {
-        m_w = value.m_w;
-        m_x = value.m_x;
-        m_y = value.m_y;
-        m_z = value.m_z;
-    }
+	template<typename T>
+	MathLab::Quaternion<T>::Quaternion(const Quaternion& value)
+	{
+		m_w = value.m_w;
+		m_x = value.m_x;
+		m_y = value.m_y;
+		m_z = value.m_z;
+	}
 
     template<typename T>
     MathLab::Quaternion<T>::Quaternion(const Vector3<T>& normal, T degree)

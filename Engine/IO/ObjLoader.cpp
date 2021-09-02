@@ -7,7 +7,6 @@
 namespace XenonEngine
 {
 	using Algorithm::String;
-	using CrossPlatform::Polygon3DPointer;
 	using CrossPlatform::Polygon3D;
 	using MathLab::Vector3f;
 
