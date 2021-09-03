@@ -115,6 +115,7 @@
     <ClCompile Include="Algorithms\StringSort.cpp" />
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
     <ClCompile Include="CrossPlatform\Polygon3D.cpp" />
+    <ClCompile Include="Engine\Component\Camera3D.cpp" />
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
@@ -184,7 +185,7 @@
     <ClInclude Include="CrossPlatform\XenonFile.h" />
     <ClInclude Include="Algorithms\DeterministicFiniteAutomaton.h" />
     <ClInclude Include="CrossPlatform\XenonKey.h" />
-    <ClInclude Include="Engine\Camera\Camera3D.h" />
+    <ClInclude Include="Engine\Component\Camera3D.h" />
     <ClInclude Include="Engine\Component\BoxCollider2D.h" />
     <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />
