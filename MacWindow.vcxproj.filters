@@ -33,9 +33,6 @@
     <ClCompile Include="Windows\Timer\StoryTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MathLab\Matrix3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Windows\WindowDrawer\DirectXDrawDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

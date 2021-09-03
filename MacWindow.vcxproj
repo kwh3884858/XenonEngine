@@ -149,7 +149,6 @@
     <ClCompile Include="Library\imgui\DX9\imgui_impl_win32.cpp" />
     <ClCompile Include="Library\imgui\imgui_tables.cpp" />
     <ClCompile Include="Library\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="MathLab\Matrix3.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
     <ClCompile Include="Windows\Input\DirectXInput.cpp" />
