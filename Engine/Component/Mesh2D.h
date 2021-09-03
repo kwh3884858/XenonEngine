@@ -26,7 +26,7 @@ namespace XenonEngine
 
         Mesh2D(GameObject* gameobject) :
             IComponent(gameobject) {}
-        virtual ~Mesh2D()override;
+		virtual ~Mesh2D()override {}
         virtual ComponentType GetComponentType() const override { return m_type; };
         virtual IComponent* Copy(GameObject*const gameObject)const override;
 

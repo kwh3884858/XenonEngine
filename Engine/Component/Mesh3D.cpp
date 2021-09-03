@@ -3,10 +3,6 @@
 namespace XenonEngine
 {
 
-	Mesh3D::~Mesh3D()
-	{
-	}
-
 	XenonEngine::IComponent* Mesh3D::Copy(GameObject*const gameObject) const
 	{
 		Mesh3D* that = new Mesh3D(gameObject);

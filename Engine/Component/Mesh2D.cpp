@@ -10,10 +10,6 @@ namespace XenonEngine
 {
     using XenonEngine::Graphic2D;
 
-    Mesh2D::~Mesh2D()
-    {
-    }
-
 	XenonEngine::IComponent* Mesh2D::Copy(GameObject*const gameObject) const
 	{
 		Mesh2D* that = new Mesh2D(gameObject);
