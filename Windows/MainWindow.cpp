@@ -16,7 +16,7 @@
 #include <TCHAR.H>
 #include <assert.h>
 
-#include "Engine/Primitive/Graphic2D.h"
+#include "Engine/Graphic/Graphic2D.h"
 #include "Engine/GameplayMain.h"
 
 #include "Engine/FileManager/FileManager.h"
@@ -275,6 +275,12 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
     COLORREF colorGreen = RGB(0, 255, 0);
     COLORREF colorBlue = RGB(0, 0, 255);
 
+	//TODO: only work after imgui is enable.
+	//if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+	//{
+	//	return true;
+	//}
+
     switch (uMSG)
     {
     case WM_COMMAND:
@@ -332,8 +338,23 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
     }
     break;
 
-    // WM_QUIT
+	//TODO: only work after imgui is enable.
+	//case WM_SIZE:
+	//	if (g_pd3dDevice != NULL && wParam != SIZE_MINIMIZED)
+	//	{
+	//		g_d3dpp.BackBufferWidth = LOWORD(lParam);
+	//		g_d3dpp.BackBufferHeight = HIWORD(lParam);
+	//		ResetDevice();
+	//	}
+	//	return 0;
 
+	//case WM_SYSCOMMAND:
+	//	if ((wParam & 0xfff0) == SC_KEYMENU) // Disable ALT application menu
+	//		return 0;
+	//	break;
+
+
+    // WM_QUIT
     default:
         return DefWindowProc(mWnd, uMSG, wParam, lParam);
     }
