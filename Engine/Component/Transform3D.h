@@ -30,12 +30,13 @@ namespace XenonEngine
 		void SetPosition(const Vector3f& position) { m_position = position; }
 		const Vector3f& GetPosition()const { return m_position; }
 
-		const Quaternionf& GetOrientation()const { return m_orientation; }
+		const Quaternionf GetOrientation()const;
+		const Vector3f& GetRotation()const { return m_orientation; }
 
 		static ComponentType m_type;
 	private:
 		bool m_isModified = false;
 		Vector3f m_position;
-		Quaternionf m_orientation;
+		Vector3f m_orientation;
 	};
 }
