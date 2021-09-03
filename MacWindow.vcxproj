@@ -145,8 +145,8 @@
     <ClCompile Include="Gameplay\Player.cpp" />
     <ClCompile Include="Library\imgui\imgui.cpp" />
     <ClCompile Include="Library\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Library\imgui\imgui_impl_dx9.cpp" />
-    <ClCompile Include="Library\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="Library\imgui\DX9\imgui_impl_dx9.cpp" />
+    <ClCompile Include="Library\imgui\DX9\imgui_impl_win32.cpp" />
     <ClCompile Include="Library\imgui\imgui_tables.cpp" />
     <ClCompile Include="Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="MathLab\Matrix3.cpp" />
@@ -228,8 +228,8 @@
     <ClInclude Include="Gameplay\Player.h" />
     <ClInclude Include="Library\imgui\imconfig.h" />
     <ClInclude Include="Library\imgui\imgui.h" />
-    <ClInclude Include="Library\imgui\imgui_impl_dx9.h" />
-    <ClInclude Include="Library\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="Library\imgui\DX9\imgui_impl_dx9.h" />
+    <ClInclude Include="Library\imgui\DX9\imgui_impl_win32.h" />
     <ClInclude Include="Library\imgui\imgui_internal.h" />
     <ClInclude Include="Library\imgui\imstb_rectpack.h" />
     <ClInclude Include="Library\imgui\imstb_textedit.h" />
