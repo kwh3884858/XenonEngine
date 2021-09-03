@@ -458,6 +458,12 @@
     <ClInclude Include="Engine\Component\Camera3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MathLab\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MathLab\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

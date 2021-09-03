@@ -240,9 +240,11 @@
     <ClInclude Include="macos\UICanvas.h" />
     <ClInclude Include="macos\ViewController.h" />
     <ClInclude Include="MathLab\MathLabDefinition.h" />
+    <ClInclude Include="MathLab\Matrix.h" />
     <ClInclude Include="MathLab\Matrix2.h" />
     <ClInclude Include="MathLab\Matrix3.h" />
     <ClInclude Include="MathLab\Quaternion.h" />
+    <ClInclude Include="MathLab\Vector.h" />
     <ClInclude Include="MathLab\Vector2.h" />
     <ClInclude Include="MathLab\Vector3.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
