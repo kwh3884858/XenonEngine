@@ -19,7 +19,7 @@ namespace CrossPlatform
 		m_vertexList = that.m_vertexList;
 	}
 
-	const Vector3f& Polygon3D::GetVertex(int index) const
+	const Vector3f& Polygon3D::operator[](int index) const
 	{
 		assert(m_vertexIndexList != nullptr);
 		assert(m_vertexList != nullptr);

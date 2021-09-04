@@ -12,7 +12,8 @@ namespace CrossPlatform {
 		Polygon3D(int numOfPtr, int* vertexPointerList, int numOfVertex, Vector3f* vertexList);
 		Polygon3D(const Polygon3D& that);
 
-		const Vector3f& GetVertex(int index)const;
+		int Count()const { return m_numOfIndex; }
+		const Vector3f& operator[](int index)const;
 		~Polygon3D();
 
 	private:
