@@ -6,6 +6,7 @@
 #pragma once
 
 #include "CrossPlatform/XenonManager.h"
+#include "Engine/Component/Transform3D.h"
 
 namespace CrossPlatform 
 {
@@ -19,7 +20,7 @@ namespace XenonEngine
 		virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
 
-		void RenderPolygon3D(const CrossPlatform::Polygon3D& polygon)const;
+		void RenderPolygon3D(const CrossPlatform::Polygon3D& polygon, const Transform3D& tranform)const;
 	private:
 
 	};
