@@ -10,6 +10,7 @@
 
 namespace XenonEngine
 {
+	//Left hand coordinate
 	class Camera3D :public IComponent
 	{
 	public:

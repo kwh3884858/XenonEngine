@@ -12,8 +12,11 @@ namespace XenonEngine
 
 	MathLab::TMatrix4X3f Camera3D::GetCameraTransform() const
 	{
+		// u coordinate = right vector
 		Vector3f rightVector = m_lookAt.Cross(Vector3f(0, 1, 0));
+		// v coordinate = up vector
 		Vector3f upVector = rightVector.Cross(m_lookAt);
+		// n coordinate = normal vector
 		return TMatrix4X3f(
 			std::initializer_list<float>{
 				rightVector.x, upVector.x, m_lookAt.x,
