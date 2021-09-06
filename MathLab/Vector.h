@@ -3,73 +3,73 @@
 namespace MathLab
 {
 	template<typename T, int COUNT>
-	struct Vector;
+	struct TVector;
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> operator+(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+	TVector<T, COUNT> operator+(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
 	template<typename T, int COUNT>
-	Vector<T, COUNT> operator-(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+	TVector<T, COUNT> operator-(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
 	template<typename T, int COUNT>
-	Vector<T, COUNT> operator*(const T& lhs, const Vector<T, COUNT>& value);
+	TVector<T, COUNT> operator*(const T& lhs, const TVector<T, COUNT>& value);
 
 	template<typename T, int COUNT>
-	void SwapVector(Vector<T, COUNT>& vectorA, Vector<T, COUNT>& vectorB);
+	void SwapVector(TVector<T, COUNT>& vectorA, TVector<T, COUNT>& vectorB);
 
 	template<typename T, int COUNT>
-	class Vector
+	class TVector
 	{
 	public:
 		T* m_vector;
 
 	public:
-		static Vector Zero;
+		static TVector Zero;
 
-		friend void SwapVector<T, COUNT>(Vector<T, COUNT>& vectorA, Vector<T, COUNT>& vectorB);
+		friend void SwapVector<T, COUNT>(TVector<T, COUNT>& vectorA, TVector<T, COUNT>& vectorB);
 
-		friend Vector<T, COUNT> operator+ <>(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
-		friend Vector<T, COUNT> operator- <>(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+		friend TVector<T, COUNT> operator+ <>(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
+		friend TVector<T, COUNT> operator- <>(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
 		
 		T& operator[](int index);
 		const T& operator[](int index)const;
-		Vector operator-()const;
-		Vector& operator=(const Vector& that);
-		Vector& operator+=(const Vector& that);
-		Vector& operator-=(const Vector& that);
-		Vector& operator*=(T value);
+		TVector operator-()const;
+		TVector& operator=(const TVector& that);
+		TVector& operator+=(const TVector& that);
+		TVector& operator-=(const TVector& that);
+		TVector& operator*=(T value);
 
-		Vector operator*(T value)const;
-		Vector operator/(T value)const;
+		TVector operator*(T value)const;
+		TVector operator/(T value)const;
 
-		bool operator==(const Vector& that);
+		bool operator==(const TVector& that);
 
-		T Dot(const Vector& that)const;
+		T Dot(const TVector& that)const;
 		//T Cross(const Vector& that)const;
 
-		Vector();
-		Vector(const Vector& that);
-		~Vector();
+		TVector();
+		TVector(const TVector& that);
+		~TVector();
 		
 		inline int Count()const { return COUNT; }
-		Vector Normalize()const;
+		TVector Normalize()const;
 		T Magnitude()const;
 		T DoubleMagnitude()const;
 	};
 
 	template<typename T, int COUNT>
-	__declspec(selectany) Vector<T, COUNT> Vector<T, COUNT>::Zero = Vector<T, COUNT>();
+	__declspec(selectany) TVector<T, COUNT> TVector<T, COUNT>::Zero = TVector<T, COUNT>();
 
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>::Vector()
+	TVector<T, COUNT>::TVector()
 	{
 		m_vector = new T[COUNT];
 		memset(m_vector, 0, COUNT * sizeof(T));
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>::Vector(const Vector& that)
+	TVector<T, COUNT>::TVector(const TVector& that)
 	{
-		Vector();
+		TVector();
 		for (int i = 0; i < that.Count(); i++)
 		{
 			m_vector[i] = that[i];
@@ -77,29 +77,29 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>::~Vector()
+	TVector<T, COUNT>::~TVector()
 	{
 		delete[] m_vector;
 		m_vector = nullptr;
 	}
 
 	template<typename T, int COUNT>
-	T& MathLab::Vector<T, COUNT>::operator[](int index)
+	T& MathLab::TVector<T, COUNT>::operator[](int index)
 	{
-		return const_cast<T&>(static_cast<const Vector<T, COUNT>&>(*this)[index]);
+		return const_cast<T&>(static_cast<const TVector<T, COUNT>&>(*this)[index]);
 	}
 
 	template<typename T, int COUNT>
-	const T& MathLab::Vector<T, COUNT>::operator[](int index) const
+	const T& MathLab::TVector<T, COUNT>::operator[](int index) const
 	{
 		assert(index >= 0 && index < COUNT);
 		return m_vector[index];
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> MathLab::Vector<T, COUNT>::operator-() const
+	TVector<T, COUNT> MathLab::TVector<T, COUNT>::operator-() const
 	{
-		Vector<T, COUNT> result;
+		TVector<T, COUNT> result;
 		for (int i = 0; i < Count(); i++)
 		{
 			result[i] = -m_vector[i];
@@ -108,7 +108,7 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>& Vector<T, COUNT>::operator=(const Vector& that)
+	TVector<T, COUNT>& TVector<T, COUNT>::operator=(const TVector& that)
 	{
 		if (this == &that)
 		{
@@ -123,7 +123,7 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>& Vector<T, COUNT>::operator+=(const Vector& that)
+	TVector<T, COUNT>& TVector<T, COUNT>::operator+=(const TVector& that)
 	{
 		assert(Count() == that.Count());
 		for (int i = 0; i < that.Count(); i++)
@@ -134,7 +134,7 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>& Vector<T, COUNT>::operator-=(const Vector& that)
+	TVector<T, COUNT>& TVector<T, COUNT>::operator-=(const TVector& that)
 	{
 		assert(Count() == that.Count());
 		for (int i = 0; i < that.Count(); i++)
@@ -146,7 +146,7 @@ namespace MathLab
 
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT>& MathLab::Vector<T, COUNT>::operator*=(T value)
+	TVector<T, COUNT>& MathLab::TVector<T, COUNT>::operator*=(T value)
 	{
 		for (int i = 0; i < Count(); i++)
 		{
@@ -156,9 +156,9 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> MathLab::Vector<T, COUNT>::operator*(T value)const
+	TVector<T, COUNT> MathLab::TVector<T, COUNT>::operator*(T value)const
 	{
-		Vector<T, COUNT> vector(*this);
+		TVector<T, COUNT> vector(*this);
 		for (int i = 0; i < Count(); i++)
 		{
 			vector[i] += value;
@@ -167,9 +167,9 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> MathLab::Vector<T, COUNT>::operator/(T value)const
+	TVector<T, COUNT> MathLab::TVector<T, COUNT>::operator/(T value)const
 	{
-		Vector<T, COUNT> vector(*this);
+		TVector<T, COUNT> vector(*this);
 		for (int i = 0; i < Count(); i++)
 		{
 			vector[i] /= value;
@@ -178,7 +178,7 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	bool MathLab::Vector<T, COUNT>::operator==(const Vector& that)
+	bool MathLab::TVector<T, COUNT>::operator==(const TVector& that)
 	{
 		assert(Count() == that.Count());
 		for (int i = 0 ; i < Count() i ++)
@@ -192,7 +192,7 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	T MathLab::Vector<T, COUNT>::Dot(const Vector& that) const
+	T MathLab::TVector<T, COUNT>::Dot(const TVector& that) const
 	{
 		assert(Count() == that.Count());
 		T result =0;
@@ -204,40 +204,40 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> operator+(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs)
+	TVector<T, COUNT> operator+(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs)
 	{
-		Vector<T, COUNT> vector(lhs);
+		TVector<T, COUNT> vector(lhs);
 		vector += rhs;
 		return vector;
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> operator-(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs)
+	TVector<T, COUNT> operator-(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs)
 	{
-		Vector<T, COUNT> vector(lhs);
+		TVector<T, COUNT> vector(lhs);
 		vector -= rhs;
 		return  vector;
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> operator*(const T& lhs, const Vector<T, COUNT>& rhs)
+	TVector<T, COUNT> operator*(const T& lhs, const TVector<T, COUNT>& rhs)
 	{
 		return value * rhs;
 	}
 
 	template<typename T, int COUNT>
-	void SwapVector(Vector<T, COUNT>& vectorA, Vector<T, COUNT>& vectorB)
+	void SwapVector(TVector<T, COUNT>& vectorA, TVector<T, COUNT>& vectorB)
 	{
-		Vector<T, COUNT> temp(vectorA);
+		TVector<T, COUNT> temp(vectorA);
 		vectorA = vectorB;
 		vectorB = temp;
 	}
 
 	template<typename T, int COUNT>
-	Vector<T, COUNT> MathLab::Vector<T, COUNT>::Normalize() const
+	TVector<T, COUNT> MathLab::TVector<T, COUNT>::Normalize() const
 	{
 		T magnitide = Magnitude();
-		Vector<T, COUNT> result;
+		TVector<T, COUNT> result;
 		for (int i = 0; i < Count() i++)
 		{
 			result[i] = m_vector[i] / magnitide;
@@ -246,13 +246,13 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	T MathLab::Vector<T, COUNT>::Magnitude() const
+	T MathLab::TVector<T, COUNT>::Magnitude() const
 	{
 		return static_cast<T>(sqrt(DoubleMagnitude()));
 	}
 
 	template<typename T, int COUNT>
-	T MathLab::Vector<T, COUNT>::DoubleMagnitude() const
+	T MathLab::TVector<T, COUNT>::DoubleMagnitude() const
 	{
 		return this->Dot(*this);
 	}

@@ -10,37 +10,38 @@
 
 namespace MathLab {
 	template<typename T, int ROW, int COLUMN>
-	struct Matrix;
+	struct TMatrix;
 
+	typedef TMatrix<float, 4, 3> TMatrix4X3f;
 
 	template<typename T, int ROW, int COLUMN>
-	struct Matrix final {
+	struct TMatrix final {
 
 	public:
-		Matrix();
-		Matrix(std::initializer_list<T> param);
-		Matrix(const Matrix& that);
-		~Matrix();
+		TMatrix();
+		TMatrix(std::initializer_list<T> param);
+		TMatrix(const TMatrix& that);
+		~TMatrix();
 
 		T& operator[](int index);
 		const T& operator[](int index)const;
 	private:
-		Vector<T,COLUMN>* m_matrix;
+		TVector<T,COLUMN>* m_matrix;
 	};
 
 	template<typename T, int ROW, int COLUMN>
-	Vector<T, COLUMN> operator*(const Vector<T, ROW>& lValue, const Matrix<T, ROW, COLUMN>& rValue);
+	TVector<T, COLUMN> operator*(const TVector<T, ROW>& lValue, const TMatrix<T, ROW, COLUMN>& rValue);
 
 	template<typename T, int ROW, int COLUMN>
-	MathLab::Matrix<T, ROW, COLUMN>::Matrix()
+	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix()
 	{
 		m_content = new T[ROW];
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	MathLab::Matrix<T, ROW, COLUMN>::Matrix(const Matrix& that)
+	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(const TMatrix& that)
 	{
-		Matrix();
+		TMatrix();
 		for (int i = 0; i < ROW; i++)
 		{
 			(*this)[i] = that[i];
@@ -48,9 +49,9 @@ namespace MathLab {
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	MathLab::Matrix<T, ROW, COLUMN>::Matrix(std::initializer_list<T> param)
+	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(std::initializer_list<T> param)
 	{
-		Matrix();
+		TMatrix();
 		for (int i = 0;i < ROW*COLUMN; i++)
 		{
 			m_content[i] = param[i];
@@ -58,23 +59,25 @@ namespace MathLab {
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	Matrix<T, ROW, COLUMN>::~Matrix()
+	TMatrix<T, ROW, COLUMN>::~TMatrix()
 	{
 		delete[] m_matrix;
 		m_matrix = nullptr;
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	T& MathLab::Matrix<T, ROW, COLUMN>::operator[](int index)
+	T& MathLab::TMatrix<T, ROW, COLUMN>::operator[](int index)
 	{
-		return const_cast<T&>(static_cast<const Matrix<T, COUNT, COLUMN>&>(*this)[index]);
+		return const_cast<T&>(static_cast<const TMatrix<T, ROW, COLUMN>&>(*this)[index]);
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	const T& MathLab::Matrix<T, ROW, COLUMN>::operator[](int index) const
+	const T& MathLab::TMatrix<T, ROW, COLUMN>::operator[](int index) const
 	{
-		assert(index >= 0 && index < COUNT);
-		return m_vector[index];
+		assert(index >= 0 && index < ROW* COLUMN);
+		int row = index / COLUMN;
+		int column = index % COLUMN;
+		return m_matrix[row][column];
 	}
 
 	//template<typename T, int ROW, int COLUMN>
@@ -103,9 +106,9 @@ namespace MathLab {
 	//}
 
 	template<typename T, int ROW, int COLUMN>
-	Vector<T, COLUMN> operator*(const Vector<T, ROW>& lValue, const Matrix<T, ROW, COLUMN>& rValue)
+	TVector<T, COLUMN> operator*(const TVector<T, ROW>& lValue, const TMatrix<T, ROW, COLUMN>& rValue)
 	{
-		Vector<T, COLUMN> result;
+		TVector<T, COLUMN> result;
 		for (int i = 0; i < COLUMN; i++)
 		{
 			for (int j = 0; j < ROW; j++)
