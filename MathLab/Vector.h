@@ -3,216 +3,256 @@
 namespace MathLab
 {
 	template<typename T, int COUNT>
+	struct Vector;
+
+	template<typename T, int COUNT>
+	Vector<T, COUNT> operator+(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+	template<typename T, int COUNT>
+	Vector<T, COUNT> operator-(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+	template<typename T, int COUNT>
+	Vector<T, COUNT> operator*(const T& lhs, const Vector<T, COUNT>& value);
+
+	template<typename T, int COUNT>
+	void SwapVector(Vector<T, COUNT>& vectorA, Vector<T, COUNT>& vectorB);
+
+	template<typename T, int COUNT>
 	class Vector
 	{
 	public:
-		T* m_content;
+		T* m_vector;
 
 	public:
 		static Vector Zero;
 
-		friend void SwapVector<T>(Vector<T>& vectorA, Vector<T>& vectorB);
-		friend bool LessY<T>(const Vector<T>& origin, const Vector<T>& compare);
+		friend void SwapVector<T, COUNT>(Vector<T, COUNT>& vectorA, Vector<T, COUNT>& vectorB);
 
-		friend Vector<T> operator+ <>(const Vector<T>& v1, const Vector<T>& v2);
-		friend Vector<T> operator- <>(const Vector<T>& v1, const Vector<T>& v2);
-
+		friend Vector<T, COUNT> operator+ <>(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+		friend Vector<T, COUNT> operator- <>(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs);
+		
+		T& operator[](int index);
+		const T& operator[](int index)const;
 		Vector operator-()const;
-		Vector& operator=(const Vector& value);
-		Vector& operator+=(const Vector& value);
-		Vector& operator-=(const Vector& value);
+		Vector& operator=(const Vector& that);
+		Vector& operator+=(const Vector& that);
+		Vector& operator-=(const Vector& that);
 		Vector& operator*=(T value);
 
 		Vector operator*(T value)const;
 		Vector operator/(T value)const;
 
-		bool operator==(const Vector& value);
+		bool operator==(const Vector& that);
 
-		T Dot(const Vector& vec)const;
-		T Cross(const Vector& vec)const;
+		T Dot(const Vector& that)const;
+		//T Cross(const Vector& that)const;
 
 		Vector();
-		Vector(T ax, T ay);
-		Vector(const Vector&);
+		Vector(const Vector& that);
 		~Vector();
-
-		void Swap();
+		
+		inline int Count()const { return COUNT; }
 		Vector Normalize()const;
 		T Magnitude()const;
 		T DoubleMagnitude()const;
 	};
 
+	template<typename T, int COUNT>
+	__declspec(selectany) Vector<T, COUNT> Vector<T, COUNT>::Zero = Vector<T, COUNT>();
 
-	template<typename T>
-	__declspec(selectany) Vector2<T> Vector2<T>::Zero = Vector2f(0, 0);
 
-
-	template<typename T>
-	Vector2<T>::Vector2()
+	template<typename T, int COUNT>
+	Vector<T, COUNT>::Vector()
 	{
-		x = 0;
-		y = 0;
+		m_vector = new T[COUNT];
+		memset(m_vector, 0, COUNT * sizeof(T));
 	}
 
-	template<typename T>
-	Vector2<T>::Vector2(T ax, T ay)
+	template<typename T, int COUNT>
+	Vector<T, COUNT>::Vector(const Vector& that)
 	{
-		x = ax;
-		y = ay;
+		Vector();
+		for (int i = 0; i < that.Count(); i++)
+		{
+			m_vector[i] = that[i];
+		}
 	}
 
-	template<typename T>
-	Vector2<T>::Vector2(const Vector2& para)
+	template<typename T, int COUNT>
+	Vector<T, COUNT>::~Vector()
 	{
-		this->x = para.x;
-		this->y = para.y;
+		delete[] m_vector;
+		m_vector = nullptr;
 	}
 
-	template<typename T>
-	Vector2<T>::~Vector2()
+	template<typename T, int COUNT>
+	T& MathLab::Vector<T, COUNT>::operator[](int index)
 	{
+		return const_cast<T&>(static_cast<const Vector<T, COUNT>&>(*this)[index]);
 	}
 
-	template<typename T>
-	Vector2<T> MathLab::Vector2<T>::operator-() const
+	template<typename T, int COUNT>
+	const T& MathLab::Vector<T, COUNT>::operator[](int index) const
 	{
-		Vector2 result(-this->x, -this->y);
+		assert(index >= 0 && index < COUNT);
+		return m_vector[index];
+	}
+
+	template<typename T, int COUNT>
+	Vector<T, COUNT> MathLab::Vector<T, COUNT>::operator-() const
+	{
+		Vector<T, COUNT> result;
+		for (int i = 0; i < Count(); i++)
+		{
+			result[i] = -m_vector[i];
+		}
 		return result;
 	}
 
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator=(const Vector2& value)
+	template<typename T, int COUNT>
+	Vector<T, COUNT>& Vector<T, COUNT>::operator=(const Vector& that)
 	{
-		if (this == &value)
+		if (this == &that)
 		{
 			return *this;
 		}
-		this->x = value.x;
-		this->y = value.y;
+		assert(Count() == that.Count());
+		for (int i = 0; i < that.Count(); i++)
+		{
+			m_vector[i] = that[i];
+		}
 		return *this;
 	}
 
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator+=(const Vector2& value)
+	template<typename T, int COUNT>
+	Vector<T, COUNT>& Vector<T, COUNT>::operator+=(const Vector& that)
 	{
-		this->x += value.x;
-		this->y += value.y;
+		assert(Count() == that.Count());
+		for (int i = 0; i < that.Count(); i++)
+		{
+			m_vector[i] += that[i];
+		}
 		return *this;
 	}
 
-	template<typename T>
-	Vector2<T>& Vector2<T>::operator-=(const Vector2& value)
+	template<typename T, int COUNT>
+	Vector<T, COUNT>& Vector<T, COUNT>::operator-=(const Vector& that)
 	{
-		this->x -= value.x;
-		this->y -= value.y;
+		assert(Count() == that.Count());
+		for (int i = 0; i < that.Count(); i++)
+		{
+			m_vector[i] -= that[i];
+		}
 		return *this;
 	}
 
 
-	template<typename T>
-	Vector2<T>& MathLab::Vector2<T>::operator*=(T value)
+	template<typename T, int COUNT>
+	Vector<T, COUNT>& MathLab::Vector<T, COUNT>::operator*=(T value)
 	{
-		this->x *= value;
-		this->y *= value;
+		for (int i = 0; i < Count(); i++)
+		{
+			m_vector[i] *= value;
+		}
 		return *this;
 	}
 
-	template<typename T>
-	Vector2<T> MathLab::Vector2<T>::operator*(T value)const
+	template<typename T, int COUNT>
+	Vector<T, COUNT> MathLab::Vector<T, COUNT>::operator*(T value)const
 	{
-		Vector2<T> vector(*this);
-		vector *= value;
+		Vector<T, COUNT> vector(*this);
+		for (int i = 0; i < Count(); i++)
+		{
+			vector[i] += value;
+		}
 		return vector;
 	}
 
-	template<typename T>
-	Vector2<T> MathLab::Vector2<T>::operator/(T value)const
+	template<typename T, int COUNT>
+	Vector<T, COUNT> MathLab::Vector<T, COUNT>::operator/(T value)const
 	{
-		Vector2<T> vector(*this);
-		vector.x /= value;
-		vector.y /= value;
+		Vector<T, COUNT> vector(*this);
+		for (int i = 0; i < Count(); i++)
+		{
+			vector[i] /= value;
+		}
 		return vector;
 	}
 
-	template<typename T>
-	bool MathLab::Vector2<T>::operator==(const Vector2& value)
+	template<typename T, int COUNT>
+	bool MathLab::Vector<T, COUNT>::operator==(const Vector& that)
 	{
-		return MathLab(this->x - value.x) < EPSILON && MathLab(this->y - value.y) < EPSILON;
+		assert(Count() == that.Count());
+		for (int i = 0 ; i < Count() i ++)
+		{
+			if (MathLab(m_vector[i] - that[i]) > EPSILON)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
-	template<typename T>
-	T MathLab::Vector2<T>::Dot(const Vector2& vec) const
+	template<typename T, int COUNT>
+	T MathLab::Vector<T, COUNT>::Dot(const Vector& that) const
 	{
-		return this->x * vec.x + this->y * vec.y;
+		assert(Count() == that.Count());
+		T result =0;
+		for (int i = 0; i < Count() i++)
+		{
+			result = m_vector[i] * that[i];
+		}
+		return result;
 	}
 
-	template<typename T>
-	T MathLab::Vector2<T>::Cross(const Vector2& vec) const
+	template<typename T, int COUNT>
+	Vector<T, COUNT> operator+(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs)
 	{
-		return this->x * vec.y - vec.x * this->y;
+		Vector<T, COUNT> vector(lhs);
+		vector += rhs;
+		return vector;
 	}
 
-	template<typename T>
-	void Vector2<T>::Swap() {
-		T temp = x;
-		x = y;
-		y = temp;
-	}
-
-	template<typename T>
-	Vector2<T> operator+(const Vector2<T>& v1, const Vector2<T>& v2)
+	template<typename T, int COUNT>
+	Vector<T, COUNT> operator-(const Vector<T, COUNT>& lhs, const Vector<T, COUNT>& rhs)
 	{
-		Vector2<T> vector(v1);
-		vector += v2;
+		Vector<T, COUNT> vector(lhs);
+		vector -= rhs;
 		return  vector;
 	}
 
-	template<typename T>
-	Vector2<T> operator-(const Vector2<T>& v1, const Vector2<T>& v2)
+	template<typename T, int COUNT>
+	Vector<T, COUNT> operator*(const T& lhs, const Vector<T, COUNT>& rhs)
 	{
-		Vector2<T> vector(v1);
-		vector -= v2;
-		return  vector;
+		return value * rhs;
 	}
 
-	template<typename T>
-	Vector2<T> operator*(const T& v1, const Vector2<T>& value)
+	template<typename T, int COUNT>
+	void SwapVector(Vector<T, COUNT>& vectorA, Vector<T, COUNT>& vectorB)
 	{
-		return value * v1;
-	}
-
-	template<typename T>
-	void SwapVector(Vector2<T>& vectorA, Vector2<T>& vectorB)
-	{
-		Vector2<T> temp(vectorA);
+		Vector<T, COUNT> temp(vectorA);
 		vectorA = vectorB;
 		vectorB = temp;
 	}
 
-	template<typename T>
-	bool LessY(const Vector2<T>& origin, const Vector2<T>& compare)
-	{
-		return origin.y < compare.y;
-	}
-
-	template<typename T>
-	Vector2<T> MathLab::Vector2<T>::Normalize() const
+	template<typename T, int COUNT>
+	Vector<T, COUNT> MathLab::Vector<T, COUNT>::Normalize() const
 	{
 		T magnitide = Magnitude();
-		Vector2<T> temp;
-		temp.x = this->x / magnitide;
-		temp.y = this->y / magnitide;
-		return temp;
+		Vector<T, COUNT> result;
+		for (int i = 0; i < Count() i++)
+		{
+			result[i] = m_vector[i] / magnitide;
+		}
+		return result;
 	}
 
-	template<typename T>
-	T MathLab::Vector2<T>::Magnitude() const
+	template<typename T, int COUNT>
+	T MathLab::Vector<T, COUNT>::Magnitude() const
 	{
 		return static_cast<T>(sqrt(DoubleMagnitude()));
 	}
 
-	template<typename T>
-	T MathLab::Vector2<T>::DoubleMagnitude() const
+	template<typename T, int COUNT>
+	T MathLab::Vector<T, COUNT>::DoubleMagnitude() const
 	{
 		return this->Dot(*this);
 	}
