@@ -12,7 +12,9 @@ namespace MathLab {
 	template<typename T, int ROW, int COLUMN>
 	struct TMatrix;
 
+	typedef TMatrix<float, 4, 4> TMatrix4X4f;
 	typedef TMatrix<float, 4, 3> TMatrix4X3f;
+	typedef TMatrix<float, 3, 3> TMatrix3X3f;
 
 	template<typename T, int ROW, int COLUMN>
 	struct TMatrix final {
@@ -21,6 +23,8 @@ namespace MathLab {
 		TMatrix();
 		TMatrix(std::initializer_list<T> param);
 		TMatrix(const TMatrix& that);
+		TMatrix(const TMatrix<T, ROW-1, COLUMN>& that);
+		TMatrix(const TMatrix<T, ROW-1, COLUMN-1>& that);
 		~TMatrix();
 
 		T& operator[](int index);
@@ -49,8 +53,22 @@ namespace MathLab {
 	}
 
 	template<typename T, int ROW, int COLUMN>
+	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(const TMatrix<T, ROW - 1, COLUMN>& that)
+	{
+		TMatrix();
+		for (int i = 0; i < ROW - 1; i++)
+		{
+			(*this)[i] = that[i];
+		}
+		TVector<T, COLUMN> unit;
+		unit[COLUMN - 1] = 1;
+		(*this)[ROW - 1] = unit;
+	}
+
+	template<typename T, int ROW, int COLUMN>
 	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(std::initializer_list<T> param)
 	{
+		assert(param.size() == ROW * COLUMN);
 		TMatrix();
 		for (int i = 0;i < ROW*COLUMN; i++)
 		{

@@ -7,6 +7,7 @@
 #include "IComponent.h"
 #include "MathLab/Vector3.h"
 #include "MathLab/Quaternion.h"
+#include "MathLab/Matrix.h"
 
 namespace XenonEngine
 {
@@ -30,8 +31,9 @@ namespace XenonEngine
 		void SetPosition(const Vector3f& position) { m_position = position; }
 		const Vector3f& GetPosition()const { return m_position; }
 
-		const Quaternionf GetOrientation()const;
+		//const Quaternionf GetOrientation()const;
 		const Vector3f& GetRotation()const { return m_orientation; }
+		const TMatrix4X3f GetLocalTransform()const;
 
 		static ComponentType m_type;
 	private:

@@ -7,7 +7,13 @@ namespace XenonEngine
 
 	IComponent* Camera3D::Copy(GameObject*const gameObject) const
 	{
-
+		Camera3D* that = new Camera3D(gameObject);
+		that->m_position = m_position;
+		that->m_lookAt = m_lookAt;
+		that->m_viewDistance = m_viewDistance;
+		that->m_fov = m_fov;
+		that->m_viewport = m_viewport;
+		return that;
 	}
 
 	MathLab::TMatrix4X3f Camera3D::GetCameraTransform() const

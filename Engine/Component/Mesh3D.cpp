@@ -19,14 +19,19 @@ namespace XenonEngine
 		m_polygon3D = config->m_polygon3D;
 	}
 
+	bool Mesh3D::Start()
+	{
+		Graphic3D::Get().
+	}
+
 	bool Mesh3D::Update()
 	{
 		//TODO
 
 		//assert(m_polygon3D->m_numberOfVertex >= 3);
-		Transform3D* transform = GetGameObject()->GetComponent<Transform3D>();
-		assert(transform != nullptr);
-		Graphic3D::Get().RenderPolygon3D(m_polygon3D, transform);
+		//Transform3D* transform = GetGameObject()->GetComponent<Transform3D>();
+		//assert(transform != nullptr);
+		//Graphic3D::Get().RenderPolygon3D(m_polygon3D, transform);
 		return true;
 	}
 

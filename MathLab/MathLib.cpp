@@ -67,4 +67,33 @@ namespace MathLab {
         return result;
     }
 
+	MathLab::TMatrix3X3f GetRotationTranformMatrix(const Vector3f& degree)
+	{
+		float radiusX = MathLab::DegreeToRadians(degree.x);
+		float radiusY = MathLab::DegreeToRadians(degree.y);
+		float radiusZ = MathLab::DegreeToRadians(degree.z);
+		return TMatrix3X3f(
+			std::initializer_list<float>{
+				cos(radiusY) * cos(radiusZ),										      cos(radiusY) * sin(radiusZ),									           -sin(radiusY),
+				sin(radiusX) * sin(radiusY) * cos(radiusZ) - cos(radiusX) * sin(radiusZ), sin(radiusX) * sin(radiusY) * sin(radiusZ) + cos(radiusX) * cos(radiusZ), sin(radiusX) * cos(radiusY),
+				cos(radiusX) * sin(radiusY) * cos(radiusZ) + sin(radiusX) * sin(radiusZ), cos(radiusX) * sin(radiusY) * sin(radiusZ) - sin(radiusX) * cos(radiusZ), cos(radiusX) * cos(radiusY)
+			}
+        );
+	}
+
+    MathLab::TMatrix4X4f GetPositionAndRotationTranformMatrix(const Vector3f& position, const Vector3f& degree)
+    {
+        float radiusX = MathLab::DegreeToRadians(degree.x);
+        float radiusY = MathLab::DegreeToRadians(degree.y);
+        float radiusZ = MathLab::DegreeToRadians(degree.z);
+        return TMatrix3X3f(
+            std::initializer_list<float>{
+                cos(radiusY) * cos(radiusZ)                                             , cos(radiusY) * sin(radiusZ)                                             , -sin(radiusY)              , 0,
+                sin(radiusX) * sin(radiusY) * cos(radiusZ) - cos(radiusX) * sin(radiusZ), sin(radiusX) * sin(radiusY) * sin(radiusZ) + cos(radiusX) * cos(radiusZ), sin(radiusX) * cos(radiusY), 0,
+                cos(radiusX) * sin(radiusY) * cos(radiusZ) + sin(radiusX) * sin(radiusZ), cos(radiusX) * sin(radiusY) * sin(radiusZ) - sin(radiusX) * cos(radiusZ), cos(radiusX) * cos(radiusY), 0,
+                position.x                                                              , position.y                                                              , position.z                 , 1
+            }
+        );
+    }
+
 }

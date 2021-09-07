@@ -7,6 +7,7 @@
 
 #include "CrossPlatform/XenonManager.h"
 #include "Engine/Component/Transform3D.h"
+#include "Algorithms/Vector.h"
 
 namespace CrossPlatform 
 {
@@ -20,9 +21,11 @@ namespace XenonEngine
 		virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
 
-		void RenderPolygon3D(const CrossPlatform::Polygon3D& polygon, const Transform3D& tranform)const;
+		void AddGameobjectToRenderList(const GameObject* gameobject);
+		void RemoveGameobjectFromRenderList(const GameObject* gameobject);
+		void Render()const;
 	private:
-
+		Algorithm::Vector<GameObject*> m_renderList;
 	};
 
 }

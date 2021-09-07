@@ -11,6 +11,7 @@
 
 #include "MathLab/Vector3.h"
 #include "MathLab/Vector2.h"
+#include "MathLab/Matrix.h"
 namespace MathLab{
 
     float DegreeToRadians(float degree);
@@ -19,6 +20,8 @@ namespace MathLab{
      Vector3f RotateZAxis(const Vector3f& vec, const float degree);
 
      Vector2f Rotate2D(const Vector2f& vec, const float degree);
+	 TMatrix3X3f GetRotationTranformMatrix(const Vector3f& degree);
+	 TMatrix4X4f GetPositionAndRotationTranformMatrix(const Vector3f& position, const Vector3f& degree);
 
      template <typename T>
      const T& clamp(const T& value, const T& min, const T& max) {

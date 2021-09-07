@@ -31,6 +31,7 @@ namespace XenonEngine
 		virtual IComponent* Copy(GameObject*const gameObject)const override;
 
 		void SetConfig(const Mesh3DConfig*const config);
+		virtual bool Start() override;
 		virtual bool Update() override;
 		virtual bool Destroy() override;
 
