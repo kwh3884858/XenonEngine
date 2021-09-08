@@ -14,6 +14,7 @@ namespace XenonEngine
 	class Rigidbody2D;
 
 	using MathLab::Vector3f;
+	using MathLab::TMatrix4X4f;
 	using MathLab::Quaternionf;
 
 	class Transform3D final : public IComponent
@@ -33,7 +34,7 @@ namespace XenonEngine
 
 		//const Quaternionf GetOrientation()const;
 		const Vector3f& GetRotation()const { return m_orientation; }
-		const TMatrix4X3f GetLocalTransform()const;
+		const TMatrix4X4f GetLocalToWorldTransformMatrix()const;
 
 		static ComponentType m_type;
 	private:

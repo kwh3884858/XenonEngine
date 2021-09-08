@@ -19,7 +19,7 @@ namespace XenonEngine
 		virtual ~Camera3D()override {}
 		virtual ComponentType GetComponentType() const override { return m_type; };
 		virtual IComponent* Copy(GameObject*const gameObject)const override;
-		MathLab::TMatrix4X3f GetCameraTransform()const;
+		MathLab::TMatrix4X4f GetCameraTransformInverseMatrix()const;
 
 		static ComponentType m_type;
 	private:

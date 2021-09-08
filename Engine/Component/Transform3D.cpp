@@ -15,9 +15,9 @@ namespace XenonEngine
 		return transform;
 	}
 
-	const MathLab::TMatrix4X3f Transform3D::GetLocalTransform() const
+	const TMatrix4X4f Transform3D::GetLocalToWorldTransformMatrix() const
 	{
-        return tma
+        return MathLab::GetPositionAndRotationTranformMatrix(m_position, m_orientation);
 	}
 
 	ComponentType Transform3D::m_type = ComponentType::ComponentType_Transform3D;
