@@ -33,8 +33,12 @@ namespace XenonEngine
         void Render()const;
 	private:
         const Camera3D* GetMajorCamera()const;
+        MathLab::TMatrix4X4f GetProjectileMatrix()const;
+
 		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;
+        MathLab::Vector2f m_viewDistance;
+        float m_aspectRatio = 0.5625;
 	};
 
 }

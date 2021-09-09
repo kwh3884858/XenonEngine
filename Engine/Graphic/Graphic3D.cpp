@@ -39,4 +39,15 @@ namespace XenonEngine
         return m_cameraList[0];
     }
 
+    MathLab::TMatrix4X4f Graphic3D::GetProjectileMatrix() const
+    {
+        return TMatrix4X4f(
+            std::initializer_list<float>{
+            m_viewDistance.x, 0, 0, 0,
+                0, m_viewDistance.y * m_aspectRatio, 0, 0,
+                0, 0, 1, 1,
+                0, 0, 0, 0
+        });
+    }
+
 }

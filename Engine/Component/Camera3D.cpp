@@ -32,6 +32,5 @@ namespace XenonEngine
 		});
 	}
 
-	ComponentType Camera3D::m_type = ComponentType::ComponentType_Camera;
-
+    ComponentType Camera3D::m_type = ComponentType::ComponentType_Camera;
 }
