@@ -1,0 +1,306 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7685FCD826F5D724009F0C14 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCD426F5D723009F0C14 /* Data */; };
+		7685FCD926F5D724009F0C14 /* Library in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCD526F5D723009F0C14 /* Library */; };
+		7685FCDA26F5D724009F0C14 /* Gameplay in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCD626F5D724009F0C14 /* Gameplay */; };
+		7685FCDB26F5D724009F0C14 /* Engine in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCD726F5D724009F0C14 /* Engine */; };
+		7685FCDE26F5D72E009F0C14 /* Algorithms in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCDC26F5D72E009F0C14 /* Algorithms */; };
+		7685FCDF26F5D72E009F0C14 /* CrossPlatform in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCDD26F5D72E009F0C14 /* CrossPlatform */; };
+		7685FCE126F5D790009F0C14 /* MacOS in Resources */ = {isa = PBXBuildFile; fileRef = 7685FCE026F5D790009F0C14 /* MacOS */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		7685FCD426F5D723009F0C14 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Data; sourceTree = "<group>"; };
+		7685FCD526F5D723009F0C14 /* Library */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Library; sourceTree = "<group>"; };
+		7685FCD626F5D724009F0C14 /* Gameplay */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Gameplay; sourceTree = "<group>"; };
+		7685FCD726F5D724009F0C14 /* Engine */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Engine; sourceTree = "<group>"; };
+		7685FCDC26F5D72E009F0C14 /* Algorithms */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Algorithms; sourceTree = "<group>"; };
+		7685FCDD26F5D72E009F0C14 /* CrossPlatform */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CrossPlatform; sourceTree = "<group>"; };
+		7685FCE026F5D790009F0C14 /* MacOS */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacOS; sourceTree = "<group>"; };
+		76BDB139218D8E7500BDF889 /* XenonEngine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XenonEngine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		76BDB136218D8E7500BDF889 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		76BDB130218D8E7500BDF889 = {
+			isa = PBXGroup;
+			children = (
+				7685FCE026F5D790009F0C14 /* MacOS */,
+				7685FCDC26F5D72E009F0C14 /* Algorithms */,
+				7685FCDD26F5D72E009F0C14 /* CrossPlatform */,
+				7685FCD426F5D723009F0C14 /* Data */,
+				7685FCD726F5D724009F0C14 /* Engine */,
+				7685FCD626F5D724009F0C14 /* Gameplay */,
+				7685FCD526F5D723009F0C14 /* Library */,
+				76BDB13A218D8E7500BDF889 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		76BDB13A218D8E7500BDF889 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				76BDB139218D8E7500BDF889 /* XenonEngine.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		76BDB138218D8E7500BDF889 /* XenonEngine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76BDB14D218D8E7500BDF889 /* Build configuration list for PBXNativeTarget "XenonEngine" */;
+			buildPhases = (
+				76BDB135218D8E7500BDF889 /* Sources */,
+				76BDB136218D8E7500BDF889 /* Frameworks */,
+				76BDB137218D8E7500BDF889 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = XenonEngine;
+			productName = MacWindow;
+			productReference = 76BDB139218D8E7500BDF889 /* XenonEngine.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		76BDB131218D8E7500BDF889 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1010;
+				ORGANIZATIONNAME = "威化饼干";
+				TargetAttributes = {
+					76BDB138218D8E7500BDF889 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 76BDB134218D8E7500BDF889 /* Build configuration list for PBXProject "XenonEngine" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+				Base,
+			);
+			mainGroup = 76BDB130218D8E7500BDF889;
+			productRefGroup = 76BDB13A218D8E7500BDF889 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				76BDB138218D8E7500BDF889 /* XenonEngine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		76BDB137218D8E7500BDF889 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7685FCDE26F5D72E009F0C14 /* Algorithms in Resources */,
+				7685FCDA26F5D724009F0C14 /* Gameplay in Resources */,
+				7685FCE126F5D790009F0C14 /* MacOS in Resources */,
+				7685FCDB26F5D724009F0C14 /* Engine in Resources */,
+				7685FCDF26F5D72E009F0C14 /* CrossPlatform in Resources */,
+				7685FCD926F5D724009F0C14 /* Library in Resources */,
+				7685FCD826F5D724009F0C14 /* Data in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		76BDB135218D8E7500BDF889 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		76BDB14B218D8E7500BDF889 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		76BDB14C218D8E7500BDF889 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		76BDB14E218D8E7500BDF889 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Library",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.StarPlatinum.MacWindow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		76BDB14F218D8E7500BDF889 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Library",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.StarPlatinum.MacWindow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		76BDB134218D8E7500BDF889 /* Build configuration list for PBXProject "XenonEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76BDB14B218D8E7500BDF889 /* Debug */,
+				76BDB14C218D8E7500BDF889 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		76BDB14D218D8E7500BDF889 /* Build configuration list for PBXNativeTarget "XenonEngine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				76BDB14E218D8E7500BDF889 /* Debug */,
+				76BDB14F218D8E7500BDF889 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 76BDB131218D8E7500BDF889 /* Project object */;
+}
