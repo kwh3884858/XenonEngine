@@ -7,15 +7,15 @@
 namespace CrossPlatform
 {
     struct EngineConfig {
-        bool m_isFullScreen = false;
-        unsigned int m_width = 800;
-        unsigned int m_height = 600;
-        bool m_isPerspectiveProjection = true;
+        const bool m_isFullScreen = false;
+        const unsigned int m_width = 800;
+        const unsigned int m_height = 600;
+        const bool m_isPerspectiveProjection = true;
 
         // For draw something in the a rectangle of window
-        int m_minX = 0;
-        int m_minY = 0;
-        int m_maxX = 800;
-        int m_maxY = 599;
+        const int m_minX = 0;
+        const int m_minY = 0;
+        const int m_maxX = 800;
+        const int m_maxY = 599;
     };
 }

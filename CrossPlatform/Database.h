@@ -10,13 +10,6 @@ namespace CrossPlatform
 {
     class Database :public XenonSingleton<Database>{
     public:
-        Database() {
-            engineConfig.m_isFullScreen = false;
-            engineConfig.m_width = 800;
-            engineConfig.m_height = 600;
-            engineConfig.m_isPerspectiveProjection = true;
-        }
-
         EngineConfig engineConfig;
     };
 

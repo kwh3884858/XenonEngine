@@ -33,7 +33,8 @@ namespace XenonEngine
         void Render()const;
 	private:
         const Camera3D* GetMajorCamera()const;
-        MathLab::TMatrix4X4f GetProjectileMatrix()const;
+        MathLab::TMatrix4X4f GetProjectionMatrix()const;
+        MathLab::TMatrix4X4f GetScreenMatrix()const;
 
 		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;
