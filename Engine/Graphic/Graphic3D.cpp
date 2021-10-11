@@ -3,15 +3,27 @@
 
 #include <cassert>
 
+//#include "MathLab/Vector2.h"
+
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Camera3D.h"
+#include "Engine/Component/Mesh3D.h"
 
+#include "CrossPlatform/Polygon3D.h"
 namespace XenonEngine
 {
 	using MathLab::TMatrix4X3f;
+	using MathLab::TVector4f;
+    using MathLab::Vector2f;
+    using CrossPlatform::Polygon3D;
 
-	void Graphic3D::AddGameobjectToRenderList( GameObject* gameobject)
+    bool Graphic3D::Initialize()
+    {
+        m_viewDistance = Vector2f(1, 1);
+    }
+
+    void Graphic3D::AddGameobjectToRenderList(GameObject* gameobject)
 	{
 		m_renderList.Add(gameobject);
 	}
@@ -27,9 +39,27 @@ namespace XenonEngine
 		{
 			GameObject* iter = m_renderList[i];
 			Transform3D* transform = iter->GetComponent<Transform3D>();
+            Mesh3D* mesh = iter->GetComponent<Mesh3D>();
+            if (!mesh || !transform)
+            {
+                continue;
+            }
             TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
             TMatrix4X4f worldToCameraTransform = GetMajorCamera()->GetCameraTransformInverseMatrix();
+            //Culling
+            //Remove back faces
+            TMatrix4X4f perspectiveTransfrom = GetProjectileMatrix();
+            TMatrix4X4f localToPerspectiveTranform = localToWorldTransform * worldToCameraTransform * perspectiveTransfrom;
 
+            const Polygon3D* polygon = mesh->GetPolygon3D();
+            for (int i = 0 ;i < polygon->Count(); i++)
+            {
+                const Vector3f& vertex = (*polygon)[i];
+                TVector4f homogeneousVertex (vertex);
+                homogeneousVertex = homogeneousVertex * localToPerspectiveTranform;
+                Vector3f  ConvertFormHomogeneous(homogeneousVertex);
+
+            }
 		}
 	}
 

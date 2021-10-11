@@ -21,7 +21,7 @@ namespace XenonEngine
 
 	bool Mesh3D::Start()
 	{
-		Graphic3D::Get().
+		Graphic3D::Get().add
 	}
 
 	bool Mesh3D::Update()

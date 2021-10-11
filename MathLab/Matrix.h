@@ -29,6 +29,12 @@ namespace MathLab {
 
 		T& operator[](int index);
 		const T& operator[](int index)const;
+
+        TVector<T, COLUMN> GetRow(int index)const;
+        TVector<T, ROW> GetColumn(int index)const;
+
+        TMatrix<T, ROW, COLUMN>& operator=(const TMatrix& rvalue);
+        TMatrix<T, ROW, COLUMN>& operator*=(const TMatrix& rvalue);
 	private:
 		TVector<T,COLUMN>* m_matrix;
 	};
@@ -36,10 +42,14 @@ namespace MathLab {
 	template<typename T, int ROW, int COLUMN>
 	TVector<T, COLUMN> operator*(const TVector<T, ROW>& lValue, const TMatrix<T, ROW, COLUMN>& rValue);
 
+    template<typename T, int ROW, int COLUMN>
+    TMatrix<T, ROW, COLUMN> operator*(const TMatrix<T, ROW, COLUMN>& lValue, const TMatrix<T, ROW, COLUMN>& rValue);
+
+
 	template<typename T, int ROW, int COLUMN>
 	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix()
 	{
-		m_content = new T[ROW];
+        m_matrix = new T[ROW];
 	}
 
 	template<typename T, int ROW, int COLUMN>
@@ -70,10 +80,12 @@ namespace MathLab {
 	{
 		assert(param.size() == ROW * COLUMN);
 		TMatrix();
-		for (int i = 0;i < ROW*COLUMN; i++)
-		{
-			m_content[i] = param[i];
-		}
+        int i = 0;
+        for (auto item: param)
+        {
+            m_matrix[i] = item;
+            i++;
+        }
 	}
 
 	template<typename T, int ROW, int COLUMN>
@@ -97,6 +109,47 @@ namespace MathLab {
 		int column = index % COLUMN;
 		return m_matrix[row][column];
 	}
+
+    template<typename T, int ROW, int COLUMN>
+    MathLab::TVector<T, COLUMN> MathLab::TMatrix<T, ROW, COLUMN>::GetRow(int index) const
+    {
+        assert(index >= 0 && index < ROW);
+        return m_matrix[index];
+    }
+
+    template<typename T, int ROW, int COLUMN>
+    MathLab::TVector<T, ROW> MathLab::TMatrix<T, ROW, COLUMN>::GetColumn(int index) const
+    {
+        assert(index >= 0 && index < COLUMN);
+        Vector<T> params;
+        for (int i = 0; i < ROW; i++)
+        {
+            params.Add(m_matrix[i][index]);
+        }
+        MathLab::TVector<T, ROW> result(params);
+        return result;
+    }
+
+    template<typename T, int ROW, int COLUMN>
+    MathLab::TMatrix<T, ROW, COLUMN>& MathLab::TMatrix<T, ROW, COLUMN>::operator=(const TMatrix& rvalue)
+    {
+        if (this == &rvalue)
+        {
+            return *this;
+        }
+        for (int row = 0 ;row < ROW;row++)
+        {
+            m_matrix[row] = rvalue[row];
+        }
+        return *this;
+    }
+
+    template<typename T, int ROW, int COLUMN>
+    MathLab::TMatrix<T, ROW, COLUMN>& TMatrix<T, ROW, COLUMN>::operator*=(const TMatrix& rvalue)
+    {
+        (*this) = (*this) * rvalue;
+        return *this;
+    }
 
 	//template<typename T, int ROW, int COLUMN>
 	//Vector3<T> operator*(const Vector3<T>& lValue, const Matrix<T, ROW, COLUMN>& rValue)
@@ -135,5 +188,22 @@ namespace MathLab {
 			}
 		}
 	}
+
+    template<typename T, int ROW, int COLUMN>
+    TMatrix<T, ROW, COLUMN>
+        operator*(const TMatrix<T, ROW, COLUMN>& lValue, const TMatrix<T, ROW, COLUMN>& rValue)
+    {
+        TMatrix<T, ROW, COLUMN> result;
+        for (int i = 0; i < COLUMN; i++)
+        {
+            float portion =0;
+            for (int j = 0; j < ROW; j++)
+            {
+                portion += lValue.GetRow(i) * rValue.GetColumn(j);
+            }
+            result[i] = portion;
+        }
+        return result;
+    }
 
 }

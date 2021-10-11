@@ -7,6 +7,9 @@ A free game contains easy-modified editor with soft render.
 - Xenon Input System is ready.
 - Use Control + C to recompiler script in the engine.
 
+## TODO
+- probably to design a system like fruit and juice. Support a clear way to describe data define and  real data value.
+
 ## Folder content
 - Algorithm, algorithm and data struction
 - Mathlab, self-defined data struction for game

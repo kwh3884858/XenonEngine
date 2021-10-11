@@ -1,10 +1,15 @@
 #pragma once
 #include <cassert>
+#include <Algorithms/Vector.h>
 
 namespace MathLab
 {
+    using Algorithm::Vector;
+
 	template<typename T, int COUNT>
 	struct TVector;
+
+    typedef     TVector<float, 4>      TVector4f;
 
 	template<typename T, int COUNT>
 	TVector<T, COUNT> operator+(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
@@ -47,7 +52,9 @@ namespace MathLab
 		//T Cross(const Vector& that)const;
 
 		TVector();
-		TVector(const TVector& that);
+        TVector(const TVector& that);
+        TVector(const Vector<T>& vector);
+        TVector(const Vector3f& vector3f);
 		~TVector();
 		
 		inline int Count()const { return COUNT; }
@@ -76,6 +83,27 @@ namespace MathLab
 			m_vector[i] = that[i];
 		}
 	}
+
+    template<typename T, int COUNT>
+    MathLab::TVector<T, COUNT>::TVector(const Vector<T>& vector)
+    {
+        assert(COUNT >= vector.Count());
+        TVector();
+        for (int i = 0; i < vector.Count(); i++)
+        {
+            m_vector[i] = vector[i];
+        }
+    }
+
+    template<typename T, int COUNT>
+    MathLab::TVector<T, COUNT>::TVector(const Vector3f& vector3f)
+    {
+        assert(COUNT >= 3);
+        TVector();
+        m_vector[0] = vector3f.x;
+        m_vector[1] = vector3f.y;
+        m_vector[2] = vector3f.z;
+    }
 
 	template<typename T, int COUNT>
 	TVector<T, COUNT>::~TVector()

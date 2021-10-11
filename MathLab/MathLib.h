@@ -23,6 +23,8 @@ namespace MathLab{
 	 TMatrix3X3f GetRotationTranformMatrix(const Vector3f& degree);
 	 TMatrix4X4f GetPositionAndRotationTranformMatrix(const Vector3f& position, const Vector3f& degree);
 
+     Vector3f ConvertFormHomogeneous(const TVector4f& homogeneous);
+
      template <typename T>
      const T& clamp(const T& value, const T& min, const T& max) {
          if (value < min)

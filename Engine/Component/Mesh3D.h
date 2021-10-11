@@ -35,6 +35,8 @@ namespace XenonEngine
 		virtual bool Update() override;
 		virtual bool Destroy() override;
 
+        const CrossPlatform::Polygon3D* GetPolygon3D()const { return m_polygon3D; }
+
 		static ComponentType m_type;
 	private:
 		const CrossPlatform::Polygon3D* m_polygon3D;

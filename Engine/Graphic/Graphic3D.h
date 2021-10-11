@@ -21,7 +21,7 @@ namespace XenonEngine
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
 	public:
-		virtual bool Initialize() override { return true; }
+        virtual bool Initialize() override;
 		virtual bool Shutdown() override { return true; }
 
 		void AddGameobjectToRenderList( GameObject* gameobject);

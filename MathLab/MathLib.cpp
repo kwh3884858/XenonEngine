@@ -96,4 +96,10 @@ namespace MathLab {
         );
     }
 
+    Vector3f ConvertFormHomogeneous(const TVector4f& homogeneous)
+    {
+        Vector3f result(homogeneous[0]/ homogeneous[3], homogeneous[1]/ homogeneous[3], homogeneous[2]/ homogeneous[3]);
+        return result;
+    }
+
 }
