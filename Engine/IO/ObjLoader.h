@@ -1,9 +1,6 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
 #include "Algorithms/String.h"
-
-#define TINYOBJLOADER_IMPLEMENTATION 
-#include "Library/tiny_obj_loader.h"
 namespace CrossPlatform
 {
 	class Polygon3D;
@@ -14,7 +11,7 @@ namespace XenonEngine
 	{
 	public:
 		virtual bool Initialize() override { return true; }
-		virtual bool Shutdown() override;
+        virtual bool Shutdown() override { return true; }
 
 		const CrossPlatform::Polygon3D* LoadObj(Algorithm::String& fileName );
 	private:

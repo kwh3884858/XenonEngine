@@ -43,7 +43,7 @@ namespace Algorithm
         const T* End()const;
 
 	protected:
-		bool IsCapacityEnough();
+		bool IsCapacityEnough() const;
 		T* m_content;
 		int m_count;
 		int m_capacity;
@@ -55,7 +55,7 @@ namespace Algorithm
 	};
 
 	template<typename T>
-	const int Vector<T>::DEFAULTCAPACITY = 1;
+	const int Vector<T>::DEFAULTCAPACITY = 3;
 
 	template<typename T>
 	Vector<T>::Vector()
@@ -244,7 +244,7 @@ namespace Algorithm
     }
 
 	template<typename T>
-	bool Vector<T>::IsCapacityEnough()
+	bool Vector<T>::IsCapacityEnough()const
 	{
 		return m_count < m_capacity;
 	}
@@ -252,10 +252,7 @@ namespace Algorithm
 	template<typename T>
 	bool Vector<T>::Reallocation()
 	{
-		if (m_capacity == 0)
-		{
-			return false;
-		}
+        assert(m_capacity > 0);
 		m_capacity = 2 * m_capacity;
 		T* newContent = new T[m_capacity];
 		for (int i = 0; i < m_count; i++)
@@ -264,6 +261,7 @@ namespace Algorithm
 		}
 		delete[] m_content;
 		m_content = newContent;
+        newContent = nullptr;
 		return true;
 	}
 
@@ -280,8 +278,8 @@ namespace Algorithm
     {
         if (m_content)
         {
-            Clear();
             delete[] m_content;
+            Clear();
             m_content = nullptr;
         }
         return true;

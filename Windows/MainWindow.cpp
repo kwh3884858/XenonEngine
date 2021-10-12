@@ -320,7 +320,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
         if (virtualCode == 0x50) //P
         {
-            Database::Get().engineConfig.m_isPerspectiveProjection = !Database::Get().engineConfig.m_isPerspectiveProjection;
+            //Database::Get().engineConfig.m_isPerspectiveProjection = !Database::Get().engineConfig.m_isPerspectiveProjection;
         }
     }
     break;

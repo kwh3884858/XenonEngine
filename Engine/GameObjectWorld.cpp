@@ -3,6 +3,10 @@
 #include "Engine/Component/Mesh2D.h"
 #include "Engine/Physics/Physics2D.h"
 #include "Algorithms/StringSort.h"
+
+#include "Engine/Graphic/Graphic3D.h"
+#include <cstdio> //for printf
+
 namespace XenonEngine
 {
     using XenonPhysics::Physics2D;
@@ -50,8 +54,15 @@ namespace XenonEngine
 			}
 		}
 
-        gameobject->Start();
-        m_physics2D->AddGameObject(gameobject);
+        gameobject->GameObjectStart();
+        bool addedToPhysicsWorld = m_physics2D->AddGameObject(gameobject);
+        if (!addedToPhysicsWorld)
+        {
+            char msg[200];
+            gameobject->GetName().CString(msg);
+            strcat(msg, " doesn`t have a physical component. [Warning]");
+            printf(msg);
+        }
         m_worldObjects.Add(gameobject);
     }
 
@@ -121,8 +132,13 @@ namespace XenonEngine
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
             Mesh2D* render2D = m_worldObjects[i]->GetComponent<Mesh2D>();
-            render2D->Update();
+            if (render2D)
+            {
+                render2D->Update();
+            }
         }
+
+        Graphic3D::Get().Update();
     }
 
 	void GameObjectWorld::ObjectUpdate()

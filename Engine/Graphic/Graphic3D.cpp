@@ -24,6 +24,7 @@ namespace XenonEngine
     bool Graphic3D::Initialize()
     {
         m_viewDistance = Vector2f(1, 1);
+        return true;
     }
 
     void Graphic3D::AddGameobjectToRenderList(GameObject* gameobject)
@@ -36,7 +37,7 @@ namespace XenonEngine
 		m_renderList.Remove(gameobject);
 	}
 
-	void Graphic3D::Render() const
+	void Graphic3D::Update() const
 	{
 		for (int i = 0; i < m_renderList.Count(); i++)
 		{

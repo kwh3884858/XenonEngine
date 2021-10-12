@@ -28,8 +28,8 @@ namespace XenonEngine
 		virtual ComponentType GetComponentType() const override { return m_type; };
 		virtual IComponent* Copy(GameObject*const gameObject)const override;
 
-		void AddPosition(const Vector3f& position) { m_position += position; }
-		void SetPosition(const Vector3f& position) { m_position = position; }
+        void AddPosition(const Vector3f& position) { assert(this != nullptr); m_position += position; }
+		void SetPosition(const Vector3f& position) { assert(this != nullptr); m_position = position; }
 		const Vector3f& GetPosition()const { return m_position; }
 
 		//const Quaternionf GetOrientation()const;

@@ -3,7 +3,8 @@
 #include "MathLab/Vector3.h"
 #include <iostream>
 
-
+#define TINYOBJLOADER_IMPLEMENTATION 
+#include "Library/tiny_obj_loader.h"
 namespace XenonEngine
 {
 	using Algorithm::String;

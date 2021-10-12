@@ -26,6 +26,31 @@
             </ArrayItems>
         </Expand>
     </Type>
+    <Type Name="MathLab::TVector&lt;*,*&gt;">
+      <DisplayString>{{ {$T2 * 2} }}</DisplayString>
+      <Expand>
+        <ArrayItems>
+          <Size>$T2</Size>
+          <ValuePointer>m_vector</ValuePointer>
+        </ArrayItems>
+        <Item Name="[size]">$T2</Item>
+      </Expand>
+    </Type>
+    <Type Name="MathLab::TMatrix&lt;*,*,*&gt;">
+      <Expand>
+        <Item Name="v3">v3, [3]nag</Item>
+        <CustomListItems>
+          <Variable Name="i" InitialValue="0"/>
+          <Loop>
+            <Item Name="m3[{i}]">m3[i],[3]nag</Item>
+            <Exec>++i</Exec>
+            <If Condition="i&gt;={$T2*$T3}">
+              <Break/>
+            </If>
+          </Loop>
+        </CustomListItems>
+      </Expand>
+    </Type>
     <!--<Type Name="Algorithm::StringBase&lt;*&gt;">
         <DisplayString>{{size = {m_count}}}</DisplayString>
         <Expand>

@@ -303,9 +303,8 @@ namespace XenonPhysics
         }
         else
         {
-            assert(true == false);
+            return false;
         }
-        return false;
     }
 
     void Physics2D::RemoveGameObject(GameObject* const gameobject)

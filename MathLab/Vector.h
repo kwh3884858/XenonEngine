@@ -17,14 +17,16 @@ namespace MathLab
 	TVector<T, COUNT> operator-(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
 	template<typename T, int COUNT>
 	TVector<T, COUNT> operator*(const T& lhs, const TVector<T, COUNT>& value);
+    template<typename T, int COUNT>
+    T operator*(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
 
-	template<typename T, int COUNT>
+    template<typename T, int COUNT>
 	void SwapVector(TVector<T, COUNT>& vectorA, TVector<T, COUNT>& vectorB);
 
 	template<typename T, int COUNT>
 	class TVector
 	{
-	public:
+	private:
 		T* m_vector;
 
 	public:
@@ -253,6 +255,17 @@ namespace MathLab
 	{
 		return value * rhs;
 	}
+
+    template<typename T, int COUNT>
+    T operator*(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs)
+    {
+        T result = 0;
+        for (int i = 0; i < COUNT; i++)
+        {
+            result += lhs[i] * rhs[i];
+        }
+        return result;
+    }
 
 	template<typename T, int COUNT>
 	void SwapVector(TVector<T, COUNT>& vectorA, TVector<T, COUNT>& vectorB)

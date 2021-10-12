@@ -11,6 +11,7 @@ namespace MathLab {
 	template<typename T>
 	struct Matrix3;
 
+    typedef  Matrix3<float> Matrix3f;
 
 	template<typename T>
     struct Matrix3 final{

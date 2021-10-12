@@ -30,7 +30,7 @@ namespace XenonEngine
         void AddCamera(Camera3D* camera) { m_cameraList.Add(camera); }
         void RemoveCamera(Camera3D* camera){ m_cameraList.Remove(camera); }
 
-        void Render()const;
+        void Update()const;
 	private:
         const Camera3D* GetMajorCamera()const;
         MathLab::TMatrix4X4f GetProjectionMatrix()const;

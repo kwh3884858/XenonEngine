@@ -25,22 +25,28 @@ namespace XenonEngine
 
     }
 
-    void GameObject::Start()
+    void GameObject::GameObjectStart()
     {
+        Start();
         for (int i = 0; i < m_components.Count(); i++)
         {
             m_components[i]->Start();
         }
     }
 
-	void GameObject::GameObjectUpdate()
+    void GameObject::GameObjectUpdate()
 	{
+        Update();
 		for (int i = 0; i < m_components.Count(); i++)
 		{
 			m_components[i]->Update();
 		}
-		Update();
 	}
+
+    void GameObject::Start()
+    {
+
+    }
 
 	void GameObject::Update()
 	{

@@ -23,7 +23,7 @@ namespace MathLab {
     Vector3f RotateXAxis(const Vector3f& vec, const float degree)
     {
         float radian = DegreeToRadians(degree );
-        Matrix3 rotationMatrix(
+        Matrix3f rotationMatrix(
             Vector3f(1, 0, 0),
             Vector3f(0, cos(radian), sin(radian)),
             Vector3f(0, -sin(radian), cos(radian))
@@ -35,7 +35,7 @@ namespace MathLab {
     Vector3f RotateYAxis(const Vector3f& vec, const float degree)
     {
         float radius = DegreeToRadians(degree);
-        Matrix3 rotationMatrix(
+        Matrix3f rotationMatrix(
             Vector3f(cos(radius), 0, sin(radius)),
             Vector3f(0, 1, 0),
             Vector3f(-sin(radius), 0, cos(radius))
@@ -47,7 +47,7 @@ namespace MathLab {
     Vector3f RotateZAxis(const Vector3f& vec, const float degree)
     {
         float radius = DegreeToRadians(degree);
-        Matrix3 rotationMatrix(
+        Matrix3f rotationMatrix(
             Vector3f(cos(radius), sin(radius), 0),
             Vector3f(-sin(radius), cos(radius), 0),
             Vector3f(0, 0, 1)
@@ -86,7 +86,7 @@ namespace MathLab {
         float radiusX = MathLab::DegreeToRadians(degree.x);
         float radiusY = MathLab::DegreeToRadians(degree.y);
         float radiusZ = MathLab::DegreeToRadians(degree.z);
-        return TMatrix3X3f(
+        return TMatrix4X4f(
             std::initializer_list<float>{
                 cos(radiusY) * cos(radiusZ)                                             , cos(radiusY) * sin(radiusZ)                                             , -sin(radiusY)              , 0,
                 sin(radiusX) * sin(radiusY) * cos(radiusZ) - cos(radiusX) * sin(radiusZ), sin(radiusX) * sin(radiusY) * sin(radiusZ) + cos(radiusX) * cos(radiusZ), sin(radiusX) * cos(radiusY), 0,

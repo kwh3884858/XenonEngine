@@ -24,6 +24,7 @@ namespace XenonEngine
 
 	bool Mesh2D::Update()
     {
+        assert(this != nullptr);
         assert(m_polygon2D->m_numberOfVertex >= 3);
         Transform2D* transform = GetGameObject()->GetComponent<Transform2D>();
         assert(transform != nullptr);

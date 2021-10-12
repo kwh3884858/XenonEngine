@@ -21,7 +21,8 @@ namespace XenonEngine
 
 	bool Mesh3D::Start()
 	{
-		Graphic3D::Get().add
+        Graphic3D::Get().AddGameobjectToRenderList(GetGameObject());
+        return true;
 	}
 
 	bool Mesh3D::Update()
@@ -37,6 +38,7 @@ namespace XenonEngine
 
 	bool Mesh3D::Destroy()
 	{
+        Graphic3D::Get().RemoveGameobjectFromRenderList(GetGameObject());
 		delete m_polygon3D;
 		m_polygon3D = nullptr;
 		return true;

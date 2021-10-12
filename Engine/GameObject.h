@@ -39,6 +39,7 @@ namespace XenonEngine
         bool IsMarkForDelete() { return m_state == ObjectState::MarkForDelete; }
         void SetState(ObjectState state) { m_state = state; }
 
+		void GameObjectStart();
 		void GameObjectUpdate();
         virtual void Start();
         virtual void Update();

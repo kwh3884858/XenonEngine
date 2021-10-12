@@ -631,8 +631,10 @@ namespace XenonEngine
                     {
                         XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
                         XenonEngine::GameObject* player = world->GetGameObject("Player");
+                        if (!player) break;
                         XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
                         personlity->SetVelocity(op1.m_floatLiteral);
+                        
                     }
                     else
                     {
@@ -646,8 +648,10 @@ namespace XenonEngine
                     {
                         XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
                         XenonEngine::GameObject* player = world->GetGameObject("Player");
+                        if (!player) break;
                         XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
                         personlity->SetJumpForce(op1.m_floatLiteral);
+                        
                     }
                     else
                     {
@@ -661,7 +665,9 @@ namespace XenonEngine
                     {
                         XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
                         XenonEngine::GameObject* player = world->GetGameObject("Player");
+                        if (!player) break;
                         XenonEngine::Rigidbody2D* rigid = player->GetComponent<XenonEngine::Rigidbody2D>();
+                        if(!rigid) break;
                         rigid->SetMass(op1.m_floatLiteral);
                     }
                     else
@@ -676,6 +682,7 @@ namespace XenonEngine
 					{
 						XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
 						XenonEngine::GameObject* player = world->GetGameObject("Player");
+                        if (!player) break;
 						XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
 						personlity->SetBulletForce(op1.m_floatLiteral);
 					}

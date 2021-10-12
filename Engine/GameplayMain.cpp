@@ -18,6 +18,7 @@
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform2D.h"
+#include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Mesh2D.h"
 #include "Engine/Component/PlayerPersonality.h"
 #include "Engine/Component/Rigidbody2D.h"
@@ -29,6 +30,7 @@
 
 #include "Gameplay/Enemy.h"
 #include "Gameplay/Player.h"
+#include "Gameplay/Cube3D.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -48,6 +50,7 @@ namespace Gameplay {
     using XenonEngine::GameObjectWorld;
     using XenonEngine::GameObjectWorldManager;
     using XenonEngine::Transform2D;
+    using XenonEngine::Transform3D;
     using XenonEngine::PlayerPersonality;
     using XenonEngine::Rigidbody2D;
     using XenonEngine::BoxCollider2D;
@@ -61,10 +64,10 @@ namespace Gameplay {
     {
         GameObjectWorldManager::Get().Initialize();
         world = GameObjectWorldManager::Get().CreateGameWorld("Shooting2D");
-        {
-            Player* player = new Player("Player");
-			world->AddGameObject(player);
-        }
+   //     {
+   //         Player* player = new Player("Player");
+			//world->AddGameObject(player);
+   //     }
 
         {
 			GameObject* ground = new GameObject("Ground");
@@ -96,10 +99,16 @@ namespace Gameplay {
             world->AddGameObject(ground);
         }
 
+   //     {
+			//Enemy* enemy = new Enemy("Enemy");
+   //         world->AddGameObject(enemy);
+   //     }
+
         {
-			Enemy* enemy = new Enemy("Enemy");
-            world->AddGameObject(enemy);
+            Cube3D* cube = new Cube3D("Cube3D");
+            world->AddGameObject(cube);
         }
+
         compiler = new XenonCompiler;
         compiler->Initialize();
     }
@@ -141,6 +150,7 @@ namespace Gameplay {
 
         GameObjectWorldManager::Get().Shutdown();
     }
+
 	/*
     void Donut()
     {
