@@ -37,7 +37,7 @@ namespace XenonEngine
 		int numOfVertex = attrib.vertices.size() / 3;
 		Vector3f* verteces = new Vector3f[attrib.vertices.size() / 3];
 		int numOfIndex = 0;
-		int* vertexIndexList = new int[attrib.vertices.size() / 3];
+
 
 		for (size_t i = 0; i < attrib.vertices.size(); i+=3)
 		{
@@ -50,6 +50,8 @@ namespace XenonEngine
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++) 
 		{
+            int numOfIndex = shapes[s].mesh.indices.size();
+            int* vertexIndexList = new int[numOfIndex];
 			// Loop over faces(polygon)
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) 
@@ -62,9 +64,10 @@ namespace XenonEngine
 				}
 				index_offset += fv;
 			}
+            Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, verteces);
+            return polygon;
 		}
 
-		Polygon3D* polygon = new Polygon3D(numOfVertex, vertexIndexList, numOfVertex, verteces);
-		return polygon;
+        return nullptr;
 	}
 }

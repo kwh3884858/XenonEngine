@@ -5,6 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include "MathLab/Vector2.h"
+#include <cassert>
 namespace MathLab {
     template<typename T>
     struct Vector3;
@@ -119,7 +120,8 @@ namespace MathLab {
     template<typename T>
     Vector3<T> Vector3<T>::Cross(const Vector3& vec) const
     {
-        Vector3 result(this->y * vec.z - this->z * vec.z,
+        Vector3 result(
+            this->y*vec.z - this->z*vec.y,
             this->z*vec.x - this->x*vec.z,
             this->x*vec.y - this->y*vec.x);
         return result;
@@ -137,9 +139,10 @@ namespace MathLab {
     {
         T magnitide = Magnitude();
         Vector3<T> temp;
-        temp->x = this->x / magnitide;
-        temp->y = this->y / magnitide;
-        temp->z = this->z / magnitide;
+        assert(magnitide != 0);
+        temp.x = x / magnitide;
+        temp.y = y / magnitide;
+        temp.z = z / magnitide;
         return temp;
     }
 

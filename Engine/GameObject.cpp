@@ -4,7 +4,8 @@
 namespace XenonEngine
 {
 	GameObject::GameObject(const String & name):
-		m_name(name)
+		m_name(name),
+        m_state(ObjectState::Enable)
 	{
 	}
 
@@ -30,6 +31,7 @@ namespace XenonEngine
         Start();
         for (int i = 0; i < m_components.Count(); i++)
         {
+            assert(m_components[i] != nullptr);
             m_components[i]->Start();
         }
     }
@@ -39,6 +41,7 @@ namespace XenonEngine
         Update();
 		for (int i = 0; i < m_components.Count(); i++)
 		{
+            assert(m_components[i] != nullptr);
 			m_components[i]->Update();
 		}
 	}

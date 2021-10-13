@@ -30,7 +30,7 @@ namespace Gameplay
     void Cube3D::Start()
     {
         Transform3D* transform = new Transform3D(this);
-        transform->SetPosition(Vector3f(0, 0, -10));
+        transform->SetPosition(Vector3f(0, 0, -3));
         AddComponent(transform);
 
         String applicationPath = FileManager::Get().GetApplicationPath();

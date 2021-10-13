@@ -44,7 +44,7 @@ namespace Algorithm
 
 	protected:
 		bool IsCapacityEnough() const;
-		T* m_content;
+		T* m_content = nullptr;
 		int m_count;
 		int m_capacity;
 
@@ -261,13 +261,14 @@ namespace Algorithm
 		}
 		delete[] m_content;
 		m_content = newContent;
-        newContent = nullptr;
 		return true;
 	}
 
     template<typename T>
     bool Algorithm::Vector<T>::InternalReplace(const T*const content, unsigned int size)
     {
+        assert(m_content != nullptr);
+        assert(content != nullptr);
         memcpy(m_content, content, size * sizeof(T));
         m_count = size;
         return true;

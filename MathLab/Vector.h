@@ -77,9 +77,8 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	TVector<T, COUNT>::TVector(const TVector& that)
+	TVector<T, COUNT>::TVector(const TVector& that):TVector()
 	{
-		TVector();
 		for (int i = 0; i < that.Count(); i++)
 		{
 			m_vector[i] = that[i];
@@ -87,10 +86,9 @@ namespace MathLab
 	}
 
     template<typename T, int COUNT>
-    MathLab::TVector<T, COUNT>::TVector(const Vector<T>& vector)
+    MathLab::TVector<T, COUNT>::TVector(const Vector<T>& vector) :TVector()
     {
         assert(COUNT >= vector.Count());
-        TVector();
         for (int i = 0; i < vector.Count(); i++)
         {
             m_vector[i] = vector[i];
@@ -98,10 +96,9 @@ namespace MathLab
     }
 
     template<typename T, int COUNT>
-    MathLab::TVector<T, COUNT>::TVector(const Vector3f& vector3f)
+    MathLab::TVector<T, COUNT>::TVector(const Vector3f& vector3f) :TVector()
     {
         assert(COUNT >= 3);
-        TVector();
         m_vector[0] = vector3f.x;
         m_vector[1] = vector3f.y;
         m_vector[2] = vector3f.z;

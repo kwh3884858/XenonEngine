@@ -23,6 +23,7 @@
 #include "Engine/Component/PlayerPersonality.h"
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
+#include "Engine/Component/Camera3D.h"
 
 #include "Engine/IO/InputSystem.h"
 #include "CrossPlatform/XenonKey.h"
@@ -31,6 +32,7 @@
 #include "Gameplay/Enemy.h"
 #include "Gameplay/Player.h"
 #include "Gameplay/Cube3D.h"
+#include "Gameplay/CameraObject3D.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -107,6 +109,11 @@ namespace Gameplay {
         {
             Cube3D* cube = new Cube3D("Cube3D");
             world->AddGameObject(cube);
+        }
+
+        {
+            CameraObject3D* camera3D = new CameraObject3D("CameraObject3D");
+            world->AddGameObject(camera3D);
         }
 
         compiler = new XenonCompiler;

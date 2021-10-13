@@ -141,6 +141,7 @@
     <ClCompile Include="Engine\VirtualMachine\XenonScriptAssemblerMachine.cpp" />
     <ClCompile Include="Engine\VirtualMachine\XenonVirtualMachine.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
+    <ClCompile Include="Gameplay\CameraObject3D.cpp" />
     <ClCompile Include="Gameplay\Bullet.cpp" />
     <ClCompile Include="Gameplay\Cube3D.cpp" />
     <ClCompile Include="Gameplay\Enemy.cpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="Engine\VirtualMachine\XenonVirtualMachine.h" />
     <ClInclude Include="Engine\VirtualMachine\XenonCompiler.h" />
     <ClInclude Include="Engine\Component\IComponent.h" />
+    <ClInclude Include="Gameplay\CameraObject3D.h" />
     <ClInclude Include="Gameplay\Bullet.h" />
     <ClInclude Include="Gameplay\Cube3D.h" />
     <ClInclude Include="Gameplay\Enemy.h" />

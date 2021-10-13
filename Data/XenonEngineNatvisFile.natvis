@@ -1,57 +1,94 @@
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-    <Type Name="Algorithm::StringBase&lt;*&gt;">
-        <DisplayString>{m_string.m_content,[m_string.m_count]}</DisplayString>
-        <StringView>m_string.m_content,[m_string.m_count]</StringView>
-    </Type>
-    <Type Name="Algorithm::Vector&lt;*&gt;">
-        <DisplayString>{{size = {m_count}}}</DisplayString>
-        <Expand>
-            <Item Name="[size]">m_count</Item>
-            <Item Name="[capacity]">m_capacity</Item>
-            <ArrayItems>
-                <Size>m_count</Size>
-                <ValuePointer>m_content</ValuePointer>
-            </ArrayItems>
-        </Expand>
-    </Type>
-    <Type Name="Algorithm::Stack&lt;*&gt;">
-        <DisplayString>{{size = {m_count}}}</DisplayString>
-        <Expand>
-            <Item Name="[size]">m_count</Item>
-            <Item Name="[capacity]">m_capacity</Item>
-            <ArrayItems>
-                <Size>m_count</Size>
-                <ValuePointer>m_stack</ValuePointer>
-            </ArrayItems>
-        </Expand>
-    </Type>
-    <Type Name="MathLab::TVector&lt;*,*&gt;">
-      <DisplayString>{{ {$T2 * 2} }}</DisplayString>
-      <Expand>
-        <ArrayItems>
-          <Size>$T2</Size>
-          <ValuePointer>m_vector</ValuePointer>
-        </ArrayItems>
-        <Item Name="[size]">$T2</Item>
-      </Expand>
-    </Type>
-    <Type Name="MathLab::TMatrix&lt;*,*,*&gt;">
-      <Expand>
-        <Item Name="v3">v3, [3]nag</Item>
-        <CustomListItems>
-          <Variable Name="i" InitialValue="0"/>
-          <Loop>
-            <Item Name="m3[{i}]">m3[i],[3]nag</Item>
-            <Exec>++i</Exec>
-            <If Condition="i&gt;={$T2*$T3}">
-              <Break/>
-            </If>
-          </Loop>
-        </CustomListItems>
-      </Expand>
-    </Type>
-    <!--<Type Name="Algorithm::StringBase&lt;*&gt;">
+  <Type Name="Algorithm::StringBase&lt;*&gt;">
+    <DisplayString>{m_string.m_content,[m_string.m_count]}</DisplayString>
+    <StringView>m_string.m_content,[m_string.m_count]</StringView>
+  </Type>
+  <Type Name="Algorithm::Vector&lt;*&gt;">
+    <DisplayString>{{size = {m_count}}}</DisplayString>
+    <Expand>
+      <Item Name="[size]">m_count</Item>
+      <Item Name="[capacity]">m_capacity</Item>
+      <ArrayItems>
+        <Size>m_count</Size>
+        <ValuePointer>m_content</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="Algorithm::Stack&lt;*&gt;">
+    <DisplayString>{{size = {m_count}}}</DisplayString>
+    <Expand>
+      <Item Name="[size]">m_count</Item>
+      <Item Name="[capacity]">m_capacity</Item>
+      <ArrayItems>
+        <Size>m_count</Size>
+        <ValuePointer>m_stack</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="MathLab::TVector&lt;*,*&gt;">
+    <Expand>
+      <Item Name="[size]">$T2</Item>
+      <ArrayItems>
+        <Size>$T2</Size>
+        <ValuePointer>m_vector</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="MathLab::TVector&lt;*,4&gt;">
+    <DisplayString>{{{m_vector[0]},{m_vector[1]},{m_vector[2]},{m_vector[3]}}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>4</Size>
+        <ValuePointer>m_vector</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <Type Name="MathLab::TMatrix&lt;*,*,*&gt;">
+    <Expand>
+      <!--<Item Name="m_matrix">m_matrix, [3]nag</Item>-->
+      <CustomListItems>
+        <Variable Name="i" InitialValue="0"/>
+        <Loop>
+          <Item Name="m_matrix[{i}]">m_matrix[i]</Item>
+          <Exec>++i</Exec>
+          <If Condition="i&gt;=$T2">
+            <Break/>
+          </If>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+  <Type Name="CrossPlatform::Polygon3D">
+    <Expand>
+      <!--<Item Name="m_matrix">m_matrix, [3]nag</Item>-->
+      <CustomListItems>
+        <Variable Name="i" InitialValue="0"/>
+        <Loop>
+          <Item Name="m_vertexIndexList[{i}]">m_vertexIndexList[i]</Item>
+          <Exec>i++</Exec>
+          <If Condition="i&gt;=m_numOfIndex">
+            <Break/>
+          </If>
+        </Loop>
+      </CustomListItems>
+      <ArrayItems>
+        <Size>m_numOfVertex</Size>
+        <ValuePointer>m_vertexList</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>
+  <!--<Type Name="XenonEngine::Graphic2D::ClipCode">
+    <DisplayString Condition="this==FooFormat::FooFormat_Foo">Foo</DisplayString>
+    <DisplayString>{{{m_vector[0]},{m_vector[1]},{m_vector[2]},{m_vector[3]}}}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>4</Size>
+        <ValuePointer>m_vector</ValuePointer>
+      </ArrayItems>
+    </Expand>
+  </Type>-->
+  <!--<Type Name="Algorithm::StringBase&lt;*&gt;">
         <DisplayString>{{size = {m_count}}}</DisplayString>
         <Expand>
             <Item Name="[size]">m_count</Item>

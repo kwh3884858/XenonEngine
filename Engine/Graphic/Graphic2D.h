@@ -29,15 +29,22 @@ namespace XenonEngine {
     class Graphic2D :public CrossPlatform::XenonManager<Graphic2D>
     {
     public:
-        static constexpr char Clip_Code_Cneter = 0x0000;
-        static constexpr char Clip_Code_North = 0x0008;  // 1000
-        static constexpr char Clip_Code_West = 0x0001;  // 0001
-        static constexpr char Clip_Code_South = 0x0004;  // 0100
-        static constexpr char Clip_Code_East = 0x0002;  // 0010
-        static constexpr char Clip_Code_North_West = 0x0009;  // 1001
-        static constexpr char Clip_Code_North_East = 0x000a;  // 1010
-        static constexpr char Clip_Code_South_West = 0x0005;  // 0101
-        static constexpr char Clip_Code_South_East = 0x0006;  // 0110
+        typedef char ClipCode;
+        static constexpr ClipCode Clip_Code_Cneter = 0x0000;
+        static constexpr ClipCode Clip_Code_North = 0x0008;  // 1000
+        static constexpr ClipCode Clip_Code_West = 0x0001;  // 0001
+        static constexpr ClipCode Clip_Code_South = 0x0004;  // 0100
+        static constexpr ClipCode Clip_Code_East = 0x0002;  // 0010
+        static constexpr ClipCode Clip_Code_North_West = 0x0009;  // 1001
+        static constexpr ClipCode Clip_Code_North_East = 0x000a;  // 1010
+        static constexpr ClipCode Clip_Code_South_West = 0x0005;  // 0101
+        static constexpr ClipCode Clip_Code_South_East = 0x0006;  // 0110
+
+        enum ClipLineState
+        {
+            Accpet,
+            Eject
+        };
 
         virtual bool Initialize() override { return true; }
         void SetConfig(const Primitive2DConfig*const config);
@@ -53,15 +60,16 @@ namespace XenonEngine {
         //void DrawLine(const Vector2f* lhs, const Vector2f*rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPolygon(const Polygon2D& polygon2D)const;
         void DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void ClipLine(Vector2f& p0, Vector2f& p1)const;
+        ClipLineState ClipLine(Vector2f& p0, Vector2f& p1)const;
+        ClipLineState ClipLine(Vector2i& p0, Vector2i& p1)const;
 
     private:
         const int Y_AXIS_STEP = 1;
 
         void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        char InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
-        bool InternalClipPoint(char clipCode,Vector2f& point, const Vector2f& anotherPoint)const;
+        ClipCode InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
+        bool InternalClipPoint(ClipCode clipCode,Vector2f& point, const Vector2f& anotherPoint)const;
         Vector2f InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX)const;
         Vector2f InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY)const;
 

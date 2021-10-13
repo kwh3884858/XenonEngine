@@ -60,7 +60,7 @@ namespace XenonEngine
         {
             char msg[200];
             gameobject->GetName().CString(msg);
-            strcat(msg, " doesn`t have a physical component. [Warning]");
+            strcat(msg, " doesn`t have a physical component. [Warning]\n");
             printf(msg);
         }
         m_worldObjects.Add(gameobject);

@@ -57,9 +57,9 @@ namespace MathLab {
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(const TMatrix& that)
+    MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(const TMatrix& that) :
+        TMatrix()
 	{
-		TMatrix();
 		for (int i = 0; i < ROW; i++)
 		{
 			(*this)[i] = that[i];
@@ -67,9 +67,9 @@ namespace MathLab {
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(const TMatrix<T, ROW - 1, COLUMN>& that)
+	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(const TMatrix<T, ROW - 1, COLUMN>& that):
+        TMatrix()
 	{
-		TMatrix();
 		for (int i = 0; i < ROW - 1; i++)
 		{
 			(*this)[i] = that[i];
@@ -80,10 +80,10 @@ namespace MathLab {
 	}
 
 	template<typename T, int ROW, int COLUMN>
-	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(std::initializer_list<T> param)
+	MathLab::TMatrix<T, ROW, COLUMN>::TMatrix(std::initializer_list<T> param):
+        TMatrix()
 	{
 		assert(param.size() == ROW * COLUMN);
-		TMatrix();
         int i = 0;
         std::initializer_list<T>::const_iterator iter = param.begin();
         for (int row = 0; row < ROW; row++)

@@ -15,7 +15,7 @@ namespace CrossPlatform
         // For draw something in the a rectangle of window
         const int m_minX = 0;
         const int m_minY = 0;
-        const int m_maxX = 800;
+        const int m_maxX = 799;
         const int m_maxY = 599;
     };
 }

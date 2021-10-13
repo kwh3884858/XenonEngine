@@ -181,13 +181,32 @@ namespace XenonEngine
         }
     }
 
-    void Graphic2D::ClipLine(Vector2f& p0, Vector2f& p1) const
+    Graphic2D::ClipLineState Graphic2D::ClipLine(Vector2f& p0, Vector2f& p1) const
     {
-        char p0Code = InternalClipCode(p0, m_minDrawPosition, m_maxDrawPosition);
-        char p1Code = InternalClipCode(p1, m_minDrawPosition, m_maxDrawPosition);
-
+        ClipCode p0Code = InternalClipCode(p0, m_minDrawPosition, m_maxDrawPosition);
+        ClipCode p1Code = InternalClipCode(p1, m_minDrawPosition, m_maxDrawPosition);
+        if (p0Code & p1Code)
+        {
+            return ClipLineState::Eject;
+        }
+        if (p0Code == 0 && p1Code == 0)
+        {
+            return ClipLineState::Accpet;
+        }
         InternalClipPoint(p0Code, p0, p1);
         InternalClipPoint(p1Code, p1, p0);
+        return ClipLineState::Accpet;
+    }
+
+    Graphic2D::ClipLineState Graphic2D::ClipLine(Vector2i& p0, Vector2i& p1) const
+    {
+        Vector2f fp0(p0.x, p0.y);
+        Vector2f fp1(p1.x, p1.y);
+        ClipLineState state = ClipLine(fp0, fp1);
+        p0 = Vector2i(fp0.x,fp0.y);
+        p1 = Vector2i(fp1.x,fp1.y);
+
+        return state;
     }
 
     void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
@@ -332,7 +351,7 @@ namespace XenonEngine
         }
     }
 
-    char Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
+    Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
     {
         char clipCode = 0;
         if (point.x < minPosition.x)
@@ -356,7 +375,7 @@ namespace XenonEngine
         return clipCode;
     }
 
-    bool Graphic2D::InternalClipPoint(char clipCode, Vector2f& point, const Vector2f& anotherPoint) const
+    bool Graphic2D::InternalClipPoint(ClipCode clipCode, Vector2f& point, const Vector2f& anotherPoint) const
     {
         switch (clipCode)
         {
@@ -429,14 +448,28 @@ namespace XenonEngine
     {
         Vector2f newPoint(point);
         newPoint.x = clipX;
-        newPoint.y = (clipX - anontherPoint.x) / (point.x - anontherPoint.x) * (point.y - anontherPoint.y) + anontherPoint.y;
+        if ((point.x - anontherPoint.x) * (point.y - anontherPoint.y) == 0)
+        {
+            newPoint.y = anontherPoint.y;
+        }
+        else
+        {
+            newPoint.y = (clipX - anontherPoint.x) / (point.x - anontherPoint.x) * (point.y - anontherPoint.y) + anontherPoint.y;
+        }
         return newPoint;
     }
 
     Vector2f Graphic2D::InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY) const
     {
         Vector2f newPoint(point);
-        newPoint.x = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (point.x - anontherPoint.x) + anontherPoint.x;
+        if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) == 0)
+        {
+            newPoint.x = anontherPoint.x;
+        }
+        else
+        {
+            newPoint.x = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (point.x - anontherPoint.x) + anontherPoint.x;
+        }
         newPoint.y = clipY;
         return newPoint;
     }
