@@ -58,6 +58,7 @@ namespace Gameplay {
     using XenonEngine::BoxCollider2D;
     using XenonEngine::BoxCollider2DConfig;
     using XenonEngine::ComponentType;
+    using XenonEngine::Camera3D;
 
     GameObjectWorld* world;
 
@@ -147,6 +148,20 @@ namespace Gameplay {
 
 			compiler->RunScript();
 		}
+        
+        if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_F))
+        {
+            GameObject* cube = world->GetGameObject("Cube3D");
+            Transform3D* cubeTrans = cube->GetComponent<Transform3D>();
+
+            GameObject* camera3D = world->GetGameObject("CameraObject3D");
+            Transform3D* cameraTrans = camera3D->GetComponent<Transform3D>();
+            Camera3D* camera = camera3D->GetComponent<Camera3D>();
+
+            Vector3f lookAt = cubeTrans->GetPosition() - cameraTrans->GetPosition();
+            camera->SetLookAt(lookAt);
+        }
+
 
 		world->Update();
     }

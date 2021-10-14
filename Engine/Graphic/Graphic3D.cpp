@@ -49,26 +49,42 @@ namespace XenonEngine
             //Remove back faces
             TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
             TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
-            TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToCameraTransform * cameraToProjectionTransfrom * projectionToScreenTransfrom;
+            TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
+            TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
+            TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
+
+            Vector3f origin(0, 0, 0);
+            Vector3f xAxisL(-1000, 0, 0);
+            Vector3f xAxisR(1000, 0, 0);
+            DrawLine(xAxisL, origin, worldToScreenTranform, CrossPlatform::INDIAN_RED);
+            DrawLine(origin, xAxisR, worldToScreenTranform, CrossPlatform::RED);
+            Vector3f yAxisU(0, 1000, 0);
+            Vector3f yAxisD(0, -1000, 0);
+            DrawLine(yAxisU, origin, worldToScreenTranform, CrossPlatform::GREEN);
+            DrawLine(origin, yAxisD, worldToScreenTranform, CrossPlatform::DARK_GREEN);
+            Vector3f zAxisF(0, 0, 1000);
+            Vector3f zAxisB(0, 0, -1000);
+            DrawLine(zAxisB, origin, worldToScreenTranform, CrossPlatform::DRAK_BLUE);
+            DrawLine(origin, zAxisF, worldToScreenTranform, CrossPlatform::BLUE);
 
             const Polygon3D* polygon = mesh->GetPolygon3D();
-            for (int i = 0; i < polygon->Count(); i += 3)
+            for (int polyIndex = 0; polyIndex < polygon->Count(); polyIndex += 3)
             {
-                const Vector3f& vertex1 = (*polygon)[i];
+                const Vector3f& vertex1 = (*polygon)[polyIndex];
                 TVector4f homogeneousVertex1(vertex1);
                 homogeneousVertex1[3] = 1.0f;
                 homogeneousVertex1 = homogeneousVertex1 * localToScreenTranform;
                 Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex1);
                 Vector2f screenPoint1(screenPosition1.x, screenPosition1.y);
 
-                const Vector3f& vertex2 = (*polygon)[i + 1];
+                const Vector3f& vertex2 = (*polygon)[polyIndex + 1];
                 TVector4f homogeneousVertex2(vertex2);
                 homogeneousVertex2[3] = 1.0f;
                 homogeneousVertex2 = homogeneousVertex2 * localToScreenTranform;
                 Vector3f screenPosition2 = ConvertFormHomogeneous(homogeneousVertex2);
                 Vector2f screenPoint2(screenPosition2.x, screenPosition2.y);
 
-                const Vector3f& vertex3 = (*polygon)[i + 2];
+                const Vector3f& vertex3 = (*polygon)[polyIndex + 2];
                 TVector4f homogeneousVertex3(vertex3);
                 homogeneousVertex3[3] = 1.0f;
                 homogeneousVertex3 = homogeneousVertex3 * localToScreenTranform;
@@ -87,19 +103,49 @@ namespace XenonEngine
                 Vector2f tmp1;
                 tmp0 = screenPoint1;
                 tmp1 = screenPoint2;
-                Graphic2D::Get().ClipLine(tmp0, tmp1);
-                Graphic2D::Get().DrawLine(tmp0, tmp1);
+                Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+                if (state == Graphic2D::ClipLineState::Accpet)
+                {
+                    Graphic2D::Get().DrawLine(tmp0, tmp1);
+                }
                 tmp0 = screenPoint2;
                 tmp1 = screenPoint3;
-                Graphic2D::Get().ClipLine(tmp0, tmp1);
-                Graphic2D::Get().DrawLine(tmp0, tmp1);
-                tmp0 = screenPoint2;
-                tmp1 = screenPoint3;
-                Graphic2D::Get().ClipLine(tmp0, tmp1);
-                Graphic2D::Get().DrawLine(tmp0, tmp1);
+                state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+                if (state == Graphic2D::ClipLineState::Accpet)
+                {
+                    Graphic2D::Get().DrawLine(tmp0, tmp1);
+                }
+                tmp0 = screenPoint3;
+                tmp1 = screenPoint1;
+                state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+                if (state == Graphic2D::ClipLineState::Accpet)
+                {
+                    Graphic2D::Get().DrawLine(tmp0, tmp1);
+                }
             }
 		}
 	}
+
+    void Graphic3D::DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    {
+        TVector4f homogeneousVertex1(start);
+        homogeneousVertex1[3] = 1.0f;
+        homogeneousVertex1 = homogeneousVertex1 * localToScreenTranform;
+        Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex1);
+        Vector2f screenPoint1(screenPosition1.x, screenPosition1.y);
+
+        TVector4f homogeneousVertex2(end);
+        homogeneousVertex2[3] = 1.0f;
+        homogeneousVertex2 = homogeneousVertex2 * localToScreenTranform;
+        Vector3f screenPosition2 = ConvertFormHomogeneous(homogeneousVertex2);
+        Vector2f screenPoint2(screenPosition2.x, screenPosition2.y);
+
+        Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(screenPoint1, screenPoint2);
+        if (state == Graphic2D::ClipLineState::Accpet)
+        {
+            Graphic2D::Get().DrawLine(screenPoint1, screenPoint2, rgba);
+        }
+    }
 
     const XenonEngine::Camera3D* Graphic3D::GetMajorCamera() const
     {
@@ -107,13 +153,13 @@ namespace XenonEngine
         return m_cameraList[0];
     }
 
-    MathLab::TMatrix4X4f Graphic3D::GetProjectionMatrix(const Vector2f& viewDistance, float aspectRatio) const
+    MathLab::TMatrix4X4f Graphic3D::GetProjectionMatrix(const float& viewDistance, float aspectRatio) const
     {
         assert(aspectRatio >= 1);
         return TMatrix4X4f(
             std::initializer_list<float>{
-            viewDistance.x, 0, 0, 0,
-                0, viewDistance.y * aspectRatio, 0, 0,
+            viewDistance, 0, 0, 0,
+                0, viewDistance * aspectRatio, 0, 0,
                 0, 0, 1, 0,
                 0, 0, 0, 1
         });
@@ -127,8 +173,22 @@ namespace XenonEngine
             std::initializer_list<float>{
                 alpha, 0, 0, 0,
                 0, -beta, 0, 0,
-                0, 0, 1, 1,
-                alpha, beta, 0, 0
+                alpha, beta, 1, 1,
+                0, 0, 0, 0
+        });
+    }
+
+    MathLab::TMatrix4X4f Graphic3D::GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort) const
+    {
+        float viewDistance = tan(fov/2) * (viewPort.x / 2);
+        float alpha = 0.5f * viewPort.x - 0.5;
+        float beta = 0.5f * viewPort.y - 0.5;
+        return TMatrix4X4f(
+            std::initializer_list<float>{
+                viewDistance, 0, 0, 0,
+                0, -viewDistance, 0, 0,
+                alpha, beta, 1, 1,
+                0, 0, 0, 0
         });
     }
 

@@ -13,8 +13,6 @@ namespace XenonEngine
     class Camera3DConfig
     {
     public:
-        MathLab::Vector3f m_lookAt;
-        MathLab::Vector2f m_viewDistance;
         float m_fov;
         MathLab::Vector2f m_viewport;
     };
@@ -29,19 +27,22 @@ namespace XenonEngine
 		virtual ComponentType GetComponentType() const override { return m_type; };
 		virtual IComponent* Copy(GameObject*const gameObject)const override;
         virtual bool Start() override;
+        virtual bool Update() override;
         virtual bool Destroy() override;
         void SetConfig(const Camera3DConfig*const config);
 
-        MathLab::Vector2f GetViewDistance()const { return m_viewDistance; }
+        float GetViewDistance()const;
+        float GetFov()const { return m_fov; }
         MathLab::Vector2f GetViewport()const { return m_viewport; }
         float GetAspectRatio()const { return m_viewport.x / m_viewport.y; }
-        void SetLookAt(const MathLab::Vector3f& lookat) { m_lookAt = lookat; }
         MathLab::TMatrix4X4f GetCameraTransformInverseMatrix()const;
+
+        void SetLookAt(const MathLab::Vector3f& lookat);
 
 		static ComponentType m_type;
 	private:
+        void SetEularLookAt(const MathLab::Vector2f& headingAndElevation);
 		MathLab::Vector3f m_lookAt;
-		MathLab::Vector2f m_viewDistance;
 		float m_fov;
 		MathLab::Vector2f m_viewport;
 	};

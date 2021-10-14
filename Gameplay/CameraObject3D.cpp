@@ -32,12 +32,12 @@ namespace Gameplay
     void CameraObject3D::Start()
     {
         Transform3D* transform = new Transform3D(this);
+        transform->SetPosition(Vector3f(0, 0, -1));
+        transform->SetRotation(Vector3f(0, -90, 0));
         AddComponent(transform);
 
         Camera3DConfig camera3DConfig;
-        camera3DConfig.m_lookAt = Vector3f(0, 0, -10);
-        camera3DConfig.m_viewDistance = Vector2f(1, 1);
-        camera3DConfig.m_fov = 1;
+        camera3DConfig.m_fov = 90;
         camera3DConfig.m_viewport = Vector2f(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
         Camera3D* camera3D = new Camera3D(this);
         camera3D->SetConfig(&camera3DConfig);
@@ -49,24 +49,57 @@ namespace Gameplay
         Transform3D* trans = GetComponent<Transform3D>();
         float xAxisDelta = 0;
         float yAxisDelta = 0;
+        float zAxisDelta = 0;
         static float velocity = 0.1;
+
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_W))
+        {
+            xAxisDelta = 1;
+        }
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_S))
+        {
+            xAxisDelta = -1;
+        }
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_Q))
         {
             yAxisDelta = 1;
         }
-        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_S))
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_E))
         {
             yAxisDelta = -1;
         }
         else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_A))
         {
-            xAxisDelta = -1;
+            zAxisDelta = 1;
         }
         else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_D))
         {
-            xAxisDelta = 1;
+            zAxisDelta = -1;
         }
-        trans->AddPosition(Vector2f(xAxisDelta * velocity, yAxisDelta*velocity));
+        Vector3f delatPos(xAxisDelta * velocity, yAxisDelta*velocity, zAxisDelta* velocity);
+        TVector3f tDeltaPos(delatPos);
+        tDeltaPos = tDeltaPos * trans->GetRotationTranformMatrix();
+        trans->AddPosition(tDeltaPos.GetVetor());
+
+        float headingDelta = 0;
+        float ElevationDelta = 0;
+        if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LEFT))
+        {
+            headingDelta = -1;
+        }
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_RIGHT))
+        {
+            headingDelta = 1;
+        }
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_UP))
+        {
+            ElevationDelta = 1;
+        }
+        else if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_DOWN))
+        {
+            ElevationDelta = -1;
+        }
+        trans->AddRotation(Vector3f(ElevationDelta,headingDelta,0));
     }
 
     void CameraObject3D::OnTrigger(GameObject* gameobject)

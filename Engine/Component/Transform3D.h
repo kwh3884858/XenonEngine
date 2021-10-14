@@ -14,6 +14,7 @@ namespace XenonEngine
 	class Rigidbody2D;
 
 	using MathLab::Vector3f;
+	using MathLab::TMatrix3X3f;
 	using MathLab::TMatrix4X4f;
 	using MathLab::Quaternionf;
 
@@ -31,11 +32,13 @@ namespace XenonEngine
         void AddPosition(const Vector3f& position) { assert(this != nullptr); m_position += position; }
 		void SetPosition(const Vector3f& position) { assert(this != nullptr); m_position = position; }
 		const Vector3f& GetPosition()const { return m_position; }
+        void AddRotation(const Vector3f& rotation) { assert(this != nullptr); m_orientation += rotation; }
+        void SetRotation(const Vector3f& rotation) { assert(this != nullptr); m_orientation = rotation; }
 
 		//const Quaternionf GetOrientation()const;
-		const Vector3f& GetRotation()const { return m_orientation; }
+		const Vector3f& GetRotation() const { return m_orientation; }
+        const TMatrix3X3f GetRotationTranformMatrix()const;
 		const TMatrix4X4f GetLocalToWorldTransformMatrix()const;
-
 		static ComponentType m_type;
 	private:
 		bool m_isModified = false;

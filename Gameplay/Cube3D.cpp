@@ -30,13 +30,13 @@ namespace Gameplay
     void Cube3D::Start()
     {
         Transform3D* transform = new Transform3D(this);
-        transform->SetPosition(Vector3f(0, 0, -3));
+        transform->SetPosition(Vector3f(0, 0, 3));
         AddComponent(transform);
 
         String applicationPath = FileManager::Get().GetApplicationPath();
         int pos = applicationPath.IndexOf("XenonEngine.exe");
         String cubeObjPath = applicationPath.Substring(0, pos);
-        cubeObjPath.Append("cube.obj");
+        cubeObjPath.Append("KeQing.obj");
         Mesh3DConfig config;
         config.m_polygon3D = ObjectLoader::Get().LoadObj(cubeObjPath);
         Mesh3D* mesh3D = new Mesh3D(this);

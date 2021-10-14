@@ -3,9 +3,11 @@
 
 #include "Engine/Component/Transform3D.h"
 #include "Engine/GameObject.h"
+#include <cmath>
 
 namespace XenonEngine
 {
+	using MathLab::Vector2f;
 	using MathLab::Vector3f;
 	using MathLab::TMatrix4X4f;
 
@@ -13,7 +15,6 @@ namespace XenonEngine
 	{
 		Camera3D* that = new Camera3D(gameObject);
 		that->m_lookAt = m_lookAt;
-		that->m_viewDistance = m_viewDistance;
 		that->m_fov = m_fov;
 		that->m_viewport = m_viewport;
 		return that;
@@ -25,6 +26,14 @@ namespace XenonEngine
         return true;
     }
 
+    bool Camera3D::Update()
+    {
+        const Transform3D* tranform3D = GetGameObject()->GetComponent<Transform3D>();
+        Vector3f rotation = tranform3D->GetRotation();
+        SetEularLookAt(Vector2f(rotation.y, rotation.x));
+        return true;
+    }
+
     bool Camera3D::Destroy()
     {
         Graphic3D::Get().RemoveCamera(this);
@@ -33,10 +42,16 @@ namespace XenonEngine
 
     void Camera3D::SetConfig(const Camera3DConfig*const config)
     {
-        m_lookAt = config->m_lookAt;
-        m_viewDistance = config->m_viewDistance;
+        assert(config->m_fov > 0);
         m_fov = config->m_fov;
+        assert(config->m_viewport.x > 0 && config->m_viewport.y > 0);
         m_viewport = config->m_viewport;
+    }
+
+    float Camera3D::GetViewDistance() const
+    {
+        float radius = MathLab::DegreeToRadians(m_fov / 2);
+        return tan(radius) *(m_viewport.x / 2);
     }
 
     MathLab::TMatrix4X4f Camera3D::GetCameraTransformInverseMatrix() const
@@ -58,6 +73,24 @@ namespace XenonEngine
 				-position.dot(rightVector), -position.dot(upVector), -position.dot(lookAt),1
 		});
 	}
+
+    void Camera3D::SetEularLookAt(const MathLab::Vector2f& headingAndElevation)
+    {
+        float headingRadius = MathLab::DegreeToRadians(headingAndElevation.x);
+        float elevationRadius = MathLab::DegreeToRadians(headingAndElevation.y);
+
+        m_lookAt.x = cos(elevationRadius) * cos(headingRadius);
+        m_lookAt.y = sin(elevationRadius);
+        m_lookAt.z = cos(elevationRadius) * sin(headingRadius);
+    }
+
+    void Camera3D::SetLookAt(const MathLab::Vector3f& lookat)
+    {
+        float heading = MathLab::RadiansToDegree(atan(lookat.z / lookat.x));
+        float elevation = MathLab::RadiansToDegree(asin(lookat.y));
+        Transform3D* tranform3D = GetGameObject()->GetComponent<Transform3D>();
+        tranform3D->SetRotation(Vector3f(elevation, heading, 0));
+    }
 
     ComponentType Camera3D::m_type = ComponentType::ComponentType_Camera;
 }

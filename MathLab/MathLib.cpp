@@ -20,6 +20,11 @@ namespace MathLab {
         return degree * TO_RADIAN;
     }
 
+    float RadiansToDegree(float radius)
+    {
+        return radius * TO_DEGREE;
+    }
+
     Vector3f RotateXAxis(const Vector3f& vec, const float degree)
     {
         float radian = DegreeToRadians(degree );

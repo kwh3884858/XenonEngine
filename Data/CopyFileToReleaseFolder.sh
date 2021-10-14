@@ -5,6 +5,7 @@
     cp XenonScriptAssemblerMachineInstrction.xet ../Release/XenonScriptAssemblerMachineInstrction.xet
     cp XenonScriptAssemblerDelimiter.xet ../Release/XenonScriptAssemblerDelimiter.xet
     cp Main.xea ../Release/Main.xea
+    cp cube.obj ../Release/cube.obj
 #     echo "Operation Complete"
 #     ;;
 # N | n)

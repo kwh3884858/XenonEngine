@@ -9,6 +9,8 @@
 #include "Engine/Component/Transform3D.h"
 #include "Algorithms/Vector.h"
 #include "MathLab/Vector2.h"
+#include "MathLab/Vector3.h"
+#include "CrossPlatform/SColorRGBA.h"
 
 namespace CrossPlatform 
 {
@@ -33,9 +35,12 @@ namespace XenonEngine
 
         void Update()const;
 	private:
+        void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+
         const Camera3D* GetMajorCamera()const;
-        MathLab::TMatrix4X4f GetProjectionMatrix(const MathLab::Vector2f& viewDistance, float aspectRatio)const;
+        MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio)const;
         MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort)const;
+        MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort)const;
 
 		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;

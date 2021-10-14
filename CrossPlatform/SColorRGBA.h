@@ -6,8 +6,6 @@
 #pragma once
 namespace CrossPlatform
 {
-
-
 	class SColorRGBA
 	{
 	public:
@@ -33,8 +31,13 @@ namespace CrossPlatform
 	};
     const SColorRGBA WHITE(255, 255, 255, 255);
     const SColorRGBA BLUE(255, 0, 0, 255);
+    const SColorRGBA DRAK_BLUE(139, 0, 0, 255);
     const SColorRGBA GREEN(0, 255, 0, 255);
+    const SColorRGBA DARK_GREEN(0, 100, 0, 255);
     const SColorRGBA RED(0, 0, 255, 255);
+    const SColorRGBA ORANGE_RED(0, 69, 255, 255);
+    const SColorRGBA PALE_GODENROD(170, 232, 238, 255);
+    const SColorRGBA INDIAN_RED(92, 92, 205, 255);
     const SColorRGBA YELLOW(0, 255, 255, 255);
 
 }

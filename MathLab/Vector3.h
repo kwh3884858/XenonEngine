@@ -24,9 +24,6 @@ namespace MathLab {
         friend bool LessY(const Vector3& origin, const Vector3& compare);
         //friend void Exchange(Vector3*const a, Vector3*const b);
 
-        friend Vector3 operator+(const Vector3& v1, const Vector3& v2);
-        friend Vector3 operator-(const Vector3& v1, const Vector3& v2);
-
         Vector3& operator+=(const Vector3& rvalue);
         Vector3& operator-=(const Vector3& rvalue);
 
@@ -160,14 +157,14 @@ namespace MathLab {
 
     template<typename T>
     Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2) {
-        Vector3 vector(v1);
+        Vector3<T> vector(v1);
         vector += v2;
         return  vector;
     }
 
     template<typename T>
     Vector3<T> operator-(const Vector3<T>& v1, const Vector3<T>& v2) {
-        Vector3 vector(v1);
+        Vector3<T> vector(v1);
         vector -= v2;
         return  vector;
     }

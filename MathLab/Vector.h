@@ -10,6 +10,7 @@ namespace MathLab
 	struct TVector;
 
     typedef     TVector<float, 4>      TVector4f;
+    typedef     TVector<float, 3>      TVector3f;
 
 	template<typename T, int COUNT>
 	TVector<T, COUNT> operator+(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs);
@@ -63,6 +64,7 @@ namespace MathLab
 		TVector Normalize()const;
 		T Magnitude()const;
 		T DoubleMagnitude()const;
+        Vector3<T> GetVetor();
 	};
 
 	template<typename T, int COUNT>
@@ -295,4 +297,11 @@ namespace MathLab
 	{
 		return this->Dot(*this);
 	}
+
+    template<typename T, int COUNT>
+    MathLab::Vector3<T> MathLab::TVector<T, COUNT>::GetVetor()
+    {
+        return Vector3<T>(m_vector[0], m_vector[1], m_vector[2]);
+    }
+
 }

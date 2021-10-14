@@ -20,5 +20,10 @@ namespace XenonEngine
         return MathLab::GetPositionAndRotationTranformMatrix(m_position, m_orientation);
 	}
 
+    const MathLab::TMatrix3X3f Transform3D::GetRotationTranformMatrix() const
+    {
+        return MathLab::GetRotationTranformMatrix(m_orientation);
+    }
+
 	ComponentType Transform3D::m_type = ComponentType::ComponentType_Transform3D;
 }

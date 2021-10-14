@@ -15,6 +15,7 @@
 namespace MathLab {
 
     float DegreeToRadians(float degree);
+    float RadiansToDegree(float radius);
     Vector3f RotateXAxis(const Vector3f& vec, const float degree);
     Vector3f RotateYAxis(const Vector3f& vec, const float degree);
     Vector3f RotateZAxis(const Vector3f& vec, const float degree);
