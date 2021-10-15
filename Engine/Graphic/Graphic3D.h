@@ -36,7 +36,8 @@ namespace XenonEngine
         void Update()const;
 	private:
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
-
+        void DrawCoordinateLines(const TMatrix4X4f& worldToScreenTranform)const;
+        
         const Camera3D* GetMajorCamera()const;
         MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio)const;
         MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort)const;

@@ -53,19 +53,7 @@ namespace XenonEngine
             TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
             TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
 
-            Vector3f origin(0, 0, 0);
-            Vector3f xAxisL(-1000, 0, 0);
-            Vector3f xAxisR(1000, 0, 0);
-            DrawLine(xAxisL, origin, worldToScreenTranform, CrossPlatform::INDIAN_RED);
-            DrawLine(origin, xAxisR, worldToScreenTranform, CrossPlatform::RED);
-            Vector3f yAxisU(0, 1000, 0);
-            Vector3f yAxisD(0, -1000, 0);
-            DrawLine(yAxisU, origin, worldToScreenTranform, CrossPlatform::GREEN);
-            DrawLine(origin, yAxisD, worldToScreenTranform, CrossPlatform::DARK_GREEN);
-            Vector3f zAxisF(0, 0, 1000);
-            Vector3f zAxisB(0, 0, -1000);
-            DrawLine(zAxisB, origin, worldToScreenTranform, CrossPlatform::DRAK_BLUE);
-            DrawLine(origin, zAxisF, worldToScreenTranform, CrossPlatform::BLUE);
+            DrawCoordinateLines(worldToScreenTranform);
 
             const Polygon3D* polygon = mesh->GetPolygon3D();
             for (int polyIndex = 0; polyIndex < polygon->Count(); polyIndex += 3)
@@ -145,6 +133,23 @@ namespace XenonEngine
         {
             Graphic2D::Get().DrawLine(screenPoint1, screenPoint2, rgba);
         }
+    }
+
+    void Graphic3D::DrawCoordinateLines(const TMatrix4X4f& worldToScreenTranform) const
+    {
+        Vector3f origin(0, 0, 0);
+        Vector3f xAxisL(-1000, 0, 0);
+        Vector3f xAxisR(1000, 0, 0);
+        DrawLine(xAxisL, origin, worldToScreenTranform, CrossPlatform::INDIAN_RED);
+        DrawLine(origin, xAxisR, worldToScreenTranform, CrossPlatform::RED);
+        Vector3f yAxisU(0, 1000, 0);
+        Vector3f yAxisD(0, -1000, 0);
+        DrawLine(yAxisU, origin, worldToScreenTranform, CrossPlatform::GREEN);
+        DrawLine(origin, yAxisD, worldToScreenTranform, CrossPlatform::DARK_GREEN);
+        Vector3f zAxisF(0, 0, 1000);
+        Vector3f zAxisB(0, 0, -1000);
+        DrawLine(zAxisB, origin, worldToScreenTranform, CrossPlatform::DRAK_BLUE);
+        DrawLine(origin, zAxisF, worldToScreenTranform, CrossPlatform::BLUE);
     }
 
     const XenonEngine::Camera3D* Graphic3D::GetMajorCamera() const
