@@ -40,5 +40,6 @@ namespace XenonEngine
 		static ComponentType m_type;
 	private:
 		const CrossPlatform::Polygon3D* m_polygon3D;
+        float m_maxRadius;
 	};
 }
