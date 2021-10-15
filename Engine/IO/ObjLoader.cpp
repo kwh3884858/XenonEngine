@@ -23,7 +23,7 @@ namespace XenonEngine
 			if (!reader.Error().empty()) {
 				std::cerr << "TinyObjReader: " << reader.Error();
 			}
-			exit(1);
+			assert(true == false);
 		}
 
 		if (!reader.Warning().empty()) {
