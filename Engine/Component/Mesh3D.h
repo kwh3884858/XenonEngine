@@ -36,7 +36,7 @@ namespace XenonEngine
 		virtual bool Destroy() override;
 
         const CrossPlatform::Polygon3D* GetPolygon3D()const { return m_polygon3D; }
-
+        float GetMaxRadius()const { return m_maxRadius; }
 		static ComponentType m_type;
 	private:
 		const CrossPlatform::Polygon3D* m_polygon3D;

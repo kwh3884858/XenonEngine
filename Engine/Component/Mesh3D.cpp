@@ -11,12 +11,23 @@ namespace XenonEngine
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
 		that->m_polygon3D = m_polygon3D;
+        that->m_maxRadius = m_maxRadius;
 		return that;
 	}
 
 	void Mesh3D::SetConfig(const Mesh3DConfig*const config)
 	{
 		m_polygon3D = config->m_polygon3D;
+        float maxRadius = 0;
+        for (int i = 0 ;i < m_polygon3D->GetNumOfVertex(); i++)
+        {
+            float radius = (*m_polygon3D)[i].x *(*m_polygon3D)[i].x + (*m_polygon3D)[i].y *(*m_polygon3D)[i].y + (*m_polygon3D)[i].z *(*m_polygon3D)[i].z;
+            if (radius > maxRadius)
+            {
+                maxRadius = radius;
+            }
+        }
+        m_maxRadius = sqrt(maxRadius);
 	}
 
 	bool Mesh3D::Start()

@@ -16,6 +16,8 @@ namespace CrossPlatform {
 		const Vector3f& operator[](int index)const;
 		~Polygon3D();
 
+        int GetNumOfVertex()const { return m_numOfVertex; }
+
 	private:
 		int m_numOfIndex = 0;
 		int* m_vertexIndexList = nullptr;

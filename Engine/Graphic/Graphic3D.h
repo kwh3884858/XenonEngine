@@ -24,6 +24,12 @@ namespace XenonEngine
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
 	public:
+        enum CullingState
+        {
+            Inside,
+            Culled
+        };
+
         virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
 
@@ -35,6 +41,8 @@ namespace XenonEngine
 
         void Update()const;
 	private:
+        CullingState Culling(const Mesh3D& mesh, const TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
+        CullingState RemoveBackFaces(const Vector3f& p0, const Vector3f& p1, const Vector3f& p2)const;
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawCoordinateLines(const TMatrix4X4f& worldToScreenTranform)const;
         

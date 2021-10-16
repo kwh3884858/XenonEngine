@@ -1,6 +1,7 @@
 #pragma once
 #include <cassert>
 #include <Algorithms/Vector.h>
+#include <initializer_list>
 
 namespace MathLab
 {
@@ -56,6 +57,7 @@ namespace MathLab
 
 		TVector();
         TVector(const TVector& that);
+        TVector(std::initializer_list<T>& param);
         TVector(const Vector<T>& vector);
         TVector(const Vector3f& vector3f);
 		~TVector();
@@ -86,6 +88,18 @@ namespace MathLab
 			m_vector[i] = that[i];
 		}
 	}
+
+    template<typename T, int COUNT>
+    MathLab::TVector<T, COUNT>::TVector(std::initializer_list<T>& param)
+    {
+        assert(param.size() == COUNT);
+        std::initializer_list<T>::const_iterator iter = param.begin();
+        for (int i = 0; i < COUNT; i++)
+        {
+            (*this)[i] = *iter;
+            iter++;
+        }
+    }
 
     template<typename T, int COUNT>
     MathLab::TVector<T, COUNT>::TVector(const Vector<T>& vector) :TVector()

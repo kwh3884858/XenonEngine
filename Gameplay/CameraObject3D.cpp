@@ -38,6 +38,7 @@ namespace Gameplay
 
         Camera3DConfig camera3DConfig;
         camera3DConfig.m_fov = 90;
+        camera3DConfig.m_viewPlane = Vector2f(2, 2);
         camera3DConfig.m_viewport = Vector2f(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
         Camera3D* camera3D = new Camera3D(this);
         camera3D->SetConfig(&camera3DConfig);

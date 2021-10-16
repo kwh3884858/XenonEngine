@@ -15,6 +15,8 @@ namespace XenonEngine
     public:
         float m_fov;
         MathLab::Vector2f m_viewport;
+        float m_nearClipZ = 1;
+        float m_farClipZ = 1000;
     };
 
 	//Left hand coordinate
@@ -33,9 +35,12 @@ namespace XenonEngine
 
         float GetViewDistance()const;
         float GetFov()const { return m_fov; }
+        MathLab::Vector2f GetViewPlane()const { return m_viewPlane; }
         MathLab::Vector2f GetViewport()const { return m_viewport; }
         float GetAspectRatio()const { return m_viewport.x / m_viewport.y; }
         MathLab::TMatrix4X4f GetCameraTransformInverseMatrix()const;
+        float GetNearClipZ()const { return m_nearClipZ; }
+        float GetFarClipZ()const { return m_farClipZ; }
 
         void SetLookAt(const MathLab::Vector3f& lookat);
 
@@ -44,6 +49,9 @@ namespace XenonEngine
         void SetEularLookAt(const MathLab::Vector2f& headingAndElevation);
 		MathLab::Vector3f m_lookAt;
 		float m_fov;
+        MathLab::Vector2f m_viewPlane;
 		MathLab::Vector2f m_viewport;
+        float m_nearClipZ;
+        float m_farClipZ;
 	};
 }

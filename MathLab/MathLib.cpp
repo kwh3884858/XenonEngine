@@ -107,4 +107,11 @@ namespace MathLab {
         return result;
     }
 
+    TVector4f ConvertFromNonHomogeneous(const Vector3f& nonHomogeneous)
+    {
+        TVector4f result (nonHomogeneous);
+        result[3] = 1;
+        return result;
+    }
+
 }

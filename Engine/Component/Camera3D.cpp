@@ -16,7 +16,10 @@ namespace XenonEngine
 		Camera3D* that = new Camera3D(gameObject);
 		that->m_lookAt = m_lookAt;
 		that->m_fov = m_fov;
+		that->m_viewPlane = m_viewPlane;
 		that->m_viewport = m_viewport;
+        that->m_farClipZ = m_farClipZ;
+        that->m_nearClipZ = m_nearClipZ;
 		return that;
 	}
 
@@ -46,12 +49,15 @@ namespace XenonEngine
         m_fov = config->m_fov;
         assert(config->m_viewport.x > 0 && config->m_viewport.y > 0);
         m_viewport = config->m_viewport;
+        m_viewPlane = Vector2f(2, 2 * (m_viewport.x / m_viewport.y));
+        m_nearClipZ = config->m_nearClipZ;
+        m_farClipZ = config->m_farClipZ;
     }
 
     float Camera3D::GetViewDistance() const
     {
         float radius = MathLab::DegreeToRadians(m_fov / 2);
-        return tan(radius) *(m_viewport.x / 2);
+        return tan(radius) *(m_viewPlane.x / 2);
     }
 
     MathLab::TMatrix4X4f Camera3D::GetCameraTransformInverseMatrix() const

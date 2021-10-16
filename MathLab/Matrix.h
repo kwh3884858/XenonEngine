@@ -6,7 +6,7 @@
 
 #pragma once
 #include "Vector.h"
-#include <initializer_list>
+
 
 namespace MathLab {
 	template<typename T, int ROW, int COLUMN>

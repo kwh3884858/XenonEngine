@@ -45,41 +45,59 @@ namespace XenonEngine
             }
             TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
             TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
-            //Culling
+
+            const Polygon3D* polygon = mesh->GetPolygon3D();
+            CullingState state = Culling(*mesh, localToWorldTransform, *majorCamera);
+            if (state == CullingState::Culled)
+            {
+                continue;
+            }
+
             //Remove back faces
             TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
             TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
             TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
             TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
             TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
+            TMatrix4X4f localToCameraTranform = localToWorldTransform * worldToCameraTransform;
 
             DrawCoordinateLines(worldToScreenTranform);
 
-            const Polygon3D* polygon = mesh->GetPolygon3D();
+            //TVector4f* tmpVertexs = new TVector4f[ polygon->GetNumOfVertex()];
+            //for (int index = 0 ;index <polygon->GetNumOfVertex(); index++)
+            //{
+            //    tmpVertexs[index] = ConvertFromNonHomogeneous((*polygon)[index]);
+            //    tmpVertexs[index] = tmpVertexs[index] * localToCameraTranform;
+            //}
+
             for (int polyIndex = 0; polyIndex < polygon->Count(); polyIndex += 3)
             {
-                const Vector3f& vertex1 = (*polygon)[polyIndex];
-                TVector4f homogeneousVertex1(vertex1);
-                homogeneousVertex1[3] = 1.0f;
+                const Vector3f& vertex0 = (*polygon)[polyIndex];
+                const Vector3f& vertex1 = (*polygon)[polyIndex + 1];
+                const Vector3f& vertex2 = (*polygon)[polyIndex + 2];
+                
+                if (state == CullingState::Culled)
+                {
+                    continue;
+                }
+
+                TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex0);
                 homogeneousVertex1 = homogeneousVertex1 * localToScreenTranform;
                 Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex1);
                 Vector2f screenPoint1(screenPosition1.x, screenPosition1.y);
 
-                const Vector3f& vertex2 = (*polygon)[polyIndex + 1];
-                TVector4f homogeneousVertex2(vertex2);
-                homogeneousVertex2[3] = 1.0f;
+                TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex1);
                 homogeneousVertex2 = homogeneousVertex2 * localToScreenTranform;
                 Vector3f screenPosition2 = ConvertFormHomogeneous(homogeneousVertex2);
                 Vector2f screenPoint2(screenPosition2.x, screenPosition2.y);
 
-                const Vector3f& vertex3 = (*polygon)[polyIndex + 2];
-                TVector4f homogeneousVertex3(vertex3);
-                homogeneousVertex3[3] = 1.0f;
+
+                TVector4f homogeneousVertex3 = ConvertFromNonHomogeneous(vertex2);
                 homogeneousVertex3 = homogeneousVertex3 * localToScreenTranform;
                 Vector3f screenPosition3 = ConvertFormHomogeneous(homogeneousVertex3);
                 Vector2f screenPoint3(screenPosition3.x, screenPosition3.y);
 
-                static int test = 0;
+                //static int test = 0;
                 //Graphic2D::Get().DrawTriangle(screenPoint1, screenPoint2, screenPoint3);
                 //if (test < 1)
                 //{
@@ -113,6 +131,39 @@ namespace XenonEngine
             }
 		}
 	}
+
+    XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Mesh3D& mesh, const TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const
+    {
+        TVector4f origin;
+        origin = origin * localToCameraTranform;
+        Vector3f center = ConvertFormHomogeneous(origin);
+        float distance = camera.GetViewDistance();
+        float maxRadius = mesh.GetMaxRadius();
+        if (center.z + maxRadius < camera.GetNearClipZ() || center.z - maxRadius > camera.GetFarClipZ())
+        {
+            return CullingState::Culled;
+        }
+        float xLimit = 0.5f * camera.GetViewPlane().x * center.z / distance;
+        if (center.x + maxRadius > xLimit || center.x - maxRadius < -xLimit)
+        {
+            return CullingState::Culled;
+        }
+        float yLimit = 0.5f * camera.GetViewPlane().y * center.z / distance;
+        if (center.y + maxRadius > yLimit || center.y - maxRadius < yLimit)
+        {
+            return CullingState::Culled;
+        }
+        return CullingState::Inside;
+    }
+
+    XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Vector3f& p0, const Vector3f& p1, const Vector3f& p2) const
+    {
+        Vector3f u = p1 - p0;
+        Vector3f v = p2 - p1;
+        Vector3f n = u.Cross(v);
+
+        Vector3f view = 
+    }
 
     void Graphic3D::DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
@@ -165,8 +216,8 @@ namespace XenonEngine
             std::initializer_list<float>{
             viewDistance, 0, 0, 0,
                 0, viewDistance * aspectRatio, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
+                0, 0, 1, 1,
+                0, 0, 0, 0
         });
     }
 
@@ -178,8 +229,8 @@ namespace XenonEngine
             std::initializer_list<float>{
                 alpha, 0, 0, 0,
                 0, -beta, 0, 0,
-                alpha, beta, 1, 1,
-                0, 0, 0, 0
+                alpha, beta, 1, 0,
+                0, 0, 0, 1
         });
     }
 

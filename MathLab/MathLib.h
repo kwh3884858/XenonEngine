@@ -25,6 +25,7 @@ namespace MathLab {
     TMatrix4X4f GetPositionAndRotationTranformMatrix(const Vector3f& position, const Vector3f& degree);
 
     Vector3f ConvertFormHomogeneous(const TVector4f& homogeneous);
+    TVector4f ConvertFromNonHomogeneous(const Vector3f& nonHomogeneous);
 
     template <typename T>
     const T& clamp(const T& value, const T& min, const T& max) {
