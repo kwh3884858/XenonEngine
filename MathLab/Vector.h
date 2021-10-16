@@ -67,6 +67,9 @@ namespace MathLab
 		T Magnitude()const;
 		T DoubleMagnitude()const;
         Vector3<T> GetVetor();
+
+		T dot(const TVector& vec)const;
+		TVector Cross(const TVector& vec)const;
 	};
 
 	template<typename T, int COUNT>
@@ -90,7 +93,7 @@ namespace MathLab
 	}
 
     template<typename T, int COUNT>
-    MathLab::TVector<T, COUNT>::TVector(std::initializer_list<T>& param)
+    MathLab::TVector<T, COUNT>::TVector(std::initializer_list<T>& param):TVector()
     {
         assert(param.size() == COUNT);
         std::initializer_list<T>::const_iterator iter = param.begin();
@@ -240,7 +243,7 @@ namespace MathLab
 	{
 		assert(Count() == that.Count());
 		T result =0;
-		for (int i = 0; i < Count() i++)
+		for (int i = 0; i < 3; i++)
 		{
 			result = m_vector[i] * that[i];
 		}
@@ -317,5 +320,29 @@ namespace MathLab
     {
         return Vector3<T>(m_vector[0], m_vector[1], m_vector[2]);
     }
+
+	template<typename T, int COUNT>
+	inline T TVector<T, COUNT>::dot(const TVector& vec) const
+	{
+		float result = 0;
+		for (size_t i = 0; i < COUNT; i++)
+		{
+			result += m_vector[i] * vec[i];
+		}
+		return result;
+	}
+
+	template<typename T, int COUNT>
+	inline TVector<T, COUNT> TVector<T, COUNT>::Cross(const TVector& vec) const
+	{
+		assert(COUNT == 3 || COUNT == 4);
+		TVector result(
+			std::initializer_list<T>{
+				m_vector[1]* vec[2] - m_vector[2] * vec[1],
+				m_vector[2]* vec[0] - m_vector[0] * vec[2],
+				m_vector[0]* vec[1] - m_vector[1] * vec[0],
+				1});
+		return result;
+	}
 
 }

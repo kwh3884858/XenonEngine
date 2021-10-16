@@ -8,7 +8,7 @@
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Camera3D.h"
-#include "Engine/Component/Mesh3D.h"
+
 #include "Engine/Graphic/Graphic2D.h"
 
 #include "CrossPlatform/Polygon3D.h"
@@ -46,13 +46,6 @@ namespace XenonEngine
             TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
             TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
 
-            const Polygon3D* polygon = mesh->GetPolygon3D();
-            CullingState state = Culling(*mesh, localToWorldTransform, *majorCamera);
-            if (state == CullingState::Culled)
-            {
-                continue;
-            }
-
             //Remove back faces
             TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
             TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
@@ -63,6 +56,12 @@ namespace XenonEngine
 
             DrawCoordinateLines(worldToScreenTranform);
 
+            const Polygon3D* polygon = mesh->GetPolygon3D();
+            CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
+            if (state == CullingState::Culled)
+            {
+                continue;
+            }
             //TVector4f* tmpVertexs = new TVector4f[ polygon->GetNumOfVertex()];
             //for (int index = 0 ;index <polygon->GetNumOfVertex(); index++)
             //{
@@ -75,26 +74,28 @@ namespace XenonEngine
                 const Vector3f& vertex0 = (*polygon)[polyIndex];
                 const Vector3f& vertex1 = (*polygon)[polyIndex + 1];
                 const Vector3f& vertex2 = (*polygon)[polyIndex + 2];
-                
+                TVector4f homogeneousVertex0 = ConvertFromNonHomogeneous(vertex0);
+                TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex1);
+                TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex2);
+                homogeneousVertex0 = homogeneousVertex0 * localToCameraTranform;
+                homogeneousVertex1 = homogeneousVertex1 * localToCameraTranform;
+                homogeneousVertex2 = homogeneousVertex2 * localToCameraTranform;
+                state = RemoveBackFaces(homogeneousVertex0, homogeneousVertex1, homogeneousVertex2);
                 if (state == CullingState::Culled)
                 {
                     continue;
                 }
 
-                TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex0);
-                homogeneousVertex1 = homogeneousVertex1 * localToScreenTranform;
-                Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex1);
+                homogeneousVertex0 = homogeneousVertex0 * cameraToScreenTranform;
+                Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex0);
                 Vector2f screenPoint1(screenPosition1.x, screenPosition1.y);
 
-                TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex1);
-                homogeneousVertex2 = homogeneousVertex2 * localToScreenTranform;
-                Vector3f screenPosition2 = ConvertFormHomogeneous(homogeneousVertex2);
+                homogeneousVertex1 = homogeneousVertex1 * cameraToScreenTranform;
+                Vector3f screenPosition2 = ConvertFormHomogeneous(homogeneousVertex1);
                 Vector2f screenPoint2(screenPosition2.x, screenPosition2.y);
 
-
-                TVector4f homogeneousVertex3 = ConvertFromNonHomogeneous(vertex2);
-                homogeneousVertex3 = homogeneousVertex3 * localToScreenTranform;
-                Vector3f screenPosition3 = ConvertFormHomogeneous(homogeneousVertex3);
+                homogeneousVertex2 = homogeneousVertex2 * cameraToScreenTranform;
+                Vector3f screenPosition3 = ConvertFormHomogeneous(homogeneousVertex2);
                 Vector2f screenPoint3(screenPosition3.x, screenPosition3.y);
 
                 //static int test = 0;
@@ -156,13 +157,20 @@ namespace XenonEngine
         return CullingState::Inside;
     }
 
-    XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Vector3f& p0, const Vector3f& p1, const Vector3f& p2) const
+    Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
     {
-        Vector3f u = p1 - p0;
-        Vector3f v = p2 - p1;
-        Vector3f n = u.Cross(v);
+        TVector4f u = p1 - p0;
+        TVector4f v = p2 - p1;
+        TVector4f n = u.Cross(v);
 
-        Vector3f view = 
+        if( p0.Dot(n) <= 0)
+        {
+            return CullingState::Inside;
+        }
+        else
+        {
+            return CullingState::Culled;
+        }
     }
 
     void Graphic3D::DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
