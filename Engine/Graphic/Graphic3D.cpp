@@ -105,7 +105,6 @@ namespace XenonEngine
                 //    printf("(%f, %f) -- (%f, %f) -- (%f, %f)\n", screenPoint1.x, screenPoint1.y, screenPoint2.x, screenPoint2.y, screenPoint3.x, screenPoint3.y);
                 //    test++;
                 //}
-
                 Vector2f tmp0;
                 Vector2f tmp1;
                 tmp0 = screenPoint1;

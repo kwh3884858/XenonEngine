@@ -195,11 +195,17 @@ namespace XenonEngine
         }
         InternalClipPoint(p0Code, p0, p1);
         InternalClipPoint(p1Code, p1, p0);
-        assert(p0.x >= m_minDrawPosition.x && p1.x >= m_minDrawPosition.x);
-        assert(p0.y >= m_minDrawPosition.y && p1.y >= m_minDrawPosition.y);
-        assert(p0.x <= m_maxDrawPosition.x && p1.x <= m_maxDrawPosition.x);
-        assert(p0.y <= m_maxDrawPosition.y && p1.y <= m_maxDrawPosition.y);
-        return ClipLineState::Accpet;
+        if (p0.x >= m_minDrawPosition.x && p1.x >= m_minDrawPosition.x &&
+            p0.y >= m_minDrawPosition.y && p1.y >= m_minDrawPosition.y &&
+            p0.x <= m_maxDrawPosition.x && p1.x <= m_maxDrawPosition.x&&
+            p0.y <= m_maxDrawPosition.y && p1.y <= m_maxDrawPosition.y)
+        {
+            return ClipLineState::Accpet;
+        }
+        else
+        {
+            return ClipLineState::Eject;
+        }
     }
 
     Graphic2D::ClipLineState Graphic2D::ClipLine(Vector2i& p0, Vector2i& p1) const
