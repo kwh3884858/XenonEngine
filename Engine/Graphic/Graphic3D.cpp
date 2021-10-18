@@ -135,6 +135,7 @@ namespace XenonEngine
     XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Mesh3D& mesh, const TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const
     {
         TVector4f origin;
+        origin[3] = 1;
         origin = origin * localToCameraTranform;
         Vector3f center = ConvertFormHomogeneous(origin);
         float distance = camera.GetViewDistance();
@@ -149,7 +150,7 @@ namespace XenonEngine
             return CullingState::Culled;
         }
         float yLimit = 0.5f * camera.GetViewPlane().y * center.z / distance;
-        if (center.y + maxRadius > yLimit || center.y - maxRadius < yLimit)
+        if (center.y + maxRadius > yLimit || center.y - maxRadius < -yLimit)
         {
             return CullingState::Culled;
         }
@@ -196,16 +197,16 @@ namespace XenonEngine
     void Graphic3D::DrawCoordinateLines(const TMatrix4X4f& worldToScreenTranform) const
     {
         Vector3f origin(0, 0, 0);
-        Vector3f xAxisL(-1000, 0, 0);
-        Vector3f xAxisR(1000, 0, 0);
+        Vector3f xAxisL(-10, 0, 0);
+        Vector3f xAxisR(10, 0, 0);
         DrawLine(xAxisL, origin, worldToScreenTranform, CrossPlatform::INDIAN_RED);
         DrawLine(origin, xAxisR, worldToScreenTranform, CrossPlatform::RED);
-        Vector3f yAxisU(0, 1000, 0);
-        Vector3f yAxisD(0, -1000, 0);
+        Vector3f yAxisU(0, 10, 0);
+        Vector3f yAxisD(0, -10, 0);
         DrawLine(yAxisU, origin, worldToScreenTranform, CrossPlatform::GREEN);
         DrawLine(origin, yAxisD, worldToScreenTranform, CrossPlatform::DARK_GREEN);
-        Vector3f zAxisF(0, 0, 1000);
-        Vector3f zAxisB(0, 0, -1000);
+        Vector3f zAxisF(0, 0, 10);
+        Vector3f zAxisB(0, 0, -10);
         DrawLine(zAxisB, origin, worldToScreenTranform, CrossPlatform::DRAK_BLUE);
         DrawLine(origin, zAxisF, worldToScreenTranform, CrossPlatform::BLUE);
     }
@@ -235,7 +236,7 @@ namespace XenonEngine
         return TMatrix4X4f(
             std::initializer_list<float>{
                 alpha, 0, 0, 0,
-                0, -beta, 0, 0,
+                0, beta, 0, 0,
                 alpha, beta, 1, 0,
                 0, 0, 0, 1
         });
@@ -249,7 +250,7 @@ namespace XenonEngine
         return TMatrix4X4f(
             std::initializer_list<float>{
                 viewDistance, 0, 0, 0,
-                0, -viewDistance, 0, 0,
+                0, viewDistance, 0, 0,
                 alpha, beta, 1, 1,
                 0, 0, 0, 0
         });

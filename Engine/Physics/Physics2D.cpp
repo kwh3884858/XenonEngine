@@ -245,7 +245,7 @@ namespace XenonPhysics
 
                         Rigidbody2D::FixedUpdateData& currentData = dynamicBody->GetCurrentUpdataData();
                         float relatedForce = currentData.m_sumOfForces.Dot(velocityNormal);
-                        currentData.m_sumOfForces += -velocityNormal * MathLab::abs(relatedForce);
+                        currentData.m_sumOfForces += -velocityNormal * MathLab::Abs(relatedForce);
 
                         Rigidbody2D::FixedUpdateData& lastData = dynamicBody->GetLastUpdataData();
                         lastData.m_velocity = Vector2f::Zero;
@@ -744,7 +744,7 @@ namespace XenonPhysics
 
                 if (vertexProjectile.Magnitude() > 0.0f &&
                     vertexProjectile.Magnitude() < edge.Magnitude() &&
-                    MathLab::abs( zAxisOfMoment) < Physics2D::CollisionTolerance &&
+                    MathLab::Abs( zAxisOfMoment) < Physics2D::CollisionTolerance &&
                     relativeVelocityVector.Dot(collisionNormal) < 0)
                 {
                     info.m_collisionType = CollisionType::IsCollision;
@@ -868,7 +868,7 @@ namespace XenonPhysics
                 dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
                 Rigidbody2D::FixedUpdateData& updateData = dynamicBody->GetLastUpdataData();
                 float relatedForce = updateData.m_sumOfForces.Dot(-info.m_collisionNormalVec);
-                updateData.m_sumOfForces += info.m_collisionNormalVec * MathLab::abs(relatedForce);
+                updateData.m_sumOfForces += info.m_collisionNormalVec * MathLab::Abs(relatedForce);
                 dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
             }
             else

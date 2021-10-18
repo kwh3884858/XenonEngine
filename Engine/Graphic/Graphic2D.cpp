@@ -54,8 +54,8 @@ namespace XenonEngine
         Vector2i startPos(lhs);
         Vector2i endPos(rhs);
 
-        int deltaX = MathLab::abs(rhs.x - lhs.x);
-        int deltaY = MathLab::abs(rhs.y - lhs.y);
+        int deltaX = MathLab::Abs(rhs.x - lhs.x);
+        int deltaY = MathLab::Abs(rhs.y - lhs.y);
         bool isFlip = deltaY > deltaX ? true : false;
         if (isFlip)
         {
@@ -230,12 +230,12 @@ namespace XenonEngine
         Vector2f rightDelta = p2 - buttom;
         Vector2f rightIndex = buttom;
         Vector2f rightStep(0, Y_AXIS_STEP);
-        rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::abs(rightDelta.x / rightDelta.y);
+        rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p1 - buttom;
         Vector2f leftIndex = buttom;
         Vector2f leftStep(0, Y_AXIS_STEP);
-        leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::abs(leftDelta.x / leftDelta.y);
+        leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
         if (buttom.y < m_minDrawPosition.y)
         {
@@ -300,12 +300,12 @@ namespace XenonEngine
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
         Vector2f rightStep(0, -Y_AXIS_STEP);
-        rightStep.x =( rightDelta.x > 0 ? 1.0f : -1.0f )* MathLab::abs(rightDelta.x / rightDelta.y);
+        rightStep.x =( rightDelta.x > 0 ? 1.0f : -1.0f )* MathLab::Abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p2 - top;
         Vector2f leftIndex = top;
         Vector2f leftStep(0, -Y_AXIS_STEP);
-        leftStep.x =( leftDelta.x > 0 ? 1.0f : -1.0f )* MathLab::abs(leftDelta.x / leftDelta.y);
+        leftStep.x =( leftDelta.x > 0 ? 1.0f : -1.0f )* MathLab::Abs(leftDelta.x / leftDelta.y);
 
         if (top.y > m_maxDrawPosition.y)
         {

@@ -68,9 +68,9 @@ namespace XenonEngine
         // n coordinate = normal vector
         Vector3f lookAt = m_lookAt.Normalize();
 		// u coordinate = right vector
-		Vector3f rightVector = lookAt.Cross(Vector3f(0, 1, 0));
+ 		Vector3f rightVector = Vector3f(0, 1, 0).Cross(lookAt);
 		// v coordinate = up vector
-		Vector3f upVector = rightVector.Cross(lookAt);
+		Vector3f upVector = lookAt.Cross(rightVector);
 		return TMatrix4X4f(
 			std::initializer_list<float>{
 				rightVector.x, upVector.x, lookAt.x,0,
@@ -87,7 +87,7 @@ namespace XenonEngine
 
         m_lookAt.x = cos(elevationRadius) * cos(headingRadius);
         m_lookAt.y = sin(elevationRadius);
-        m_lookAt.z = cos(elevationRadius) * sin(headingRadius);
+        m_lookAt.z = -cos(elevationRadius) * sin(headingRadius);
     }
 
     void Camera3D::SetLookAt(const MathLab::Vector3f& lookat)

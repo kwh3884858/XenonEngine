@@ -28,7 +28,7 @@ namespace MathLab {
     TVector4f ConvertFromNonHomogeneous(const Vector3f& nonHomogeneous);
 
     template <typename T>
-    const T& clamp(const T& value, const T& min, const T& max) {
+    const T& Clamp(const T& value, const T& min, const T& max) {
         if (value < min)
         {
             return min;
@@ -41,7 +41,7 @@ namespace MathLab {
     }
 
     template <typename T>
-    T abs(const T& value)
+    T Abs(const T& value)
     {
         return value < 0 ? -value : value;
     }

@@ -93,7 +93,7 @@ namespace Gameplay
 
 		float xAxisDelta = 0;
 		Vector2f axis = InputSystem::Get().GetAxis();
-		if (MathLab::abs(axis.x) > 0.1f)
+		if (MathLab::Abs(axis.x) > 0.1f)
 		{
 			xAxisDelta = axis.x;
 		}
@@ -106,7 +106,7 @@ namespace Gameplay
 			xAxisDelta = 1;
 		}
 
-		if (MathLab::abs(xAxisDelta) > EPSILON)
+		if (MathLab::Abs(xAxisDelta) > EPSILON)
 		{
 			if (xAxisDelta > 0)
 			{
