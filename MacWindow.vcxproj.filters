@@ -177,6 +177,12 @@
     <ClCompile Include="Gameplay\CameraObject3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\LightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\DirectionLightComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -474,6 +480,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Gameplay\CameraObject3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\LightComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\DirectionLightComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

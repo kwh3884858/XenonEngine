@@ -6,6 +6,7 @@
 #pragma once
 
 #include "IComponent.h"
+#include "CrossPlatform/Polygon3D.h"
 
 namespace CrossPlatform {
 	class Polygon3D;
@@ -41,5 +42,6 @@ namespace XenonEngine
 	private:
 		const CrossPlatform::Polygon3D* m_polygon3D;
         float m_maxRadius;
+        CrossPlatform::SColorRGBA m_color;
 	};
 }

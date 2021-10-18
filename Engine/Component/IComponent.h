@@ -24,7 +24,8 @@ namespace XenonEngine
             ComponentType_Personality,
             ComponentType_Script,
             ComponentType_Input,
-			ComponentType_Camera
+			ComponentType_Camera,
+            ComponentType_Light
         };
         IComponent( GameObject* gameobject) :
             m_gameobject(gameobject)

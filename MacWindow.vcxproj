@@ -119,6 +119,8 @@
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
     <ClCompile Include="Engine\Component\Collider2D.cpp" />
+    <ClCompile Include="Engine\Component\DirectionLightComponent.cpp" />
+    <ClCompile Include="Engine\Component\LightComponent.cpp" />
     <ClCompile Include="Engine\Component\Mesh3D.cpp" />
     <ClCompile Include="Engine\Component\PlayerPersonality.cpp" />
     <ClCompile Include="Engine\Component\Mesh2D.cpp" />
@@ -191,6 +193,8 @@
     <ClInclude Include="Engine\Component\BoxCollider2D.h" />
     <ClInclude Include="Engine\Component\CircleCollider2D.h" />
     <ClInclude Include="Engine\Component\Collider2D.h" />
+    <ClInclude Include="Engine\Component\DirectionLightComponent.h" />
+    <ClInclude Include="Engine\Component\LightComponent.h" />
     <ClInclude Include="Engine\Component\Mesh3D.h" />
     <ClInclude Include="Engine\Component\PlayerPersonality.h" />
     <ClInclude Include="Engine\Component\Mesh2D.h" />
