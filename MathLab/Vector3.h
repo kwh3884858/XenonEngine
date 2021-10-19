@@ -27,7 +27,7 @@ namespace MathLab {
         Vector3& operator+=(const Vector3& rvalue);
         Vector3& operator-=(const Vector3& rvalue);
 
-        T dot(const Vector3& vec)const;
+        T Dot(const Vector3& vec)const;
         Vector3 Cross(const Vector3& vec)const;
 
         Vector3();
@@ -37,7 +37,9 @@ namespace MathLab {
         ~Vector3();
 
         void Swap();
+        bool IsNormalized()const;
         Vector3 Normalize()const;
+        void Normalized();
         T Magnitude()const;
         T DoubleMagnitude()const;
     };
@@ -109,7 +111,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    T Vector3<T>::dot(const Vector3& vec) const
+    T Vector3<T>::Dot(const Vector3& vec) const
     {
         return this->x * vec.x + this->y * vec.y + this->z * vec.z;
     }
@@ -132,15 +134,27 @@ namespace MathLab {
     }
 
     template<typename T>
+    bool MathLab::Vector3<T>::IsNormalized() const
+    {
+        return DoubleMagnitude() == 1;
+    }
+
+    template<typename T>
     Vector3<T> Vector3<T>::Normalize() const
     {
-        T magnitide = Magnitude();
-        Vector3<T> temp;
-        assert(magnitide != 0);
-        temp.x = x / magnitide;
-        temp.y = y / magnitide;
-        temp.z = z / magnitide;
+        Vector3<T> temp(*this);
+        temp.Normalized();
         return temp;
+    }
+
+    template<typename T>
+    void MathLab::Vector3<T>::Normalized()
+    {
+        T magnitide = Magnitude();
+        assert(magnitide != 0);
+        x = x / magnitide;
+        y = y / magnitide;
+        z = z / magnitide;
     }
 
     template<typename T>
@@ -152,7 +166,7 @@ namespace MathLab {
     template<typename T>
     T Vector3<T>::DoubleMagnitude() const
     {
-        return this->dot(*this);
+        return this->Dot(*this);
     }
 
     template<typename T>

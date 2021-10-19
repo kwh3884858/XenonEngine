@@ -27,7 +27,9 @@ namespace XenonEngine
         virtual ComponentType GetComponentType() const override { return m_type; };
         virtual IComponent* Copy(GameObject*const gameObject)const override;
 
-        void SetConfig(const DirectionLightComponentConfig*const config);
+        void SetConfig(const DirectionLightComponentConfig& config);
+        MathLab::Vector3f GetDirection();
+        CrossPlatform::SColorRGBA GetColor()const { return m_color; }
 
         static ComponentType m_type;
     private:

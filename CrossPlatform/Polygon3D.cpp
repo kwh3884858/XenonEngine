@@ -3,11 +3,13 @@
 
 namespace CrossPlatform 
 {
-	Polygon3D::Polygon3D(int numOfIndex, int* vertexIndexList, int numOfVertex, Vector3f * vertexList):
+	Polygon3D::Polygon3D(int numOfIndex, VertexIndexs* vertexIndexList, int numOfVertex, Vector3f * vertexList, int numOfNormal, Vector3f* normalList):
 		m_numOfIndex(numOfIndex),
 		m_vertexIndexList(vertexIndexList),
 		m_numOfVertex(numOfVertex),
-		m_vertexList(vertexList)
+		m_vertexList(vertexList),
+        m_numOfNormal(numOfNormal),
+        m_normalList(normalList)
 	{
 	}
 
@@ -17,20 +19,36 @@ namespace CrossPlatform
 		m_vertexIndexList = that.m_vertexIndexList;
 		m_numOfVertex = that.m_numOfVertex;
 		m_vertexList = that.m_vertexList;
+        m_numOfNormal = that.m_numOfNormal;
+        m_normalList = that.m_normalList;
 	}
 
-	const Vector3f& Polygon3D::operator[](int index) const
+	const Vertex3D& Polygon3D::operator[](int index) const
 	{
 		assert(m_vertexIndexList != nullptr);
+		assert(m_normalList != nullptr);
 		assert(m_vertexList != nullptr);
 		assert(index >= 0 && index < m_numOfIndex);
-		int vertexIndex = m_vertexIndexList[index];
-		assert(vertexIndex >= 0 && vertexIndex < m_numOfVertex);
+        VertexIndexs vertexIndex = m_vertexIndexList[index];
+		assert(vertexIndex.m_vertexIndex >= 0 && vertexIndex.m_vertexIndex < m_numOfVertex);
+		assert(vertexIndex.m_normalIndex >= 0 && vertexIndex.m_normalIndex < m_numOfNormal);
 
-		return m_vertexList[vertexIndex];
+        Vertex3D result(m_vertexList[vertexIndex.m_vertexIndex], m_normalList[vertexIndex.m_normalIndex]);
+		return result;
 	}
 
-	Polygon3D::~Polygon3D()
+    const Vector3f& Polygon3D::GetNormal(int index) const
+    {
+        assert(m_normalList != nullptr);
+        assert(m_vertexList != nullptr);
+        assert(index >= 0 && index < m_numOfIndex);
+        VertexIndexs vertexIndex = m_vertexIndexList[index];
+        assert(vertexIndex.m_normalIndex >= 0 && vertexIndex.m_normalIndex < m_numOfNormal);
+
+        return m_vertexList[vertexIndex.m_normalIndex];
+    }
+
+    Polygon3D::~Polygon3D()
 	{
 		assert(m_vertexIndexList != nullptr);
 		assert(m_vertexList != nullptr);
@@ -38,6 +56,8 @@ namespace CrossPlatform
 		m_vertexIndexList = nullptr;
 		delete[] m_vertexList;
 		m_vertexList = nullptr;
+        delete[] m_normalList;
+        m_normalList = nullptr;
 	}
 
 }

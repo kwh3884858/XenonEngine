@@ -16,6 +16,16 @@ namespace XenonEngine
         m_color = config.m_color;
 
     }
+
+    MathLab::Vector3f DirectionLightComponent::GetDirection()
+    {
+        if (!m_direction.IsNormalized())
+        {
+            m_direction.Normalized();
+        }
+        return m_direction;
+    }
+
     ComponentType DirectionLightComponent::m_type = ComponentType::ComponentType_Light;
 
 }

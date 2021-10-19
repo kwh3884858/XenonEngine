@@ -8,11 +8,14 @@
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Camera3D.h"
+#include "Engine/Component/LightComponent.h"
 
 #include "Engine/Graphic/Graphic2D.h"
 
 #include "CrossPlatform/Polygon3D.h"
-#include <stdio.h>
+#include <stdio.h> // for printf
+#include <assert.h>
+#include "../Component/DirectionLightComponent.h"
 
 namespace XenonEngine
 {
@@ -62,18 +65,15 @@ namespace XenonEngine
             {
                 continue;
             }
-            //TVector4f* tmpVertexs = new TVector4f[ polygon->GetNumOfVertex()];
-            //for (int index = 0 ;index <polygon->GetNumOfVertex(); index++)
-            //{
-            //    tmpVertexs[index] = ConvertFromNonHomogeneous((*polygon)[index]);
-            //    tmpVertexs[index] = tmpVertexs[index] * localToCameraTranform;
-            //}
+            
+
+
 
             for (int polyIndex = 0; polyIndex < polygon->Count(); polyIndex += 3)
             {
-                const Vector3f& vertex0 = (*polygon)[polyIndex];
-                const Vector3f& vertex1 = (*polygon)[polyIndex + 1];
-                const Vector3f& vertex2 = (*polygon)[polyIndex + 2];
+                const Vector3f& vertex0 = (*polygon)[polyIndex].m_vertex;
+                const Vector3f& vertex1 = (*polygon)[polyIndex + 1].m_vertex;
+                const Vector3f& vertex2 = (*polygon)[polyIndex + 2].m_vertex;
                 TVector4f homogeneousVertex0 = ConvertFromNonHomogeneous(vertex0);
                 TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex1);
                 TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex2);
@@ -85,7 +85,26 @@ namespace XenonEngine
                 {
                     continue;
                 }
+                //Lighting
+                SColorRGBA baseColor;
+                SColorRGBA finalColor;
+                for (int i =0 ;i< m_lightList.Count(); i++)
+                {
+                    assert(m_lightList[i]->GetLightType() != LightComponent::LightType::None);
+                    if (m_lightList[i]->GetLightType() == LightComponent::LightType::Direction)
+                    {
+                        DirectionLightComponent* directionLight = static_cast<DirectionLightComponent*>(m_lightList[i]);
+                        Vector3f direction = directionLight->GetDirection();
+                        Vector3f zeroToOne = vertex1 - vertex0;
+                        Vector3f zeroToTwo = vertex2 - vertex0;
+                        Vector3f faceNormal = zeroToOne.Cross(zeroToTwo);
+                        float face = direction.Dot(faceNormal);
+                        if (face < 0)
+                        {
 
+                        }
+                    }
+                }
                 homogeneousVertex0 = homogeneousVertex0 * cameraToScreenTranform;
                 Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex0);
                 Vector2f screenPoint1(screenPosition1.x, screenPosition1.y);

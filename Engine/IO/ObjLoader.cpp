@@ -35,23 +35,30 @@ namespace XenonEngine
 		auto& materials = reader.GetMaterials();
 
 		int numOfVertex = attrib.vertices.size() / 3;
-		Vector3f* verteces = new Vector3f[attrib.vertices.size() / 3];
-		int numOfIndex = 0;
-
-
+		Vector3f* vertices = new Vector3f[numOfVertex];
 		for (size_t i = 0; i < attrib.vertices.size(); i+=3)
 		{
-			verteces[i / 3].x = attrib.vertices[i + 0];
-			verteces[i / 3].y = attrib.vertices[i + 1];
-			verteces[i / 3].z = attrib.vertices[i + 2];
+			vertices[i / 3].x = attrib.vertices[i + 0];
+			vertices[i / 3].y = attrib.vertices[i + 1];
+			vertices[i / 3].z = attrib.vertices[i + 2];
 		}
 
+        int numOfNormal = attrib.normals.size / 3;
+        Vector3f* normals = new Vector3f[numOfNormal];
+        for (size_t i = 0; i < attrib.normals.size(); i++)
+        {
+            normals[i / 3].x = attrib.normals[i + 0];
+            normals[i / 3].y = attrib.normals[i + 1];
+            normals[i / 3].z = attrib.normals[i + 2];
+        }
+
+        int numOfIndex = 0;
 		size_t vindex = 0;
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++) 
 		{
             int numOfIndex = shapes[s].mesh.indices.size();
-            int* vertexIndexList = new int[numOfIndex];
+            Polygon3D::VertexIndexs* vertexIndexList = new Polygon3D::VertexIndexs[numOfIndex];
 			// Loop over faces(polygon)
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) 
@@ -60,11 +67,20 @@ namespace XenonEngine
 				for (size_t v = 0; v < fv; v++) 
 				{
 					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-					vertexIndexList[vindex++] = idx.vertex_index;
+					vertexIndexList[vindex].m_vertexIndex = idx.vertex_index;
+                    if (idx.normal_index >=0)
+                    {
+                        vertexIndexList[vindex].m_normalIndex = idx.normal_index;
+                    }
+                    if (idx.texcoord_index >=0)
+                    {
+                        vertexIndexList[vindex].m_textureCoordinateIndex = idx.texcoord_index;
+                    }
+                    vindex++;
 				}
 				index_offset += fv;
 			}
-            Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, verteces);
+            Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals);
             return polygon;
 		}
 

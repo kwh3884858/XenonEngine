@@ -21,6 +21,7 @@ namespace XenonEngine
 {
     class GameObject;
     class Camera3D;
+    class LightComponent;
 
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
@@ -40,6 +41,9 @@ namespace XenonEngine
         void AddCamera(Camera3D* camera) { m_cameraList.Add(camera); }
         void RemoveCamera(Camera3D* camera){ m_cameraList.Remove(camera); }
 
+        void AddLight(LightComponent* light) { m_lightList.Add(light); }
+        void RemoveLight(LightComponent* light) { m_lightList.Remove(light); }
+
         void Update()const;
 	private:
         CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
@@ -54,6 +58,7 @@ namespace XenonEngine
 
 		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;
+        Algorithm::Vector<LightComponent*> m_lightList;
 	};
 
 }

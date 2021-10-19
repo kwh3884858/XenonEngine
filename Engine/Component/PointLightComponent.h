@@ -24,7 +24,7 @@ namespace XenonEngine
         static const float PI;
 
         PointLightComponent(GameObject* gameobject) :
-            LightComponent(gameobject, LightType::Direction) {}
+            LightComponent(gameobject, LightType::Point) {}
         virtual ~PointLightComponent()override {}
         virtual ComponentType GetComponentType() const override { return m_type; };
         virtual IComponent* Copy(GameObject*const gameObject)const override;

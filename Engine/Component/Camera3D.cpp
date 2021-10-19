@@ -76,7 +76,7 @@ namespace XenonEngine
 				rightVector.x, upVector.x, lookAt.x,0,
 				rightVector.y, upVector.y, lookAt.y,0,
 				rightVector.z, upVector.z, lookAt.z,0,
-				-position.dot(rightVector), -position.dot(upVector), -position.dot(lookAt),1
+				-position.Dot(rightVector), -position.Dot(upVector), -position.Dot(lookAt),1
 		});
 	}
 

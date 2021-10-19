@@ -18,14 +18,14 @@ namespace XenonEngine
         };
         LightComponent(GameObject* gameobject, LightType colliderType) :
             IComponent(gameobject),
-            m_colliderType(colliderType)
+            m_lightType(colliderType)
         {}  
         virtual ~LightComponent()override {}
         virtual ComponentType GetComponentType() const override { return m_type; };
-        LightType GetColliderType() const { return m_colliderType; }
+        LightType GetLightType() const { return m_lightType; }
 
         static ComponentType m_type;
     private:
-        LightType m_colliderType = LightType::None;
+        LightType m_lightType = LightType::None;
     };
 }
