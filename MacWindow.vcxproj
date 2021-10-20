@@ -149,6 +149,7 @@
     <ClCompile Include="Gameplay\Cube3D.cpp" />
     <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="Gameplay\Player.cpp" />
+    <ClCompile Include="Gameplay\SceneDirectionLight.cpp" />
     <ClCompile Include="Library\imgui\imgui.cpp" />
     <ClCompile Include="Library\imgui\imgui_draw.cpp" />
     <ClCompile Include="Library\imgui\DX9\imgui_impl_dx9.cpp" />
@@ -236,6 +237,7 @@
     <ClInclude Include="Gameplay\Cube3D.h" />
     <ClInclude Include="Gameplay\Enemy.h" />
     <ClInclude Include="Gameplay\Player.h" />
+    <ClInclude Include="Gameplay\SceneDirectionLight.h" />
     <ClInclude Include="Library\imgui\imconfig.h" />
     <ClInclude Include="Library\imgui\imgui.h" />
     <ClInclude Include="Library\imgui\DX9\imgui_impl_dx9.h" />

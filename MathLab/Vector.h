@@ -52,9 +52,6 @@ namespace MathLab
 
 		bool operator==(const TVector& that);
 
-		T Dot(const TVector& that)const;
-		//T Cross(const Vector& that)const;
-
 		TVector();
         TVector(const TVector& that);
         TVector(std::initializer_list<T>& param);
@@ -68,7 +65,7 @@ namespace MathLab
 		T DoubleMagnitude()const;
         Vector3<T> GetVetor();
 
-		T dot(const TVector& vec)const;
+		T Dot(const TVector& vec)const;
 		TVector Cross(const TVector& vec)const;
 	};
 
@@ -239,18 +236,6 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	T MathLab::TVector<T, COUNT>::Dot(const TVector& that) const
-	{
-		assert(Count() == that.Count());
-		T result =0;
-		for (int i = 0; i < 3; i++)
-		{
-			result = m_vector[i] * that[i];
-		}
-		return result;
-	}
-
-	template<typename T, int COUNT>
 	TVector<T, COUNT> operator+(const TVector<T, COUNT>& lhs, const TVector<T, COUNT>& rhs)
 	{
 		TVector<T, COUNT> vector(lhs);
@@ -294,11 +279,12 @@ namespace MathLab
 	template<typename T, int COUNT>
 	TVector<T, COUNT> MathLab::TVector<T, COUNT>::Normalize() const
 	{
+        assert(COUNT == 3 || COUNT == 4);
 		T magnitide = Magnitude();
-		TVector<T, COUNT> result;
-		for (int i = 0; i < Count() i++)
+		TVector<T, COUNT> result(*this);
+		for (int i = 0; i < 3; i++)
 		{
-			result[i] = m_vector[i] / magnitide;
+			result[i] /= magnitide;
 		}
 		return result;
 	}
@@ -312,6 +298,7 @@ namespace MathLab
 	template<typename T, int COUNT>
 	T MathLab::TVector<T, COUNT>::DoubleMagnitude() const
 	{
+        assert(COUNT == 3 || COUNT == 4);
 		return this->Dot(*this);
 	}
 
@@ -322,10 +309,12 @@ namespace MathLab
     }
 
 	template<typename T, int COUNT>
-	inline T TVector<T, COUNT>::dot(const TVector& vec) const
+	inline T TVector<T, COUNT>::Dot(const TVector& vec) const
 	{
+        assert(COUNT == 3 || COUNT == 4);
+        assert(COUNT == vec.Count());
 		float result = 0;
-		for (size_t i = 0; i < COUNT; i++)
+		for (size_t i = 0; i < 3; i++)
 		{
 			result += m_vector[i] * vec[i];
 		}

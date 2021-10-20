@@ -32,6 +32,10 @@ namespace XenonEngine
         void SetConfig(const PointLightComponentConfig& config);
 
         static ComponentType m_type;
+
+        const CrossPlatform::SColorRGBA& GetColor()const { return m_color; }
+        float GetKc()const { return m_kc; }
+        float GetKl()const { return m_kl; }
     private:
         CrossPlatform::SColorRGBA m_color;
         float m_kc;

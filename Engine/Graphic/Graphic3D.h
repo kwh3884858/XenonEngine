@@ -32,6 +32,12 @@ namespace XenonEngine
             Culled
         };
 
+        enum RenderType
+        {
+            Wireframe,
+            FlatShdering,
+        };
+
         virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
 
@@ -56,6 +62,7 @@ namespace XenonEngine
         MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort)const;
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort)const;
 
+        RenderType m_renderType = RenderType::FlatShdering;
 		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;

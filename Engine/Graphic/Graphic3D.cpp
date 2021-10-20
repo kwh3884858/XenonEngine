@@ -16,6 +16,7 @@
 #include <stdio.h> // for printf
 #include <assert.h>
 #include "../Component/DirectionLightComponent.h"
+#include "../Component/PointLightComponent.h"
 
 namespace XenonEngine
 {
@@ -65,9 +66,6 @@ namespace XenonEngine
             {
                 continue;
             }
-            
-
-
 
             for (int polyIndex = 0; polyIndex < polygon->Count(); polyIndex += 3)
             {
@@ -86,22 +84,39 @@ namespace XenonEngine
                     continue;
                 }
                 //Lighting
-                SColorRGBA baseColor;
+                SColorRGBA baseColor = CrossPlatform::GERY;
                 SColorRGBA finalColor;
                 for (int i =0 ;i< m_lightList.Count(); i++)
                 {
+                    TVector4f zeroToOne = homogeneousVertex1 - homogeneousVertex0;
+                    TVector4f zeroToTwo = homogeneousVertex2 - homogeneousVertex0;
+                    TVector4f faceNormal = zeroToTwo.Cross(zeroToOne).Normalize();
                     assert(m_lightList[i]->GetLightType() != LightComponent::LightType::None);
                     if (m_lightList[i]->GetLightType() == LightComponent::LightType::Direction)
                     {
                         DirectionLightComponent* directionLight = static_cast<DirectionLightComponent*>(m_lightList[i]);
-                        Vector3f direction = directionLight->GetDirection();
-                        Vector3f zeroToOne = vertex1 - vertex0;
-                        Vector3f zeroToTwo = vertex2 - vertex0;
-                        Vector3f faceNormal = zeroToOne.Cross(zeroToTwo);
+                        TVector4f direction = ConvertFromNonHomogeneous(directionLight->GetDirection());
                         float face = direction.Dot(faceNormal);
-                        if (face < 0)
+                        if (face > 0)
                         {
-
+                            finalColor += directionLight->GetColor() * baseColor * face;
+                        }
+                    }
+                    if (m_lightList[i]->GetLightType() == LightComponent::LightType::Point)
+                    {
+                        PointLightComponent* pointLight = static_cast<PointLightComponent*>(m_lightList[i]);
+                        Vector3f lightPosition = pointLight->GetGameObject()->GetComponent<Transform3D>()->GetPosition();
+                        TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
+                        lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
+                        lightPosition = MathLab::ConvertFormHomogeneous(lightPoistionHomogeneous);
+                        TVector4f direction = vertex0 - lightPosition;
+                        float kc = pointLight->GetKc();
+                        float kl = pointLight->GetKl();
+                        float face = direction.Normalize().Dot(faceNormal);
+                        if (face > 0)
+                        {
+                            float attenuation = kc + kl * direction.Magnitude();
+                            finalColor += pointLight->GetColor() * baseColor *  face / attenuation;
                         }
                     }
                 }
@@ -117,36 +132,44 @@ namespace XenonEngine
                 Vector3f screenPosition3 = ConvertFormHomogeneous(homogeneousVertex2);
                 Vector2f screenPoint3(screenPosition3.x, screenPosition3.y);
 
-                //static int test = 0;
-                //Graphic2D::Get().DrawTriangle(screenPoint1, screenPoint2, screenPoint3);
-                //if (test < 1)
-                //{
-                //    printf("(%f, %f) -- (%f, %f) -- (%f, %f)\n", screenPoint1.x, screenPoint1.y, screenPoint2.x, screenPoint2.y, screenPoint3.x, screenPoint3.y);
-                //    test++;
-                //}
-                Vector2f tmp0;
-                Vector2f tmp1;
-                tmp0 = screenPoint1;
-                tmp1 = screenPoint2;
-                Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-                if (state == Graphic2D::ClipLineState::Accpet)
+
+                if (m_renderType == RenderType::FlatShdering)
                 {
-                    Graphic2D::Get().DrawLine(tmp0, tmp1);
+                    //static int test = 0;
+                    Graphic2D::Get().DrawTriangle(screenPoint1, screenPoint2, screenPoint3, finalColor);
+                    //if (test < 1)
+                    //{
+                    //    printf("(%f, %f) -- (%f, %f) -- (%f, %f)\n", screenPoint1.x, screenPoint1.y, screenPoint2.x, screenPoint2.y, screenPoint3.x, screenPoint3.y);
+                    //    test++;
+                    //}
                 }
-                tmp0 = screenPoint2;
-                tmp1 = screenPoint3;
-                state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-                if (state == Graphic2D::ClipLineState::Accpet)
+                if (m_renderType == RenderType::Wireframe)
                 {
-                    Graphic2D::Get().DrawLine(tmp0, tmp1);
+                    Vector2f tmp0;
+                    Vector2f tmp1;
+                    tmp0 = screenPoint1;
+                    tmp1 = screenPoint2;
+                    Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+                    if (state == Graphic2D::ClipLineState::Accpet)
+                    {
+                        Graphic2D::Get().DrawLine(tmp0, tmp1);
+                    }
+                    tmp0 = screenPoint2;
+                    tmp1 = screenPoint3;
+                    state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+                    if (state == Graphic2D::ClipLineState::Accpet)
+                    {
+                        Graphic2D::Get().DrawLine(tmp0, tmp1);
+                    }
+                    tmp0 = screenPoint3;
+                    tmp1 = screenPoint1;
+                    state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+                    if (state == Graphic2D::ClipLineState::Accpet)
+                    {
+                        Graphic2D::Get().DrawLine(tmp0, tmp1);
+                    }
                 }
-                tmp0 = screenPoint3;
-                tmp1 = screenPoint1;
-                state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-                if (state == Graphic2D::ClipLineState::Accpet)
-                {
-                    Graphic2D::Get().DrawLine(tmp0, tmp1);
-                }
+
             }
 		}
 	}

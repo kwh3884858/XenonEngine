@@ -23,6 +23,9 @@ namespace XenonEngine
         virtual ~LightComponent()override {}
         virtual ComponentType GetComponentType() const override { return m_type; };
         LightType GetLightType() const { return m_lightType; }
+        virtual bool Start() override;
+        virtual bool Update() override;
+        virtual bool Destroy() override;
 
         static ComponentType m_type;
     private:

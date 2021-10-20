@@ -43,9 +43,9 @@ namespace XenonEngine
 			vertices[i / 3].z = attrib.vertices[i + 2];
 		}
 
-        int numOfNormal = attrib.normals.size / 3;
+        int numOfNormal = attrib.normals.size() / 3;
         Vector3f* normals = new Vector3f[numOfNormal];
-        for (size_t i = 0; i < attrib.normals.size(); i++)
+        for (size_t i = 0; i < attrib.normals.size(); i+=3)
         {
             normals[i / 3].x = attrib.normals[i + 0];
             normals[i / 3].y = attrib.normals[i + 1];

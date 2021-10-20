@@ -33,6 +33,7 @@
 #include "Gameplay/Player.h"
 #include "Gameplay/Cube3D.h"
 #include "Gameplay/CameraObject3D.h"
+#include "Gameplay/SceneDirectionLight.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -115,6 +116,11 @@ namespace Gameplay {
         {
             CameraObject3D* camera3D = new CameraObject3D("CameraObject3D");
             world->AddGameObject(camera3D);
+        }
+
+        {
+            SceneDirectionLight* directionLight = new SceneDirectionLight("SceneDirectionLight");
+            world->AddGameObject(directionLight);
         }
 
         compiler = new XenonCompiler;

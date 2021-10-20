@@ -21,7 +21,7 @@ namespace XenonEngine
         float maxRadius = 0;
         for (int i = 0 ;i < m_polygon3D->GetNumOfVertex(); i++)
         {
-            float radius = (*m_polygon3D)[i].x *(*m_polygon3D)[i].x + (*m_polygon3D)[i].y *(*m_polygon3D)[i].y + (*m_polygon3D)[i].z *(*m_polygon3D)[i].z;
+            float radius = (*m_polygon3D)[i].m_vertex.x *(*m_polygon3D)[i].m_vertex.x + (*m_polygon3D)[i].m_vertex.y *(*m_polygon3D)[i].m_vertex.y + (*m_polygon3D)[i].m_vertex.z *(*m_polygon3D)[i].m_vertex.z;
             if (radius > maxRadius)
             {
                 maxRadius = radius;

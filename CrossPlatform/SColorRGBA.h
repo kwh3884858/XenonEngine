@@ -19,6 +19,8 @@ namespace CrossPlatform
         SColorRGBA operator+(const SColorRGBA& rhs);
         SColorRGBA& operator+=(const SColorRGBA& rhs);
         SColorRGBA operator*(const SColorRGBA& rhs) const;
+        SColorRGBA operator*(float rhs) const;
+        SColorRGBA operator/(float rhs) const;
 
 		unsigned int ToRGBALittleEndian();
 		unsigned int ToRGBLittleEndian();
@@ -27,7 +29,6 @@ namespace CrossPlatform
         unsigned char GetG()const { return static_cast<unsigned char>(0xff & (m_value >> 8)); }
         unsigned char GetR()const { return static_cast<unsigned char>(0xff & (m_value >> 16)); }
         unsigned char GetA()const { return static_cast<unsigned char>(0xff & (m_value >> 24)); }
-
 
         void SetB(int value);
         void SetG(int value);
@@ -39,6 +40,7 @@ namespace CrossPlatform
 		unsigned int m_value;
 	};
     const SColorRGBA WHITE(255, 255, 255, 255);
+    const SColorRGBA GERY(128, 128, 128, 255);
     const SColorRGBA BLUE(0, 0, 255, 255);
     const SColorRGBA DRAK_BLUE(0, 0, 139, 255);
     const SColorRGBA GREEN(0, 255, 0, 255);

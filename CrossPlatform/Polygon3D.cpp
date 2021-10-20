@@ -23,7 +23,7 @@ namespace CrossPlatform
         m_normalList = that.m_normalList;
 	}
 
-	const Vertex3D& Polygon3D::operator[](int index) const
+	const Vertex3D Polygon3D::operator[](int index) const
 	{
 		assert(m_vertexIndexList != nullptr);
 		assert(m_normalList != nullptr);

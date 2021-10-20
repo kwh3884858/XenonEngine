@@ -65,21 +65,48 @@ namespace CrossPlatform
         b = b + rhs.GetB();
         b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
         SetR(r);
-        SetR(g);
-        SetR(b);
+        SetG(g);
+        SetB(b);
         return *this;
     }
 
     SColorRGBA SColorRGBA::operator*(const SColorRGBA& rhs) const
     {
+        float r = (*this).GetR();
+        float g = (*this).GetG();
+        float b = (*this).GetB();
+        r = r * rhs.GetR() / COLORLIMIT;
+        g = g * rhs.GetG() / COLORLIMIT;
+        b = b * rhs.GetB() / COLORLIMIT;
+        SColorRGBA result(r, g, b);
+        return result;
+    }
+
+    SColorRGBA SColorRGBA::operator*(float rhs) const
+    {
         int r = (*this).GetR();
         int g = (*this).GetG();
         int b = (*this).GetB();
-        r = r * rhs.GetR();
+        r = r * rhs;
         r = r >= COLORLIMIT ? COLORLIMIT - 1 : r;
-        g = g * rhs.GetG();
+        g = g * rhs;
         g = g >= COLORLIMIT ? COLORLIMIT - 1 : g;
-        b = b * rhs.GetB();
+        b = b * rhs;
+        b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
+        SColorRGBA result(r, g, b);
+        return result;
+    }
+
+    SColorRGBA SColorRGBA::operator/(float rhs) const
+    {
+        int r = (*this).GetR();
+        int g = (*this).GetG();
+        int b = (*this).GetB();
+        r = r / rhs;
+        r = r >= COLORLIMIT ? COLORLIMIT - 1 : r;
+        g = g / rhs;
+        g = g >= COLORLIMIT ? COLORLIMIT - 1 : g;
+        b = b / rhs;
         b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
         SColorRGBA result(r, g, b);
         return result;

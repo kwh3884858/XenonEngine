@@ -28,7 +28,7 @@ namespace CrossPlatform {
 		Polygon3D(const Polygon3D& that);
 
 		int Count()const { return m_numOfIndex; }
-		const Vertex3D& operator[](int index)const;
+		const Vertex3D operator[](int index)const;
         const Vector3f& GetNormal(int index) const;
 		~Polygon3D();
 
