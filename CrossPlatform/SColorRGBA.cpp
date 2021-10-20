@@ -1,4 +1,5 @@
 #include "CrossPlatform/SColorRGBA.h"
+#include <assert.h>
 
 namespace CrossPlatform
 {
@@ -13,22 +14,26 @@ namespace CrossPlatform
 
     SColorRGBA::SColorRGBA()
     {
-        value = 0;
+        m_value = 0;
     }
 
-    SColorRGBA::SColorRGBA(int b, int g, int r, int a /*= 255*/)
+    SColorRGBA::SColorRGBA(int r, int g, int b, int a /*= 255*/)
     {
-        value = (b | g << 8 | r << 16 | a << 24);
+        assert(r >= 0 && r < COLORLIMIT);
+        assert(g >= 0 && g < COLORLIMIT);
+        assert(b >= 0 && b < COLORLIMIT);
+        assert(a >= 0 && a < COLORLIMIT);
+        m_value = (b | g << 8 | r << 16 | a << 24);
     }
 
     SColorRGBA::SColorRGBA(int rgba)
     {
-        value = rgba;
+        m_value = rgba;
     }
 
     SColorRGBA::SColorRGBA(const SColorRGBA& rhs)
     {
-        this->value = rhs.value;
+        this->m_value = rhs.m_value;
     }
 
     SColorRGBA::~SColorRGBA()
@@ -38,17 +43,90 @@ namespace CrossPlatform
 
     SColorRGBA& SColorRGBA::operator=(const SColorRGBA& rhs)
     {
-        this->value = rhs.value;
+        this->m_value = rhs.m_value;
         return *this;
+    }
+
+    SColorRGBA SColorRGBA::operator+(const SColorRGBA& rhs)
+    {
+        SColorRGBA result(*this);
+        return result += rhs.m_value;
+    }
+
+    SColorRGBA& SColorRGBA::operator+=(const SColorRGBA& rhs)
+    {
+        int r = (*this).GetR();
+        int g = (*this).GetG();
+        int b = (*this).GetB();
+        r = r + rhs.GetR();
+        r = r >= COLORLIMIT ? COLORLIMIT - 1 : r;
+        g = g + rhs.GetG();
+        g = g >= COLORLIMIT ? COLORLIMIT - 1 : g;
+        b = b + rhs.GetB();
+        b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
+        SetR(r);
+        SetR(g);
+        SetR(b);
+        return *this;
+    }
+
+    SColorRGBA SColorRGBA::operator*(const SColorRGBA& rhs) const
+    {
+        int r = (*this).GetR();
+        int g = (*this).GetG();
+        int b = (*this).GetB();
+        r = r * rhs.GetR();
+        r = r >= COLORLIMIT ? COLORLIMIT - 1 : r;
+        g = g * rhs.GetG();
+        g = g >= COLORLIMIT ? COLORLIMIT - 1 : g;
+        b = b * rhs.GetB();
+        b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
+        SColorRGBA result(r, g, b);
+        return result;
     }
 
     unsigned int SColorRGBA::ToRGBALittleEndian()
     {
-        return value;
+        return m_value;
     }
 
     unsigned int SColorRGBA::ToRGBLittleEndian()
     {
-        return value & 0xffffff;
+        return m_value & 0xffffff;
     }
+
+    void SColorRGBA::SetB(int value)
+    {
+        assert(value >= 0 && value < COLORLIMIT);
+        int mask = ~0 & ~0xff;
+        m_value &= mask;
+        m_value |= value;
+    }
+
+    void SColorRGBA::SetG(int value)
+    {
+        assert(value >= 0 && value < COLORLIMIT);
+        int mask = ~0 & ~(0xff << 8);
+        m_value &= mask;
+        m_value |= (value<<8);
+    }
+
+    void SColorRGBA::SetR(int value)
+    {
+        assert(value >= 0 && value < COLORLIMIT);
+        int mask = ~0 & ~(0xff << 16);
+        m_value &= mask;
+        m_value |= (value << 16);
+    }
+
+    void SColorRGBA::SetA(int value)
+    {
+        assert(value >= 0 && value < COLORLIMIT);
+        int mask = ~0 & ~(0xff << 24);
+        m_value &= mask;
+        m_value |= (value << 24);
+    }
+
+    int SColorRGBA::COLORLIMIT = 256;
+
 }
