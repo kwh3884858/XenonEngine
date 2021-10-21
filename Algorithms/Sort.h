@@ -12,57 +12,33 @@ namespace Algorithm
 	public:
 		Sort();
 		~Sort();
+        
+        typedef bool CampareFunction(const T& lhs, const T& rhs);
 
 		void Selection(const T* begin, const T* end) const;
 		void Insertion(const T* begin, const T* end) const;
 		void Shell(const T* begin, const T* end) const;
 		void UpDownSortion(const T* begin, const T* end) const;
 		void DownUpSortion(const T* begin, const T* end) const;
-		void Quick() const;
+		void Quick(const T* begin, const T* end, CampareFunction* isLess) const;
+		void Quick( T*const begin, int length, CampareFunction* isLess) const;
 	private:
 		bool Less(const T* lhs, const T* rhs)const;
-		void Swap(const T* lhs, const T* rhs)const;
+		void Swap( T* const lhs,  T*const rhs)const;
+		void Swap( T& lhs,  T& rhs)const;
 		void Merge(const T* begin, int low, int middle, int high) const;
 		int Length(const T* begin, const T* end) const;
 		void DownSortion(const T* begin, int low ,int high) const;
-		void Partition(const T* begin, int low, int high) const;
+
+        void InternalQuick( T*const begin, int low, int high, CampareFunction* isLess) const;
+        int Partition( T*const begin, int low, int high, CampareFunction* isLess) const;
+
 	};
 
 	template<typename T>
 	bool Algorithm::Sort<T>::Less(const T* lhs, const T* rhs) const
 	{
 		return *lhs < *rhs;
-	}
-
-	template<typename T>
-	void Algorithm::Sort<T>::Partition(const T* begin, int low, int high)const
-	{
-		int i = low;
-		int j = high + 1;
-		T* middle = begin[0];
-		while (true)
-		{
-			while (Less(begin[++i], middle))
-			{
-				if (i == high)
-				{
-					break;
-				}
-			}
-
-			while (Less(middle ,begin[--j]))
-			{
-				if ()
-				{
-				}
-			}
-		}
-	}
-
-	template<typename T>
-	void Algorithm::Sort<T>::Quick()const
-	{
-
 	}
 
 	template<typename T>
@@ -87,6 +63,7 @@ namespace Algorithm
 		while (begin != end)
 		{
 			length++;
+            begin++;
 		}
 		return length;
 	}
@@ -111,6 +88,59 @@ namespace Algorithm
 			}
 		}
 	}
+
+    template<typename T>
+    void Algorithm::Sort<T>::Quick(const T* begin, const T* end, CampareFunction* isLess) const
+    {
+        int length = Length(begin, end);
+        InternalQuick(begin, 0, length - 1, isLess);
+    }
+
+    template<typename T>
+    void Algorithm::Sort<T>::Quick( T*const begin, int length, CampareFunction* isLess) const
+    {
+        InternalQuick(begin, 0, length - 1, isLess);
+    }
+
+    template<typename T>
+    void Algorithm::Sort<T>::InternalQuick( T*const begin, int low, int high, CampareFunction* isLess) const
+    {
+        if (low >= high)
+        {
+            return;
+        }
+        int middle = Partition(begin, low, high, isLess);
+        InternalQuick(begin, low, middle - 1, isLess);
+        InternalQuick(begin, middle + 1, high, isLess);
+    }
+
+    template<typename T>
+    int Algorithm::Sort<T>::Partition( T*const begin, int low, int high, CampareFunction* isLess)const
+    {
+        //from low + 1 to high
+        int left = low;
+        int right = high + 1;
+         T middle = begin[low];
+        while (true)
+        {
+            while (isLess(begin[++left], middle))
+            {
+                if (left == high) break;
+            }
+            while (isLess(middle, begin[--right]))
+            {
+                if (right == low) break;
+            }
+
+            if (left >= right)
+            {
+                Swap(begin[low], begin[right]);
+                break;
+            }
+            Swap(begin[left], begin[right]);
+        }
+        return right;
+    }
 
 	template<typename T>
 	void Algorithm::Sort<T>::UpDownSortion(const T* begin, const T* end)const
@@ -214,12 +244,18 @@ namespace Algorithm
 	}
 
 	template<typename T>
-	void Algorithm::Sort<T>::Swap(const T* lhs, const T* rhs) const
+	void Algorithm::Sort<T>::Swap( T* const lhs,  T*const rhs) const
 	{
 		T tmp = *lhs;
 		*lhs = *rhs;
 		*rhs = tmp;
 	}
+
+    template<typename T>
+    void Algorithm::Sort<T>::Swap( T& lhs,  T& rhs) const
+    {
+        Swap(&lhs, &rhs);
+    }
 
 	template<typename T>
 	void Algorithm::Sort<T>::Selection(const T* begin, const T* end) const

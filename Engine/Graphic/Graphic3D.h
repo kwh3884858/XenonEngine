@@ -68,4 +68,11 @@ namespace XenonEngine
         Algorithm::Vector<LightComponent*> m_lightList;
 	};
 
+    struct Triangle
+    {
+        MathLab::TVector4f m_p0;
+        MathLab::TVector4f m_p1;
+        MathLab::TVector4f m_p2;
+    };
+    bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
 }

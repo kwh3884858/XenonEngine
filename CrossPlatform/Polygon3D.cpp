@@ -40,12 +40,11 @@ namespace CrossPlatform
     const Vector3f& Polygon3D::GetNormal(int index) const
     {
         assert(m_normalList != nullptr);
-        assert(m_vertexList != nullptr);
         assert(index >= 0 && index < m_numOfIndex);
         VertexIndexs vertexIndex = m_vertexIndexList[index];
         assert(vertexIndex.m_normalIndex >= 0 && vertexIndex.m_normalIndex < m_numOfNormal);
 
-        return m_vertexList[vertexIndex.m_normalIndex];
+        return m_normalList[vertexIndex.m_normalIndex];
     }
 
     Polygon3D::~Polygon3D()

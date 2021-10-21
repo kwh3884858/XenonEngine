@@ -17,7 +17,7 @@
 #include <assert.h>
 #include "../Component/DirectionLightComponent.h"
 #include "../Component/PointLightComponent.h"
-
+#include "Algorithms/Sort.h"
 namespace XenonEngine
 {
 	using MathLab::TMatrix4X3f;
@@ -67,17 +67,33 @@ namespace XenonEngine
                 continue;
             }
 
-            for (int polyIndex = 0; polyIndex < polygon->Count(); polyIndex += 3)
+            int triangleCount = polygon->Count() / 3;
+            Triangle* triangleList = new Triangle[triangleCount];
+            for (int polyIndex = 0; polyIndex < triangleCount; polyIndex ++)
             {
-                const Vector3f& vertex0 = (*polygon)[polyIndex].m_vertex;
-                const Vector3f& vertex1 = (*polygon)[polyIndex + 1].m_vertex;
-                const Vector3f& vertex2 = (*polygon)[polyIndex + 2].m_vertex;
+                const Vector3f& vertex0 = (*polygon)[polyIndex * 3].m_vertex;
+                const Vector3f& vertex1 = (*polygon)[polyIndex * 3 + 1].m_vertex;
+                const Vector3f& vertex2 = (*polygon)[polyIndex * 3 + 2].m_vertex;
+                
                 TVector4f homogeneousVertex0 = ConvertFromNonHomogeneous(vertex0);
                 TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex1);
                 TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex2);
                 homogeneousVertex0 = homogeneousVertex0 * localToCameraTranform;
                 homogeneousVertex1 = homogeneousVertex1 * localToCameraTranform;
                 homogeneousVertex2 = homogeneousVertex2 * localToCameraTranform;
+                triangleList[polyIndex].m_p0 = homogeneousVertex0;
+                triangleList[polyIndex].m_p1 = homogeneousVertex1;
+                triangleList[polyIndex].m_p2 = homogeneousVertex2;
+            }
+
+            Algorithm::Sort<Triangle> sort;
+            sort.Quick(triangleList, triangleCount, IsZAxisBigger);
+
+            for (int polyIndex = 0; polyIndex < triangleCount; polyIndex ++)
+            {
+                TVector4f homogeneousVertex0 = triangleList[polyIndex].m_p0;
+                TVector4f homogeneousVertex1 = triangleList[polyIndex].m_p1;
+                TVector4f homogeneousVertex2 = triangleList[polyIndex].m_p2;
                 state = RemoveBackFaces(homogeneousVertex0, homogeneousVertex1, homogeneousVertex2);
                 if (state == CullingState::Culled)
                 {
@@ -108,8 +124,7 @@ namespace XenonEngine
                         Vector3f lightPosition = pointLight->GetGameObject()->GetComponent<Transform3D>()->GetPosition();
                         TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
                         lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
-                        lightPosition = MathLab::ConvertFormHomogeneous(lightPoistionHomogeneous);
-                        TVector4f direction = vertex0 - lightPosition;
+                        TVector4f direction = homogeneousVertex0 - lightPoistionHomogeneous;
                         float kc = pointLight->GetKc();
                         float kl = pointLight->GetKl();
                         float face = direction.Normalize().Dot(faceNormal);
@@ -296,6 +311,11 @@ namespace XenonEngine
                 alpha, beta, 1, 1,
                 0, 0, 0, 0
         });
+    }
+
+    bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs)
+    {
+        return lhs.m_p0[2] < rhs.m_p0[2];
     }
 
 }
