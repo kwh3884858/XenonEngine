@@ -186,6 +186,8 @@ namespace XenonEngine
                 }
 
             }
+
+            delete[] triangleList;
 		}
 	}
 
@@ -315,7 +317,7 @@ namespace XenonEngine
 
     bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs)
     {
-        return lhs.m_p0[2] < rhs.m_p0[2];
+        return (lhs.m_p0[2] + lhs.m_p1[2] + lhs.m_p2[2]) /3 > (rhs.m_p0[2] + rhs.m_p1[2] + rhs.m_p2[2]) / 3;
     }
 
 }

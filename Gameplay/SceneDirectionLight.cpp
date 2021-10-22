@@ -32,7 +32,7 @@ namespace Gameplay
 
         DirectionLightComponent* directionLightComponent = new DirectionLightComponent(this);
         DirectionLightComponentConfig config;
-        config.m_color = CrossPlatform::RED;
+        config.m_color = CrossPlatform::GERY;
         config.m_direction = Vector3f(0, 0, 1);
         directionLightComponent->SetConfig(config);
         AddComponent(directionLightComponent);
