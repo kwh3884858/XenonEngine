@@ -151,7 +151,7 @@ namespace XenonEngine
                 if (m_renderType == RenderType::FlatShdering)
                 {
                     //static int test = 0;
-                    Graphic2D::Get().DrawTriangle(screenPoint1, screenPoint2, screenPoint3, finalColor);
+                    Graphic2D::Get().DrawTriangle(screenPoint1 + Vector2f(0.5f, 0.5f), screenPoint2 + Vector2f(0.5f, 0.5f), screenPoint3 + Vector2f(0.5f, 0.5f), finalColor);
                     //if (test < 1)
                     //{
                     //    printf("(%f, %f) -- (%f, %f) -- (%f, %f)\n", screenPoint1.x, screenPoint1.y, screenPoint2.x, screenPoint2.y, screenPoint3.x, screenPoint3.y);

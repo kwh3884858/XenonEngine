@@ -252,7 +252,7 @@ namespace XenonEngine
         {
             while (leftIndex.y <= p1.y)
             {
-                DrawLine(leftIndex, rightIndex, rgba);
+                DrawLine(leftIndex , rightIndex, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
             }
@@ -269,23 +269,23 @@ namespace XenonEngine
                 leftIndex += leftStep;
                 rightIndex += rightStep;
 
-                if (leftIndex.x < m_minDrawPosition.x)
+                if (left.x < m_minDrawPosition.x)
                 {
                     left.x = m_minDrawPosition.x;
-                    if (rightIndex.x <= m_minDrawPosition.x)
+                    if (right.x <= m_minDrawPosition.x)
                     {
                         continue;
                     }
                 }
-                if (rightIndex.x > m_maxDrawPosition.x)
+                if (right.x > m_maxDrawPosition.x)
                 {
                     right.x = m_maxDrawPosition.x;
-                    if (leftIndex.x >= m_maxDrawPosition.x)
+                    if (left.x >= m_maxDrawPosition.x)
                     {
                         continue;
                     }
                 }
-                DrawLine(left, right, rgba);
+                DrawLine(left, right , rgba);
             }
         }
     }
@@ -324,7 +324,7 @@ namespace XenonEngine
         {
             while (leftIndex.y >= p1.y)
             {
-                DrawLine(leftIndex, rightIndex, rgba);
+                DrawLine(leftIndex , rightIndex, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
             }
@@ -340,23 +340,23 @@ namespace XenonEngine
 
                 left = leftIndex;
                 right = rightIndex;
-                if (leftIndex.x < m_minDrawPosition.x)
+                if (left.x < m_minDrawPosition.x)
                 {
                     left.x = m_minDrawPosition.x;
-                    if (rightIndex.x <= m_minDrawPosition.x)
+                    if (right.x <= m_minDrawPosition.x)
                     {
                         continue;
                     }
                 }
-                if (rightIndex.x > m_maxDrawPosition.x)
+                if (right.x > m_maxDrawPosition.x)
                 {
                     right.x = m_maxDrawPosition.x;
-                    if (leftIndex.x >= m_maxDrawPosition.x)
+                    if (left.x >= m_maxDrawPosition.x)
                     {
                         continue;
                     }
                 }
-                DrawLine(left, right, rgba);
+                DrawLine(left , right , rgba);
             }
         }
     }
