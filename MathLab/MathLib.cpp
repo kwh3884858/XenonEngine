@@ -118,7 +118,7 @@ namespace MathLab {
         return result;
     }
 
-    int Ceiling(float value)
+    int Ceil(float value)
     {
         if (value < 0)
         {

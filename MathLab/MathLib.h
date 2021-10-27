@@ -27,7 +27,7 @@ namespace MathLab {
     Vector3f ConvertFormHomogeneous(const TVector4f& homogeneous);
     TVector4f ConvertFromNonHomogeneous(const Vector3f& nonHomogeneous);
 
-    int Ceiling(float value);
+    int Ceil(float value);
 
     template <typename T>
     const T& Clamp(const T& value, const T& min, const T& max) {
