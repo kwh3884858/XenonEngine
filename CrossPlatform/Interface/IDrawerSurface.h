@@ -15,6 +15,7 @@ namespace CrossPlatform {
 
         virtual void lock() = 0;
         virtual void DrawPixel(unsigned int x, unsigned int y, SColorRGBA rgba) = 0;
+        virtual void DrawStraightLine(unsigned int xStart, unsigned int xEnd, unsigned int y, SColorRGBA rgba) = 0;
         virtual SColorRGBA GetPixel(unsigned int x, unsigned int y) = 0;
         virtual void Unlock() = 0;
         virtual unsigned int GetWidth()const = 0;

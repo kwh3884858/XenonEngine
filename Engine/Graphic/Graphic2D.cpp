@@ -110,6 +110,11 @@ namespace XenonEngine
         DrawLine(Vector2i((int)lhs.x, (int)lhs.y), Vector2i((int)rhs.x, (int)rhs.y), rgba);
     }
 
+    void Graphic2D::DrawStraightLine(const int xStart, const int xEnd, const int y, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    {
+        m_drawerSurface->DrawStraightLine(xStart, xEnd, m_drawerSurface->GetHeight() - 1 - y, rgba);
+    }
+
     void Graphic2D::DrawPolygon(const Polygon2D& polygon2D) const
     {
         //if (polygon2D.m_state == Polygon2D::EState::Enable)
@@ -237,31 +242,36 @@ namespace XenonEngine
         Vector2f leftStep(0, Y_AXIS_STEP);
         leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
+        int yButtom = MathLab::Ceil(buttom.y);
+        int yTop = MathLab::Ceil(p1.y) - 1;
         if (buttom.y < m_minDrawPosition.y)
         {
-            leftIndex = InternalClipYPoint(buttom, p1, m_minDrawPosition.y);
-            rightIndex = InternalClipYPoint(buttom, p2, m_minDrawPosition.y);
+            yButtom = m_minDrawPosition.y;
+            leftIndex = InternalClipYPoint(buttom, p1, yButtom);
+            rightIndex = InternalClipYPoint(buttom, p2, yButtom);
         }
-        if (p1.y > m_maxDrawPosition.y)
+        if (yTop > m_maxDrawPosition.y)
         {
-            p1.y = m_maxDrawPosition.y;
+            yTop = m_maxDrawPosition.y - 1;
         }
+
         if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
             buttom.x >= m_minDrawPosition.x && buttom.y <= m_maxDrawPosition.x)
         {
-            while (leftIndex.y <= p1.y)
+            while (yButtom <= yTop)
             {
-                DrawLine(leftIndex , rightIndex, rgba);
+                DrawStraightLine(leftIndex.x, rightIndex.x, yButtom, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
+                yButtom++;
             }
         }
         else
         {
             Vector2f left;
             Vector2f right;
-            while (leftIndex.y < p1.y)
+            while (yButtom < yTop)
             {
                 left = leftIndex;
                 right = rightIndex;
@@ -285,7 +295,7 @@ namespace XenonEngine
                         continue;
                     }
                 }
-                DrawLine(left, right , rgba);
+                DrawStraightLine(left.x, right.x, yButtom, rgba);
             }
         }
     }
@@ -472,15 +482,19 @@ namespace XenonEngine
     Vector2f Graphic2D::InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY) const
     {
         Vector2f newPoint(point);
-        if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) == 0)
+        if ((point.y - clipY) * (anontherPoint.y - clipY) <= 0)
         {
-            newPoint.x = anontherPoint.x;
+            if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) == 0)
+            {
+                newPoint.x = anontherPoint.x;
+            }
+            else
+            {
+                newPoint.x = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (point.x - anontherPoint.x) + anontherPoint.x;
+            }
+            newPoint.y = clipY;
         }
-        else
-        {
-            newPoint.x = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (point.x - anontherPoint.x) + anontherPoint.x;
-        }
-        newPoint.y = clipY;
+
         return newPoint;
     }
 }

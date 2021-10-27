@@ -118,4 +118,23 @@ namespace MathLab {
         return result;
     }
 
+    int Ceiling(float value)
+    {
+        if (value < 0)
+        {
+            return (int)value;
+        }
+        else
+        {
+            if ((int)value < value)
+            {
+                return (int)value + 1;
+            }
+            else
+            {
+                return (int)value;
+            }
+        }
+    }
+
 }
