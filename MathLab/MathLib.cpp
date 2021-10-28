@@ -137,4 +137,9 @@ namespace MathLab {
         }
     }
 
+    int Floor(float value)
+    {
+        return (int)value;
+    }
+
 }

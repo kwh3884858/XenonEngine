@@ -68,10 +68,10 @@ namespace Gameplay {
     {
         GameObjectWorldManager::Get().Initialize();
         world = GameObjectWorldManager::Get().CreateGameWorld("Shooting2D");
-   //     {
-   //         Player* player = new Player("Player");
-			//world->AddGameObject(player);
-   //     }
+        {
+            Player* player = new Player("Player");
+            world->AddGameObject(player);
+        }
 
         {
 			GameObject* ground = new GameObject("Ground");
@@ -89,10 +89,20 @@ namespace Gameplay {
 
             int numOfVertex = 4;
             Vector2f* heroVertex = new Vector2f[numOfVertex];
-            heroVertex[0] = Vector2f(200, -10);
-            heroVertex[1] = Vector2f(200, 10);
-            heroVertex[2] = Vector2f(-200, 10);
-            heroVertex[3] = Vector2f(-200, -10);
+            //heroVertex[0] = Vector2f(100, -10);
+            //heroVertex[1] = Vector2f(100, 10);
+            //heroVertex[2] = Vector2f(-100, 10);
+            //heroVertex[3] = Vector2f(-100, -10);
+
+            //heroVertex[0] = Vector2f(100, -10);
+            //heroVertex[1] = Vector2f(40, 10);
+            //heroVertex[2] = Vector2f(-40, 10);
+            //heroVertex[3] = Vector2f(-100, -10);
+
+            heroVertex[0] = Vector2f(100, 0);
+            heroVertex[1] = Vector2f(0, 100);
+            heroVertex[2] = Vector2f(-100, 0);
+            heroVertex[3] = Vector2f(0, -100);
             Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
             Mesh2DConfig render2DConfig;
             render2DConfig.m_polygon2D = heroPolygon;
@@ -168,7 +178,8 @@ namespace Gameplay {
             camera->SetLookAt(lookAt);
         }
 
-
+        //Graphic2D::Get().DrawLine(Vector2i(0, 90), Vector2i(800, 90), CrossPlatform::YELLOW);
+        //Graphic2D::Get().DrawLine(Vector2i(0, 110), Vector2i(800, 110), CrossPlatform::YELLOW);
 		world->Update();
     }
 

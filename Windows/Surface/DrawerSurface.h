@@ -21,6 +21,7 @@ namespace WindowSurface {
 
         virtual void lock() override;
         virtual void DrawPixel(unsigned int x, unsigned int y, SColorRGBA rgba)override;
+        virtual void DrawStraightLine(unsigned int xStart, unsigned int xEnd, unsigned int y, SColorRGBA rgba) override;
         virtual SColorRGBA GetPixel(unsigned int x, unsigned int y)override;
         virtual void Unlock()override;
 

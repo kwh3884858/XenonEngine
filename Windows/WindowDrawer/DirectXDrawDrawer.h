@@ -47,7 +47,7 @@ namespace WindowDrawer {
 
         //void SetFrameBufeer(FramerBufferHandler const frameBufferHandle);
         //virtual const FramerBufferHandler GetFrameBuffer() const override{ return m_frameBuffer; }
-        void SetHDC(HDC hdc);
+
 
         LPDIRECTDRAW7 GetDirectRaw() { return lpdd7; }
     private:

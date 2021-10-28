@@ -28,6 +28,7 @@ namespace MathLab {
     TVector4f ConvertFromNonHomogeneous(const Vector3f& nonHomogeneous);
 
     int Ceil(float value);
+    int Floor(float value);
 
     template <typename T>
     const T& Clamp(const T& value, const T& min, const T& max) {

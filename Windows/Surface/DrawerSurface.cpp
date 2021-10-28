@@ -1,4 +1,5 @@
 #include "Windows/Surface/DrawerSurface.h"
+#include <vcruntime_string.h>
 
 namespace WindowSurface 
 {
@@ -32,6 +33,15 @@ namespace WindowSurface
         }
 
         m_buffer[y *m_width + x] = rgba;
+    }
+
+    void DrawerSurface::DrawStraightLine(unsigned int xStart, unsigned int xEnd, unsigned int y, SColorRGBA rgba)
+    {
+        if (m_lock == false)
+        {
+            return;
+        }
+        memset(m_buffer + m_width * y + xStart, rgba.ToRGBALittleEndian(), (xEnd - xStart + 1)* sizeof(SColorRGBA));
     }
 
     CrossPlatform::SColorRGBA DrawerSurface::GetPixel(unsigned int x, unsigned int y)

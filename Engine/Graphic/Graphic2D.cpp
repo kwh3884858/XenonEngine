@@ -112,6 +112,7 @@ namespace XenonEngine
 
     void Graphic2D::DrawStraightLine(const int xStart, const int xEnd, const int y, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
+        assert(xStart <= xEnd);
         m_drawerSurface->DrawStraightLine(xStart, xEnd, m_drawerSurface->GetHeight() - 1 - y, rgba);
     }
 
@@ -250,6 +251,12 @@ namespace XenonEngine
             leftIndex = InternalClipYPoint(buttom, p1, yButtom);
             rightIndex = InternalClipYPoint(buttom, p2, yButtom);
         }
+        //else
+        //{
+        //    leftIndex.x = leftIndex.x + leftStep.x * (yButtom - buttom.y);
+        //    rightIndex.x = rightIndex.x + rightStep.x * (yButtom - buttom.y);
+        //}
+
         if (yTop > m_maxDrawPosition.y)
         {
             yTop = m_maxDrawPosition.y - 1;
@@ -261,7 +268,9 @@ namespace XenonEngine
         {
             while (yButtom <= yTop)
             {
-                DrawStraightLine(leftIndex.x, rightIndex.x, yButtom, rgba);
+                int xStart = MathLab::Floor(leftIndex.x);
+                int xEnd = MathLab::Ceil(rightIndex.x);
+                DrawStraightLine(xStart, xEnd, yButtom, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
                 yButtom++;
@@ -296,6 +305,7 @@ namespace XenonEngine
                     }
                 }
                 DrawStraightLine(left.x, right.x, yButtom, rgba);
+                yButtom++;
             }
         }
     }
@@ -317,33 +327,43 @@ namespace XenonEngine
         Vector2f leftStep(0, -Y_AXIS_STEP);
         leftStep.x =( leftDelta.x > 0 ? 1.0f : -1.0f )* MathLab::Abs(leftDelta.x / leftDelta.y);
 
-        if (top.y > m_maxDrawPosition.y)
+        int yButtom = MathLab::Ceil(p1.y);
+        int yTop = MathLab::Ceil(top.y) - 1;
+        if (yButtom < m_minDrawPosition.y)
         {
-            rightIndex = InternalClipYPoint(top, p1, m_maxDrawPosition.y);
-            leftIndex = InternalClipYPoint(top, p2, m_maxDrawPosition.y);
+            yButtom = m_minDrawPosition.y;
         }
-
-        if (p1.y < m_minDrawPosition.y)
+        if (yTop > m_maxDrawPosition.y)
         {
-            p1.y = m_minDrawPosition.y;
+            yTop = m_maxDrawPosition.y - 1;
         }
+        rightIndex = InternalClipYPoint(top, p1, yTop);
+        leftIndex = InternalClipYPoint(top, p2, yTop);
+        //else
+        //{
+        //    leftIndex.x = leftIndex.x + leftStep.x * (yTop - top.y);
+        //    rightIndex.x = rightIndex.x + rightStep.x * (yTop - top.y);
+        //}
 
         if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
             top.x >= m_minDrawPosition.x && top.x <=m_maxDrawPosition.x)
         {
-            while (leftIndex.y >= p1.y)
+            while (yTop >= yButtom)
             {
-                DrawLine(leftIndex , rightIndex, rgba);
+                int xStart = MathLab::Floor(leftIndex.x);
+                int xEnd = MathLab::Ceil(rightIndex.x);
+                DrawStraightLine(xStart, xEnd, yTop, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
+                yTop--;
             }
         }
         else
         {
             Vector2f left;
             Vector2f right;
-            while (leftIndex.y > p1.y)
+            while (yTop >= yButtom)
             {
                 leftIndex += leftStep;
                 rightIndex += rightStep;
@@ -366,7 +386,8 @@ namespace XenonEngine
                         continue;
                     }
                 }
-                DrawLine(left , right , rgba);
+                DrawStraightLine(left.x, right.x, yTop, rgba);
+                yTop--;
             }
         }
     }
@@ -482,6 +503,7 @@ namespace XenonEngine
     Vector2f Graphic2D::InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY) const
     {
         Vector2f newPoint(point);
+        //assert((point.y - clipY) * (anontherPoint.y - clipY) <= 0);
         if ((point.y - clipY) * (anontherPoint.y - clipY) <= 0)
         {
             if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) == 0)
@@ -494,7 +516,6 @@ namespace XenonEngine
             }
             newPoint.y = clipY;
         }
-
         return newPoint;
     }
 }

@@ -243,13 +243,10 @@ void MainWindow::Run()
                 break;
             }
         }
-        frameAmount++;
-        _stprintf_s(debugTextBuffer, 80, _T("Frame Amout: %d"), frameAmount);
-        TextOut(hdc, 0, 0, debugTextBuffer, _tcslen(debugTextBuffer));
 
-        bool isUpdateBuffer = CanUpdateBuffer();
-
-        if (isUpdateBuffer)
+        DWORD currentTime = m_timer->GetTime();
+        DWORD timeInterval = currentTime - m_lastUpdateTiemstamp;
+        if (timeInterval > m_timeInterval)
         {
             m_directXDrawSurface->lock();
             m_zBuffer->lock();
@@ -257,7 +254,35 @@ void MainWindow::Run()
             Gameplay::GameplayMain();
             m_directXDrawSurface->Unlock();
             m_zBuffer->Unlock();
+            if (m_windowDrawer->GetType() == CrossPlatform::DrawerType::DirectX_Draw_Drawer)
+            {
+
+                HDC workingDC;
+                DirectXDrawSurface* directXDrawSurface = static_cast<DirectXDrawSurface*>(m_directXDrawSurface);
+                HRESULT result = directXDrawSurface->GetDirectRawSurface()->GetDC(&workingDC);
+                assert(result == DD_OK);
+
+                static TCHAR debugTextBuffer2[80];
+                static unsigned long int paintAmount = 0;
+                paintAmount++;
+                _stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
+                TextOut(workingDC, 0, 10, debugTextBuffer2, _tcslen(debugTextBuffer2));
+                SetTextColor(workingDC, colorRed);
+
+                float fps = 1000.0f / timeInterval;
+                TCHAR debugTextBuffer[80];
+                _stprintf_s(debugTextBuffer, 80, _T("FPS: %f"), fps);
+                TextOut(workingDC, 0, 50, debugTextBuffer, _tcslen(debugTextBuffer));
+
+                float secondPerFrame = timeInterval / 1000.0;
+                TCHAR debugTimeInterval[80];
+                _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %f s"), secondPerFrame);
+                TextOut(workingDC, 0, 30, debugTimeInterval, _tcslen(debugTimeInterval));
+
+                directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
+            }
             bool result = m_windowDrawer->Draw(m_directXDrawSurface);
+            m_lastUpdateTiemstamp = currentTime;
         }
     }
     Gameplay::GameplayShutdown();
@@ -268,9 +293,6 @@ void MainWindow::Run()
 
 LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 {
-    static unsigned long int paintAmount = 0;
-    static TCHAR debugTextBuffer2[80];
-
     COLORREF colorRed = RGB(255, 0, 0);
     COLORREF colorGreen = RGB(0, 255, 0);
     COLORREF colorBlue = RGB(0, 0, 255);
@@ -295,23 +317,20 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
             break;
         }
 
-    case WM_PAINT:
-    {
-        PAINTSTRUCT ps;
-        // Make the full window invalid
-        InvalidateRect(GetHwnd(), nullptr, false);
-        HDC hdc = BeginPaint(mWnd, &ps);
+    //case WM_PAINT:
+    //{
+        //PAINTSTRUCT ps;
+        //InvalidateRect(GetHwnd(), nullptr, false);
+        //HDC hdc = BeginPaint(mWnd, &ps);
 
-        paintAmount++;
+        //paintAmount++;
 
-        _stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
-        TextOut(hdc, 0, 10, debugTextBuffer2, _tcslen(debugTextBuffer2));
+        //_stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
+        //TextOut(hdc, 0, 10, debugTextBuffer2, _tcslen(debugTextBuffer2));
 
-
-        EndPaint(mWnd, &ps);
-        //std::cout << "Redraw!" << std::endl;
-    }
-    break;
+        //EndPaint(mWnd, &ps);
+    //}
+    //break;
 
     case WM_KEYDOWN:
     {
@@ -364,19 +383,5 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 
 bool MainWindow::CanUpdateBuffer()
 {
-    DWORD currentTime = m_timer->GetTime();
-    DWORD timeInterval = currentTime-m_lastUpdateTiemstamp;
-
-    if (timeInterval > m_timeInterval)
-    {
-        float fps = 1 / timeInterval;
-        TCHAR debugTextBuffer[80];
-        _stprintf_s(debugTextBuffer, 80, _T("FPS: %d"), (int)fps);
-        TextOut(hdc, 0, 40, debugTextBuffer, _tcslen(debugTextBuffer));
-        printf("%lc", debugTextBuffer);
-
-        m_lastUpdateTiemstamp = currentTime;
-        return true;
-    }
     return false;
 }
