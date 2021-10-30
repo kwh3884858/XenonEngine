@@ -9,6 +9,7 @@
 
 using CrossPlatform::IDrawerSurface;
 using MathLab::Vector2f;
+using MathLab::Vector3f;
 //using MathLab::operator+;
 //using MathLab::operator-;
 
@@ -112,8 +113,10 @@ namespace XenonEngine
 
     void Graphic2D::DrawStraightLine(const int xStart, const int xEnd, const int y, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
-        assert(xStart <= xEnd);
-        m_drawerSurface->DrawStraightLine(xStart, xEnd, m_drawerSurface->GetHeight() - 1 - y, rgba);
+        if (xEnd >= xStart)
+        {
+            m_drawerSurface->DrawStraightLine(xStart, xEnd, m_drawerSurface->GetHeight() - 1 - y, rgba);
+        }
     }
 
     void Graphic2D::DrawPolygon(const Polygon2D& polygon2D) const
@@ -181,9 +184,65 @@ namespace XenonEngine
         else
         {
             Vector2f middlePoint = p1;
-            middlePoint.x = (p1.y - p2.y) / (p0.y - p2.y) * (p0.x - p2.x) + p2.x;
+            middlePoint.x = (p0.x - p2.x) / (p0.y - p2.y) * (p1.y - p2.y) + p2.x;
             DrawTopTriangle(p2, middlePoint, p1, rgba);
             DrawButtomTriangle(p0, middlePoint, p1, rgba);
+        }
+    }
+
+    void Graphic2D::DrawTriangle(VertexData data) const
+    {
+        if ((data.p0.x == data.p1.x && data.p1.x == data.p2.x) || 
+            (data.p0.y == data.p1.y && data.p1.y == data.p2.y))
+        {
+            return;
+        }
+        // p0 < p1 < p2 (y-axis)
+        if (data.p0.y > data.p1.y)
+        {
+            MathLab::SwapVector(data.p0, data.p1);
+        }
+
+        if (data.p0.y > data.p2.y)
+        {
+            MathLab::SwapVector(data.p0, data.p2);
+        }
+
+        if (data.p1.y > data.p2.y)
+        {
+            MathLab::SwapVector(data.p1, data.p2);
+        }
+
+        if (data.p0.y == data.p1.y)
+        {
+            //verse clockwise
+            if (data.p0.x > data.p1.x)
+            {
+                DrawTopTriangle(data.p2, data.p0, data.p1, data.vcolor2, data.vcolor0, data.vcolor1);
+            }
+            else
+            {
+                DrawTopTriangle(data.p2, data.p1, data.p0, data.vcolor2, data.vcolor1, data.vcolor0);
+            }
+        }
+        else if (data.p1.y == data.p2.y)
+        {
+            if (data.p1.x > data.p2.x)
+            {
+                DrawButtomTriangle(data.p0, data.p2, data.p1, data.vcolor0, data.vcolor2, data.vcolor1);
+            }
+            else
+            {
+                DrawButtomTriangle(data.p0, data.p1, data.p2, data.vcolor0, data.vcolor1, data.vcolor2);
+            }
+        }
+        else
+        {
+            Vector2f middlePoint = data.p1;
+            middlePoint.x = (data.p1.y - data.p2.y) * (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) + data.p2.x;
+            Vector3f middleColor = (data.vcolor1 - data.vcolor2) * (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) + data.vcolor2;
+            DrawTopTriangle(data.p2, middlePoint, data.p1, data.vcolor2, middleColor, data.vcolor1);
+            DrawButtomTriangle(data.p0, middlePoint, data.p1, data.vcolor0, middleColor, data.vcolor1);
         }
     }
 
@@ -268,8 +327,8 @@ namespace XenonEngine
         {
             while (yButtom <= yTop)
             {
-                int xStart = MathLab::Floor(leftIndex.x);
-                int xEnd = MathLab::Ceil(rightIndex.x);
+                int xStart = MathLab::Ceil(leftIndex.x);
+                int xEnd = MathLab::Ceil(rightIndex.x) - 1;
                 DrawStraightLine(xStart, xEnd, yButtom, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
@@ -310,6 +369,11 @@ namespace XenonEngine
                 yButtom++;
             }
         }
+    }
+
+    void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2) const
+    {
+
     }
 
     void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
@@ -353,8 +417,8 @@ namespace XenonEngine
         {
             while (yTop >= yButtom)
             {
-                int xStart = MathLab::Floor(leftIndex.x);
-                int xEnd = MathLab::Ceil(rightIndex.x);
+                int xStart = MathLab::Ceil(leftIndex.x);
+                int xEnd = MathLab::Ceil(rightIndex.x) - 1;
                 DrawStraightLine(xStart, xEnd, yTop, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
@@ -394,6 +458,11 @@ namespace XenonEngine
                 yTop--;
             }
         }
+    }
+
+    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2) const
+    {
+
     }
 
     Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const

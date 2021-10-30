@@ -17,6 +17,7 @@ namespace CrossPlatform
 
         SColorRGBA& operator=(const SColorRGBA& rhs);
         SColorRGBA operator+(const SColorRGBA& rhs);
+        SColorRGBA operator-(const SColorRGBA& rhs);
         SColorRGBA& operator+=(const SColorRGBA& rhs);
         SColorRGBA operator*(const SColorRGBA& rhs) const;
         SColorRGBA operator*(float rhs) const;

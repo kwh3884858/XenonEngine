@@ -16,6 +16,7 @@ namespace CrossPlatform {
 using CrossPlatform::SColorRGBA;
 using MathLab::Vector2i;
 using MathLab::Vector2f;
+using MathLab::Vector3f;
 using CrossPlatform::Polygon2D;
 
 namespace XenonEngine {
@@ -24,6 +25,16 @@ namespace XenonEngine {
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
         Vector2f m_MinDrawPosition;
         Vector2f m_MaxDrawPosition;
+    };
+
+    struct VertexData
+    {
+        Vector2f p0;
+        Vector2f p1;
+        Vector2f p2;
+        Vector3f vcolor0;
+        Vector3f vcolor1;
+        Vector3f vcolor2;
     };
 
     class Graphic2D :public CrossPlatform::XenonManager<Graphic2D>
@@ -61,6 +72,7 @@ namespace XenonEngine {
         //void DrawLine(const Vector2f* lhs, const Vector2f*rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPolygon(const Polygon2D& polygon2D)const;
         void DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawTriangle(VertexData data)const;
         ClipLineState ClipLine(Vector2f& p0, Vector2f& p1)const;
         ClipLineState ClipLine(Vector2i& p0, Vector2i& p1)const;
 
@@ -69,6 +81,11 @@ namespace XenonEngine {
 
         void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, 
+            Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2)const;
+        void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2,
+            Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2)const;
+
         ClipCode InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
         bool InternalClipPoint(ClipCode clipCode,Vector2f& point, const Vector2f& anotherPoint)const;
         Vector2f InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX)const;

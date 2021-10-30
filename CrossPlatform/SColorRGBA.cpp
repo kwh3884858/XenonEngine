@@ -70,6 +70,21 @@ namespace CrossPlatform
         return *this;
     }
 
+    //Do Not Protect Overflow
+    SColorRGBA SColorRGBA::operator-(const SColorRGBA& rhs)
+    {
+        int r = (*this).GetR();
+        int g = (*this).GetG();
+        int b = (*this).GetB();
+        r = rhs.GetR() >= r ? 0 : r - rhs.GetR();
+        g = rhs.GetG() >= g ? 0 : g - rhs.GetG();
+        b = rhs.GetB() >= b ? 0 : b - rhs.GetB();
+        SetR(r);
+        SetG(g);
+        SetB(b);
+        return *this;
+    }
+
     SColorRGBA SColorRGBA::operator*(const SColorRGBA& rhs) const
     {
         float r = (*this).GetR();
