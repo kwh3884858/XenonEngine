@@ -70,7 +70,7 @@ namespace Gameplay {
         world = GameObjectWorldManager::Get().CreateGameWorld("Shooting2D");
         {
             Player* player = new Player("Player");
-            world->AddGameObject(player);
+            //world->AddGameObject(player);
         }
 
         {
@@ -110,7 +110,7 @@ namespace Gameplay {
             render2D->SetConfig(&render2DConfig);
             ground->AddComponent(render2D);
 
-            world->AddGameObject(ground);
+            //world->AddGameObject(ground);
         }
 
    //     {

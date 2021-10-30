@@ -36,6 +36,7 @@ namespace Gameplay
         String applicationPath = FileManager::Get().GetApplicationPath();
         int pos = applicationPath.IndexOf("XenonEngine.exe");
         String cubeObjPath = applicationPath.Substring(0, pos);
+        //cubeObjPath.Append("cubeTest.obj");
         //cubeObjPath.Append("cube.obj");
         cubeObjPath.Append("KeQing.obj");
         Mesh3DConfig config;

@@ -48,7 +48,6 @@ MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_windowDrawer(nullptr)
 , m_timer(nullptr)
 , m_directXDrawSurface(nullptr)
-, m_lastUpdateTiemstamp(0)
 , m_screenWidth(Database::Get().engineConfig.m_width)
 , m_screenHight(Database::Get().engineConfig.m_height)
 , m_directInput(nullptr)
@@ -69,7 +68,6 @@ void MainWindow::Initialize()
     m_windowDrawer = new WindowDrawer::DirectXDrawDrawer();
 
     m_timer = new Timer::StoryTimer();
-    m_lastUpdateTiemstamp = m_timer->GetTime();
 
     m_debugConsole = new DebugTool::DebugConsole();
     m_debugConsole->Initialize();
@@ -244,16 +242,18 @@ void MainWindow::Run()
             }
         }
 
-        DWORD currentTime = m_timer->GetTime();
-        DWORD timeInterval = currentTime - m_lastUpdateTiemstamp;
+        double timeInterval = m_timer->GetTimeMilliSecond();
         if (timeInterval > m_timeInterval)
         {
+            m_timer->Update();
+
             m_directXDrawSurface->lock();
             m_zBuffer->lock();
             m_directInput->Update();
             Gameplay::GameplayMain();
             m_directXDrawSurface->Unlock();
             m_zBuffer->Unlock();
+
             if (m_windowDrawer->GetType() == CrossPlatform::DrawerType::DirectX_Draw_Drawer)
             {
 
@@ -269,20 +269,19 @@ void MainWindow::Run()
                 TextOut(workingDC, 0, 10, debugTextBuffer2, _tcslen(debugTextBuffer2));
                 SetTextColor(workingDC, colorRed);
 
-                float fps = 1000.0f / timeInterval;
-                TCHAR debugTextBuffer[80];
-                _stprintf_s(debugTextBuffer, 80, _T("FPS: %f"), fps);
-                TextOut(workingDC, 0, 50, debugTextBuffer, _tcslen(debugTextBuffer));
-
                 float secondPerFrame = timeInterval / 1000.0;
                 TCHAR debugTimeInterval[80];
                 _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %f s"), secondPerFrame);
                 TextOut(workingDC, 0, 30, debugTimeInterval, _tcslen(debugTimeInterval));
 
+                float fps = 1000.0f / timeInterval;
+                TCHAR debugTextBuffer[80];
+                _stprintf_s(debugTextBuffer, 80, _T("FPS: %f"), fps);
+                TextOut(workingDC, 0, 50, debugTextBuffer, _tcslen(debugTextBuffer));
+
                 directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
             }
             bool result = m_windowDrawer->Draw(m_directXDrawSurface);
-            m_lastUpdateTiemstamp = currentTime;
         }
     }
     Gameplay::GameplayShutdown();

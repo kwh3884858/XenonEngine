@@ -14,6 +14,6 @@ namespace XenonEngine
 
 	float XenonTimer::GetTime() const
 	{
-		return m_timer->GetTime();
+		return m_timer->GetTimeMilliSecond();
 	}
 }

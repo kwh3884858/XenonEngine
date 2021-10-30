@@ -47,9 +47,8 @@ private:
     CrossPlatform::IFileReader* m_fileReader;
     WindowInput::DirectXInput* m_directInput;
 
-    double m_timeInterval = 33.3333;  //30fps
+    double m_timeInterval = 16.66;  //60fps
     Timer::StoryTimer* m_timer;
-    DWORD m_lastUpdateTiemstamp;
 
     int m_screenWidth;
     int m_screenHight;

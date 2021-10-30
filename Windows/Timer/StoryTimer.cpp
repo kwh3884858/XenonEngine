@@ -1,10 +1,11 @@
 #include "StoryTimer.h"
+#include <chrono>
 
 namespace Timer {
 
     void StoryTimer::Update()
     {
-        m_currentTime = GetTime();
+        m_currentTime = std::chrono::system_clock::now();
     }
 
     StoryTimer::StoryTimer()
@@ -12,8 +13,16 @@ namespace Timer {
         Update();
     }
 
-    float StoryTimer::GetTime() const
+    //float StoryTimer::GetTime() const
+    //{
+        //return GetTickCount();
+    //}
+
+    double StoryTimer::GetTimeMilliSecond() const
     {
-        return GetTickCount();
+
+        milliseconds runtime = std::chrono::duration_cast<milliseconds> ( std::chrono::system_clock::now() - m_currentTime );
+        return runtime.count();
     }
+
 }

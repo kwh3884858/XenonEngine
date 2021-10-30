@@ -248,8 +248,6 @@ namespace XenonEngine
         if (buttom.y < m_minDrawPosition.y)
         {
             yButtom = m_minDrawPosition.y;
-            leftIndex = InternalClipYPoint(buttom, p1, yButtom);
-            rightIndex = InternalClipYPoint(buttom, p2, yButtom);
         }
         //else
         //{
@@ -261,10 +259,12 @@ namespace XenonEngine
         {
             yTop = m_maxDrawPosition.y - 1;
         }
+        leftIndex = InternalClipYPoint(buttom, p1, yButtom);
+        rightIndex = InternalClipYPoint(buttom, p2, yButtom);
 
         if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
-            buttom.x >= m_minDrawPosition.x && buttom.y <= m_maxDrawPosition.x)
+            buttom.x >= m_minDrawPosition.x && buttom.x <= m_maxDrawPosition.x)
         {
             while (yButtom <= yTop)
             {
@@ -280,7 +280,7 @@ namespace XenonEngine
         {
             Vector2f left;
             Vector2f right;
-            while (yButtom < yTop)
+            while (yButtom <= yTop)
             {
                 left = leftIndex;
                 right = rightIndex;
@@ -293,6 +293,7 @@ namespace XenonEngine
                     left.x = m_minDrawPosition.x;
                     if (right.x <= m_minDrawPosition.x)
                     {
+                        yButtom++;
                         continue;
                     }
                 }
@@ -301,6 +302,7 @@ namespace XenonEngine
                     right.x = m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
+                        yButtom++;
                         continue;
                     }
                 }
@@ -375,6 +377,7 @@ namespace XenonEngine
                     left.x = m_minDrawPosition.x;
                     if (right.x <= m_minDrawPosition.x)
                     {
+                        yTop--;
                         continue;
                     }
                 }
@@ -383,6 +386,7 @@ namespace XenonEngine
                     right.x = m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
+                        yTop--;
                         continue;
                     }
                 }
