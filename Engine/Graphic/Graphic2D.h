@@ -6,6 +6,7 @@
 #pragma once
 
 #include "MathLab/Vector2.h"
+#include "MathLab/Vector4.h"
 #include "CrossPlatform/XenonManager.h"
 #include "CrossPlatform/SColorRGBA.h"
 #include "CrossPlatform/Polygon2D.h"
@@ -17,6 +18,7 @@ using CrossPlatform::SColorRGBA;
 using MathLab::Vector2i;
 using MathLab::Vector2f;
 using MathLab::Vector3f;
+using MathLab::Vector4f;
 using CrossPlatform::Polygon2D;
 
 namespace XenonEngine {
@@ -32,9 +34,9 @@ namespace XenonEngine {
         Vector2f p0;
         Vector2f p1;
         Vector2f p2;
-        Vector3f vcolor0;
-        Vector3f vcolor1;
-        Vector3f vcolor2;
+        Vector4f vcolor0;
+        Vector4f vcolor1;
+        Vector4f vcolor2;
     };
 
     class Graphic2D :public CrossPlatform::XenonManager<Graphic2D>
@@ -82,9 +84,9 @@ namespace XenonEngine {
         void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, 
-            Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2)const;
+            Vector4f vcolor0, Vector4f vcolor1, Vector4f rvcolor2)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2,
-            Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2)const;
+            Vector4f vcolor0, Vector4f vcolor1, Vector4f rvcolor2)const;
 
         ClipCode InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
         bool InternalClipPoint(ClipCode clipCode,Vector2f& point, const Vector2f& anotherPoint)const;

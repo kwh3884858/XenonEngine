@@ -259,6 +259,7 @@
     <ClInclude Include="MathLab\Vector.h" />
     <ClInclude Include="MathLab\Vector2.h" />
     <ClInclude Include="MathLab\Vector3.h" />
+    <ClInclude Include="MathLab\Vector4.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\Editor\EditorGUI.h" />
     <ClInclude Include="Windows\File\FileReader.h" />

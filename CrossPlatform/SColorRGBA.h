@@ -4,6 +4,7 @@
 //  Created by whkong on 2021-3-22.
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
+
 namespace CrossPlatform
 {
 	class SColorRGBA

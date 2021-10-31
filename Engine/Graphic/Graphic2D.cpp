@@ -239,8 +239,8 @@ namespace XenonEngine
         else
         {
             Vector2f middlePoint = data.p1;
-            middlePoint.x = (data.p1.y - data.p2.y) * (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) + data.p2.x;
-            Vector3f middleColor = (data.vcolor1 - data.vcolor2) * (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) + data.vcolor2;
+            middlePoint.x = (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.p1.y - data.p2.y) + data.p2.x;
+            Vector3f middleColor =(data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.vcolor1 - data.vcolor2) + data.vcolor2;
             DrawTopTriangle(data.p2, middlePoint, data.p1, data.vcolor2, middleColor, data.vcolor1);
             DrawButtomTriangle(data.p0, middlePoint, data.p1, data.vcolor0, middleColor, data.vcolor1);
         }
@@ -371,7 +371,7 @@ namespace XenonEngine
         }
     }
 
-    void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2) const
+    void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, Vector4f vcolor0, Vector4f vcolor1, Vector4f rvcolor2) const
     {
 
     }
@@ -460,9 +460,101 @@ namespace XenonEngine
         }
     }
 
-    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, Vector3f vcolor0, Vector3f vcolor1, Vector3f rvcolor2) const
+    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, Vector4f vcolor0, Vector4f vcolor1, Vector4f vcolor2) const
     {
+        //verse-clock: buttom->p1->p2
+        if (p1.x < p2.x)
+        {
+            SwapVector(p1, p2);
+        }
+        Vector2f rightDelta = p1 - top;
+        Vector2f rightIndex = top;
+        Vector2f rightStep(0, -Y_AXIS_STEP);
+        rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f)* MathLab::Abs(rightDelta.x / rightDelta.y);
 
+        Vector2f leftDelta = p2 - top;
+        Vector2f leftIndex = top;
+        Vector2f leftStep(0, -Y_AXIS_STEP);
+        leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f)* MathLab::Abs(leftDelta.x / leftDelta.y);
+
+        int yButtom = MathLab::Ceil(p1.y);
+        int yTop = MathLab::Ceil(top.y) - 1;
+        if (yButtom < m_minDrawPosition.y)
+        {
+            yButtom = m_minDrawPosition.y;
+        }
+        if (yTop > m_maxDrawPosition.y)
+        {
+            yTop = m_maxDrawPosition.y - 1;
+        }
+        rightIndex = InternalClipYPoint(top, p1, yTop);
+        leftIndex = InternalClipYPoint(top, p2, yTop);
+
+        Vector4f lColorDelta = (vcolor1 - vcolor0) / (yButtom - yTop);
+        Vector4f rColorDelta = (vcolor2 - vcolor0) / (yButtom - yTop);
+        Vector4f lColorIndex = vcolor0;
+        Vector4f rColorIndex = vcolor0;
+
+        if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
+            p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
+            top.x >= m_minDrawPosition.x && top.x <= m_maxDrawPosition.x)
+        {
+            while (yTop >= yButtom)
+            {
+                int xStart = MathLab::Ceil(leftIndex.x);
+                int xEnd = MathLab::Ceil(rightIndex.x);
+                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+                Vector4f strightLineIndex = lColorIndex;
+                for (;xStart < xEnd; xStart++)
+                {
+                    DrawPixel(xStart, yTop, strightLineIndex.ToColor());
+                    strightLineIndex += strightLineDelta;
+                }
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+                lColorIndex += lColorDelta;
+                rColorIndex += rColorDelta;
+                yTop--;
+            }
+        }
+        else
+        {
+            Vector2f left;
+            Vector2f right;
+            while (yTop >= yButtom)
+            {
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+
+                left = leftIndex;
+                right = rightIndex;
+                if (left.x < m_minDrawPosition.x)
+                {
+                    left.x = m_minDrawPosition.x;
+                    if (right.x <= m_minDrawPosition.x)
+                    {
+                        yTop--;
+                        continue;
+                    }
+                }
+                if (right.x > m_maxDrawPosition.x)
+                {
+                    right.x = m_maxDrawPosition.x;
+                    if (left.x >= m_maxDrawPosition.x)
+                    {
+                        yTop--;
+                        continue;
+                    }
+                }
+
+                for (int i = left.x; i < right.x; i++)
+                {
+
+                }
+                DrawStraightLine(left.x, right.x, yTop, rgba);
+                yTop--;
+            }
+        }
     }
 
     Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const

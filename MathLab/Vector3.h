@@ -26,6 +26,10 @@ namespace MathLab {
 
         Vector3& operator+=(const Vector3& rvalue);
         Vector3& operator-=(const Vector3& rvalue);
+        Vector3& operator*=(T rvalue);
+        Vector3& operator*(T rvalue);
+        Vector3& operator/=(T rvalue);
+        Vector3& operator/(T rvalue);
 
         T Dot(const Vector3& vec)const;
         Vector3 Cross(const Vector3& vec)const;
@@ -53,6 +57,8 @@ namespace MathLab {
     void SwapVector(Vector3<T>* vectorA, Vector3<T>* vectorB);
     template<typename T>
     bool LessY(const Vector3<T>& origin, const Vector3<T>& compare);
+    template<typename T>
+    Vector3<T> operator*(const T& v1, const Vector3<T>& value);
     //template<typename T>
     //void Exchange(Vector3*const a, Vector3*const b);
 
@@ -108,6 +114,40 @@ namespace MathLab {
         this->y -= rvalue.y;
         this->z -= rvalue.z;
         return *this;
+    }
+
+    template<typename T>
+    Vector3<T>& MathLab::Vector3<T>::operator*=(T rvalue)
+    {
+        this->x -= rvalue.x;
+        this->y -= rvalue.y;
+        this->z -= rvalue.z;
+        return *this;
+    }
+
+    template<typename T>
+    Vector3<T>& MathLab::Vector3<T>::operator*(T rvalue)
+    {
+        Vector3<T> result(*this);
+        result *= rvalue;
+        return result;
+    }
+
+    template<typename T>
+    Vector3<T>& MathLab::Vector3<T>::operator/=(T rvalue)
+    {
+        this->x /= rvalue.x;
+        this->y /= rvalue.y;
+        this->z /= rvalue.z;
+        return *this;
+    }
+
+    template<typename T>
+    Vector3<T>& MathLab::Vector3<T>::operator/(T rvalue)
+    {
+        Vector3f result(*this);
+        result /= rvalue;
+        return result;
     }
 
     template<typename T>
@@ -199,6 +239,12 @@ namespace MathLab {
     template<typename T>
     bool LessY(const Vector3<T>& origin, const Vector3<T>& compare) {
         return origin.y < compare.y;
+    }
+
+    template<typename T>
+    Vector3<T> operator*(const T& v1, const Vector3<T>& value)
+    {
+        return value * v1;
     }
 
 }
