@@ -174,11 +174,11 @@ namespace XenonEngine
         {
             if (p1.x > p2.x)
             {
-                DrawButtomTriangle(p0, p2, p1, rgba);
+                DrawBottomTriangle(p0, p2, p1, rgba);
             }
             else
             {
-                DrawButtomTriangle(p0, p1, p2, rgba);
+                DrawBottomTriangle(p0, p1, p2, rgba);
             }
         }
         else
@@ -186,7 +186,7 @@ namespace XenonEngine
             Vector2f middlePoint = p1;
             middlePoint.x = (p0.x - p2.x) / (p0.y - p2.y) * (p1.y - p2.y) + p2.x;
             DrawTopTriangle(p2, middlePoint, p1, rgba);
-            DrawButtomTriangle(p0, middlePoint, p1, rgba);
+            DrawBottomTriangle(p0, middlePoint, p1, rgba);
         }
     }
 
@@ -229,20 +229,20 @@ namespace XenonEngine
         {
             if (data.p1.x > data.p2.x)
             {
-                DrawButtomTriangle(data.p0, data.p2, data.p1, data.vcolor0, data.vcolor2, data.vcolor1);
+                DrawBottomTriangle(data.p0, data.p2, data.p1, data.vcolor0, data.vcolor2, data.vcolor1);
             }
             else
             {
-                DrawButtomTriangle(data.p0, data.p1, data.p2, data.vcolor0, data.vcolor1, data.vcolor2);
+                DrawBottomTriangle(data.p0, data.p1, data.p2, data.vcolor0, data.vcolor1, data.vcolor2);
             }
         }
         else
         {
             Vector2f middlePoint = data.p1;
             middlePoint.x = (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.p1.y - data.p2.y) + data.p2.x;
-            Vector3f middleColor =(data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.vcolor1 - data.vcolor2) + data.vcolor2;
+            Vector4f middleColor = (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.vcolor1 - data.vcolor2) + data.vcolor2;
             DrawTopTriangle(data.p2, middlePoint, data.p1, data.vcolor2, middleColor, data.vcolor1);
-            DrawButtomTriangle(data.p0, middlePoint, data.p1, data.vcolor0, middleColor, data.vcolor1);
+            DrawBottomTriangle(data.p0, middlePoint, data.p1, data.vcolor0, middleColor, data.vcolor1);
         }
     }
 
@@ -284,7 +284,7 @@ namespace XenonEngine
         return state;
     }
 
-    void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+    void Graphic2D::DrawBottomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         //verse-clock: buttom->p1->p2
         if (p1.x >p2.x)
@@ -302,11 +302,11 @@ namespace XenonEngine
         Vector2f leftStep(0, Y_AXIS_STEP);
         leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
-        int yButtom = MathLab::Ceil(buttom.y);
+        int yBottom = MathLab::Ceil(buttom.y);
         int yTop = MathLab::Ceil(p1.y) - 1;
         if (buttom.y < m_minDrawPosition.y)
         {
-            yButtom = m_minDrawPosition.y;
+            yBottom = m_minDrawPosition.y;
         }
         //else
         //{
@@ -318,41 +318,38 @@ namespace XenonEngine
         {
             yTop = m_maxDrawPosition.y - 1;
         }
-        leftIndex = InternalClipYPoint(buttom, p1, yButtom);
-        rightIndex = InternalClipYPoint(buttom, p2, yButtom);
+        leftIndex = InternalClipYPoint(buttom, p1, yBottom);
+        rightIndex = InternalClipYPoint(buttom, p2, yBottom);
 
         if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
             buttom.x >= m_minDrawPosition.x && buttom.x <= m_maxDrawPosition.x)
         {
-            while (yButtom <= yTop)
+            while (yBottom <= yTop)
             {
                 int xStart = MathLab::Ceil(leftIndex.x);
                 int xEnd = MathLab::Ceil(rightIndex.x) - 1;
-                DrawStraightLine(xStart, xEnd, yButtom, rgba);
+                DrawStraightLine(xStart, xEnd, yBottom, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
-                yButtom++;
+                yBottom++;
             }
         }
         else
         {
             Vector2f left;
             Vector2f right;
-            while (yButtom <= yTop)
+            while (yBottom <= yTop)
             {
                 left = leftIndex;
                 right = rightIndex;
-
-                leftIndex += leftStep;
-                rightIndex += rightStep;
 
                 if (left.x < m_minDrawPosition.x)
                 {
                     left.x = m_minDrawPosition.x;
                     if (right.x <= m_minDrawPosition.x)
                     {
-                        yButtom++;
+                        yBottom++;
                         continue;
                     }
                 }
@@ -361,19 +358,129 @@ namespace XenonEngine
                     right.x = m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
-                        yButtom++;
+                        yBottom++;
                         continue;
                     }
                 }
-                DrawStraightLine(left.x, right.x, yButtom, rgba);
-                yButtom++;
+                DrawStraightLine(left.x, right.x, yBottom, rgba);
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+                yBottom++;
             }
         }
     }
 
-    void Graphic2D::DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, Vector4f vcolor0, Vector4f vcolor1, Vector4f rvcolor2) const
+    void Graphic2D::DrawBottomTriangle(Vector2f bottom, Vector2f p1, Vector2f p2, Vector4f vcolorBottom, Vector4f vcolor1, Vector4f vcolor2) const
     {
+        //verse-clock: bottom->p1->p2
+        if (p1.x > p2.x)
+        {
+            SwapVector(p1, p2);
+        }
 
+        Vector2f rightDelta = p2 - bottom;
+        Vector2f rightIndex = bottom;
+        Vector2f rightStep(0, Y_AXIS_STEP);
+        rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
+
+        Vector2f leftDelta = p1 - bottom;
+        Vector2f leftIndex = bottom;
+        Vector2f leftStep(0, Y_AXIS_STEP);
+        leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
+
+        int yBottom = MathLab::Ceil(bottom.y);
+        int yTop = MathLab::Ceil(p1.y) - 1;
+        if (bottom.y < m_minDrawPosition.y)
+        {
+            yBottom = m_minDrawPosition.y;
+        }
+        if (yTop > m_maxDrawPosition.y)
+        {
+            yTop = m_maxDrawPosition.y - 1;
+        }
+        leftIndex = InternalClipYPoint(bottom, p1, yBottom);
+        rightIndex = InternalClipYPoint(bottom, p2, yBottom);
+
+        Vector4f leftColor = InternalClipColor(bottom, p1, yTop, vcolorBottom, vcolor1);
+        Vector4f RightColor = InternalClipColor(bottom, p2, yTop, vcolorBottom, vcolor2);
+        Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
+        Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom);
+        Vector4f lColorIndex = leftColor;
+        Vector4f rColorIndex = RightColor;
+
+        if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
+            p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
+            bottom.x >= m_minDrawPosition.x && bottom.x <= m_maxDrawPosition.x)
+        {
+            while (yBottom <= yTop)
+            {
+                int xStart = MathLab::Ceil(leftIndex.x);
+                int xEnd = MathLab::Ceil(rightIndex.x) - 1;
+                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+                Vector4f strightLineIndex = lColorIndex;
+                for (; xStart < xEnd; xStart++)
+                {
+                    DrawPixel(xStart, yBottom, strightLineIndex.ToColor());
+                    strightLineIndex += strightLineDelta;
+                }
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+                lColorIndex += lColorDelta;
+                rColorIndex += rColorDelta;
+                yBottom++;
+            }
+        }
+        else
+        {
+            Vector2f left;
+            Vector2f right;
+            Vector4f strightLineDelta;
+            Vector4f strightLineIndex;
+            while (yBottom <= yTop)
+            {
+                left = leftIndex;
+                right = rightIndex;
+                strightLineDelta = (rColorIndex - lColorIndex) / (right.x - left.x);
+                strightLineIndex = lColorIndex;
+                if (left.x < m_minDrawPosition.x)
+                {
+                    left.x = m_minDrawPosition.x;
+                    strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
+                    if (right.x <= m_minDrawPosition.x)
+                    {
+                        leftIndex += leftStep;
+                        rightIndex += rightStep;
+                        lColorIndex += lColorDelta;
+                        rColorIndex += rColorDelta;
+                        yBottom++;
+                        continue;
+                    }
+                }
+                if (right.x > m_maxDrawPosition.x)
+                {
+                    right.x = m_maxDrawPosition.x;
+                    if (left.x >= m_maxDrawPosition.x)
+                    {
+                        leftIndex += leftStep;
+                        rightIndex += rightStep;
+                        lColorIndex += lColorDelta;
+                        rColorIndex += rColorDelta;
+                        yBottom++;
+                        continue;
+                    }
+                }
+                for (int i = left.x; i <= right.x; i++)
+                {
+                    DrawPixel(i, yBottom, strightLineIndex.ToColor());
+                    strightLineIndex += strightLineDelta;
+                }
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+                lColorIndex += lColorDelta;
+                rColorIndex += rColorDelta;
+                yBottom++;
+            }
+        }
     }
 
     void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
@@ -393,11 +500,11 @@ namespace XenonEngine
         Vector2f leftStep(0, -Y_AXIS_STEP);
         leftStep.x =( leftDelta.x > 0 ? 1.0f : -1.0f )* MathLab::Abs(leftDelta.x / leftDelta.y);
 
-        int yButtom = MathLab::Ceil(p1.y);
+        int yBottom = MathLab::Ceil(p1.y);
         int yTop = MathLab::Ceil(top.y) - 1;
-        if (yButtom < m_minDrawPosition.y)
+        if (yBottom < m_minDrawPosition.y)
         {
-            yButtom = m_minDrawPosition.y;
+            yBottom = m_minDrawPosition.y;
         }
         if (yTop > m_maxDrawPosition.y)
         {
@@ -415,7 +522,7 @@ namespace XenonEngine
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
             top.x >= m_minDrawPosition.x && top.x <=m_maxDrawPosition.x)
         {
-            while (yTop >= yButtom)
+            while (yTop >= yBottom)
             {
                 int xStart = MathLab::Ceil(leftIndex.x);
                 int xEnd = MathLab::Ceil(rightIndex.x) - 1;
@@ -429,11 +536,8 @@ namespace XenonEngine
         {
             Vector2f left;
             Vector2f right;
-            while (yTop >= yButtom)
+            while (yTop >= yBottom)
             {
-                leftIndex += leftStep;
-                rightIndex += rightStep;
-
                 left = leftIndex;
                 right = rightIndex;
                 if (left.x < m_minDrawPosition.x)
@@ -455,12 +559,14 @@ namespace XenonEngine
                     }
                 }
                 DrawStraightLine(left.x, right.x, yTop, rgba);
+                leftIndex += leftStep;
+                rightIndex += rightStep;
                 yTop--;
             }
         }
     }
 
-    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, Vector4f vcolor0, Vector4f vcolor1, Vector4f vcolor2) const
+    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, Vector4f vcolorTop, Vector4f vcolor1, Vector4f vcolor2) const
     {
         //verse-clock: buttom->p1->p2
         if (p1.x < p2.x)
@@ -471,17 +577,16 @@ namespace XenonEngine
         Vector2f rightIndex = top;
         Vector2f rightStep(0, -Y_AXIS_STEP);
         rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f)* MathLab::Abs(rightDelta.x / rightDelta.y);
-
         Vector2f leftDelta = p2 - top;
         Vector2f leftIndex = top;
         Vector2f leftStep(0, -Y_AXIS_STEP);
         leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f)* MathLab::Abs(leftDelta.x / leftDelta.y);
 
-        int yButtom = MathLab::Ceil(p1.y);
+        int yBottom = MathLab::Ceil(p1.y);
         int yTop = MathLab::Ceil(top.y) - 1;
-        if (yButtom < m_minDrawPosition.y)
+        if (yBottom < m_minDrawPosition.y)
         {
-            yButtom = m_minDrawPosition.y;
+            yBottom = m_minDrawPosition.y;
         }
         if (yTop > m_maxDrawPosition.y)
         {
@@ -490,16 +595,18 @@ namespace XenonEngine
         rightIndex = InternalClipYPoint(top, p1, yTop);
         leftIndex = InternalClipYPoint(top, p2, yTop);
 
-        Vector4f lColorDelta = (vcolor1 - vcolor0) / (yButtom - yTop);
-        Vector4f rColorDelta = (vcolor2 - vcolor0) / (yButtom - yTop);
-        Vector4f lColorIndex = vcolor0;
-        Vector4f rColorIndex = vcolor0;
+        Vector4f leftColor = InternalClipColor(top, p1, yTop, vcolorTop, vcolor1);
+        Vector4f RightColor = InternalClipColor(top, p2, yTop, vcolorTop, vcolor2);
+        Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
+        Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom );
+        Vector4f lColorIndex = leftColor;
+        Vector4f rColorIndex = RightColor;
 
         if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
             top.x >= m_minDrawPosition.x && top.x <= m_maxDrawPosition.x)
         {
-            while (yTop >= yButtom)
+            while (yTop >= yBottom)
             {
                 int xStart = MathLab::Ceil(leftIndex.x);
                 int xEnd = MathLab::Ceil(rightIndex.x);
@@ -521,18 +628,22 @@ namespace XenonEngine
         {
             Vector2f left;
             Vector2f right;
-            while (yTop >= yButtom)
+            while (yTop >= yBottom)
             {
-                leftIndex += leftStep;
-                rightIndex += rightStep;
-
                 left = leftIndex;
                 right = rightIndex;
+                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (right.x - left.x);
+                Vector4f strightLineIndex = lColorIndex;
                 if (left.x < m_minDrawPosition.x)
                 {
                     left.x = m_minDrawPosition.x;
+                    strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
                     if (right.x <= m_minDrawPosition.x)
                     {
+                        leftIndex += leftStep;
+                        rightIndex += rightStep;
+                        lColorIndex += lColorDelta;
+                        rColorIndex += rColorDelta;
                         yTop--;
                         continue;
                     }
@@ -542,16 +653,23 @@ namespace XenonEngine
                     right.x = m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
+                        leftIndex += leftStep;
+                        rightIndex += rightStep;
+                        lColorIndex += lColorDelta;
+                        rColorIndex += rColorDelta;
                         yTop--;
                         continue;
                     }
                 }
-
                 for (int i = left.x; i < right.x; i++)
                 {
-
+                    DrawPixel(i, yTop, strightLineIndex.ToColor());
+                    strightLineIndex += strightLineDelta;
                 }
-                DrawStraightLine(left.x, right.x, yTop, rgba);
+                leftIndex += leftStep;
+                rightIndex += rightStep;
+                lColorIndex += lColorDelta;
+                rColorIndex += rColorDelta;
                 yTop--;
             }
         }
@@ -682,5 +800,19 @@ namespace XenonEngine
             newPoint.y = clipY;
         }
         return newPoint;
+    }
+
+    Vector4f Graphic2D::InternalClipColor(const Vector2f& point, const Vector2f& anontherPoint, int clipY, const Vector4f& color, const Vector4f& anotherColor) const
+    {
+        Vector4f finalColor(color);
+        //assert((point.y - clipY) * (anontherPoint.y - clipY) <= 0);
+        if ((point.y - clipY) * (anontherPoint.y - clipY) <= 0)
+        {
+            if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) != 0)
+            {
+                finalColor = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (color - anotherColor) + color;
+            }
+        }
+        return finalColor;
     }
 }

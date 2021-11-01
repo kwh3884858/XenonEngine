@@ -30,9 +30,9 @@ namespace MathLab {
         Vector4& operator+=(const Vector4& rvalue);
         Vector4& operator-=(const Vector4& rvalue);
         Vector4& operator*=(T rvalue);
-        Vector4& operator*(T rvalue);
+        Vector4& operator*(T rvalue) const;
         Vector4& operator/=(T rvalue);
-        Vector4& operator/(T rvalue);
+        Vector4& operator/(T rvalue) const;
 
         T Dot(const Vector4& vec)const;
         Vector4 Cross(const Vector4& vec)const;
@@ -119,15 +119,15 @@ namespace MathLab {
     template<typename T>
     Vector4<T>& MathLab::Vector4<T>::operator*=(T rvalue)
     {
-        this->x -= rvalue.x;
-        this->y -= rvalue.y;
-        this->z -= rvalue.z;
-        this->w -= rvalue.w;
+        this->x *= rvalue;
+        this->y *= rvalue;
+        this->z *= rvalue;
+        this->w *= rvalue;
         return *this;
     }
 
     template<typename T>
-    Vector4<T>& MathLab::Vector4<T>::operator*(T rvalue)
+    Vector4<T>& MathLab::Vector4<T>::operator*(T rvalue)const
     {
         Vector4<T> result(*this);
         result *= rvalue;
@@ -137,15 +137,15 @@ namespace MathLab {
     template<typename T>
     Vector4<T>& MathLab::Vector4<T>::operator/=(T rvalue)
     {
-        this->x /= rvalue.x;
-        this->y /= rvalue.y;
-        this->z /= rvalue.z;
-        this->w /= rvalue.w;
+        this->x /= rvalue;
+        this->y /= rvalue;
+        this->z /= rvalue;
+        this->w /= rvalue;
         return *this;
     }
 
     template<typename T>
-    Vector4<T>& MathLab::Vector4<T>::operator/(T rvalue)
+    Vector4<T>& MathLab::Vector4<T>::operator/(T rvalue)const
     {
         Vector4f result(*this);
         result /= rvalue;

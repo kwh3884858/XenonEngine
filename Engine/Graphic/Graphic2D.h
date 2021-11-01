@@ -17,7 +17,6 @@ namespace CrossPlatform {
 using CrossPlatform::SColorRGBA;
 using MathLab::Vector2i;
 using MathLab::Vector2f;
-using MathLab::Vector3f;
 using MathLab::Vector4f;
 using CrossPlatform::Polygon2D;
 
@@ -81,17 +80,18 @@ namespace XenonEngine {
     private:
         const int Y_AXIS_STEP = 1;
 
-        void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawBottomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawButtomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, 
-            Vector4f vcolor0, Vector4f vcolor1, Vector4f rvcolor2)const;
+        void DrawBottomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, 
+            Vector4f vcolorButtom, Vector4f vcolor1, Vector4f vcolor2)const;
         void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2,
-            Vector4f vcolor0, Vector4f vcolor1, Vector4f rvcolor2)const;
+            Vector4f vcolorTop, Vector4f vcolor1, Vector4f vcolor2)const;
 
         ClipCode InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
         bool InternalClipPoint(ClipCode clipCode,Vector2f& point, const Vector2f& anotherPoint)const;
         Vector2f InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX)const;
         Vector2f InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY)const;
+        Vector4f InternalClipColor(const Vector2f& point, const Vector2f& anontherPoint, int clipY, const Vector4f& color, const Vector4f& anotherColor) const;
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;

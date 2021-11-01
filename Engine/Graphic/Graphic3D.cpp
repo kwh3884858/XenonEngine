@@ -147,16 +147,9 @@ namespace XenonEngine
                 Vector3f screenPosition3 = ConvertFormHomogeneous(homogeneousVertex2);
                 Vector2f screenPoint3(screenPosition3.x, screenPosition3.y);
 
-
                 if (m_renderType == RenderType::FlatShdering)
                 {
-                    //static int test = 0;
                     Graphic2D::Get().DrawTriangle(screenPoint1, screenPoint2, screenPoint3, finalColor);
-                    //if (test < 1)
-                    //{
-                    //    printf("(%f, %f) -- (%f, %f) -- (%f, %f)\n", screenPoint1.x, screenPoint1.y, screenPoint2.x, screenPoint2.y, screenPoint3.x, screenPoint3.y);
-                    //    test++;
-                    //}
                 }
                 if (m_renderType == RenderType::Wireframe)
                 {

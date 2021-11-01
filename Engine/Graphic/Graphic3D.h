@@ -23,6 +23,29 @@ namespace XenonEngine
     class Camera3D;
     class LightComponent;
 
+    struct Triangle
+    {
+        MathLab::TVector4f m_p0;
+        MathLab::TVector4f m_p1;
+        MathLab::TVector4f m_p2;
+    };
+
+    struct VertexShaderDataInputFlat
+    {
+        Triangle m_triangle;
+        SColorRGBA m_faceColor;
+    };
+    struct VertexShaderDataOutputFlat
+    {
+        Vector2f m_screenPoint0;
+        Vector2f m_screenPoint1;
+        Vector2f m_screenPoint2;
+        SColorRGBA m_faceColor;
+    };
+
+    VertexShaderDataOutput VertexShader(const VertexShaderDataInput& );
+    bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
+
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
 	public:
@@ -68,11 +91,4 @@ namespace XenonEngine
         Algorithm::Vector<LightComponent*> m_lightList;
 	};
 
-    struct Triangle
-    {
-        MathLab::TVector4f m_p0;
-        MathLab::TVector4f m_p1;
-        MathLab::TVector4f m_p2;
-    };
-    bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
 }
