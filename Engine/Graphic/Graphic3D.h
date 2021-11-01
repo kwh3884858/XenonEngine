@@ -29,21 +29,6 @@ namespace XenonEngine
         MathLab::TVector4f m_p1;
         MathLab::TVector4f m_p2;
     };
-
-    struct VertexShaderDataInputFlat
-    {
-        Triangle m_triangle;
-        SColorRGBA m_faceColor;
-    };
-    struct VertexShaderDataOutputFlat
-    {
-        Vector2f m_screenPoint0;
-        Vector2f m_screenPoint1;
-        Vector2f m_screenPoint2;
-        SColorRGBA m_faceColor;
-    };
-
-    VertexShaderDataOutput VertexShader(const VertexShaderDataInput& );
     bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
 
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
@@ -60,6 +45,20 @@ namespace XenonEngine
             Wireframe,
             FlatShdering,
         };
+
+        struct VertexShaderDataInputFlat
+        {
+            Triangle m_triangle;
+            CrossPlatform::SColorRGBA m_faceColor;
+        };
+        struct VertexShaderDataOutputFlat
+        {
+            MathLab::Vector2f m_screenPoint0;
+            MathLab::Vector2f m_screenPoint1;
+            MathLab::Vector2f m_screenPoint2;
+            CrossPlatform::SColorRGBA m_faceColor;
+        };
+        bool VertexShaderFlat(const VertexShaderDataInputFlat& input, VertexShaderDataOutputFlat& output, const MathLab::TMatrix4X4f& worldToCameraTransform, const MathLab::TMatrix4X4f& cameraToScreenTranform) const;
 
         virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
@@ -78,7 +77,7 @@ namespace XenonEngine
         CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
         CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2)const;
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawCoordinateLines(const TMatrix4X4f& worldToScreenTranform)const;
+        void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform)const;
         
         const Camera3D* GetMajorCamera()const;
         MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio)const;
