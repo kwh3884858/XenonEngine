@@ -6,6 +6,9 @@
 #define IDR_MAIN_MENU                   104
 #define ID_FILE_CLOSE                   40001
 #define ID_HELP_ABOUT                   40002
+#define ID_SHADER_WIREFRAME                   60001
+#define ID_SHADER_FLAT                   60002
+#define ID_SHADE_GOURAUD                   60003
 
 // Next default values for new objects
 // 

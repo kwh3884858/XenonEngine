@@ -240,7 +240,7 @@ namespace XenonEngine
         {
             Vector2f middlePoint = data.p1;
             middlePoint.x = (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.p1.y - data.p2.y) + data.p2.x;
-            Vector4f middleColor = (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.vcolor1 - data.vcolor2) + data.vcolor2;
+            Vector4f middleColor = (data.p1.y - data.p2.y) / (data.p0.y - data.p2.y) * (data.vcolor1 - data.vcolor2) + data.vcolor2;
             DrawTopTriangle(data.p2, middlePoint, data.p1, data.vcolor2, middleColor, data.vcolor1);
             DrawBottomTriangle(data.p0, middlePoint, data.p1, data.vcolor0, middleColor, data.vcolor1);
         }

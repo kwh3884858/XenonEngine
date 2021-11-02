@@ -61,6 +61,7 @@ namespace MathLab
 		
 		inline int Count()const { return COUNT; }
 		TVector Normalize()const;
+        void Normalized();
 		T Magnitude()const;
 		T DoubleMagnitude()const;
         Vector3<T> GetVetor();
@@ -277,17 +278,23 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	TVector<T, COUNT> MathLab::TVector<T, COUNT>::Normalize() const
+    MathLab::TVector<T, COUNT> MathLab::TVector<T, COUNT>::Normalize() const
 	{
-        assert(COUNT == 3 || COUNT == 4);
-		T magnitide = Magnitude();
-		TVector<T, COUNT> result(*this);
-		for (int i = 0; i < 3; i++)
-		{
-			result[i] /= magnitide;
-		}
-		return result;
+        TVector<T, COUNT> temp(*this);
+        temp.Normalized();
+        return temp;
 	}
+
+    template<typename T, int COUNT>
+    void MathLab::TVector<T, COUNT>::Normalized()
+    {
+        assert(COUNT == 3 || COUNT == 4);
+        T magnitide = Magnitude();
+        for (int i = 0; i < 3; i++)
+        {
+            (*this)[i] /= magnitide;
+        }
+    }
 
 	template<typename T, int COUNT>
 	T MathLab::TVector<T, COUNT>::Magnitude() const

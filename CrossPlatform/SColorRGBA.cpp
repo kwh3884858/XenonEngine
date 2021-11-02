@@ -14,7 +14,7 @@ namespace CrossPlatform
 
     SColorRGBA::SColorRGBA()
     {
-        m_value = 0;
+        m_value = 255 << 24;
     }
 
     SColorRGBA::SColorRGBA(int r, int g, int b, int a /*= 255*/)

@@ -40,6 +40,7 @@ namespace MathLab {
         Vector4();
         Vector4(T ax, T ay, T az, T aw);
         Vector4(const Vector4& vec);
+        Vector4(const CrossPlatform::SColorRGBA& rgba);
         ~Vector4();
 
         bool IsNormalized()const;
@@ -89,6 +90,15 @@ namespace MathLab {
         this->y = para.y;
         this->z = para.z;
         this->w = para.w;
+    }
+
+    template<typename T>
+    MathLab::Vector4<T>::Vector4(const CrossPlatform::SColorRGBA& rgba)
+    {
+        this->x = rgba.GetR();
+        this->y = rgba.GetG();
+        this->z = rgba.GetB();
+        this->w = rgba.GetA();
     }
 
     template<typename T>

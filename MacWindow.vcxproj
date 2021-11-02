@@ -291,7 +291,9 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="Data\XenonEngineNatvisFile.natvis" />
+    <Natvis Include="Data\XenonEngineNatvisFile.natvis">
+      <SubType>Designer</SubType>
+    </Natvis>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -25,11 +25,17 @@ namespace XenonEngine
 
     struct Triangle
     {
-        MathLab::TVector4f m_p0;
-        MathLab::TVector4f m_p1;
-        MathLab::TVector4f m_p2;
+        MathLab::TVector4f m_vertex[3];
+        const MathLab::TVector4f& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
+        MathLab::TVector4f& operator[](int index) { return const_cast<MathLab::TVector4f&>(static_cast<const Triangle&>(*this)[index]); }
+    };
+    struct TriangleIndex
+    {
+        int m_index;
+        float m_zAixs;
     };
     bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
+    bool IsIndexZAxisBigger(const TriangleIndex& lIndex, const TriangleIndex& rIndex);
 
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
@@ -44,6 +50,7 @@ namespace XenonEngine
         {
             Wireframe,
             FlatShdering,
+            GouraudShdering,
         };
 
         struct VertexShaderDataInputFlat
@@ -60,6 +67,20 @@ namespace XenonEngine
         };
         bool VertexShaderFlat(const VertexShaderDataInputFlat& input, VertexShaderDataOutputFlat& output, const MathLab::TMatrix4X4f& worldToCameraTransform, const MathLab::TMatrix4X4f& cameraToScreenTranform) const;
 
+        struct VertexShaderDataInputGouraud
+        {
+            Triangle m_vertex;
+            Triangle m_normal;
+            CrossPlatform::SColorRGBA m_baseColor[3];
+        };
+        struct VertexShaderDataOutputGouraud
+        {
+            MathLab::Vector2f m_screenPoint[3];
+            CrossPlatform::SColorRGBA m_vertexColor[3];
+
+        };
+        bool VertexShaderGouraud(const VertexShaderDataInputGouraud& input, VertexShaderDataOutputGouraud& output, const MathLab::TMatrix4X4f& worldToCameraTransform, const MathLab::TMatrix4X4f& cameraToScreenTranform) const;
+
         virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
 
@@ -71,6 +92,8 @@ namespace XenonEngine
 
         void AddLight(LightComponent* light) { m_lightList.Add(light); }
         void RemoveLight(LightComponent* light) { m_lightList.Remove(light); }
+
+        void SetRenderType(RenderType renderType) { m_renderType = renderType; }
 
         void Update()const;
 	private:
@@ -84,7 +107,7 @@ namespace XenonEngine
         MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort)const;
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort)const;
 
-        RenderType m_renderType = RenderType::FlatShdering;
+        RenderType m_renderType = RenderType::GouraudShdering;
 		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;
