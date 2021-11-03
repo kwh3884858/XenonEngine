@@ -88,6 +88,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -104,6 +105,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -150,10 +152,12 @@
     <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="Gameplay\Player.cpp" />
     <ClCompile Include="Gameplay\SceneDirectionLight.cpp" />
+    <ClCompile Include="Library\imgui\DX\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Library\imgui\DX\imgui_impl_dx9.cpp" />
+    <ClCompile Include="Library\imgui\DX\imgui_impl_win32.cpp" />
     <ClCompile Include="Library\imgui\imgui.cpp" />
+    <ClCompile Include="Library\imgui\imgui_demo.cpp" />
     <ClCompile Include="Library\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Library\imgui\DX9\imgui_impl_dx9.cpp" />
-    <ClCompile Include="Library\imgui\DX9\imgui_impl_win32.cpp" />
     <ClCompile Include="Library\imgui\imgui_tables.cpp" />
     <ClCompile Include="Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
@@ -238,10 +242,11 @@
     <ClInclude Include="Gameplay\Enemy.h" />
     <ClInclude Include="Gameplay\Player.h" />
     <ClInclude Include="Gameplay\SceneDirectionLight.h" />
+    <ClInclude Include="Library\imgui\DX\imgui_impl_dx11.h" />
+    <ClInclude Include="Library\imgui\DX\imgui_impl_dx9.h" />
+    <ClInclude Include="Library\imgui\DX\imgui_impl_win32.h" />
     <ClInclude Include="Library\imgui\imconfig.h" />
     <ClInclude Include="Library\imgui\imgui.h" />
-    <ClInclude Include="Library\imgui\DX9\imgui_impl_dx9.h" />
-    <ClInclude Include="Library\imgui\DX9\imgui_impl_win32.h" />
     <ClInclude Include="Library\imgui\imgui_internal.h" />
     <ClInclude Include="Library\imgui\imstb_rectpack.h" />
     <ClInclude Include="Library\imgui\imstb_textedit.h" />
@@ -262,6 +267,7 @@
     <ClInclude Include="MathLab\Vector4.h" />
     <ClInclude Include="Windows\DebugTool\DebugConsole.h" />
     <ClInclude Include="Windows\Editor\EditorGUI.h" />
+    <ClInclude Include="Windows\Editor\EditorMain.h" />
     <ClInclude Include="Windows\File\FileReader.h" />
     <ClInclude Include="Windows\Input\DirectXInput.h" />
     <ClInclude Include="Windows\MainWindow.h" />
