@@ -163,7 +163,6 @@ void MainWindow::Initialize()
 
 	Timer::StoryTimer* timer = new Timer::StoryTimer;
 	XenonEngine::XenonTimer::Get().SetFileReader(timer);
-
 }
 
 void MainWindow::Shutdown()
@@ -207,9 +206,6 @@ void MainWindow::Run()
     SetTextColor(hdc, colorRed);
     SetBkColor(hdc, colorGreen);
     SetBkMode(hdc, OPAQUE);
-
-    //Debug text
-    TCHAR debugTextBuffer[80];
 
     //Game Init
     Gameplay::GameplayInitialize();

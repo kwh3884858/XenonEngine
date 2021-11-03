@@ -23,6 +23,7 @@ namespace MathLab {
     Vector2f Rotate2D(const Vector2f& vec, const float degree);
     TMatrix3X3f GetRotationTranformMatrix(const Vector3f& degree);
     TMatrix4X4f GetPositionAndRotationTranformMatrix(const Vector3f& position, const Vector3f& degree);
+    TMatrix4X4f GetRotationFromTransformMatrix(const TMatrix4X4f& matrix);
 
     Vector3f ConvertFormHomogeneous(const TVector4f& homogeneous);
     TVector4f ConvertFromNonHomogeneous(const Vector3f& nonHomogeneous);

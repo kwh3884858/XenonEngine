@@ -20,6 +20,8 @@ namespace XenonEngine
 		Algorithm::Vector<GameObject*> GetGameObjectList(const Algorithm::String& gameObjectName)const;
 		Algorithm::Vector<const Algorithm::String*> GetGameObjectNameList(const Algorithm::String& gameObjectName)const;
 
+        const Algorithm::Vector<GameObject*>& GetWorldObjects()const { return m_worldObjects; }
+        
         void Start();
         void Update();
         void Destroy();

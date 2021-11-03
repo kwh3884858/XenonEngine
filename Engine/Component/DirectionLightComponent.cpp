@@ -17,7 +17,12 @@ namespace XenonEngine
 
     }
 
-    MathLab::Vector3f DirectionLightComponent::GetDirection()
+    //MathLab::Vector3f DirectionLightComponent::GetDirection()const
+    //{
+    //    return GetDirection();
+    //}
+
+    const MathLab::Vector3f& DirectionLightComponent::GetDirection()
     {
         if (!m_direction.IsNormalized())
         {

@@ -6,6 +6,9 @@
 #include <d3d11.h>
 #include <tchar.h>
 
+#include "Engine/EngineSyncData.h"
+#include "Engine/Editor/EditorGameObjectWorld.h"
+
 #pragma comment(lib, "d3d11")
 #pragma comment(lib, "d3dcompiler")
 #pragma comment(lib, "dxgi")
@@ -24,13 +27,13 @@ void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // Main code
-int ImGUIMain(int, char**)
+int ImGUIMain()
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, _T("ImGui Example"), NULL };
     ::RegisterClassEx(&wc);
-    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Dear ImGui DirectX11 Example"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("Xenon Engine Editor"), WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -75,8 +78,11 @@ int ImGUIMain(int, char**)
     //IM_ASSERT(font != NULL);
 
     // Our state
-    bool show_demo_window = true;
+    bool show_demo_window = false;
     bool show_another_window = false;
+    static XenonEngine::EditorGameObjectWorld editorWorld; 
+    bool* show_xenon_window = editorWorld.GetHandle();
+
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     // Main loop
@@ -118,6 +124,7 @@ int ImGUIMain(int, char**)
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &show_another_window);
+            ImGui::Checkbox("Xenon Editor", show_xenon_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -139,6 +146,11 @@ int ImGUIMain(int, char**)
             if (ImGui::Button("Close Me"))
                 show_another_window = false;
             ImGui::End();
+        }
+
+        if (show_xenon_window)
+        {
+            editorWorld.Update(XenonEngine::pGlobalSyncData);
         }
 
         // Rendering

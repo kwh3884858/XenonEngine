@@ -810,7 +810,7 @@ namespace XenonEngine
         {
             if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) != 0)
             {
-                finalColor = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (color - anotherColor) + color;
+                finalColor = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (color - anotherColor) + anotherColor;
             }
         }
         return finalColor;

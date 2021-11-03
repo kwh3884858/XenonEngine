@@ -130,6 +130,11 @@
     <ClCompile Include="Engine\Component\Rigidbody2D.cpp" />
     <ClCompile Include="Engine\Component\Transform2D.cpp" />
     <ClCompile Include="Engine\Component\Transform3D.cpp" />
+    <ClCompile Include="Engine\Editor\EditorGameObject.cpp" />
+    <ClCompile Include="Engine\Editor\EditorGameObjectWorld.cpp" />
+    <ClCompile Include="Engine\Editor\XenonBaseWidget.cpp" />
+    <ClCompile Include="Engine\Editor\XenonBaseWindow.cpp" />
+    <ClCompile Include="Engine\EngineSyncData.cpp" />
     <ClCompile Include="Engine\FileManager\FileManager.cpp" />
     <ClCompile Include="Engine\GameObjectWorld.cpp" />
     <ClCompile Include="Engine\GameObjectWorldManager.cpp" />
@@ -187,6 +192,10 @@
     <ClInclude Include="Algorithms\String.h" />
     <ClInclude Include="Algorithms\Vector.h" />
     <ClInclude Include="CrossPlatform\Database.h" />
+    <ClInclude Include="Engine\Editor\EditorGameObject.h" />
+    <ClInclude Include="Engine\Editor\XenonBaseWidget.h" />
+    <ClInclude Include="Engine\Editor\XenonBaseWindow.h" />
+    <ClInclude Include="Engine\EngineSyncData.h" />
     <ClInclude Include="CrossPlatform\Interface\IDrawerSurface.h" />
     <ClInclude Include="CrossPlatform\Interface\IFileReader.h" />
     <ClInclude Include="CrossPlatform\Interface\IInput.h" />
@@ -206,7 +215,7 @@
     <ClInclude Include="Engine\Component\Mesh2D.h" />
     <ClInclude Include="Engine\Component\PointLightComponent.h" />
     <ClInclude Include="Engine\Component\Transform3D.h" />
-    <ClInclude Include="Engine\Editor\EditorGUI.h" />
+    <ClInclude Include="Engine\Editor\EditorGameObjectWorld.h" />
     <ClInclude Include="Engine\GameObjectWorld.h" />
     <ClInclude Include="Engine\GameObjectWorldManager.h" />
     <ClInclude Include="Engine\Graphic\Graphic3D.h" />

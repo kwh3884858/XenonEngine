@@ -101,6 +101,15 @@ namespace MathLab {
         );
     }
 
+    MathLab::TMatrix4X4f GetRotationFromTransformMatrix(const TMatrix4X4f& matrix)
+    {
+        TMatrix4X4f result(matrix);
+        result[3][0] = 0;
+        result[3][1] = 0;
+        result[3][2] = 0;
+        return result;
+    }
+
     Vector3f ConvertFormHomogeneous(const TVector4f& homogeneous)
     {
         if (Abs(homogeneous[3]) == 0)

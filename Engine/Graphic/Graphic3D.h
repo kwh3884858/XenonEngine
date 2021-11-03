@@ -94,6 +94,7 @@ namespace XenonEngine
         void RemoveLight(LightComponent* light) { m_lightList.Remove(light); }
 
         void SetRenderType(RenderType renderType) { m_renderType = renderType; }
+        const RenderType& GetRenderType()const { return m_renderType; }
 
         void Update()const;
 	private:

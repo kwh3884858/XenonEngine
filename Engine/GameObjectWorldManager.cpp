@@ -2,16 +2,24 @@
 #include "Algorithms/String.h"
 #include "Engine/GameObject.h"
 #include "Engine/GameObjectWorld.h"
+
+#include "Engine/EngineSyncData.h"
+#include "Engine/Graphic/Graphic3D.h"
+
 namespace XenonEngine
 {
 
     bool GameObjectWorldManager::Initialize()
     {
+        (*pGlobalSyncData).Graphic3DSetter(&(Graphic3D::Get()));
         return true;
     }
 
-    bool GameObjectWorldManager::Shutdown()
+    bool GameObjectWorldManager::Shutdown() 
     {
+        (*pGlobalSyncData).WorldSetter(nullptr);
+        (*pGlobalSyncData).Graphic3DSetter(nullptr);
+
         m_currentWorld = nullptr;
         for (int i = 0; i < m_worlds.Count(); i++)
         {
@@ -53,6 +61,8 @@ namespace XenonEngine
     {
         assert(m_currentWorld != nullptr);
         m_currentWorld->Update();
+        (*pGlobalSyncData).WorldSetter(m_currentWorld);
+
     }
 
     XenonEngine::GameObjectWorld*const GameObjectWorldManager::CreateGameWorld(const Algorithm::String& worldName)

@@ -180,7 +180,7 @@ namespace Gameplay {
 
         //Graphic2D::Get().DrawLine(Vector2i(0, 90), Vector2i(800, 90), CrossPlatform::YELLOW);
         //Graphic2D::Get().DrawLine(Vector2i(0, 110), Vector2i(800, 110), CrossPlatform::YELLOW);
-		world->Update();
+        GameObjectWorldManager::Get().Update();
     }
 
     void GameplayShutdown()

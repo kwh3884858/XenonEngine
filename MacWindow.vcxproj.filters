@@ -195,6 +195,21 @@
     <ClCompile Include="Library\imgui\imgui_demo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Editor\EditorGameObjectWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\XenonBaseWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EngineSyncData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\XenonBaseWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Editor\EditorGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="library\lua\lua.h">
@@ -449,9 +464,6 @@
     <ClInclude Include="MathLab\Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Editor\EditorGUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Windows\Editor\EditorGUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -513,6 +525,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Library\imgui\DX\imgui_impl_win32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\EditorGameObjectWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\XenonBaseWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\EditorGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EngineSyncData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Editor\XenonBaseWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,7 @@
 #include "Windows/Surface/DirectXDrawSurface.h"
 //#include "CrossPlatform/SColorRGBA.h"
 #include <assert.h>
+#include <xutility>
 
 namespace WindowSurface {
 
@@ -79,7 +80,8 @@ namespace WindowSurface {
     {
         assert(xStart < m_width && xEnd < m_width  && y < m_height);
         UINT* buffer = static_cast<UINT*>(m_directDrawSurfaceDescription.lpSurface);
-        memset(buffer + y * m_width + xStart, rgba.ToRGBALittleEndian(),( xEnd - xStart + 1)*sizeof(UINT) );
+        UINT value = rgba.ToRGBALittleEndian();
+        std::fill(buffer + y * m_width + xStart, buffer + y * m_width + xStart + (xEnd - xStart + 1), value);
     }
 
     CrossPlatform::SColorRGBA DirectXDrawSurface::GetPixel(unsigned int x, unsigned int y)

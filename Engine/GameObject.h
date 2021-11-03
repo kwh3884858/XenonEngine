@@ -39,6 +39,9 @@ namespace XenonEngine
         bool IsMarkForDelete() { return m_state == ObjectState::MarkForDelete; }
         void SetState(ObjectState state) { m_state = state; }
 
+        int GetComponentCount()const { return m_components.Count(); }
+        const IComponent* GetComponentByIndex(int index)const { assert(index >= 0 && index < m_components.Count()); return m_components[index]; }
+
 		void GameObjectStart();
 		void GameObjectUpdate();
         virtual void Start();

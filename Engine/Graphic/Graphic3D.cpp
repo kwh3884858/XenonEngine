@@ -23,6 +23,7 @@ namespace XenonEngine
 	using MathLab::TMatrix4X3f;
 	using MathLab::TVector4f;
     using MathLab::Vector2f;
+    using MathLab::Vector3f;
     using CrossPlatform::Polygon3D;
     using CrossPlatform::Vertex3D;
 
@@ -35,17 +36,22 @@ namespace XenonEngine
         //Lighting
         SColorRGBA baseColor = input.m_faceColor;
         SColorRGBA finalColor = CrossPlatform::BLACK;
+
+        TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
+
         for (int i = 0; i < m_lightList.Count(); i++)
         {
             TVector4f zeroToOne = homogeneousVertex1 - homogeneousVertex0;
             TVector4f zeroToTwo = homogeneousVertex2 - homogeneousVertex0;
-            TVector4f faceNormal = zeroToTwo.Cross(zeroToOne).Normalize();
+            TVector4f faceNormal = zeroToTwo.Cross(zeroToOne).Normalize(); //anti-lighting direction
             assert(m_lightList[i]->GetLightType() != LightComponent::LightType::None);
             if (m_lightList[i]->GetLightType() == LightComponent::LightType::Direction)
             {
                 DirectionLightComponent* directionLight = static_cast<DirectionLightComponent*>(m_lightList[i]);
-                TVector4f direction = ConvertFromNonHomogeneous(directionLight->GetDirection());
-                float face = direction.Dot(faceNormal);
+                Vector3f direction = directionLight->GetDirection();
+                TVector4f tDirection = ConvertFromNonHomogeneous(direction);
+                tDirection = tDirection * worldToCameraRotationMatrix;
+                float face = tDirection.Dot(faceNormal);
                 if (face > 0)
                 {
                     finalColor += directionLight->GetColor() * baseColor * face;
@@ -57,7 +63,7 @@ namespace XenonEngine
                 Vector3f lightPosition = pointLight->GetGameObject()->GetComponent<Transform3D>()->GetPosition();
                 TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
-                TVector4f direction = homogeneousVertex0 - lightPoistionHomogeneous;
+                TVector4f direction = lightPoistionHomogeneous - homogeneousVertex0 ;
                 float kc = pointLight->GetKc();
                 float kl = pointLight->GetKl();
                 float face = direction.Normalize().Dot(faceNormal);
@@ -86,6 +92,8 @@ namespace XenonEngine
 
     bool Graphic3D::VertexShaderGouraud(const VertexShaderDataInputGouraud& input, VertexShaderDataOutputGouraud& output, const MathLab::TMatrix4X4f& worldToCameraTransform, const MathLab::TMatrix4X4f& cameraToScreenTranform) const
     {
+        TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
+
         //Lighting
         for (int i = 0; i < m_lightList.Count(); i++)
         {
@@ -93,11 +101,14 @@ namespace XenonEngine
             if (m_lightList[i]->GetLightType() == LightComponent::LightType::Direction)
             {
                 DirectionLightComponent* directionLight = static_cast<DirectionLightComponent*>(m_lightList[i]);
-                TVector4f direction = ConvertFromNonHomogeneous(directionLight->GetDirection());
+                Vector3f direction = directionLight->GetDirection();
+                direction = -direction;
+                TVector4f tDirection = ConvertFromNonHomogeneous(direction);
+                tDirection = tDirection * worldToCameraRotationMatrix;
                 for (int i = 0; i < 3; i++)
                 {
                     TVector4f faceNormal = input.m_normal[i];
-                    float face = direction.Dot(faceNormal);
+                    float face = tDirection.Dot(faceNormal);
                     if (face > 0)
                     {
                         CrossPlatform::SColorRGBA baseColor = input.m_baseColor[i];
@@ -113,7 +124,7 @@ namespace XenonEngine
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
                 for (int i = 0; i < 3; i++)
                 {
-                    TVector4f direction = input.m_vertex[i] - lightPoistionHomogeneous;
+                    TVector4f direction = lightPoistionHomogeneous - input.m_vertex[i];
                     float kc = pointLight->GetKc();
                     float kl = pointLight->GetKl();
                     float face = direction.Normalize().Dot(input.m_normal[i]);
@@ -159,7 +170,7 @@ namespace XenonEngine
             }
             TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
             TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
-
+            TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
             //Remove back faces
             TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
             TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
@@ -209,9 +220,9 @@ namespace XenonEngine
                 TVector4f homogeneousNormal0 = ConvertFromNonHomogeneous(normal0);
                 TVector4f homogeneousNormal1 = ConvertFromNonHomogeneous(normal1);
                 TVector4f homogeneousNormal2 = ConvertFromNonHomogeneous(normal2);
-                homogeneousNormal0 = homogeneousNormal0 * localToCameraTranform;
-                homogeneousNormal1 = homogeneousNormal1 * localToCameraTranform;
-                homogeneousNormal2 = homogeneousNormal2 * localToCameraTranform;
+                homogeneousNormal0 = homogeneousNormal0 * worldToCameraRotationMatrix;
+                homogeneousNormal1 = homogeneousNormal1 * worldToCameraRotationMatrix;
+                homogeneousNormal2 = homogeneousNormal2 * worldToCameraRotationMatrix;
                 normalList[polyIndex][0] = homogeneousNormal0.Normalize();
                 normalList[polyIndex][1] = homogeneousNormal1.Normalize();
                 normalList[polyIndex][2] = homogeneousNormal2.Normalize();

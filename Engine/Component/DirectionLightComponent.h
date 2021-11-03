@@ -6,6 +6,7 @@
 #pragma once
 #include "LightComponent.h"
 #include "MathLab/Vector3.h"
+#include "MathLab/Vector4.h"
 #include "CrossPlatform/SColorRGBA.h"
 
 namespace XenonEngine
@@ -28,13 +29,16 @@ namespace XenonEngine
         virtual IComponent* Copy(GameObject*const gameObject)const override;
 
         void SetConfig(const DirectionLightComponentConfig& config);
-        MathLab::Vector3f GetDirection();
-        CrossPlatform::SColorRGBA GetColor()const { return m_color; }
+        //MathLab::Vector3f GetDirection()const;
+        const MathLab::Vector3f& GetDirection();
+        //CrossPlatform::SColorRGBA GetColor()const { return m_color; }
+        CrossPlatform::SColorRGBA GetColor()const { return m_color.ToColor(); }
+        const MathLab::Vector4f& GetRawColor()const { return m_color; }
 
         static ComponentType m_type;
     private:
         MathLab::Vector3f m_direction;
-        CrossPlatform::SColorRGBA m_color;
+        MathLab::Vector4f m_color;
     };
 
 }

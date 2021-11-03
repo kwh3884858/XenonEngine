@@ -95,10 +95,10 @@ namespace MathLab {
     template<typename T>
     MathLab::Vector4<T>::Vector4(const CrossPlatform::SColorRGBA& rgba)
     {
-        this->x = rgba.GetR();
-        this->y = rgba.GetG();
-        this->z = rgba.GetB();
-        this->w = rgba.GetA();
+        this->x = rgba.GetR()/255.0f;
+        this->y = rgba.GetG()/255.0f;
+        this->z = rgba.GetB()/255.0f;
+        this->w = rgba.GetA()/255.0f;
     }
 
     template<typename T>
@@ -217,7 +217,7 @@ namespace MathLab {
     template<typename T>
     CrossPlatform::SColorRGBA MathLab::Vector4<T>::ToColor() const
     {
-        return SColorRGBA(x, y, z, w);
+        return CrossPlatform::SColorRGBA(x*255, y*255, z*255, w*255);
     }
 
     template<typename T>
