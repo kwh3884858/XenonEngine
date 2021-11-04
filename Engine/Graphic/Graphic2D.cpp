@@ -5,7 +5,7 @@
 #include "MathLab/Vector2.h"
 #include <cstdio>
 
-#include <assert.h>
+#include <cassert>
 
 using CrossPlatform::IDrawerSurface;
 using MathLab::Vector2f;
@@ -190,59 +190,82 @@ namespace XenonEngine
         }
     }
 
-    void Graphic2D::DrawTriangle(VertexData data) const
+    void Graphic2D::DrawTriangle(const VertexData& originalData) const
     {
-        if ((data.p0.x == data.p1.x && data.p1.x == data.p2.x) || 
-            (data.p0.y == data.p1.y && data.p1.y == data.p2.y))
+        if ((originalData.p0.x == originalData.p1.x && originalData.p1.x == originalData.p2.x) ||
+            (originalData.p0.y == originalData.p1.y && originalData.p1.y == originalData.p2.y))
         {
             return;
         }
+        Vector2f p0 (originalData.p0);
+        Vector2f p1 (originalData.p1);
+        Vector2f p2 (originalData.p2);
+
         // p0 < p1 < p2 (y-axis)
-        if (data.p0.y > data.p1.y)
+        // c0 < c1 < c2
+        if (p0.y > p1.y)
         {
-            MathLab::SwapVector(data.p0, data.p1);
+            MathLab::SwapVector(p0, p1);
         }
 
-        if (data.p0.y > data.p2.y)
+        if (p0.y > p2.y)
         {
-            MathLab::SwapVector(data.p0, data.p2);
+            MathLab::SwapVector(p0, p2);
         }
 
-        if (data.p1.y > data.p2.y)
+        if (p1.y > p2.y)
         {
-            MathLab::SwapVector(data.p1, data.p2);
+            MathLab::SwapVector(p1, p2);
         }
 
-        if (data.p0.y == data.p1.y)
+        Vector4f colorTop(originalData.vcolor2);
+        Vector4f colorCenter(originalData.vcolor1);
+        Vector4f colorBottom(originalData.vcolor0);
+        if (p2 == originalData.p1) colorTop = originalData.vcolor1;
+        if (p2 == originalData.p0) colorTop = originalData.vcolor0;
+        if (p1 == originalData.p0) colorCenter = originalData.vcolor0;
+        if (p1 == originalData.p2) colorCenter = originalData.vcolor2;
+        if (p0 == originalData.p1) colorBottom = originalData.vcolor1;
+        if (p0 == originalData.p2) colorBottom = originalData.vcolor2;
+
+        if (p0.y == p1.y)
         {
-            //verse clockwise
-            if (data.p0.x > data.p1.x)
+            //clockwise
+            if (p1.x < p0.x )
             {
-                DrawTopTriangle(data.p2, data.p0, data.p1, data.vcolor2, data.vcolor0, data.vcolor1);
+                DrawTopTriangle(p2, p0, p1, colorTop, colorBottom, colorCenter);
             }
             else
             {
-                DrawTopTriangle(data.p2, data.p1, data.p0, data.vcolor2, data.vcolor1, data.vcolor0);
+                DrawTopTriangle(p2, p1, p0, colorTop, colorCenter, colorBottom);
             }
         }
-        else if (data.p1.y == data.p2.y)
+        else if (p1.y == p2.y)
         {
-            if (data.p1.x > data.p2.x)
+            if (p2.x < p1.x)
             {
-                DrawBottomTriangle(data.p0, data.p2, data.p1, data.vcolor0, data.vcolor2, data.vcolor1);
+                DrawBottomTriangle(p0, p2, p1, colorBottom, colorTop, colorCenter);
             }
             else
             {
-                DrawBottomTriangle(data.p0, data.p1, data.p2, data.vcolor0, data.vcolor1, data.vcolor2);
+                DrawBottomTriangle(p0, p1, p2, colorBottom, colorCenter, colorTop);
             }
         }
         else
         {
-            Vector2f middlePoint = data.p1;
-            middlePoint.x = (data.p0.x - data.p2.x) / (data.p0.y - data.p2.y) * (data.p1.y - data.p2.y) + data.p2.x;
-            Vector4f middleColor = (data.p1.y - data.p2.y) / (data.p0.y - data.p2.y) * (data.vcolor1 - data.vcolor2) + data.vcolor2;
-            DrawTopTriangle(data.p2, middlePoint, data.p1, data.vcolor2, middleColor, data.vcolor1);
-            DrawBottomTriangle(data.p0, middlePoint, data.p1, data.vcolor0, middleColor, data.vcolor1);
+            Vector2f middlePoint = p1;
+            middlePoint.x = (p1.y - p2.y) / (p0.y - p2.y) *  (p0.x - p2.x) + p2.x;
+            Vector4f middleColor = (p1.y - p2.y) / (p0.y - p2.y) * (colorBottom - colorTop) + colorTop;
+            if (middlePoint.x < p1.x)
+            {
+                DrawTopTriangle(p2, p1, middlePoint, colorTop, colorCenter, middleColor);
+                DrawBottomTriangle(p0, middlePoint, p1, colorBottom, middleColor, colorCenter);
+            }
+            else
+            {
+                DrawTopTriangle(p2, middlePoint, p1, colorTop, middleColor, colorCenter);
+                DrawBottomTriangle(p0, p1, middlePoint, colorBottom, colorCenter, middleColor);
+            }
         }
     }
 
@@ -401,8 +424,8 @@ namespace XenonEngine
         leftIndex = InternalClipYPoint(bottom, p1, yBottom);
         rightIndex = InternalClipYPoint(bottom, p2, yBottom);
 
-        Vector4f leftColor = InternalClipColor(bottom, p1, yTop, vcolorBottom, vcolor1);
-        Vector4f RightColor = InternalClipColor(bottom, p2, yTop, vcolorBottom, vcolor2);
+        Vector4f leftColor = InternalClipColor(bottom, p1, yBottom, vcolorBottom, vcolor1);
+        Vector4f RightColor = InternalClipColor(bottom, p2, yBottom, vcolorBottom, vcolor2);
         Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
         Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom);
         Vector4f lColorIndex = leftColor;
@@ -418,7 +441,7 @@ namespace XenonEngine
                 int xEnd = MathLab::Ceil(rightIndex.x) - 1;
                 Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
                 Vector4f strightLineIndex = lColorIndex;
-                for (; xStart < xEnd; xStart++)
+                for (; xStart <= xEnd; xStart++)
                 {
                     DrawPixel(xStart, yBottom, strightLineIndex.ToColor());
                     strightLineIndex += strightLineDelta;
@@ -469,7 +492,7 @@ namespace XenonEngine
                         continue;
                     }
                 }
-                for (int i = left.x; i <= right.x; i++)
+                for (float i = left.x; i <= right.x; i++)
                 {
                     DrawPixel(i, yBottom, strightLineIndex.ToColor());
                     strightLineIndex += strightLineDelta;
@@ -485,7 +508,7 @@ namespace XenonEngine
 
     void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
-        //verse-clock: buttom->p1->p2
+        //verse-clock: top->p2->p1
         if (p1.x < p2.x)
         {
             SwapVector(p1, p2);
@@ -595,12 +618,12 @@ namespace XenonEngine
         rightIndex = InternalClipYPoint(top, p1, yTop);
         leftIndex = InternalClipYPoint(top, p2, yTop);
 
-        Vector4f leftColor = InternalClipColor(top, p1, yTop, vcolorTop, vcolor1);
-        Vector4f RightColor = InternalClipColor(top, p2, yTop, vcolorTop, vcolor2);
-        Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
-        Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom );
+        Vector4f rightColor = InternalClipColor(top, p1, yTop, vcolorTop, vcolor1);
+        Vector4f leftColor = InternalClipColor(top, p2, yTop, vcolorTop, vcolor2);
+        Vector4f rColorDelta = (vcolor1 - rightColor) / (yTop - yBottom);
+        Vector4f lColorDelta = (vcolor2 - leftColor) / (yTop - yBottom );
+        Vector4f rColorIndex = rightColor;
         Vector4f lColorIndex = leftColor;
-        Vector4f rColorIndex = RightColor;
 
         if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
             p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
@@ -612,15 +635,15 @@ namespace XenonEngine
                 int xEnd = MathLab::Ceil(rightIndex.x);
                 Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
                 Vector4f strightLineIndex = lColorIndex;
-                for (;xStart < xEnd; xStart++)
+                for (;xStart <= xEnd; xStart++)
                 {
                     DrawPixel(xStart, yTop, strightLineIndex.ToColor());
                     strightLineIndex += strightLineDelta;
                 }
                 leftIndex += leftStep;
                 rightIndex += rightStep;
-                lColorIndex += lColorDelta;
                 rColorIndex += rColorDelta;
+                lColorIndex += lColorDelta;
                 yTop--;
             }
         }
@@ -632,7 +655,7 @@ namespace XenonEngine
             {
                 left = leftIndex;
                 right = rightIndex;
-                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (right.x - left.x);
+                Vector4f strightLineDelta = (rColorIndex - lColorIndex ) / (right.x - left.x);
                 Vector4f strightLineIndex = lColorIndex;
                 if (left.x < m_minDrawPosition.x)
                 {
@@ -642,8 +665,8 @@ namespace XenonEngine
                     {
                         leftIndex += leftStep;
                         rightIndex += rightStep;
-                        lColorIndex += lColorDelta;
                         rColorIndex += rColorDelta;
+                        lColorIndex += lColorDelta;
                         yTop--;
                         continue;
                     }
@@ -655,21 +678,21 @@ namespace XenonEngine
                     {
                         leftIndex += leftStep;
                         rightIndex += rightStep;
-                        lColorIndex += lColorDelta;
                         rColorIndex += rColorDelta;
+                        lColorIndex += lColorDelta;
                         yTop--;
                         continue;
                     }
                 }
-                for (int i = left.x; i < right.x; i++)
+                for (float i = left.x; i <= right.x; i++)
                 {
                     DrawPixel(i, yTop, strightLineIndex.ToColor());
                     strightLineIndex += strightLineDelta;
                 }
                 leftIndex += leftStep;
                 rightIndex += rightStep;
-                lColorIndex += lColorDelta;
                 rColorIndex += rColorDelta;
+                lColorIndex += lColorDelta;
                 yTop--;
             }
         }

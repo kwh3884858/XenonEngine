@@ -8,7 +8,7 @@ namespace MathLab
     using Algorithm::Vector;
 
 	template<typename T, int COUNT>
-	struct TVector;
+    class TVector;
 
     typedef     TVector<float, 4>      TVector4f;
     typedef     TVector<float, 3>      TVector3f;

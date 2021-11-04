@@ -41,6 +41,10 @@ namespace CrossPlatform
         static int COLORLIMIT;
 		unsigned int m_value;
 	};
+
+    //template<typename T, int COUNT>
+    //void SwapColorRGBA(SColorRGBA& colorA, SColorRGBA& colorB);
+
     const SColorRGBA WHITE(255, 255, 255, 255);
     const SColorRGBA GERY(128, 128, 128, 255);
     const SColorRGBA BLUE(0, 0, 255, 255);

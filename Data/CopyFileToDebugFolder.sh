@@ -8,6 +8,7 @@
     cp cube.obj ../Debug/cube.obj
     cp KeQing.obj ../Debug/KeQing.obj
     cp KeQing.mtl ../Debug/KeQing.mtl
+    cp sphere.obj ../Debug/sphere.obj
 #     echo "Operation Complete"
 #     ;;
 # N | n)

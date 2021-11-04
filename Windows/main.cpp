@@ -12,10 +12,15 @@
 #include "Windows/Editor/EditorGUI.h"
 #include "Engine/EngineSyncData.h"
 
+#include "CrossPlatform/Database.h"
+
 void ThreadEditor( XenonEngine::EngineSyncData& syncData)
 {
     XenonEngine::pGlobalSyncData = &syncData;
-    ImGUIMain();
+    if (CrossPlatform::Database::Get().engineConfig.m_isEditorLaunch)
+    {
+        ImGUIMain();
+    }
 }
 
 void ThreadEngine(HINSTANCE hInstance,  XenonEngine::EngineSyncData& syncData)

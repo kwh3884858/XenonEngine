@@ -164,7 +164,7 @@ namespace MathLab {
     template<typename T>
     bool MathLab::Vector2<T>::operator==(const Vector2& value)
     {
-        return MathLab(this->x - value.x) < EPSILON && MathLab(this->y - value.y) < EPSILON;
+        return MathLab::Abs(this->x - value.x) < EPSILON && MathLab::Abs(this->y - value.y) < EPSILON;
     }
 
     template<typename T>

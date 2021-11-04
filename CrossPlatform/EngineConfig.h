@@ -11,6 +11,7 @@ namespace CrossPlatform
         const unsigned int m_width = 1280;
         const unsigned int m_height = 720;
         const bool m_isPerspectiveProjection = true;
+        const bool m_isEditorLaunch = true;
 
         // For draw something in the a rectangle of window
         const int m_minX = 0;

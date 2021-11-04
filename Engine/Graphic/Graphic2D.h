@@ -73,7 +73,7 @@ namespace XenonEngine {
         //void DrawLine(const Vector2f* lhs, const Vector2f*rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawPolygon(const Polygon2D& polygon2D)const;
         void DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawTriangle(VertexData data)const;
+        void DrawTriangle(const VertexData& originalData)const;
         ClipLineState ClipLine(Vector2f& p0, Vector2f& p1)const;
         ClipLineState ClipLine(Vector2i& p0, Vector2i& p1)const;
 

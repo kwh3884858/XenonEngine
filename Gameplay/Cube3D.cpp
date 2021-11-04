@@ -38,7 +38,8 @@ namespace Gameplay
         String cubeObjPath = applicationPath.Substring(0, pos);
         //cubeObjPath.Append("cubeTest.obj");
         //cubeObjPath.Append("cube.obj");
-        cubeObjPath.Append("KeQing.obj");
+        //cubeObjPath.Append("KeQing.obj");
+        cubeObjPath.Append("sphere.obj");
         Mesh3DConfig config;
         config.m_polygon3D = ObjectLoader::Get().LoadObj(cubeObjPath);
         Mesh3D* mesh3D = new Mesh3D(this);

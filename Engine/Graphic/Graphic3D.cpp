@@ -301,64 +301,11 @@ namespace XenonEngine
                     vertexData.vcolor0 = output.m_vertexColor[0];
                     vertexData.vcolor1 = output.m_vertexColor[1];
                     vertexData.vcolor2 = output.m_vertexColor[2];
+                    //vertexData.vcolor0 = CrossPlatform::RED;
+                    //vertexData.vcolor1 = CrossPlatform::GREEN;
+                    //vertexData.vcolor2 = CrossPlatform::BLUE;
                     Graphic2D::Get().DrawTriangle(vertexData);
                 }
-
-                //TVector4f homogeneousVertex0 = triangleList[polyIndex].m_p0;
-                //TVector4f homogeneousVertex1 = triangleList[polyIndex].m_p1;
-                //TVector4f homogeneousVertex2 = triangleList[polyIndex].m_p2;
-                //state = RemoveBackFaces(homogeneousVertex0, homogeneousVertex1, homogeneousVertex2);
-                //if (state == CullingState::Culled)
-                //{
-                //    continue;
-                //}
-                ////Lighting
-                //SColorRGBA baseColor = CrossPlatform::WHITE;
-                //SColorRGBA finalColor;
-                //for (int i =0 ;i< m_lightList.Count(); i++)
-                //{
-                //    TVector4f zeroToOne = homogeneousVertex1 - homogeneousVertex0;
-                //    TVector4f zeroToTwo = homogeneousVertex2 - homogeneousVertex0;
-                //    TVector4f faceNormal = zeroToTwo.Cross(zeroToOne).Normalize();
-                //    assert(m_lightList[i]->GetLightType() != LightComponent::LightType::None);
-                //    if (m_lightList[i]->GetLightType() == LightComponent::LightType::Direction)
-                //    {
-                //        DirectionLightComponent* directionLight = static_cast<DirectionLightComponent*>(m_lightList[i]);
-                //        TVector4f direction = ConvertFromNonHomogeneous(directionLight->GetDirection());
-                //        float face = direction.Dot(faceNormal);
-                //        if (face > 0)
-                //        {
-                //            finalColor += directionLight->GetColor() * baseColor * face;
-                //        }
-                //    }
-                //    if (m_lightList[i]->GetLightType() == LightComponent::LightType::Point)
-                //    {
-                //        PointLightComponent* pointLight = static_cast<PointLightComponent*>(m_lightList[i]);
-                //        Vector3f lightPosition = pointLight->GetGameObject()->GetComponent<Transform3D>()->GetPosition();
-                //        TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
-                //        lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
-                //        TVector4f direction = homogeneousVertex0 - lightPoistionHomogeneous;
-                //        float kc = pointLight->GetKc();
-                //        float kl = pointLight->GetKl();
-                //        float face = direction.Normalize().Dot(faceNormal);
-                //        if (face > 0)
-                //        {
-                //            float attenuation = kc + kl * direction.Magnitude();
-                //            finalColor += pointLight->GetColor() * baseColor *  face / attenuation;
-                //        }
-                //    }
-                //}
-                //homogeneousVertex0 = homogeneousVertex0 * cameraToScreenTranform;
-                //Vector3f screenPosition1 = ConvertFormHomogeneous(homogeneousVertex0);
-                //Vector2f screenPoint1(screenPosition1.x, screenPosition1.y);
-
-                //homogeneousVertex1 = homogeneousVertex1 * cameraToScreenTranform;
-                //Vector3f screenPosition2 = ConvertFormHomogeneous(homogeneousVertex1);
-                //Vector2f screenPoint2(screenPosition2.x, screenPosition2.y);
-
-                //homogeneousVertex2 = homogeneousVertex2 * cameraToScreenTranform;
-                //Vector3f screenPosition3 = ConvertFormHomogeneous(homogeneousVertex2);
-                //Vector2f screenPoint3(screenPosition3.x, screenPosition3.y);
             }
 
             delete[] triangleList;

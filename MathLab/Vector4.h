@@ -16,6 +16,20 @@ namespace MathLab {
     typedef     Vector4<float>      Vector4f;
 
     template<typename T>
+    Vector4<T> operator+(const Vector4<T>& v1, const Vector4<T>& v2);
+    template<typename T>
+    Vector4<T> operator-(const Vector4<T>& v1, const Vector4<T>& v2);
+
+    template<typename T>
+    void SwapVector(Vector4<T>& vectorA, Vector4<T>& vectorB);
+    template<typename T>
+    bool LessY(const Vector4<T>& origin, const Vector4<T>& compare);
+    template<typename T>
+    Vector4<T> operator*(const T& v1, const Vector4<T>& value);
+    //template<typename T>
+    //void Exchange(Vector4*const a, Vector4*const b);
+
+    template<typename T>
     struct Vector4 final {
         T x;
         T y;
@@ -23,7 +37,6 @@ namespace MathLab {
         T w;
 
     public:
-        friend void SwapVector(Vector4* vectorA, Vector4* vectorB);
         friend bool LessY(const Vector4& origin, const Vector4& compare);
         //friend void Exchange(Vector4*const a, Vector4*const b);
 
@@ -51,20 +64,6 @@ namespace MathLab {
 
         CrossPlatform::SColorRGBA ToColor()const;
     };
-
-    template<typename T>
-    Vector4<T> operator+(const Vector4<T>& v1, const Vector4<T>& v2);
-    template<typename T>
-    Vector4<T> operator-(const Vector4<T>& v1, const Vector4<T>& v2);
-
-    template<typename T>
-    void SwapVector(Vector4<T>* vectorA, Vector4<T>* vectorB);
-    template<typename T>
-    bool LessY(const Vector4<T>& origin, const Vector4<T>& compare);
-    template<typename T>
-    Vector4<T> operator*(const T& v1, const Vector4<T>& value);
-    //template<typename T>
-    //void Exchange(Vector4*const a, Vector4*const b);
 
     template<typename T>
     Vector4<T>::Vector4() :
@@ -157,7 +156,7 @@ namespace MathLab {
     template<typename T>
     Vector4<T>& MathLab::Vector4<T>::operator/(T rvalue)const
     {
-        Vector4f result(*this);
+        Vector4<T> result(*this);
         result /= rvalue;
         return result;
     }
@@ -235,17 +234,17 @@ namespace MathLab {
     }
 
     template<typename T>
-    void SwapVector(Vector4<T>* vectorA, Vector4<T>* vectorB) {
-        Vector4 temp = *vectorA;
-        vectorA->x = vectorB->x;
-        vectorA->y = vectorB->y;
-        vectorA->z = vectorB->z;
-        vectorA->w = vectorB->w;
+    void SwapVector(Vector4<T>& vectorA, Vector4<T>& vectorB) {
+        Vector4<T> temp(vectorA);
+        vectorA.x = vectorB.x;
+        vectorA.y = vectorB.y;
+        vectorA.z = vectorB.z;
+        vectorA.w = vectorB.w;
 
-        vectorB->x = temp.x;
-        vectorB->y = temp.y;
-        vectorB->z = temp.z;
-        vectorB->w = temp.w;
+        vectorB.x = temp.x;
+        vectorB.y = temp.y;
+        vectorB.z = temp.z;
+        vectorB.w = temp.w;
 
     }
 
