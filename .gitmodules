@@ -1,0 +1,18 @@
+[submodule "Library/imgui"]
+	path = Library/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "Library/stb"]
+	path = Library/stb
+	url = https://github.com/nothings/stb.git
+[submodule "Library/tinyobjloader"]
+	path = Library/tinyobjloader
+	url = https://github.com/tinyobjloader/tinyobjloader.git
+[submodule "Library/crossguid"]
+	path = Library/crossguid
+	url = https://github.com/graeme-hill/crossguid.git
+[submodule "Library/ImGuiFileDialog"]
+	path = Library/ImGuiFileDialog
+	url = https://github.com/aiekick/ImGuiFileDialog.git
+[submodule "Library/ImGui-Addons"]
+	path = Library/ImGui-Addons
+	url = https://github.com/gallickgunner/ImGui-Addons.git
