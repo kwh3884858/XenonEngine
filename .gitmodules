@@ -16,3 +16,6 @@
 [submodule "Library/ImGui-Addons"]
 	path = Library/ImGui-Addons
 	url = https://github.com/gallickgunner/ImGui-Addons.git
+[submodule "Library/yaml-cpp"]
+	path = Library/yaml-cpp
+	url = https://github.com/jbeder/yaml-cpp.git
