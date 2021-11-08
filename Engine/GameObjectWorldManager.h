@@ -6,22 +6,21 @@
 #pragma once
 #include "Algorithms/Vector.h"
 #include "Algorithms/String.h"
-#include "CrossPlatform/XenonManager.h"
 
 namespace XenonEngine
 {
     class GameObject;
     class GameObjectWorld;
 
-    class GameObjectWorldManager :public CrossPlatform::XenonManager<GameObjectWorldManager>
+    class GameObjectWorldManager final
     {
     public:
         //initilize function, take the place of constructor
-        virtual bool Initialize()override;
+         bool Initialize();
 
         //destroy function, take the  place of deconstructor
-        virtual bool Shutdown() override;
-        virtual ~GameObjectWorldManager() override;
+         bool Shutdown() ;
+         ~GameObjectWorldManager() ;
 
         void Update();
         GameObjectWorld*const CreateGameWorld(const Algorithm::String& worldName);

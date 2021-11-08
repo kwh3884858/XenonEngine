@@ -34,6 +34,7 @@
 #include "Gameplay/Cube3D.h"
 #include "Gameplay/CameraObject3D.h"
 #include "Gameplay/SceneDirectionLight.h"
+#include "EngineManager.h"
 
 namespace Gameplay {
     using MathLab::Vector3f;
@@ -46,28 +47,15 @@ namespace Gameplay {
     using XenonEngine::InputSystem;
     using XenonPhysics::Force2D;
 
-    using XenonEngine::Mesh2D;
-    using XenonEngine::Mesh2DConfig;
-
-    using XenonEngine::GameObject;
-    using XenonEngine::GameObjectWorld;
-    using XenonEngine::GameObjectWorldManager;
-    using XenonEngine::Transform2D;
-    using XenonEngine::Transform3D;
-    using XenonEngine::PlayerPersonality;
-    using XenonEngine::Rigidbody2D;
-    using XenonEngine::BoxCollider2D;
-    using XenonEngine::BoxCollider2DConfig;
-    using XenonEngine::ComponentType;
-    using XenonEngine::Camera3D;
+    using namespace XenonEngine;
 
     GameObjectWorld* world;
 
     XenonCompiler* compiler = nullptr;
     void GameplayInitialize()
     {
-        GameObjectWorldManager::Get().Initialize();
-        world = GameObjectWorldManager::Get().CreateGameWorld("Shooting2D");
+        EngineManager::Get().Initialize();
+        world = EngineManager::Get().GetWorldManager().CreateGameWorld("Shooting2D");
         {
             Player* player = new Player("Player");
             //world->AddGameObject(player);
@@ -180,14 +168,14 @@ namespace Gameplay {
 
         //Graphic2D::Get().DrawLine(Vector2i(0, 90), Vector2i(800, 90), CrossPlatform::YELLOW);
         //Graphic2D::Get().DrawLine(Vector2i(0, 110), Vector2i(800, 110), CrossPlatform::YELLOW);
-        GameObjectWorldManager::Get().Update();
+        EngineManager::Get().Update();
     }
 
     void GameplayShutdown()
     {
         delete compiler;
 
-        GameObjectWorldManager::Get().Shutdown();
+        EngineManager::Get().Shutdown();
     }
 
 	/*

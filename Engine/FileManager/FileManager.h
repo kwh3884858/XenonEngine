@@ -18,9 +18,9 @@ namespace Algorithm
     template<typename T>
     class StreamingVector;
 
-    template<typename T>
-    class StringBase;
-    typedef StringBase<char> String;
+    //template<typename T>
+    //class StringBase;
+    //typedef StringBase<char> String;
 }
 
 namespace XenonEngine {

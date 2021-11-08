@@ -1,8 +1,13 @@
 #pragma once
 #include <mutex>
 
+namespace CrossPlatform
+{
+    class Folder;
+}
 namespace XenonEngine
 {
+    using CrossPlatform::Folder;
     class GameObjectWorld;
     class Graphic3D;
 
@@ -31,12 +36,26 @@ namespace XenonEngine
             return m_graphic3D;
         }
 
+        void FolderSetter(const Folder* folder) {
+            std::lock_guard<std::mutex> lck(m_folderMutex);
+            m_folder = folder;
+        }
+
+        const Folder* FolderGetter()const
+        {
+            std::lock_guard<std::mutex> lck(m_folderMutex);
+            return m_folder;
+        }
+
     private:
         mutable std::mutex m_mutex;
         const GameObjectWorld* m_gameWorld = nullptr;
 
         mutable std::mutex m_graphic3DMutex;
         const Graphic3D* m_graphic3D = nullptr;
+
+        mutable std::mutex m_folderMutex;
+        const Folder* m_folder = nullptr;
     };
 
     extern XenonEngine::EngineSyncData* pGlobalSyncData;
