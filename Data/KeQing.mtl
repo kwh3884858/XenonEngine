@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 0.000000
 d 1.000000
 illum 1
-map_Kd C:\\Users\\whkong\\Downloads\\刻晴\\tex\\表情.png
+map_Kd E:\\GithubProjects\\MacWindow\\Data\\tex\\表情.png
 
 newmtl 目星
 Ns 900.000000
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 0.000000
 d 1.000000
 illum 1
-map_Kd C:\\Users\\whkong\\Downloads\\刻晴\\tex\\面.png
+map_Kd E:\\GithubProjects\\MacWindow\\Data\\tex\\面.png
 
 newmtl 肌
 Ns 900.000000
@@ -32,7 +32,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 0.000000
 d 1.000000
 illum 1
-map_Kd C:\\Users\\whkong\\Downloads\\刻晴\\tex\\肌.png
+map_Kd E:\\GithubProjects\\MacWindow\\Data\\tex\\肌.png
 
 newmtl 裙
 Ns 900.000000
@@ -43,7 +43,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 0.000000
 d 1.000000
 illum 1
-map_Kd C:\\Users\\whkong\\Downloads\\刻晴\\tex\\服.png
+map_Kd E:\\GithubProjects\\MacWindow\\Data\\tex\\服.png
 
 newmtl 辫
 Ns 900.000000
@@ -54,4 +54,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 0.000000
 d 1.000000
 illum 1
-map_Kd C:\\Users\\whkong\\Downloads\\刻晴\\tex\\发.png
+map_Kd E:\\GithubProjects\\MacWindow\\Data\\tex\\发.png
