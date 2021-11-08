@@ -115,8 +115,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Algorithms\StringSort.cpp" />
+    <ClCompile Include="CrossPlatform\Material\XenonMaterial.cpp" />
     <ClCompile Include="CrossPlatform\Polygon2D.cpp" />
     <ClCompile Include="CrossPlatform\Polygon3D.cpp" />
+    <ClCompile Include="CrossPlatform\XenonImage.cpp" />
     <ClCompile Include="Engine\Component\Camera3D.cpp" />
     <ClCompile Include="Engine\Component\BoxCollider2D.cpp" />
     <ClCompile Include="Engine\Component\CircleCollider2D.cpp" />
@@ -141,6 +143,7 @@
     <ClCompile Include="Engine\Graphic\Graphic3D.cpp" />
     <ClCompile Include="Engine\IO\InputSystem.cpp" />
     <ClCompile Include="Engine\IO\ObjLoader.cpp" />
+    <ClCompile Include="Engine\IO\XenonImageLoader.cpp" />
     <ClCompile Include="Engine\Physics\Physics2D.cpp" />
     <ClCompile Include="Engine\Graphic\Graphic2D.cpp" />
     <ClCompile Include="CrossPlatform\SColorRGB.cpp" />
@@ -157,14 +160,6 @@
     <ClCompile Include="Gameplay\Enemy.cpp" />
     <ClCompile Include="Gameplay\Player.cpp" />
     <ClCompile Include="Gameplay\SceneDirectionLight.cpp" />
-    <ClCompile Include="Library\imgui\DX\imgui_impl_dx11.cpp" />
-    <ClCompile Include="Library\imgui\DX\imgui_impl_dx9.cpp" />
-    <ClCompile Include="Library\imgui\DX\imgui_impl_win32.cpp" />
-    <ClCompile Include="Library\imgui\imgui.cpp" />
-    <ClCompile Include="Library\imgui\imgui_demo.cpp" />
-    <ClCompile Include="Library\imgui\imgui_draw.cpp" />
-    <ClCompile Include="Library\imgui\imgui_tables.cpp" />
-    <ClCompile Include="Library\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Windows\DebugTool\DebugConsole.cpp" />
     <ClCompile Include="Windows\File\FileReader.cpp" />
     <ClCompile Include="Windows\Input\DirectXInput.cpp" />
@@ -192,6 +187,8 @@
     <ClInclude Include="Algorithms\String.h" />
     <ClInclude Include="Algorithms\Vector.h" />
     <ClInclude Include="CrossPlatform\Database.h" />
+    <ClInclude Include="CrossPlatform\Material\XenonMaterial.h" />
+    <ClInclude Include="CrossPlatform\XenonImage.h" />
     <ClInclude Include="Engine\Editor\EditorGameObject.h" />
     <ClInclude Include="Engine\Editor\XenonBaseWidget.h" />
     <ClInclude Include="Engine\Editor\XenonBaseWindow.h" />
@@ -221,6 +218,8 @@
     <ClInclude Include="Engine\Graphic\Graphic3D.h" />
     <ClInclude Include="Engine\IO\InputSystem.h" />
     <ClInclude Include="Engine\IO\ObjLoader.h" />
+    <ClInclude Include="Engine\IO\XenonImageLoader.h" />
+    <ClInclude Include="Engine\XenonMaterialManager.h" />
     <ClInclude Include="Engine\Physics\Force2D.h" />
     <ClInclude Include="Engine\Physics\Physics2D.h" />
     <ClInclude Include="CrossPlatform\Polygon2D.h" />
@@ -251,15 +250,6 @@
     <ClInclude Include="Gameplay\Enemy.h" />
     <ClInclude Include="Gameplay\Player.h" />
     <ClInclude Include="Gameplay\SceneDirectionLight.h" />
-    <ClInclude Include="Library\imgui\DX\imgui_impl_dx11.h" />
-    <ClInclude Include="Library\imgui\DX\imgui_impl_dx9.h" />
-    <ClInclude Include="Library\imgui\DX\imgui_impl_win32.h" />
-    <ClInclude Include="Library\imgui\imconfig.h" />
-    <ClInclude Include="Library\imgui\imgui.h" />
-    <ClInclude Include="Library\imgui\imgui_internal.h" />
-    <ClInclude Include="Library\imgui\imstb_rectpack.h" />
-    <ClInclude Include="Library\imgui\imstb_textedit.h" />
-    <ClInclude Include="Library\imgui\imstb_truetype.h" />
     <ClInclude Include="library\lua\lua.h" />
     <ClInclude Include="macos\AppDelegate.h" />
     <ClInclude Include="macos\MacDrawer.h" />
