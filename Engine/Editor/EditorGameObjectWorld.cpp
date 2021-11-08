@@ -66,9 +66,7 @@ namespace XenonEngine
             for (int i = 0; i < objectList.Count(); i++)
             {
                 const GameObject* go =objectList[i];
-                char name[128];
-                go->GetName().CString(name);
-                if (ImGui::TreeNode((void*)(intptr_t)i, name))
+                if (ImGui::TreeNode((void*)(intptr_t)i, go->GetName().CString()))
                 {
                     editorGameobject.Update(go);
                     ImGui::TreePop();

@@ -14,6 +14,8 @@ namespace Algorithm
     template<typename T>
     class StringBase;
 
+    typedef StringBase<char> String;
+
     template<typename T>
     bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
 	template<typename T>
@@ -46,33 +48,39 @@ namespace Algorithm
         int ToInt()const;
         float ToFloat()const;
         char ToChar()const;
-        void CString(char*const pOutChar) const;
+        const char* const CString()const;
         void Clear();
         const T* const Beign()const;
 
         int IndexOf(const StringBase& subString)const;
+        int LastIndexOf(const StringBase& subString)const; 
         bool Find(const StringBase& subString)const;
         void Append(const StringBase& subString);
-        StringBase<T> Substring(unsigned int start, unsigned int end);
+        StringBase<T> Substring(unsigned int start, unsigned int end)const;
     private:
+        void CStringlize();
+
         Vector<T> m_string;
     };
 
     template<typename T>
     StringBase<T>::StringBase()
     {
+        CStringlize();
     }
 
     template<typename T>
     StringBase<T>::StringBase(const StringBase& value) :
         m_string(value.m_string)
     {
+        CStringlize();
     }
 
     template<typename T>
     Algorithm::StringBase<T>::StringBase(const T* value, unsigned int size)
     {
         m_string.Replace(value, size);
+        CStringlize();
     }
 
     template<typename T>
@@ -84,12 +92,14 @@ namespace Algorithm
             m_string.Add(value[index]);
             index++;
         }
+        CStringlize();
     }
 
     template<typename T>
     inline StringBase<T>::StringBase(T value)
     {
         m_string.Add(value);
+        CStringlize();
     }
 
     template<typename T>
@@ -106,6 +116,7 @@ namespace Algorithm
     template<typename T>
     inline const T& Algorithm::StringBase<T>::operator[](int index)const
     {
+        assert(index >= 0 && index < m_string.Count());
         return m_string[index];
     }
 
@@ -118,6 +129,7 @@ namespace Algorithm
     template<typename T>
     inline const T& StringBase<T>::operator[](unsigned int index)const
     {
+        assert(index >= 0 && index < m_string.Count());
         return m_string[index];
     }
 
@@ -140,6 +152,7 @@ namespace Algorithm
         {
             m_string.Add(rhs[index]);
         }
+        CStringlize();
         return *this;
     }
 
@@ -150,8 +163,7 @@ namespace Algorithm
         {
             return false;
         }
-        int minCount = Count() < rhs.Count() ? Count() : rhs.Count();
-        for (int i = 0; i < minCount; i++)
+        for (int i = 0; i < Count(); i++)
         {
             if (m_string[i] != rhs[i])
             {
@@ -177,6 +189,7 @@ namespace Algorithm
     void Algorithm::StringBase<T>::Add(T value)
     {
         m_string.Add(value);
+        CStringlize();
     }
 
     template<typename T>
@@ -226,10 +239,9 @@ namespace Algorithm
     }
 
     template<typename T>
-    inline void StringBase<T>::CString(char*const pOutChar) const
+    const char* const Algorithm::StringBase<T>::CString()const
     {
-        memcpy(pOutChar, m_string.Begin(), m_string.Count());
-        pOutChar[m_string.Count()] = '\0';
+        return m_string.Begin();
     }
 
     template<typename T>
@@ -267,6 +279,8 @@ namespace Algorithm
 		StringBase tmp(lhs);
 		lhs = rhs;
 		rhs = tmp;
+        lhs.CStringlize();
+        rhs.CStringlize();
 		return true;
 	}
 
@@ -337,6 +351,71 @@ namespace Algorithm
     }
 
     template<typename T>
+    int Algorithm::StringBase<T>::LastIndexOf(const StringBase& subString) const
+    {
+        int character[265];
+        int nonCharacterCount = 0;
+
+        //Construct DFA
+
+        //Count character occurrences
+        memset(character, 0, sizeof(character));
+        for (int i = 0; i < subString.Count(); i++) {
+            int index = subString[i];
+            character[index]++;
+        }
+        for (int i = 0; i < 265; i++) {
+            if (character[i] != 0) {
+                nonCharacterCount++;
+            }
+        }
+
+        DeterministicFiniteAutomaton<T>* pOutDFA = new DeterministicFiniteAutomaton<T>;
+        pOutDFA->m_characterCount = nonCharacterCount;
+        pOutDFA->m_countentlength = subString.Count();
+
+        pOutDFA->m_next = new int[pOutDFA->m_characterCount * pOutDFA->m_countentlength];
+        memset(pOutDFA->m_next, 0, pOutDFA->m_characterCount * pOutDFA->m_countentlength * sizeof(int));
+        pOutDFA->m_character = new char[pOutDFA->m_characterCount];
+
+        nonCharacterCount = 0;
+        for (int i = 0; i < 265; i++) {
+            if (character[i] != 0) {
+                pOutDFA->m_character[nonCharacterCount++] = i;
+            }
+        }
+
+        const int startPos = 0;
+        const int nextPosWhenFirstCharacterIsCorrect = 1;
+        pOutDFA->Set(pOutDFA->GetCharacterPos(subString[pOutDFA->m_countentlength -1]), startPos, nextPosWhenFirstCharacterIsCorrect);
+
+        int restartPos = 0;
+        for (int currentSubStringIndex = pOutDFA->m_countentlength - 2; currentSubStringIndex > 0; currentSubStringIndex--) {
+            for (int character = 0; character < pOutDFA->m_characterCount; character++) {
+                pOutDFA->Set(character, currentSubStringIndex, pOutDFA->Get(character, restartPos));
+            }
+            int characterTablePos = pOutDFA->GetCharacterPos(subString[currentSubStringIndex]);
+
+            pOutDFA->Set(characterTablePos, currentSubStringIndex, currentSubStringIndex + 1);
+
+            restartPos = pOutDFA->Get(characterTablePos, restartPos);
+        }
+
+        // Find content
+        int nextPos = 0;
+        for (int i = Count(); i > 0; i++) {
+            nextPos = pOutDFA->Get(pOutDFA->GetCharacterPos(m_string[i]), nextPos);
+
+            if (nextPos == subString.Count()) {
+                delete pOutDFA;
+                return i + 1;
+            }
+        }
+        delete pOutDFA;
+        return -1;
+    }
+
+    template<typename T>
     inline bool StringBase<T>::Find(const StringBase& subString)const
     {
         return IndexOf(subString) != -1;
@@ -349,15 +428,25 @@ namespace Algorithm
         {
             m_string.Add(subString[i]);
         }
+        CStringlize();
     }
 
     template<typename T>
-    Algorithm::StringBase<T> Algorithm::StringBase<T>::Substring(unsigned int start, unsigned int end)
+    Algorithm::StringBase<T> Algorithm::StringBase<T>::Substring(unsigned int start, unsigned int end)const
     {
         StringBase<T> result;
         result.m_string.Replace(m_string.Begin() + start, end - start );
+        result.CStringlize();
         return result;
     }
 
-	typedef StringBase<char> String;
+    template<typename T>
+    void Algorithm::StringBase<T>::CStringlize()
+    {
+        if (m_string.IsCapacityEnoughToPutCStringEnd() == false) {
+            m_string.DoubleCurrentCapacity();
+        }
+        m_string[m_string.Count()] = '\0';
+    }
+
 }

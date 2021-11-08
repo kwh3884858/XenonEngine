@@ -58,10 +58,7 @@ namespace XenonEngine
         bool addedToPhysicsWorld = m_physics2D->AddGameObject(gameobject);
         if (!addedToPhysicsWorld)
         {
-            char msg[200];
-            gameobject->GetName().CString(msg);
-            strcat(msg, " doesn`t have a physical component. [Warning]\n");
-            printf(msg);
+            printf("%s doesn`t have a physical component. [Warning]\n", gameobject->GetName().CString());
         }
         m_worldObjects.Add(gameobject);
     }

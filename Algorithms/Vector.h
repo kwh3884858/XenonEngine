@@ -42,6 +42,8 @@ namespace Algorithm
         T* End();
         const T* End()const;
 
+        bool IsCapacityEnoughToPutCStringEnd()const;
+        void DoubleCurrentCapacity();
 	protected:
 		bool IsCapacityEnough() const;
 		T* m_content = nullptr;
@@ -198,7 +200,7 @@ namespace Algorithm
 	template<typename T>
 	inline const T& Vector<T>::operator[](int index) const
 	{
-        assert(index >= 0 && index < m_count);
+        assert(index >= 0 && index < m_capacity);
 		return m_content[index];
 	}
 
@@ -241,6 +243,18 @@ namespace Algorithm
     T* Vector<T>::End()
     {
         return const_cast<T*>(static_cast<const Vector<T>&>(*this).End());
+    }
+
+    template<typename T>
+    bool Algorithm::Vector<T>::IsCapacityEnoughToPutCStringEnd() const
+    {
+        return m_count + 1 < m_capacity;
+    }
+
+    template<typename T>
+    void Algorithm::Vector<T>::DoubleCurrentCapacity()
+    {
+        Reallocation();
     }
 
 	template<typename T>

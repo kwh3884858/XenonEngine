@@ -18,10 +18,8 @@ namespace File
     {
         std::ifstream fins;
         XenonFile* xenonFile = new XenonFile;
-        char fileNameA[MAX_PATH];
-        fileName.CString(fileNameA);
 
-        fins.open(fileNameA);
+        fins.open(fileName.CString());
 
         // If it could not open the file then exit.
         if (fins.good())
@@ -65,10 +63,8 @@ namespace File
     {
         std::ifstream fins;
         Algorithm::StreamingVector<char>* streamedFile = new Algorithm::StreamingVector<char>;
-        char fileNameA[MAX_PATH];
-        fileName.CString(fileNameA);
 
-        fins.open(fileNameA, std::ios::in | std::ios::binary | std::ios::ate);
+        fins.open(fileName.CString(), std::ios::in | std::ios::binary | std::ios::ate);
 
         // If it could not open the file then exit.
         if (fins.good())
@@ -99,10 +95,8 @@ namespace File
     bool FileReader::WriteFile(const Algorithm::String fileName, const Algorithm::StreamingVector<char>& stream) const
     {
         std::ofstream fouts;
-        char fileNameA[MAX_PATH];
-        fileName.CString(fileNameA);
 
-        fouts.open(fileNameA, std::ios::out | std::ios::binary);
+        fouts.open(fileName.CString(), std::ios::out | std::ios::binary);
         if (fouts.good())
         {
             fouts.write(stream.Begin(), stream.Count());

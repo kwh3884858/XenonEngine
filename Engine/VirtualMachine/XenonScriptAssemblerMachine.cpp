@@ -900,9 +900,7 @@ namespace XenonEngine
 
     void XenonScriptAssemblerMachine::BuildTableError(const Token* const token, int index)
     {
-        char errorToken[64];
-        token->m_character.CString(errorToken);
-        printf("Fetal Error: Parsing Error\n Character %c In the index %d \n", errorToken, index);
+        printf("Fetal Error: Parsing Error\n Character %c In the index %d \n", token->m_character.CString(), index);
         assert(true == false);
     }
 
@@ -1256,9 +1254,7 @@ namespace XenonEngine
 
     void XenonScriptAssemblerMachine::CreateInstructionListError(const Token* const token, int index)
     {
-        char errorToken[64];
-        token->m_character.CString(errorToken);
-        printf("Fetal Error: Parsing Create Instruction List Error\n Character %c In the index %d \n", errorToken, index);
+        printf("Fetal Error: Parsing Create Instruction List Error\n Character %c In the index %d \n", token->m_character.CString(), index);
         assert(true == false);
     }
 
@@ -1283,11 +1279,8 @@ namespace XenonEngine
         }
 
         // Print out final calculations
-        char filePaht[200];
-        xenonFile->m_fileName.CString(filePaht);
-
         printf("%Created successfully!\n\n");
-        printf("File Path: %s\n", filePaht);
+        printf("File Path: %s\n", xenonFile->m_fileName.CString());
         printf("Global Data Size: %d\n", m_scriptHeader.m_globalDataSize);
 
         printf("\n");

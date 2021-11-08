@@ -615,9 +615,7 @@ namespace XenonEngine
 					InstructionOp op2 = m_localStack.Pop();
 					if (op1.m_type == InstructionOpType_StringIndex && op2.m_type == InstructionOpType_IntegerLiteral)
 					{
-						char tmp[200];
-						m_stringTable[op1.m_stringTableIndex].CString(tmp);
-						printf("%s\n", tmp);
+						printf("%s\n", m_stringTable[op1.m_stringTableIndex].CString());
 					}
 					else
 					{
