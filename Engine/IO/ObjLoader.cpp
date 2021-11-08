@@ -1,5 +1,5 @@
 #include "ObjLoader.h"
-#include "CrossPlatform/Polygon3D.h"
+#include "CrossPlatform/Polygon/Polygon3D.h"
 #include "MathLab/Vector3.h"
 #include <iostream>
 

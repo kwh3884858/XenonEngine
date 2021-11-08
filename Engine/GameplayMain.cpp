@@ -8,7 +8,7 @@
 #include "CrossPlatform/Interface/IInput.h"
 
 #include "CrossPlatform/SColorRGBA.h"
-#include "CrossPlatform/Polygon2D.h"
+#include "CrossPlatform/Polygon/Polygon2D.h"
 
 #include "MathLab/Vector3.h"
 #include <cmath> // sin, cos

@@ -13,7 +13,7 @@
 #include "Engine/IO/InputSystem.h"
 #include "CrossPlatform/XenonKey.h"
 
-#include "CrossPlatform/Polygon2D.h"
+#include "CrossPlatform/Polygon/Polygon2D.h"
 #include "CrossPlatform/Database.h"
 
 #include "MathLab/MathLib.h"

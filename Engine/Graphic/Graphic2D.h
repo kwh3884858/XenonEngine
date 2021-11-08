@@ -9,7 +9,7 @@
 #include "MathLab/Vector4.h"
 #include "CrossPlatform/XenonManager.h"
 #include "CrossPlatform/SColorRGBA.h"
-#include "CrossPlatform/Polygon2D.h"
+#include "CrossPlatform/Polygon/Polygon2D.h"
 
 namespace CrossPlatform {
     class IDrawerSurface;

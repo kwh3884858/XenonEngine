@@ -4,7 +4,7 @@
 #include "Engine/Component/Mesh2D.h"
 #include "Engine/Component/Rigidbody2D.h"
 #include "Engine/Component/BoxCollider2D.h"
-#include "CrossPlatform/Polygon2D.h"
+#include "CrossPlatform/Polygon/Polygon2D.h"
 #include "MathLab/Vector2.h"
 
 namespace Gameplay

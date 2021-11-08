@@ -1,7 +1,7 @@
 #pragma once
 #include "MathLab/Vector3.h"
 #include "CrossPlatform/SColorRGBA.h"
-#include "CrossPlatform/Polygon3D.h"
+#include "CrossPlatform/Polygon/Polygon3D.h"
 
 namespace CrossPlatform {
 	using MathLab::Vector3f;

@@ -12,7 +12,7 @@
 
 #include "Engine/Graphic/Graphic2D.h"
 
-#include "CrossPlatform/Polygon3D.h"
+#include "CrossPlatform/Polygon/Polygon3D.h"
 #include <stdio.h> // for printf
 #include <assert.h>
 #include "../Component/DirectionLightComponent.h"
