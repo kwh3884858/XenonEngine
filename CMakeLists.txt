@@ -19,6 +19,9 @@ IF (WIN32)
 
     target_link_libraries(${PROJECT_NAME} crossguid)
     target_include_directories(${PROJECT_NAME} PUBLIC crossguid)
+
+    # add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E )
+
     # find_library(STATIC_LIB1 yaml-cpp HINTS ${CMAKE_PREFIX_PATH}/lib)
     # IF(NOT STATIC_LIB1)
     #     message(FATAL_ERROR "Library YAML_CPP was not found!")
@@ -71,6 +74,7 @@ ${PROJECT_SOURCE_DIR}/MathLab/*.h
 
     $<$<BOOL:${WIN32}>:
     # for Windows
+    ${PROJECT_SOURCE_DIR}/Windows/XenonEngineNatvisFile.natvis
     ${PROJECT_SOURCE_DIR}/MacWindow.licenseheader
     ${PROJECT_SOURCE_DIR}/Windows/*.cpp 
     ${PROJECT_SOURCE_DIR}/Windows/*.h
@@ -90,10 +94,19 @@ file(
     ${PROJECT_SOURCE_DIR}/Library/imgui/backends/imgui_impl_dx11.h
     ${PROJECT_SOURCE_DIR}/Library/imgui/backends/imgui_impl_dx11.cpp
     ${PROJECT_SOURCE_DIR}/Library/imgui/backends/imgui_impl_win32.h
-    ${PROJECT_SOURCE_DIR}/Library/imgui/backends/imgui_impl_win32.cpp)
+    ${PROJECT_SOURCE_DIR}/Library/imgui/backends/imgui_impl_win32.cpp
+    ${PROJECT_SOURCE_DIR}/Library/imgui/*.cpp 
+    ${PROJECT_SOURCE_DIR}/Library/imgui/*.h
+    )
 target_sources(${PROJECT_NAME} PUBLIC ${DIR_IMGUI})
 
-
+file(
+    GLOB_RECURSE
+    DIR_IMGUI_FILE_DIALOG
+    ${PROJECT_SOURCE_DIR}/Library/ImGuiFileDialog/*.h
+    ${PROJECT_SOURCE_DIR}/Library/ImGuiFileDialog/*.cpp
+    )
+target_sources(${PROJECT_NAME} PUBLIC ${DIR_IMGUI_FILE_DIALOG})
 
 message("PROJECT_SOURCE_DIR" ${PROJECT_SOURCE_DIR})
 message("DEBUG_POSTFIX" ${DEBUG_POSTFIX})
