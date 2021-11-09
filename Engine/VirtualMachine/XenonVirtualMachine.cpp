@@ -13,6 +13,8 @@
 #include "Algorithms/StreamingVector.h"
 
 #include <cstdio>
+#include "Engine/EngineManager.h"
+
 namespace XenonEngine
 {
 	using Algorithm::Vector;
@@ -627,7 +629,7 @@ namespace XenonEngine
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
                     {
-                        XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+                        XenonEngine::GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
                         XenonEngine::GameObject* player = world->GetGameObject("Player");
                         if (!player) break;
                         XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
@@ -644,7 +646,7 @@ namespace XenonEngine
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
                     {
-                        XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+                        XenonEngine::GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
                         XenonEngine::GameObject* player = world->GetGameObject("Player");
                         if (!player) break;
                         XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();
@@ -661,7 +663,7 @@ namespace XenonEngine
                     InstructionOp op1 = m_localStack.Pop();
                     if (op1.m_type == InstructionOpType_FloatLiteral)
                     {
-                        XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+                        XenonEngine::GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
                         XenonEngine::GameObject* player = world->GetGameObject("Player");
                         if (!player) break;
                         XenonEngine::Rigidbody2D* rigid = player->GetComponent<XenonEngine::Rigidbody2D>();
@@ -678,7 +680,7 @@ namespace XenonEngine
 					InstructionOp op1 = m_localStack.Pop();
 					if (op1.m_type == InstructionOpType_FloatLiteral)
 					{
-						XenonEngine::GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+						XenonEngine::GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
 						XenonEngine::GameObject* player = world->GetGameObject("Player");
                         if (!player) break;
 						XenonEngine::PlayerPersonality* personlity = player->GetComponent<XenonEngine::PlayerPersonality>();

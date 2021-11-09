@@ -12,6 +12,7 @@
 
 #include "MathLab/Vector2.h"
 #include "Gameplay/Bullet.h"
+#include "Engine/EngineManager.h"
 
 namespace Gameplay
 {
@@ -70,7 +71,7 @@ namespace Gameplay
 
 	void Enemy::Update()
 	{
-		GameObject* gameobject = GameObjectWorldManager::Get().GetCurrentWorld()->GetGameObject("Player");
+		GameObject* gameobject = EngineManager::Get().GetWorldManager().GetCurrentWorld()->GetGameObject("Player");
 		if (gameobject!= nullptr)
 		{
 			float currentTime = XenonTimer::Get().GetTime();
@@ -82,7 +83,7 @@ namespace Gameplay
                 Vector2f posVecNormal = positionVector.Normalize();
 				// New bullet
 				Bullet* bullet = new Bullet("Bullet");
-                GameObjectWorldManager::Get().GetCurrentWorld()->AddGameObject(bullet);
+                EngineManager::Get().GetWorldManager().GetCurrentWorld()->AddGameObject(bullet);
 				Transform2D* bulletTransform = bullet->GetComponent<Transform2D>();
                 bulletTransform->SetPosition(tranform->GetPosition() + posVecNormal * 20);
                 Rigidbody2D* rigid = bullet->GetComponent<Rigidbody2D>();

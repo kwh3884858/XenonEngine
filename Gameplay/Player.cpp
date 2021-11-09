@@ -22,6 +22,7 @@
 #include "Gameplay/Bullet.h"
 
 #include <cstdio>
+#include "Engine/EngineManager.h"
 namespace Gameplay
 {
 	using namespace XenonEngine;
@@ -131,7 +132,7 @@ namespace Gameplay
 		if (InputSystem::Get().GetStickButton(3))
 		{
 			GameObject* newbullet = new Bullet("Bullet");
-			GameObjectWorld* world = GameObjectWorldManager::Get().GetCurrentWorld();
+			GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
 			world->AddGameObject(newbullet);
 
 			Transform2D* bulletTransform = newbullet->GetComponent<Transform2D>();

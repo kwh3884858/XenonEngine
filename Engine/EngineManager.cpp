@@ -13,7 +13,7 @@ namespace XenonEngine
         m_fileDatabase.Initialize();
         (*pGlobalSyncData).Graphic3DSetter(&(Graphic3D::Get()));
         (*pGlobalSyncData).FolderSetter(m_fileDatabase.GetDataRoot());
-
+        return true;
     }
 
     bool EngineManager::Shutdown()
@@ -23,6 +23,7 @@ namespace XenonEngine
 
         m_fileDatabase.Shutdown();
         m_worldManager.Shutdown();
+        return true;
     }
 
     EngineManager::~EngineManager()
