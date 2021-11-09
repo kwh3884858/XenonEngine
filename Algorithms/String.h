@@ -141,6 +141,7 @@ namespace Algorithm
             return *this;
         }
         this->m_string = rhs.m_string;
+        CStringlize();
         return *this;
     }
 
@@ -150,7 +151,7 @@ namespace Algorithm
         int index = 0;
         while (rhs[index] != '\0')
         {
-            m_string.Add(rhs[index]);
+            m_string.Add(rhs[index++]);
         }
         CStringlize();
         return *this;
