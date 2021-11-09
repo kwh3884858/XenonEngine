@@ -34,6 +34,7 @@ void ThreadEngine(HINSTANCE hInstance,  XenonEngine::EngineSyncData& syncData)
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
+    CrossPlatform::Database::Get().Initialize();
     XenonEngine::EngineSyncData globalSyncData;
 
     std::thread engineThread(ThreadEngine, hInstance, std::ref(globalSyncData));
@@ -41,7 +42,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine,
 
     engineThread.join();
     guiThread.join();
-
+    CrossPlatform::Database::Get().Shutdown();
     return 0;
 }
 #endif
