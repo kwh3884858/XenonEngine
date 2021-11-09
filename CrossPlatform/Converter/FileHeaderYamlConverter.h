@@ -7,6 +7,10 @@
 #include "CrossPlatform/IFile.h"
 #include "yaml-cpp/yaml.h"
 
+#include "CrossPlatform/Converter/GUIDYamlConverter.h"
+#include "CrossPlatform/Converter/StringYamlConverter.h"
+#include "CrossPlatform/Converter/FileTypeYamlConverter.h"
+
 namespace YAML {
     using CrossPlatform::FileHeader;
 
