@@ -26,11 +26,11 @@ namespace XenonEngine
         const Vector2f& GetPosition()const { return m_position; }
 
         float GetOrientation()const { return m_orientation; }
+        void SetOrientation(float rotation) { m_orientation = rotation; }
         void AddRotation(float rotation) { m_orientation += rotation; }
 
         static ComponentType m_type;
     private:
-        bool m_isModified = false;
         Vector2f m_position;
         float m_orientation = 0;
     };

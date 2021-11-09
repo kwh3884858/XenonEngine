@@ -41,7 +41,6 @@ namespace XenonEngine
 		const TMatrix4X4f GetLocalToWorldTransformMatrix()const;
 		static ComponentType m_type;
 	private:
-		bool m_isModified = false;
 		Vector3f m_position;
 		Vector3f m_orientation;
 	};

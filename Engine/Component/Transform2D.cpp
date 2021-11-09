@@ -9,7 +9,6 @@ namespace XenonEngine {
     XenonEngine::IComponent* Transform2D::Copy(GameObject*const gameObject) const
     {
         Transform2D* transform = new Transform2D(gameObject);
-        transform->m_isModified = m_isModified;
         transform->m_position = m_position;
         transform->m_orientation = m_orientation;
         return transform;
