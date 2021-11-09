@@ -15,7 +15,7 @@ namespace XenonEngine
     class FileDatabase
     {
     public:
-        FileDatabase();
+        FileDatabase() = default;
 
         void Initialize();
         void Shutdown();
@@ -23,7 +23,7 @@ namespace XenonEngine
         CrossPlatform::FileType GetFileType(const std::string& ext)const;
         const CrossPlatform::Folder* GetDataRoot()const {return m_root; }
     private:
-        CrossPlatform::Folder* m_root;
+        CrossPlatform::Folder* m_root = nullptr;
         Algorithm::Vector<CrossPlatform::DataPair> m_typePair;
     };
 }

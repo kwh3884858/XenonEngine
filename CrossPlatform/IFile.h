@@ -9,6 +9,7 @@ namespace CrossPlatform
     class FileHeader
     {
     public:
+        FileHeader():m_fileType(FileType::None),m_guid() {}
         FileHeader(const FileHeader& header) :
             m_fileType (header.m_fileType),
             m_filePath(header.m_filePath),
@@ -19,7 +20,7 @@ namespace CrossPlatform
             m_fileType(fileType), m_filePath(filePath), m_guid(guid) {}
 
         FileType GetFileType()const { return m_fileType; }
-        FileType SetFileType(FileType fileType) { m_fileType = fileType; }
+        void SetFileType(FileType fileType) { m_fileType = fileType; }
         const Algorithm::String& GetFilePath()const { return m_filePath; }
         void SetFilePath(Algorithm::String filePath) { m_filePath = filePath; }
         const xg::Guid& GetGUID()const { return m_guid; }

@@ -1,18 +1,17 @@
 #pragma once
+#include "CrossPlatform/FileTypeEnum.h"
+#include "Algorithms/String.h"
 
 namespace CrossPlatform
 {
     struct DataPair
     {
     public:
-        DataPair(FileType type, const Algorithm::String& fileSuffix) :
-            m_fileType(type),
-            m_fileSuffix(fileSuffix) {}
+        DataPair() = default;
+        DataPair(FileType type, const Algorithm::String& fileSuffix);
         DataPair(const DataPair& data);
-        m_fileType = data.m_fileType;
-        m_fileSuffix = data.m_fileSuffix;
 
-        FileType m_fileType;
+        FileType m_fileType = FileType::None;
         Algorithm::String m_fileSuffix;
     };
 }

@@ -7,6 +7,7 @@
 #include "CrossPlatform/DataPair.h"
 #include <filesystem>
 #include "yaml-cpp/yaml.h"
+#include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 
 namespace XenonEngine
 {
@@ -19,7 +20,7 @@ namespace XenonEngine
         m_typePair.Add(DataPair(CrossPlatform::FileTypeModel, "obj"));
         m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, "mtl"));
 
-        path Project(CrossPlatform::Database::Get().engineConfig.m_projectPath);
+        path Project(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
         if (!exists(Project))
         {
             create_directory(Project);
@@ -63,7 +64,6 @@ namespace XenonEngine
                 m_root->AddIFile(file);
             }
         }
-
     }
 
     void FileDatabase::Shutdown()
@@ -76,7 +76,7 @@ namespace XenonEngine
     {
         for (int i = 0; i < m_typePair.Count(); i++)
         {
-            if (ext == m_typePair[i].m_fileSuffix.CStringlize())
+            if (ext == m_typePair[i].m_fileSuffix.CString())
             {
                 return m_typePair[i].m_fileType;
             }

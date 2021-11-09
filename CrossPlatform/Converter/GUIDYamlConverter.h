@@ -17,7 +17,7 @@ namespace YAML {
         static bool decode(const Node& node, xg::Guid& rhs) {
             if (!node.IsScalar())
                 return false;
-            rhs = node.Scalar();
+            rhs = xg::Guid(node.Scalar());
             return true;
         }
     };
