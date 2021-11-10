@@ -1,3 +1,8 @@
+//  Vector3YamlConverter.h
+//  XenonEngine
+//
+//  Created by whkong on 2021-11-10.
+//  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 #include "yaml-cpp/yaml.h"
 #include "MathLab/Vector3.h"
