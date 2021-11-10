@@ -77,16 +77,16 @@ namespace Gameplay
 			float currentTime = XenonTimer::Get().GetTime();
 			if (currentTime - m_lastTime > 5000.0f)
 			{
-				Transform2D* tranform = GetComponent<Transform2D>();
-				Transform2D* playerTransform = gameobject->GetComponent<Transform2D>();
+				Transform2D* tranform = GetComponentPointer<Transform2D>();
+				Transform2D* playerTransform = gameobject->GetComponentPointer<Transform2D>();
 				Vector2f positionVector = playerTransform->GetPosition() - tranform->GetPosition();
                 Vector2f posVecNormal = positionVector.Normalize();
 				// New bullet
 				Bullet* bullet = new Bullet("Bullet");
                 EngineManager::Get().GetWorldManager().GetCurrentWorld()->AddGameObject(bullet);
-				Transform2D* bulletTransform = bullet->GetComponent<Transform2D>();
+				Transform2D* bulletTransform = bullet->GetComponentPointer<Transform2D>();
                 bulletTransform->SetPosition(tranform->GetPosition() + posVecNormal * 20);
-                Rigidbody2D* rigid = bullet->GetComponent<Rigidbody2D>();
+                Rigidbody2D* rigid = bullet->GetComponentPointer<Rigidbody2D>();
                 Force2D jumpForce;
                 jumpForce.fvalue = 5000.0f;
                 jumpForce.m_forceDirection = posVecNormal;

@@ -79,9 +79,9 @@ namespace Gameplay
 
 	void Player::Update()
 	{
-		PlayerPersonality* personlity = GetComponent<PlayerPersonality>();
-		Transform2D* playerTransform = GetComponent<Transform2D>();
-		Rigidbody2D* rigid = GetComponent<Rigidbody2D>();
+		PlayerPersonality* personlity = GetComponentPointer<PlayerPersonality>();
+		Transform2D* playerTransform = GetComponentPointer<Transform2D>();
+		Rigidbody2D* rigid = GetComponentPointer<Rigidbody2D>();
 
 		static bool shouldPrintPlayerData = false;
 		if (shouldPrintPlayerData)
@@ -135,10 +135,10 @@ namespace Gameplay
 			GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
 			world->AddGameObject(newbullet);
 
-			Transform2D* bulletTransform = newbullet->GetComponent<Transform2D>();
+			Transform2D* bulletTransform = newbullet->GetComponentPointer<Transform2D>();
 			Vector2f bulletPos = playerTransform->GetPosition() + Vector2f((isFaceRight ? 1 : -1) * 30, 0);
 			bulletTransform->SetPosition(bulletPos);
-			Rigidbody2D* bulletRigid = newbullet->GetComponent<Rigidbody2D>();
+			Rigidbody2D* bulletRigid = newbullet->GetComponentPointer<Rigidbody2D>();
 			Force2D jumpForce;
 			jumpForce.fvalue = personlity->GetBulletForce();
 			if (isFaceRight)

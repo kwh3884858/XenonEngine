@@ -23,7 +23,7 @@ namespace XenonEngine
 	public:
 		friend class Rigidbody2D;
 
-		Transform3D(GameObject* gameobject) :
+		Transform3D(GameObject* gameobject = nullptr) :
 			IComponent(gameobject) {}
 		virtual ~Transform3D()override;
 		virtual ComponentType GetComponentType() const override { return m_type; };

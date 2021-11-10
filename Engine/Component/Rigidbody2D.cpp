@@ -70,7 +70,7 @@ namespace XenonEngine
         {
             return false;
         }
-        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
+        Transform2D* transform = m_gameobject->GetComponentPointer<Transform2D>();
         assert(transform != nullptr);
         transform->AddPosition(-m_currentData.m_deltaDistance);
         transform->AddRotation(-m_currentData.m_deltaRotation);
@@ -100,7 +100,7 @@ namespace XenonEngine
     bool Rigidbody2D::AddLocalForce(const XenonPhysics::Force2D& force)
     {        
         //Convert forces from model spece to world space
-        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
+        Transform2D* transform = m_gameobject->GetComponentPointer<Transform2D>();
         assert(transform != nullptr);
         Vector2f localCoordinateForce = force.m_forceDirection * force.fvalue;
         Vector2f globalForce = MathLab::Rotate2D(localCoordinateForce, transform->GetOrientation());
@@ -136,7 +136,7 @@ namespace XenonEngine
         {
             float projectedArea = 1;
             float radius = 0;
-            XenonEngine::Collider2D* collider = m_gameobject->GetComponent<XenonEngine::Collider2D>();
+            XenonEngine::Collider2D* collider = m_gameobject->GetComponentPointer<XenonEngine::Collider2D>();
             if (collider != nullptr)
             {
                 projectedArea = collider->GetArea();
@@ -199,7 +199,7 @@ namespace XenonEngine
         currentData.m_deltaRotation = MathLab::DegreeToRadians(currentData.m_localAngularVelocity) * deltaTime;
 
         //Misc. calculation
-        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
+        Transform2D* transform = m_gameobject->GetComponentPointer<Transform2D>();
         assert(transform != nullptr);
         currentData.m_speed = currentData.m_velocity.Magnitude();
         currentData.m_localVelocity = MathLab::Rotate2D(currentData.m_velocity, -(transform->GetOrientation() + currentData.m_deltaRotation));
@@ -208,7 +208,7 @@ namespace XenonEngine
 
     void Rigidbody2D::AffectGameobjectInWorld(const FixedUpdateData& data)
     {
-        Transform2D* transform = m_gameobject->GetComponent<Transform2D>();
+        Transform2D* transform = m_gameobject->GetComponentPointer<Transform2D>();
         assert(transform != nullptr);
         transform->AddPosition(data.m_deltaDistance);
         transform->AddRotation(data.m_deltaRotation);

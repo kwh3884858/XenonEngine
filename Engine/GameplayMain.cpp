@@ -49,54 +49,54 @@ namespace Gameplay {
 
     using namespace XenonEngine;
 
-    GameObjectWorld* world;
+    //GameObjectWorld* world;
 
     XenonCompiler* compiler = nullptr;
     void GameplayInitialize()
     {
         EngineManager::Get().Initialize();
-        world = EngineManager::Get().GetWorldManager().CreateGameWorld("Shooting2D");
-        {
-            Player* player = new Player("Player");
-            //world->AddGameObject(player);
-        }
+        //world = EngineManager::Get().GetWorldManager().CreateGameWorld("Shooting2D");
+        //{
+        //    Player* player = new Player("Player");
+        //    //world->AddGameObject(player);
+        //}
 
         {
-			GameObject* ground = new GameObject("Ground");
+			//GameObject* ground = new GameObject("Ground");
 
-            Transform2D* transform = new Transform2D(ground);
-            transform->AddPosition(Vector2f(400, 100));
-            ground->AddComponent(transform);
+   //         Transform2D* transform = new Transform2D(ground);
+   //         transform->AddPosition(Vector2f(400, 100));
+   //         ground->AddComponent(transform);
 
-            BoxCollider2D* collider = new BoxCollider2D(ground);
-            BoxCollider2DConfig boxCollider2DConfig;
-            boxCollider2DConfig.m_isTrigger = false;
-            boxCollider2DConfig.m_size = Vector2f(400, 20);
-            collider->SetConfig(&boxCollider2DConfig);
-            ground->AddComponent(collider);
+   //         BoxCollider2D* collider = new BoxCollider2D(ground);
+   //         BoxCollider2DConfig boxCollider2DConfig;
+   //         boxCollider2DConfig.m_isTrigger = false;
+   //         boxCollider2DConfig.m_size = Vector2f(400, 20);
+   //         collider->SetConfig(&boxCollider2DConfig);
+   //         ground->AddComponent(collider);
 
-            int numOfVertex = 4;
-            Vector2f* heroVertex = new Vector2f[numOfVertex];
-            //heroVertex[0] = Vector2f(100, -10);
-            //heroVertex[1] = Vector2f(100, 10);
-            //heroVertex[2] = Vector2f(-100, 10);
-            //heroVertex[3] = Vector2f(-100, -10);
+   //         int numOfVertex = 4;
+   //         Vector2f* heroVertex = new Vector2f[numOfVertex];
+   //         //heroVertex[0] = Vector2f(100, -10);
+   //         //heroVertex[1] = Vector2f(100, 10);
+   //         //heroVertex[2] = Vector2f(-100, 10);
+   //         //heroVertex[3] = Vector2f(-100, -10);
 
-            //heroVertex[0] = Vector2f(100, -10);
-            //heroVertex[1] = Vector2f(40, 10);
-            //heroVertex[2] = Vector2f(-40, 10);
-            //heroVertex[3] = Vector2f(-100, -10);
+   //         //heroVertex[0] = Vector2f(100, -10);
+   //         //heroVertex[1] = Vector2f(40, 10);
+   //         //heroVertex[2] = Vector2f(-40, 10);
+   //         //heroVertex[3] = Vector2f(-100, -10);
 
-            heroVertex[0] = Vector2f(100, 0);
-            heroVertex[1] = Vector2f(0, 100);
-            heroVertex[2] = Vector2f(-100, 0);
-            heroVertex[3] = Vector2f(0, -100);
-            Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
-            Mesh2DConfig render2DConfig;
-            render2DConfig.m_polygon2D = heroPolygon;
-            Mesh2D* render2D = new Mesh2D(ground);
-            render2D->SetConfig(&render2DConfig);
-            ground->AddComponent(render2D);
+   //         heroVertex[0] = Vector2f(100, 0);
+   //         heroVertex[1] = Vector2f(0, 100);
+   //         heroVertex[2] = Vector2f(-100, 0);
+   //         heroVertex[3] = Vector2f(0, -100);
+   //         Polygon2D* heroPolygon = new Polygon2D(Polygon2D::EState::Enable, CrossPlatform::WHITE, numOfVertex, heroVertex);
+   //         Mesh2DConfig render2DConfig;
+   //         render2DConfig.m_polygon2D = heroPolygon;
+   //         Mesh2D* render2D = new Mesh2D(ground);
+   //         render2D->SetConfig(&render2DConfig);
+   //         ground->AddComponent(render2D);
 
             //world->AddGameObject(ground);
         }
@@ -107,18 +107,18 @@ namespace Gameplay {
    //     }
 
         {
-            Cube3D* cube = new Cube3D("Cube3D");
-            world->AddGameObject(cube);
+            //Cube3D* cube = new Cube3D("Cube3D");
+            //world->AddGameObject(cube);
         }
 
         {
-            CameraObject3D* camera3D = new CameraObject3D("CameraObject3D");
-            world->AddGameObject(camera3D);
+            //CameraObject3D* camera3D = new CameraObject3D("CameraObject3D");
+            //world->AddGameObject(camera3D);
         }
 
         {
-            SceneDirectionLight* directionLight = new SceneDirectionLight("SceneDirectionLight");
-            world->AddGameObject(directionLight);
+            //SceneDirectionLight* directionLight = new SceneDirectionLight("SceneDirectionLight");
+            //world->AddGameObject(directionLight);
         }
 
         compiler = new XenonCompiler;
@@ -131,24 +131,24 @@ namespace Gameplay {
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))
         {
-            printf("Recompile\n");
-            compiler->Recompile();
+            //printf("Recompile\n");
+            //compiler->Recompile();
         }
 		if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
 			InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_R))
 		{
-			printf("Respawn Player\n");
-			GameObject* player = world->GetGameObject("Player");
-			if (!player)
-			{
-				player = new Player("Player");
-				world->AddGameObject(player);
-			}
-			Transform2D* playerTransform = player->GetComponent<Transform2D>();
-			playerTransform->SetPosition(Vector2f(400, 300));
+			//printf("Respawn Player\n");
+			//GameObject* player = world->GetGameObject("Player");
+			//if (!player)
+			//{
+			//	player = new Player("Player");
+			//	world->AddGameObject(player);
+			//}
+			//Transform2D* playerTransform = player->GetComponentPointer<Transform2D>();
+			//playerTransform->SetPosition(Vector2f(400, 300));
 
-			Rigidbody2D* rigid = player->GetComponent<Rigidbody2D>();
-			rigid->SetVelocity(Vector2f(0, 0));
+			//Rigidbody2D* rigid = player->GetComponentPointer<Rigidbody2D>();
+			//rigid->SetVelocity(Vector2f(0, 0));
 
 			compiler->RunScript();
 		}

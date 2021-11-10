@@ -15,7 +15,7 @@ namespace XenonEngine
     public:
         friend class Rigidbody2D;
 
-        Transform2D(GameObject* gameobject) :
+        Transform2D(GameObject* gameobject = nullptr) :
             IComponent(gameobject){}
         virtual ~Transform2D()override;
         virtual ComponentType GetComponentType() const override { return m_type; };

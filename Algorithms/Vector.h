@@ -22,7 +22,7 @@ namespace Algorithm
 		bool Remove(const T& element);
 		void Remove(int index);
 		bool Initialize(int size);
-        void Replace(const T*const content,unsigned int size);
+        void Replace(const T*const content,int size);
         bool Clear();
 
 		int IndexOf(T element)const;
@@ -143,7 +143,7 @@ namespace Algorithm
 	}
 
     template<typename T>
-    void Algorithm::Vector<T>::Replace(const T*const content, unsigned int size)
+    void Algorithm::Vector<T>::Replace(const T*const content, int size)
     {
         if (m_capacity <= size)
         {

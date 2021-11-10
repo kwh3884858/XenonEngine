@@ -1,13 +1,14 @@
 #pragma once
-#include "CrossPlatform/IFile.h"
+#include "CrossPlatform/File/IFileMeta.h"
 #include <string>
 
 #include "CrossPlatform/DataPair.h"
 #include "CrossPlatform/FileTypeEnum.h"
+#include <map>
 
 namespace CrossPlatform
 {
-    class Folder;
+    class FolderMeta;
 }
 
 namespace XenonEngine
@@ -21,9 +22,14 @@ namespace XenonEngine
         void Shutdown();
 
         CrossPlatform::FileType GetFileType(const std::string& ext)const;
-        const CrossPlatform::Folder* GetDataRoot()const {return m_root; }
+        const CrossPlatform::FolderMeta* GetDataRoot()const {return m_root; }
+
+        const CrossPlatform::IFileMeta* GetFile(xg::Guid fileGuid);
     private:
-        CrossPlatform::Folder* m_root = nullptr;
+        void RecursionFindFolder(const CrossPlatform::FolderMeta& folder);
+        void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
+        CrossPlatform::FolderMeta* m_root = nullptr;
         Algorithm::Vector<CrossPlatform::DataPair> m_typePair;
+        std::map<xg::Guid, CrossPlatform::IFileMeta*> m_database;
     };
 }

@@ -3,11 +3,11 @@
 
 namespace CrossPlatform
 {
-    class Folder;
+    class FolderMeta;
 }
 namespace XenonEngine
 {
-    using CrossPlatform::Folder;
+    using CrossPlatform::FolderMeta;
     class GameObjectWorld;
     class Graphic3D;
 
@@ -36,12 +36,12 @@ namespace XenonEngine
             return m_graphic3D;
         }
 
-        void FolderSetter(const Folder* folder) {
+        void FolderSetter(const FolderMeta* folder) {
             std::lock_guard<std::mutex> lck(m_folderMutex);
             m_folder = folder;
         }
 
-        const Folder* FolderGetter()const
+        const FolderMeta* FolderGetter()const
         {
             std::lock_guard<std::mutex> lck(m_folderMutex);
             return m_folder;
@@ -55,7 +55,7 @@ namespace XenonEngine
         const Graphic3D* m_graphic3D = nullptr;
 
         mutable std::mutex m_folderMutex;
-        const Folder* m_folder = nullptr;
+        const FolderMeta* m_folder = nullptr;
     };
 
     extern XenonEngine::EngineSyncData* pGlobalSyncData;

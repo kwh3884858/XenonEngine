@@ -2,15 +2,28 @@
 #include "Algorithms/String.h"
 #include "Engine/GameObject.h"
 #include "Engine/GameObjectWorld.h"
+#include <filesystem>
 
-
+#include "yaml-cpp/yaml.h"
+#include "EngineManager.h"
+#include "CrossPlatform/File/WorldMeta.h"
+#include "CrossPlatform/Converter/GameObjectWorldYamlConverter.h"
+#include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
+#include <fstream>
 
 
 namespace XenonEngine
 {
+    using namespace std;
+    using namespace std::filesystem;
+    using namespace CrossPlatform;
 
     bool GameObjectWorldManager::Initialize()
     {
+        if (!m_currentWorld)
+        {
+            CreateGameWorld("Untitled");
+        }
         return true;
     }
 
@@ -28,6 +41,46 @@ namespace XenonEngine
     {
         assert(m_currentWorld == nullptr);
         assert(m_worlds.Count() == 0);
+    }
+
+    void GameObjectWorldManager::LoadWorld(const Algorithm::String& worldMetaFilePath)
+    {
+        path metaFilePath(worldMetaFilePath.CString());
+        if (!exists(metaFilePath))
+        {
+            return;
+        }
+        if (metaFilePath.extension() != "metadata")
+        {
+            return;
+        }
+        YAML::Node config = YAML::LoadFile(metaFilePath.generic_string());
+        FileHeader header = config.as<FileHeader>();
+        WorldMeta* metaFile = (WorldMeta*)EngineManager::Get().GetFileDatabase().GetFile(header.GetGUID());
+
+        AddGameWorld(metaFile->GetGameObject());
+    }
+
+    void GameObjectWorldManager::SaveWorld(const Algorithm::String& savePath) const
+    {
+        String metaFilePath = savePath + ".metadata";
+        WorldMeta worldMeta(FileHeader(FileType::FileTypeWorld, savePath, xg::Guid(savePath.CString())));
+        {
+            ofstream outputStream(metaFilePath.CString());
+            YAML::Emitter out(outputStream);
+            out << YAML::BeginSeq;
+            out << YAML::Node(worldMeta.GetFileHeader());
+            out << YAML::EndSeq;
+            outputStream.close();
+        }
+        {
+            ofstream outputStream(savePath.CString());
+            YAML::Emitter out(outputStream);
+            out << YAML::BeginSeq;
+            out << YAML::Node(*m_currentWorld);
+            out << YAML::EndSeq;
+            outputStream.close();
+        }
     }
 
     //void GameObjectWorldManager::AddGameObject(GameObject* gameobject)
@@ -62,11 +115,7 @@ namespace XenonEngine
     XenonEngine::GameObjectWorld*const GameObjectWorldManager::CreateGameWorld(const Algorithm::String& worldName)
     {
         GameObjectWorld* newWorld = new GameObjectWorld(worldName);
-        m_worlds.Add(newWorld);
-        if (m_currentWorld == nullptr)
-        {
-            m_currentWorld = newWorld;
-        }
+        AddGameWorld(newWorld);
         return newWorld;
     }
 
@@ -74,6 +123,15 @@ namespace XenonEngine
     {
         assert(m_currentWorld != nullptr);
         return m_currentWorld;
+    }
+
+    void GameObjectWorldManager::AddGameWorld(GameObjectWorld* world)
+    {
+        m_worlds.Add(world);
+        if (m_currentWorld == nullptr)
+        {
+            m_currentWorld = world;
+        }
     }
 
 }

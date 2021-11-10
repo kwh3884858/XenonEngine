@@ -288,8 +288,8 @@ namespace XenonPhysics
 
     bool Physics2D::AddGameObject(GameObject* const gameobject)
     {
-        Rigidbody2D* rigidbody = gameobject->GetComponent<Rigidbody2D>();
-        Collider2D* collider = gameobject->GetComponent<Collider2D>();
+        Rigidbody2D* rigidbody = gameobject->GetComponentPointer<Rigidbody2D>();
+        Collider2D* collider = gameobject->GetComponentPointer<Collider2D>();
 
         if (rigidbody != nullptr)
         {
@@ -309,8 +309,8 @@ namespace XenonPhysics
 
     void Physics2D::RemoveGameObject(GameObject* const gameobject)
     {
-        Rigidbody2D* rigidbody = gameobject->GetComponent<Rigidbody2D>();
-        Collider2D* collider = gameobject->GetComponent<Collider2D>();
+        Rigidbody2D* rigidbody = gameobject->GetComponentPointer<Rigidbody2D>();
+        Collider2D* collider = gameobject->GetComponentPointer<Collider2D>();
         if (rigidbody != nullptr)
         {
             RemoveRigidbody2D(rigidbody);
@@ -339,7 +339,7 @@ namespace XenonPhysics
 
     bool Physics2D::AddCollider2D(Collider2D*const collider)
     {
-        Rigidbody2D* rigidbody = collider->GetGameObject()->GetComponent<Rigidbody2D>();
+        Rigidbody2D* rigidbody = collider->GetGameObject()->GetComponentPointer<Rigidbody2D>();
         assert(rigidbody == nullptr);
         if (rigidbody == nullptr)
         {
@@ -367,7 +367,7 @@ namespace XenonPhysics
 
     bool Physics2D::RemoveCollider2D(Collider2D* const collider)
     {
-        Rigidbody2D* rigidbody = collider->GetGameObject()->GetComponent<Rigidbody2D>();
+        Rigidbody2D* rigidbody = collider->GetGameObject()->GetComponentPointer<Rigidbody2D>();
         assert(rigidbody == nullptr);
         if (rigidbody == nullptr)
         {
@@ -387,8 +387,8 @@ namespace XenonPhysics
         CollisionInfo info;
 
         //do type check, and call suitable function
-        Collider2D* collider1 = body1->GetGameObject()->GetComponent<Collider2D>();
-        Collider2D* collider2 = body2->GetGameObject()->GetComponent<Collider2D>();
+        Collider2D* collider1 = body1->GetGameObject()->GetComponentPointer<Collider2D>();
+        Collider2D* collider2 = body2->GetGameObject()->GetComponentPointer<Collider2D>();
 
         if (collider1 == nullptr || collider2 == nullptr)
         {
@@ -430,8 +430,8 @@ namespace XenonPhysics
 
     Physics2D::CollisionInfo Physics2D::CheckForCollisionCircleAndCircle(Rigidbody2D* body1, Rigidbody2D* body2)
     {
-        CircleCollider2D* body1Collider = body1->GetGameObject()->GetComponent<CircleCollider2D>();
-        CircleCollider2D* body2Collider = body2->GetGameObject()->GetComponent<CircleCollider2D>();
+        CircleCollider2D* body1Collider = body1->GetGameObject()->GetComponentPointer<CircleCollider2D>();
+        CircleCollider2D* body2Collider = body2->GetGameObject()->GetComponentPointer<CircleCollider2D>();
         assert(body1Collider != nullptr);
         assert(body2Collider != nullptr);
         assert(body1Collider->GetColliderType() == ColliderType::Circle);
@@ -443,8 +443,8 @@ namespace XenonPhysics
 
     Physics2D::CollisionInfo Physics2D::CheckForCollisionCircleAndBox(Rigidbody2D* ball, Rigidbody2D* box)
     {
-        CircleCollider2D* ballCollider = ball->GetGameObject()->GetComponent<CircleCollider2D>();
-        BoxCollider2D* boxCollider = box->GetGameObject()->GetComponent<BoxCollider2D>();
+        CircleCollider2D* ballCollider = ball->GetGameObject()->GetComponentPointer<CircleCollider2D>();
+        BoxCollider2D* boxCollider = box->GetGameObject()->GetComponentPointer<BoxCollider2D>();
         assert(ballCollider != nullptr);
         assert(boxCollider != nullptr);
         assert(ballCollider->GetColliderType() == ColliderType::Circle);
@@ -456,8 +456,8 @@ namespace XenonPhysics
 
     Physics2D::CollisionInfo Physics2D::CheckForCollisionBoxAndBox(Rigidbody2D* box1, Rigidbody2D* box2)
     {
-        BoxCollider2D* body1Collider = box1->GetGameObject()->GetComponent<BoxCollider2D>();
-        BoxCollider2D* body2Collider = box2->GetGameObject()->GetComponent<BoxCollider2D>();
+        BoxCollider2D* body1Collider = box1->GetGameObject()->GetComponentPointer<BoxCollider2D>();
+        BoxCollider2D* body2Collider = box2->GetGameObject()->GetComponentPointer<BoxCollider2D>();
         assert(body1Collider != nullptr);
         assert(body2Collider != nullptr);
         assert(body1Collider->GetColliderType() == ColliderType::Box);
@@ -473,7 +473,7 @@ namespace XenonPhysics
         CollisionInfo info;
 
         //do type check, and call suitable function
-        Collider2D* rigidBodyCollider = rigidBody->GetGameObject()->GetComponent<Collider2D>();
+        Collider2D* rigidBodyCollider = rigidBody->GetGameObject()->GetComponentPointer<Collider2D>();
 
         if (collider == nullptr || rigidBodyCollider == nullptr)
         {
@@ -527,8 +527,8 @@ namespace XenonPhysics
 
         float sumOfRaidus = body1Collider->GetRadius() + body2Collider->GetRadius();
         Vector2f relativePositionVector =
-            body1Collider->GetGameObject()->GetComponent<Transform2D>()->GetPosition() -
-            body2Collider->GetGameObject()->GetComponent<Transform2D>()->GetPosition();
+            body1Collider->GetGameObject()->GetComponentPointer<Transform2D>()->GetPosition() -
+            body2Collider->GetGameObject()->GetComponentPointer<Transform2D>()->GetPosition();
 
         float s = relativePositionVector.Magnitude() - sumOfRaidus;
 
@@ -560,8 +560,8 @@ namespace XenonPhysics
         float radius = ballCollider->GetRadius();
 
         //Quick test
-        Vector2f circlePosition = ballCollider->GetGameObject()->GetComponent<Transform2D>()->GetPosition();
-        Vector2f boxPosition = boxCollider->GetGameObject()->GetComponent<Transform2D>()->GetPosition();
+        Vector2f circlePosition = ballCollider->GetGameObject()->GetComponentPointer<Transform2D>()->GetPosition();
+        Vector2f boxPosition = boxCollider->GetGameObject()->GetComponentPointer<Transform2D>()->GetPosition();
         Vector2f boxMinPoint(0, 0);
         Vector2f size = boxCollider->GetSize();
 
@@ -615,8 +615,8 @@ namespace XenonPhysics
 
         float sumOfRaidus = boxCollider1->GetRadius() + boxCollider2->GetRadius();
 
-        Transform2D* box1Transform = boxCollider1->GetGameObject()->GetComponent<Transform2D>();
-        Transform2D* box2Transform = boxCollider2->GetGameObject()->GetComponent<Transform2D>();
+        Transform2D* box1Transform = boxCollider1->GetGameObject()->GetComponentPointer<Transform2D>();
+        Transform2D* box2Transform = boxCollider2->GetGameObject()->GetComponentPointer<Transform2D>();
         Vector2f relativePositionVector = box1Transform->GetPosition() - box2Transform->GetPosition();
         float s = relativePositionVector.Magnitude() - sumOfRaidus;
         if (s > CollisionTolerance)
@@ -649,8 +649,8 @@ namespace XenonPhysics
         box2InWorld.m_bottomRight.x = box2Pos.x + box2extent.x;
         box2InWorld.m_bottomRight.y = box2Pos.y - box2extent.y;
 
-        Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponent<Rigidbody2D>();
-        Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponent< Rigidbody2D >();
+        Rigidbody2D* boxRigidbody1 = boxCollider1->GetGameObject()->GetComponentPointer<Rigidbody2D>();
+        Rigidbody2D* boxRigidbody2 = boxCollider2->GetGameObject()->GetComponentPointer< Rigidbody2D >();
         //if (boxRigidbody1)
         //{
         //    info.m_rigidbody1 = boxRigidbody1;
@@ -894,7 +894,7 @@ namespace XenonPhysics
         Rigidbody2D* dynamicBody = info.m_rigidbody2;
         if (staticBody->IsStatic() == true)
         {
-            if (staticBody->GetGameObject()->GetComponent<Collider2D>()->IsTrigger() == true)
+            if (staticBody->GetGameObject()->GetComponentPointer<Collider2D>()->IsTrigger() == true)
             {
                 staticBody->GetGameObject()->OnTrigger(dynamicBody->GetGameObject());
             }
@@ -907,7 +907,7 @@ namespace XenonPhysics
         }
         else
         {
-            if (dynamicBody->GetGameObject()->GetComponent<Collider2D>()->IsTrigger() == true)
+            if (dynamicBody->GetGameObject()->GetComponentPointer<Collider2D>()->IsTrigger() == true)
             {
                 dynamicBody->GetGameObject()->OnTrigger(staticBody->GetGameObject());
             }

@@ -31,37 +31,32 @@ namespace CrossPlatform
         xg::Guid m_guid;
     };
 
-    class IFile
+    class IFileMeta
     {
     public:
-        IFile(const FileHeader& header) : m_header(header) {}
-
-    private:
+        IFileMeta(const FileHeader& header) : m_header(header) {}
+        virtual ~IFileMeta() {};
+        const FileHeader& GetFileHeader()const { return m_header; }
+    protected:
         FileHeader m_header;
-    };
-
-    class Folder :public IFile
-    {
-    public:
-        Folder(const FileHeader& header) :IFile(header) {}
-        void AddIFile(IFile* file) { m_content.Add(file); }
     private:
-        Algorithm::Vector<IFile*> m_content;
     };
 
-    class Material :public IFile
+    class FolderMeta :public IFileMeta
     {
     public:
-        Material(const FileHeader& header) :IFile(header) {}
-        CrossPlatform::XenonMaterial* Get() {}
+        FolderMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeFolder); }
+        void AddIFile(IFileMeta* file) { m_content.Add(file); }
+        IFileMeta* GetFile(int index) { return m_content[index]; }
+        int GetFileCount()const { return m_content.Count(); }
     private:
-
+        Algorithm::Vector<IFileMeta*> m_content;
     };
 
-    class Model :public IFile
+    class MaterialMeta :public IFileMeta
     {
     public:
-        Model(const FileHeader& header) :IFile(header) {}
+        MaterialMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMaterial); }
         CrossPlatform::XenonMaterial* Get() {}
     private:
 

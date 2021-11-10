@@ -22,27 +22,27 @@ namespace XenonEngine
         m_xsam = new XenonScriptAssemblerMachine;
         m_xvm = new XenonVirtualMachine;
 
-        String applicationPath = FileManager::Get().GetApplicationPath();
-        int pos = applicationPath.IndexOf("XenonEngine.exe");
+        //String applicationPath = FileManager::Get().GetApplicationPath();
+        //int pos = applicationPath.IndexOf("XenonEngine.exe");
 
-        String instructionPath = applicationPath.Substring(0, pos);
-        instructionPath.Append("XenonScriptAssemblerMachineInstrction.xet");
-        XenonFile* instructionListFile = FileManager::Get().ReadFile(instructionPath);
-        assert(instructionListFile != nullptr);
-        bool result = m_xsam->InitializeInstructionList(instructionListFile);
-        delete instructionListFile;
-        instructionListFile = nullptr;
-        assert(result == true);
+        //String instructionPath = applicationPath.Substring(0, pos);
+        //instructionPath.Append("XenonScriptAssemblerMachineInstrction.xet");
+        //XenonFile* instructionListFile = FileManager::Get().ReadFile(instructionPath);
+        //assert(instructionListFile != nullptr);
+        //bool result = m_xsam->InitializeInstructionList(instructionListFile);
+        //delete instructionListFile;
+        //instructionListFile = nullptr;
+        //assert(result == true);
 
-        String delimiterPath = applicationPath.Substring(0, pos);
-        delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
-        XenonFile*  delimiterListFile = FileManager::Get().ReadFile(delimiterPath);
-        result = m_xsam->InitializeDelimiterList(delimiterListFile);
-        delete delimiterListFile;
-        delimiterListFile = nullptr;
-        assert(result == true);
+        //String delimiterPath = applicationPath.Substring(0, pos);
+        //delimiterPath.Append("XenonScriptAssemblerDelimiter.xet");
+        //XenonFile*  delimiterListFile = FileManager::Get().ReadFile(delimiterPath);
+        //result = m_xsam->InitializeDelimiterList(delimiterListFile);
+        //delete delimiterListFile;
+        //delimiterListFile = nullptr;
+        //assert(result == true);
 
-        Recompile();
+        //Recompile();
     }
 
     void XenonCompiler::Shutdown()

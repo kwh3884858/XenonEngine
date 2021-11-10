@@ -41,7 +41,11 @@ namespace XenonEngine
         virtual bool Update() { return true; }
         virtual bool Destroy() { return true; }
 
+        //virtual void Serialization() = 0;
+        //virtual void Deserialization() = 0;
+
         GameObject* GetGameObject()const { return m_gameobject; }
+        void SetGameobject(GameObject* object) { m_gameobject = object; }
 
         static IComponentType m_type;
     protected:

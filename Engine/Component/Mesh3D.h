@@ -6,6 +6,8 @@
 #pragma once
 
 #include "IComponent.h"
+#include "Algorithms/String.h"
+#include "crossguid/guid.hpp"
 
 namespace CrossPlatform {
 	class Polygon3D;
@@ -13,34 +15,34 @@ namespace CrossPlatform {
 
 namespace XenonEngine
 {
-	class Mesh3DConfig
-	{
-	public:
-		const CrossPlatform::Polygon3D* m_polygon3D;
-	};
-
 	class Mesh3D final :public IComponent
 	{
 	public:
 		static const float PI;
 
-		Mesh3D(GameObject* gameobject) :
+		Mesh3D(GameObject* gameobject = nullptr) :
 			IComponent(gameobject) {}
 		virtual ~Mesh3D()override {}
 		virtual ComponentType GetComponentType() const override { return m_type; };
 		virtual IComponent* Copy(GameObject*const gameObject)const override;
 
-		void SetConfig(const Mesh3DConfig*const config);
 		virtual bool Start() override;
 		virtual bool Update() override;
 		virtual bool Destroy() override;
 
+        const xg::Guid& GetModelGuid()const { return m_modelId; }
+        void SetModelGuid(const xg::Guid& modelGuid);;
         const CrossPlatform::Polygon3D* GetPolygon3D()const { return m_polygon3D; }
         float GetMaxRadius()const { return m_maxRadius; }
-		static ComponentType m_type;
+
+        static ComponentType m_type;
 	private:
-		const CrossPlatform::Polygon3D* m_polygon3D;
-        float m_maxRadius;
+        void LoadModel();
+        void CalculateModelMaxRadius();
+
+        xg::Guid m_modelId;
+		const CrossPlatform::Polygon3D* m_polygon3D = nullptr;
+        float m_maxRadius = 0.0f;
 
 	};
 }

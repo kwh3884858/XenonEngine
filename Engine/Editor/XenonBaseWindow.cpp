@@ -31,23 +31,19 @@ int XenonBaseWindow::indexCount = 0;
             return;
         }
 
-        char name[128];
         const char * windowName = GetWindiwName();
-        int index = GetWindowIndex();
-        sprintf(name, "%s_%d", windowName, index);
+
+
 
         //Only for popup
         if (GetWindowType() == Window_Type::Popup)
         {
-            ImGui::OpenPopup(name);
-
-            if (ImGui::BeginPopupModal(name, NULL, ImGuiWindowFlags_AlwaysAutoResize))
+            ImGui::OpenPopup(windowName);
+            if (ImGui::BeginPopupModal(windowName, NULL, ImGuiWindowFlags_AlwaysAutoResize))
             {
                 UpdateMainWindow();
-
                 ImGui::EndPopup();
             }
-
             return;
         }
 
@@ -57,7 +53,7 @@ int XenonBaseWindow::indexCount = 0;
 
         switch (GetWindowType())
         {
-        case Window_Type::MainWindow:
+        case Window_Type::MultiWindow:
         {
             // We specify a default position/size in case there's no data in the .ini file. Typically this isn't required! We only do it to make the Demo applications a little more welcoming.
             ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver);
@@ -77,14 +73,30 @@ int XenonBaseWindow::indexCount = 0;
             break;
         }
 
-
-        // Main body of the Demo window starts here.
-        if (!ImGui::Begin(name, &m_open, window_flags))
+        if (GetWindowType() == Window_Type::MultiWindow)
         {
-            // Early out if the window is collapsed, as an optimization.
-            ImGui::End();
-            return;
+            char name[128];
+            int index = GetWindowIndex();
+            sprintf(name, "%s_%d", windowName, index);
+            // Main body of the Demo window starts here.
+            if (!ImGui::Begin(name, &m_open, window_flags))
+            {
+                // Early out if the window is collapsed, as an optimization.
+                ImGui::End();
+                return;
+            }
         }
+        else
+        {
+            // Main body of the Demo window starts here.
+            if (!ImGui::Begin(windowName, &m_open, window_flags))
+            {
+                // Early out if the window is collapsed, as an optimization.
+                ImGui::End();
+                return;
+            }
+        }
+
 
         // Most "big" widgets share a common width settings by default.
         //ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.65f);    // Use 2/3 of the space for widgets and 1/3 for labels (default)
@@ -133,7 +145,7 @@ int XenonBaseWindow::indexCount = 0;
     }
     XenonBaseWindow::Window_Type XenonBaseWindow::GetWindowType() const
     {
-        return Window_Type::MainWindow;
+        return Window_Type::MultiWindow;
     }
 
     void XenonBaseWindow::SetParentWindow(XenonBaseWindow * parent)

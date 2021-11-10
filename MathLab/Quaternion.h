@@ -4,7 +4,7 @@
 
 namespace MathLab {
 	template<typename T>
-	struct Quaternion;
+    class Quaternion;
 
 	typedef     Quaternion<float>      Quaternionf;
 

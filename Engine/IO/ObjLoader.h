@@ -13,7 +13,7 @@ namespace XenonEngine
 		virtual bool Initialize() override { return true; }
         virtual bool Shutdown() override { return true; }
 
-		const CrossPlatform::Polygon3D* LoadObj(Algorithm::String& fileName );
+		const CrossPlatform::Polygon3D* LoadObj(const Algorithm::String& fileName );
 	private:
 
 	};

@@ -60,7 +60,7 @@ namespace XenonEngine
             if (m_lightList[i]->GetLightType() == LightComponent::LightType::Point)
             {
                 PointLightComponent* pointLight = static_cast<PointLightComponent*>(m_lightList[i]);
-                Vector3f lightPosition = pointLight->GetGameObject()->GetComponent<Transform3D>()->GetPosition();
+                Vector3f lightPosition = pointLight->GetGameObject()->GetComponentPointer<Transform3D>()->GetPosition();
                 TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
                 TVector4f direction = lightPoistionHomogeneous - homogeneousVertex0 ;
@@ -119,7 +119,7 @@ namespace XenonEngine
             if (m_lightList[i]->GetLightType() == LightComponent::LightType::Point)
             {
                 PointLightComponent* pointLight = static_cast<PointLightComponent*>(m_lightList[i]);
-                Vector3f lightPosition = pointLight->GetGameObject()->GetComponent<Transform3D>()->GetPosition();
+                Vector3f lightPosition = pointLight->GetGameObject()->GetComponentPointer<Transform3D>()->GetPosition();
                 TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
                 for (int i = 0; i < 3; i++)
@@ -159,11 +159,15 @@ namespace XenonEngine
 	void Graphic3D::Update() const
 	{
         const Camera3D* majorCamera = GetMajorCamera();
+        if (!majorCamera)
+        {
+            return;
+        }
 		for (int i = 0; i < m_renderList.Count(); i++)
 		{
 			GameObject* iter = m_renderList[i];
-			Transform3D* transform = iter->GetComponent<Transform3D>();
-            Mesh3D* mesh = iter->GetComponent<Mesh3D>();
+			Transform3D* transform = iter->GetComponentPointer<Transform3D>();
+            Mesh3D* mesh = iter->GetComponentPointer<Mesh3D>();
             if (!mesh || !transform)
             {
                 continue;
@@ -182,6 +186,10 @@ namespace XenonEngine
             DrawCoordinateLines(worldToScreenTranform);
 
             const Polygon3D* polygon = mesh->GetPolygon3D();
+            if (polygon == nullptr)
+            {
+                continue;
+            }
             CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
             if (state == CullingState::Culled)
             {
@@ -395,7 +403,11 @@ namespace XenonEngine
 
     const XenonEngine::Camera3D* Graphic3D::GetMajorCamera() const
     {
-        assert(m_cameraList.Count() != 0);
+        //assert(m_cameraList.Count() != 0);
+        if (m_cameraList.Count() == 0)
+        {
+            return nullptr;
+        }
         return m_cameraList[0];
     }
 

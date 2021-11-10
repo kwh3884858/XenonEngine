@@ -26,7 +26,7 @@ namespace XenonEngine
     {
         assert(this != nullptr);
         assert(m_polygon2D->m_numberOfVertex >= 3);
-        Transform2D* transform = GetGameObject()->GetComponent<Transform2D>();
+        Transform2D* transform = GetGameObject()->GetComponentPointer<Transform2D>();
         assert(transform != nullptr);
         for (int i = 1; i < m_polygon2D->m_numberOfVertex - 1; i++)
         {

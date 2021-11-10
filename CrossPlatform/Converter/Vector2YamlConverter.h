@@ -23,8 +23,8 @@ namespace YAML {
             if (!node.IsSequence() || node.size() != 3) {
                 return false;
             }
-            rhs.x = node[0].as<double>();
-            rhs.y = node[1].as<double>();
+            rhs.x = node[0].as<float>();
+            rhs.y = node[1].as<float>();
             return true;
         }
     };

@@ -7,7 +7,8 @@ namespace CrossPlatform
         None,
         FileTypeFolder,
         FileTypeMaterial,
-        FileTypeModel
+        FileTypeModel,
+        FileTypeWorld,
     };
 
 }

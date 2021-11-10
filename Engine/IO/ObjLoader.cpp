@@ -1,17 +1,20 @@
 #include "ObjLoader.h"
 #include "CrossPlatform/Polygon/Polygon3D.h"
+#include "CrossPlatform/Material/XenonMaterial.h"
 #include "MathLab/Vector3.h"
 #include <iostream>
 
 #define TINYOBJLOADER_IMPLEMENTATION 
-#include "Library/tiny_obj_loader.h"
+#include "Library/tinyobjloader/tiny_obj_loader.h"
 namespace XenonEngine
 {
 	using Algorithm::String;
+    using Algorithm::Vector;
 	using CrossPlatform::Polygon3D;
+	using CrossPlatform::XenonMaterial;
 	using MathLab::Vector3f;
 
-	const Polygon3D* ObjectLoader::LoadObj(Algorithm::String & fileName)
+	const Polygon3D* ObjectLoader::LoadObj(const Algorithm::String & fileName)
 	{
 		std::string inputfile (fileName.Beign(), fileName.Count());
 		tinyobj::ObjReaderConfig reader_config;
@@ -51,6 +54,13 @@ namespace XenonEngine
             normals[i / 3].y = attrib.normals[i + 1];
             normals[i / 3].z = attrib.normals[i + 2];
         }
+
+        int numOfMaterial = materials.size();
+        //Vector<XenonMaterial*>* xenonMaterials = new Vector<XenonMaterial*>;
+        //for (size_t i = 0; i < attrib.normals.size(); i += 3)
+        //{
+        //}
+
 
         int numOfIndex = 0;
 		size_t vindex = 0;

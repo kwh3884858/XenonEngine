@@ -16,16 +16,20 @@ namespace XenonEngine
     {
     public:
         //initilize function, take the place of constructor
-         bool Initialize();
+        bool Initialize();
 
         //destroy function, take the  place of deconstructor
-         bool Shutdown() ;
-         ~GameObjectWorldManager() ;
+        bool Shutdown() ;
+        ~GameObjectWorldManager() ;
+
+        void LoadWorld(const Algorithm::String& worldMetaFilePath);
+        void SaveWorld(const Algorithm::String& savePath)const;
 
         void Update();
         GameObjectWorld*const CreateGameWorld(const Algorithm::String& worldName);
         GameObjectWorld*const GetCurrentWorld() const;
     private:
+        void AddGameWorld(GameObjectWorld* world);
         GameObjectWorld* m_currentWorld = nullptr;
         Algorithm::Vector<GameObjectWorld*> m_worlds;
     };

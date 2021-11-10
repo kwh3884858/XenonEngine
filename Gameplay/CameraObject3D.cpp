@@ -48,7 +48,7 @@ namespace Gameplay
 
     void CameraObject3D::Update()
     {
-        Transform3D* trans = GetComponent<Transform3D>();
+        Transform3D* trans = GetComponentPointer<Transform3D>();
         float xAxisDelta = 0;
         float yAxisDelta = 0;
         float zAxisDelta = 0;

@@ -4,7 +4,7 @@
 
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Mesh3D.h"
-#include "Engine/FileManager/FileManager.h"
+
 
 namespace Gameplay
 {
@@ -33,18 +33,18 @@ namespace Gameplay
         transform->SetPosition(Vector3f(0, 0, 3));
         AddComponent(transform);
 
-        String applicationPath = FileManager::Get().GetApplicationPath();
-        int pos = applicationPath.IndexOf("XenonEngine.exe");
-        String cubeObjPath = applicationPath.Substring(0, pos);
-        //cubeObjPath.Append("cubeTest.obj");
-        //cubeObjPath.Append("cube.obj");
-        //cubeObjPath.Append("KeQing.obj");
-        cubeObjPath.Append("sphere.obj");
-        Mesh3DConfig config;
-        config.m_polygon3D = ObjectLoader::Get().LoadObj(cubeObjPath);
-        Mesh3D* mesh3D = new Mesh3D(this);
-        mesh3D->SetConfig(&config);
-        AddComponent(mesh3D);
+        //String applicationPath = FileManager::Get().GetApplicationPath();
+        //int pos = applicationPath.IndexOf("XenonEngine.exe");
+        //String cubeObjPath = applicationPath.Substring(0, pos);
+        ////cubeObjPath.Append("cubeTest.obj");
+        ////cubeObjPath.Append("cube.obj");
+        ////cubeObjPath.Append("KeQing.obj");
+        //cubeObjPath.Append("sphere.obj");
+        //Mesh3DConfig config;
+        //config.m_polygon3D = ObjectLoader::Get().LoadObj(cubeObjPath);
+        //Mesh3D* mesh3D = new Mesh3D(this);
+        //mesh3D->SetConfig(&config);
+        //AddComponent(mesh3D);
 
     }
 

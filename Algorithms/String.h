@@ -29,7 +29,7 @@ namespace Algorithm
         friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
         StringBase();
         StringBase(const StringBase& value);
-        StringBase(const T* value, unsigned int size);
+        StringBase(const T* value, int size);
         StringBase(const T* value);
         StringBase(T value);
         ~StringBase();
@@ -42,6 +42,7 @@ namespace Algorithm
         StringBase<T>& operator=(const T* rhs);
         bool operator==(const StringBase<T>& rhs)const;
         bool operator!=(const StringBase<T>& rhs)const;
+        StringBase<T> operator+(const StringBase<T> text)const;
 
         void Add(T value);
         int Count()const;
@@ -77,7 +78,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    Algorithm::StringBase<T>::StringBase(const T* value, unsigned int size)
+    Algorithm::StringBase<T>::StringBase(const T* value, int size)
     {
         m_string.Replace(value, size);
         CStringlize();
@@ -184,6 +185,14 @@ namespace Algorithm
     bool Algorithm::StringBase<T>::operator!=(const StringBase<T>& rhs)const
     {
         return !((*this) == rhs);
+    }
+
+    template<typename T>
+    Algorithm::StringBase<T> Algorithm::StringBase<T>::operator+(const StringBase<T> text) const
+    {
+        StringBase<T> result(*this);
+        result.Append(text);
+        return result;
     }
 
     template<typename T>

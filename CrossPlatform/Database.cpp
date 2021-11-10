@@ -18,5 +18,4 @@ namespace CrossPlatform
         engineConfig = config.as<EngineConfig>();
         return true;
     }
-
 }

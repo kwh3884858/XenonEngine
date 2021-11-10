@@ -23,14 +23,20 @@ namespace XenonEngine
             Enable,
             MarkForDelete
         };
-        GameObject(const String& name);
+        GameObject(const String& name = "Untitled");
         virtual GameObject* Copy()const;
         virtual ~GameObject();
 
         template<typename T>
         void AddComponent(T* component);
         template<typename T>
-        T* GetComponent();
+        T* GetComponentPointer();
+        template<typename T>
+        const T* GetComponentPointer()const;
+        template<typename T>
+        T& GetComponent();
+        template<typename T>
+        const T& GetComponent()const;
         template<typename T>
         bool RemoveComponent(T* type);
 
@@ -64,7 +70,7 @@ namespace XenonEngine
     }
 
     template<typename T>
-    T * GameObject::GetComponent()
+    T * GameObject::GetComponentPointer()
     {
         ComponentType componentType = T::m_type;
 
@@ -78,6 +84,26 @@ namespace XenonEngine
         }
 
         return nullptr;
+    }
+
+    template<typename T>
+    const T* GameObject::GetComponentPointer() const
+    {
+        return const_cast<const T*>(static_cast<const GameObject&>(*this).GetComponentPointer<T>());
+    }
+
+    template<typename T>
+    T& GameObject::GetComponent()
+    {
+        T* result = GetComponentPointer<T>();
+        return *result;
+    }
+
+    template<typename T>
+    const T& GameObject::GetComponent() const
+    {
+        const T* result = GetComponentPointer<T>();
+        return *result;
     }
 
     template<typename T>

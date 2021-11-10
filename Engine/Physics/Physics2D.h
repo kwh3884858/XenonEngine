@@ -70,6 +70,7 @@ namespace XenonPhysics
                 if (index == 1)return m_topRight;
                 if (index == 2)return m_bottomLeft;
                 if (index == 3)return m_bottomRight;
+                return Vector2f::Zero;
             }
         };
 

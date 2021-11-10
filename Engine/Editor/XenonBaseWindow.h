@@ -14,17 +14,21 @@ namespace XenonEngine {
 
 #define STR(str) #str
 
-#define WINDOW_DECLARE(windowName, windowType) \
+#define WINDOW_DECLARE_NAME(windowName) \
 public: \
-    const char*         GetWindiwName() const override          { return windowName; } \
-    Window_Type         GetWindowType() const override          { return windowType; } \
+    const char*         GetWindiwName() const override          { return windowName; } 
+
+#define WINDOW_DECLARE_TYPE(windowType) \
+public: \
+    Window_Type         GetWindowType() const override          { return windowType; } 
 
     class XenonBaseWindow
     {
     public:
         enum class Window_Type
         {
-            MainWindow,
+            MultiWindow,
+            SingleWindow,
             SubWindow,
             Popup
         };

@@ -2,11 +2,17 @@
 #include "Transform3D.h"
 #include "CrossPlatform/Polygon/Polygon3D.h"
 #include "Engine/Graphic/Graphic3D.h"
+#include "Engine/FileManager/FileManager.h"
 
 #include <cassert>
 
+#include "Engine/EngineManager.h"
+#include "CrossPlatform/File/ModelMeta.h"
+
 namespace XenonEngine
 {
+    using namespace CrossPlatform;
+
 	IComponent* Mesh3D::Copy(GameObject*const gameObject) const
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
@@ -15,35 +21,16 @@ namespace XenonEngine
 		return that;
 	}
 
-	void Mesh3D::SetConfig(const Mesh3DConfig*const config)
-	{
-		m_polygon3D = config->m_polygon3D;
-        float maxRadius = 0;
-        for (int i = 0 ;i < m_polygon3D->GetNumOfVertex(); i++)
-        {
-            float radius = (*m_polygon3D)[i].m_vertex.x *(*m_polygon3D)[i].m_vertex.x + (*m_polygon3D)[i].m_vertex.y *(*m_polygon3D)[i].m_vertex.y + (*m_polygon3D)[i].m_vertex.z *(*m_polygon3D)[i].m_vertex.z;
-            if (radius > maxRadius)
-            {
-                maxRadius = radius;
-            }
-        }
-        m_maxRadius = sqrt(maxRadius);
-	}
-
 	bool Mesh3D::Start()
 	{
+        LoadModel();
+
         Graphic3D::Get().AddGameobjectToRenderList(GetGameObject());
         return true;
 	}
 
 	bool Mesh3D::Update()
 	{
-		//TODO
-
-		//assert(m_polygon3D->m_numberOfVertex >= 3);
-		//Transform3D* transform = GetGameObject()->GetComponent<Transform3D>();
-		//assert(transform != nullptr);
-		//Graphic3D::Get().RenderPolygon3D(m_polygon3D, transform);
 		return true;
 	}
 
@@ -54,6 +41,47 @@ namespace XenonEngine
 		m_polygon3D = nullptr;
 		return true;
 	}
+
+    void Mesh3D::SetModelGuid(const xg::Guid& modelGuid)
+    {
+        m_modelId = modelGuid;
+        LoadModel();
+    }
+
+
+    void Mesh3D::LoadModel()
+    {
+        if (!m_modelId.isValid())
+        {
+            return;
+        }
+        const IFileMeta* dataRoot = EngineManager::Get().GetFileDatabase().GetFile(m_modelId);
+        if (dataRoot == nullptr)
+        {
+            m_modelId = xg::Guid();
+            return;
+        }
+
+        const ModelMeta* model = static_cast<const ModelMeta*>(dataRoot);
+        m_polygon3D = model->GetPolygon();
+
+        CalculateModelMaxRadius();
+    }
+
+    void Mesh3D::CalculateModelMaxRadius()
+    {
+        assert(m_polygon3D != nullptr);
+        float maxRadius = 0;
+        for (int i = 0; i < m_polygon3D->GetNumOfVertex(); i++)
+        {
+            float radius = (*m_polygon3D)[i].m_vertex.x *(*m_polygon3D)[i].m_vertex.x + (*m_polygon3D)[i].m_vertex.y *(*m_polygon3D)[i].m_vertex.y + (*m_polygon3D)[i].m_vertex.z *(*m_polygon3D)[i].m_vertex.z;
+            if (radius > maxRadius)
+            {
+                maxRadius = radius;
+            }
+        }
+        m_maxRadius = sqrt(maxRadius);
+    }
 
 	ComponentType Mesh3D::m_type = ComponentType::ComponentType_Mesh3D;
 }

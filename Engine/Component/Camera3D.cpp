@@ -31,7 +31,7 @@ namespace XenonEngine
 
     bool Camera3D::Update()
     {
-        const Transform3D* tranform3D = GetGameObject()->GetComponent<Transform3D>();
+        const Transform3D* tranform3D = GetGameObject()->GetComponentPointer<Transform3D>();
         Vector3f rotation = tranform3D->GetRotation();
         SetEularLookAt(Vector2f(rotation.y, rotation.x));
         return true;
@@ -62,7 +62,7 @@ namespace XenonEngine
 
     MathLab::TMatrix4X4f Camera3D::GetCameraTransformInverseMatrix() const
 	{
-        Transform3D* tranform3D = GetGameObject()->GetComponent<Transform3D>();
+        Transform3D* tranform3D = GetGameObject()->GetComponentPointer<Transform3D>();
         Vector3f position = tranform3D->GetPosition();
 
         // n coordinate = normal vector
@@ -94,7 +94,7 @@ namespace XenonEngine
     {
         float heading = MathLab::RadiansToDegree(atan(lookat.z / lookat.x));
         float elevation = MathLab::RadiansToDegree(asin(lookat.y));
-        Transform3D* tranform3D = GetGameObject()->GetComponent<Transform3D>();
+        Transform3D* tranform3D = GetGameObject()->GetComponentPointer<Transform3D>();
         tranform3D->SetRotation(Vector3f(elevation, heading, 0));
     }
 

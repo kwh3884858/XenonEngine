@@ -29,6 +29,17 @@ namespace XenonEngine
         delete m_physics2D;
     }
 
+    XenonEngine::GameObjectWorld* GameObjectWorld::Copy() const
+    {
+        GameObjectWorld* newObjectWorld = new GameObjectWorld(m_worldName);
+
+        for (int i = 0; i < m_worldObjects.Count(); i++)
+        {
+            newObjectWorld->AddGameObject(m_worldObjects[i]);
+        }
+        return newObjectWorld;
+    }
+
     void GameObjectWorld::AddGameObject(GameObject* const gameobject)
     {
         Vector<const String*> sameNameObjects = GetGameObjectNameList(gameobject->GetName());
@@ -128,7 +139,7 @@ namespace XenonEngine
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
-            Mesh2D* render2D = m_worldObjects[i]->GetComponent<Mesh2D>();
+            Mesh2D* render2D = m_worldObjects[i]->GetComponentPointer<Mesh2D>();
             if (render2D)
             {
                 render2D->Update();
