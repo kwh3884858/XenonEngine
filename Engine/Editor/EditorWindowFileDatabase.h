@@ -22,7 +22,7 @@ namespace XenonEngine
         WINDOW_DECLARE_NAME("File Database")
         WINDOW_DECLARE_TYPE(Window_Type::SingleWindow)
     public:
-        virtual void Initialize() override {}
+        virtual void Initialize() override;
         virtual void Shutdown() override {}
 
 

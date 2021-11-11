@@ -64,21 +64,19 @@ namespace XenonEngine
     void GameObjectWorldManager::SaveWorld(const Algorithm::String& savePath) const
     {
         String metaFilePath = savePath + ".metadata";
-        WorldMeta worldMeta(FileHeader(FileType::FileTypeWorld, savePath, xg::Guid(savePath.CString())));
+
+        xg::Guid guid = xg::newGuid();
+        WorldMeta worldMeta(FileHeader(FileType::FileTypeWorld, savePath, guid));
         {
             ofstream outputStream(metaFilePath.CString());
             YAML::Emitter out(outputStream);
-            out << YAML::BeginSeq;
             out << YAML::Node(worldMeta.GetFileHeader());
-            out << YAML::EndSeq;
             outputStream.close();
         }
         {
             ofstream outputStream(savePath.CString());
             YAML::Emitter out(outputStream);
-            out << YAML::BeginSeq;
             out << YAML::Node(*m_currentWorld);
-            out << YAML::EndSeq;
             outputStream.close();
         }
     }

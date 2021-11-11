@@ -20,11 +20,15 @@ namespace Algorithm
     bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
 	template<typename T>
 	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs);
+    //template<typename T>
+    //StringBase<T> operator+(const StringBase<T> lhs, const StringBase<T> rhs);
 
     template<typename T>
     class StringBase
     {
     public:
+        static const int INVALID_VALUE;
+
         template<typename T>
         friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
         StringBase();
@@ -55,14 +59,20 @@ namespace Algorithm
 
         int IndexOf(const StringBase& subString)const;
         int LastIndexOf(const StringBase& subString)const; 
+        int IndexOf(const T& subChar, int startPos = 0)const;
+        int LastIndexOf(const T& subChar)const;
         bool Find(const StringBase& subString)const;
         void Append(const StringBase& subString);
-        StringBase<T> Substring(unsigned int start, unsigned int end)const;
+        StringBase<T> Substring(unsigned int start, unsigned int end)const; //[start,end)
+        Vector<StringBase<T>> Split(T delimiter) const;
     private:
         void CStringlize();
 
         Vector<T> m_string;
     };
+
+    template<typename T>
+    __declspec(selectany) const int Algorithm::StringBase<T>::INVALID_VALUE = -1;;
 
     template<typename T>
     StringBase<T>::StringBase()
@@ -266,6 +276,13 @@ namespace Algorithm
         return m_string.Begin();
     }
 
+    //template<typename T>
+    //StringBase<T>
+    //    operator+(const StringBase<T> lhs, const StringBase<T> rhs)
+    //{
+    //    return lhs + rhs;
+    //}
+
     template<typename T>
     bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs)
     {
@@ -357,7 +374,7 @@ namespace Algorithm
             }
         }
         delete pOutDFA;
-        return -1;
+        return INVALID_VALUE;
     }
 
     template<typename T>
@@ -422,13 +439,39 @@ namespace Algorithm
             }
         }
         delete pOutDFA;
-        return -1;
+        return INVALID_VALUE;
+    }
+
+    template<typename T>
+    int Algorithm::StringBase<T>::IndexOf(const T& subChar, int startPos) const
+    {
+        for (int i = startPos; i < m_string.Count(); i++)
+        {
+            if (m_string[i] == subChar)
+            {
+                return i;
+            }
+        }
+        return INVALID_VALUE;
+    }
+
+    template<typename T>
+    int Algorithm::StringBase<T>::LastIndexOf(const T& subChar) const
+    {
+        for (int i = m_string.Count() -1; i >= 0 ; i--)
+        {
+            if (m_string[i] == subChar)
+            {
+                return i;
+            }
+        }
+        return INVALID_VALUE;
     }
 
     template<typename T>
     inline bool StringBase<T>::Find(const StringBase& subString)const
     {
-        return IndexOf(subString) != -1;
+        return IndexOf(subString) != INVALID_VALUE;
     }
 
     template<typename T>
@@ -444,10 +487,34 @@ namespace Algorithm
     template<typename T>
     Algorithm::StringBase<T> Algorithm::StringBase<T>::Substring(unsigned int start, unsigned int end)const
     {
+        assert(end - start >= 0);
         StringBase<T> result;
         result.m_string.Replace(m_string.Begin() + start, end - start );
         result.CStringlize();
         return result;
+    }
+
+    template<typename T>
+    Algorithm::Vector<Algorithm::StringBase<T>> Algorithm::StringBase<T>::Split(T delimiter) const
+    {
+        Algorithm::Vector<StringBase<T>> arr;
+        if (m_string.Count() != 0)
+        {
+            int start = 0;
+            int end = IndexOf(delimiter);
+            while (end != INVALID_VALUE)
+            {
+                StringBase<T> token = Substring(start, end);
+                if (token.Count() != 0) //-V728
+                    arr.Add(token);
+                start = end + 1;
+                end = IndexOf(delimiter, start);
+            }
+            StringBase<T> token = Substring(start, Count());
+            if (token.Count() != 0) //-V728
+                arr.Add(token);
+        }
+        return arr;
     }
 
     template<typename T>

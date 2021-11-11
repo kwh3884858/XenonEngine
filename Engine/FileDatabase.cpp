@@ -9,6 +9,7 @@
 #include "yaml-cpp/yaml.h"
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include "CrossPlatform/File/WorldMeta.h"
+#include "CrossPlatform/File/FolderMeta.h"
 
 namespace XenonEngine
 {
@@ -34,8 +35,8 @@ namespace XenonEngine
         {
             create_directory(m_projectData);
         }
-
-        m_root = new FolderMeta(FileHeader(FileTypeFolder, m_projectData.string().c_str(), xg::Guid(m_projectData.string().c_str())));
+        xg::Guid guid = xg::newGuid();
+        m_root = new FolderMeta(FileHeader(FileTypeFolder, m_projectData.string().c_str(), guid));
         RecursionFindFolder(*m_root);
     }
 
@@ -69,9 +70,9 @@ namespace XenonEngine
         directory_iterator dataRoot(parentFolder.GetFileHeader().GetFilePath().CString());
         for (auto& it : dataRoot)
         {
-            if (it.path().extension() == "metadata")
+            if (it.path().extension() == ".metadata")
             {
-                path relatedFile = it.path().string().substr(0, 9);
+                path relatedFile = it.path().string().substr(0, it.path().string().find_last_of('.'));
                 if (!exists(relatedFile))
                 {
                     remove(it.path());
@@ -79,7 +80,17 @@ namespace XenonEngine
                 }
 
                 YAML::Node config = YAML::LoadFile(it.path().generic_string());
-                FileHeader header = config["header"].as<FileHeader>();
+                FileHeader header = config.as<FileHeader>();
+                if (header.GetFileType() == FileType::None)
+                {
+                    remove(it.path());
+                    continue;
+                }
+                if (header.GetGUID() == xg::Guid())
+                {
+                    remove(it.path());
+                    continue;
+                }
                 header.SetFilePath(relatedFile.string().c_str());
 
                 IFileMeta* file = nullptr;
@@ -101,6 +112,7 @@ namespace XenonEngine
                 {
                     file = new WorldMeta(header);
                 }
+                assert(file != nullptr);
                 m_root->AddIFile(file);
                 m_database[header.GetGUID()] = file;
             }

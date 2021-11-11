@@ -59,7 +59,7 @@ namespace XenonEngine
         {
             return;
         }
-        m_worldName = world->GetWorldName().CString();
+        m_worldName = world->GetWorldName();
 
         EditorGameObject editorGameobject;
         if (ImGui::TreeNode("Scene"))

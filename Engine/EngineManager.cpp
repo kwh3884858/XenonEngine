@@ -12,7 +12,7 @@ namespace XenonEngine
         m_worldManager.Initialize();
         m_fileDatabase.Initialize();
         (*pGlobalSyncData).Graphic3DSetter(&(Graphic3D::Get()));
-        (*pGlobalSyncData).FolderSetter(m_fileDatabase.GetDataRoot());
+        (*pGlobalSyncData).FolderSetter(m_fileDatabase.GetRootFolder());
         return true;
     }
 

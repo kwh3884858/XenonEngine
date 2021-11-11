@@ -10,9 +10,6 @@
 [submodule "Library/crossguid"]
 	path = Library/crossguid
 	url = https://github.com/graeme-hill/crossguid.git
-[submodule "Library/ImGuiFileDialog"]
-	path = Library/ImGuiFileDialog
-	url = https://github.com/aiekick/ImGuiFileDialog.git
 [submodule "Library/ImGui-Addons"]
 	path = Library/ImGui-Addons
 	url = https://github.com/gallickgunner/ImGui-Addons.git

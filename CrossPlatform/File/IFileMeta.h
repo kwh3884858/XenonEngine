@@ -9,6 +9,8 @@ namespace CrossPlatform
     class FileHeader
     {
     public:
+        static const Algorithm::String Root_Drive;
+
         FileHeader():m_fileType(FileType::None),m_guid() {}
         FileHeader(const FileHeader& header) :
             m_fileType (header.m_fileType),
@@ -22,6 +24,8 @@ namespace CrossPlatform
         FileType GetFileType()const { return m_fileType; }
         void SetFileType(FileType fileType) { m_fileType = fileType; }
         const Algorithm::String& GetFilePath()const { return m_filePath; }
+        Algorithm::String GetVirtualPath() const;
+        Algorithm::String GetFileName() const;
         void SetFilePath(Algorithm::String filePath) { m_filePath = filePath; }
         const xg::Guid& GetGUID()const { return m_guid; }
         void SetGUID(xg::Guid guid) { m_guid = guid; }
@@ -40,17 +44,6 @@ namespace CrossPlatform
     protected:
         FileHeader m_header;
     private:
-    };
-
-    class FolderMeta :public IFileMeta
-    {
-    public:
-        FolderMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeFolder); }
-        void AddIFile(IFileMeta* file) { m_content.Add(file); }
-        IFileMeta* GetFile(int index) { return m_content[index]; }
-        int GetFileCount()const { return m_content.Count(); }
-    private:
-        Algorithm::Vector<IFileMeta*> m_content;
     };
 
     class MaterialMeta :public IFileMeta

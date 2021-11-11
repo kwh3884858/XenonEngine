@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Engine/Editor/XenonBaseWindow.h"
-
+#include "Algorithms/String.h"
 namespace XenonEngine
 {
 	class EditorWindowGameObjectWorld : public XenonBaseWindow{
@@ -12,8 +12,8 @@ namespace XenonEngine
 
     protected:
         virtual void UpdateMainWindow(const void* data = nullptr) override;
-        virtual const char* GetWindiwName() const override { return m_worldName; }
+        virtual const char* GetWindiwName() const override { return m_worldName.CString(); }
 	private:
-        const char* m_worldName = "Empty";
+        Algorithm::String m_worldName = "Empty";
 	};
 }

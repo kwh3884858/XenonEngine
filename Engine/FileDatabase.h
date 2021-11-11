@@ -22,7 +22,7 @@ namespace XenonEngine
         void Shutdown();
 
         CrossPlatform::FileType GetFileType(const std::string& ext)const;
-        const CrossPlatform::FolderMeta* GetDataRoot()const {return m_root; }
+        const CrossPlatform::FolderMeta* GetRootFolder()const { assert(m_root != nullptr); return m_root; }
 
         const CrossPlatform::IFileMeta* GetFile(xg::Guid fileGuid);
     private:

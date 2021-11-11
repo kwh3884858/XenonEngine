@@ -20,6 +20,8 @@ IF (WIN32)
     target_link_libraries(${PROJECT_NAME} crossguid)
     target_include_directories(${PROJECT_NAME} PUBLIC crossguid)
 
+    set_property(TARGET ${PROJECT_NAME} PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
+
     # add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E )
 
     # find_library(STATIC_LIB1 yaml-cpp HINTS ${CMAKE_PREFIX_PATH}/lib)
@@ -31,7 +33,10 @@ IF (WIN32)
     #             ${yaml-cpp_INCLUDE_DIR})
     #     target_link_libraries(${PROJECT_NAME} yaml-cpp)
     # ENDIF()
-
+    add_custom_command(
+        TARGET ${PROJECT_NAME} 
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/Library/Font-Awesome/webfonts/fa-regular-400.ttf" "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
 
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:${FLAGS}>" "$<$<CONFIG:RELEASE>:${FLAGS}>")
 
@@ -60,22 +65,28 @@ target_include_directories( ${PROJECT_NAME}
     ${PROJECT_SOURCE_DIR}/Library/imgui
 )
 
-file(GLOB_RECURSE DIR_SRCS 
+file(GLOB_RECURSE Dir_Algorithms 
 ${PROJECT_SOURCE_DIR}/Algorithms/*.cpp 
-${PROJECT_SOURCE_DIR}/Algorithms/*.h
+${PROJECT_SOURCE_DIR}/Algorithms/*.h)
+file(GLOB_RECURSE Dir_CrossPlatform 
 ${PROJECT_SOURCE_DIR}/CrossPlatform/*.cpp 
-${PROJECT_SOURCE_DIR}/CrossPlatform/*.h
+${PROJECT_SOURCE_DIR}/CrossPlatform/*.h)
+file(GLOB_RECURSE Dir_Engine 
 ${PROJECT_SOURCE_DIR}/Engine/*.cpp 
-${PROJECT_SOURCE_DIR}/Engine/*.h
+${PROJECT_SOURCE_DIR}/Engine/*.h)
+file(GLOB_RECURSE Dir_Gameplay 
 ${PROJECT_SOURCE_DIR}/Gameplay/*.cpp 
-${PROJECT_SOURCE_DIR}/Gameplay/*.h
+${PROJECT_SOURCE_DIR}/Gameplay/*.h)
+file(GLOB_RECURSE Dir_MathLab 
 ${PROJECT_SOURCE_DIR}/MathLab/*.cpp 
-${PROJECT_SOURCE_DIR}/MathLab/*.h
+${PROJECT_SOURCE_DIR}/MathLab/*.h)
+file(GLOB_RECURSE Dir_Root 
+${PROJECT_SOURCE_DIR}/Windows/XenonEngineNatvisFile.natvis
+${PROJECT_SOURCE_DIR}/MacWindow.licenseheader)
 
+file(GLOB_RECURSE Dir_Platform 
     $<$<BOOL:${WIN32}>:
     # for Windows
-    ${PROJECT_SOURCE_DIR}/Windows/XenonEngineNatvisFile.natvis
-    ${PROJECT_SOURCE_DIR}/MacWindow.licenseheader
     ${PROJECT_SOURCE_DIR}/Windows/*.cpp 
     ${PROJECT_SOURCE_DIR}/Windows/*.h
     >
@@ -83,8 +94,14 @@ ${PROJECT_SOURCE_DIR}/MathLab/*.h
     $<$<NOT:$<BOOL:${WIN32}>>:
     # for POSIX
     >
-    )
-target_sources(${PROJECT_NAME} PUBLIC ${DIR_SRCS})
+)
+target_sources(${PROJECT_NAME} PUBLIC ${Dir_Algorithms} ${Dir_CrossPlatform} ${Dir_Engine} ${Dir_Gameplay} ${Dir_MathLab} ${Dir_Root} ${Dir_Platform})
+source_group("Algorithms"            FILES ${Dir_Algorithms})
+source_group("CrossPlatform"            FILES ${Dir_CrossPlatform})
+source_group("Engine"            FILES ${Dir_Engine})
+source_group("Gameplay"            FILES ${Dir_Gameplay})
+source_group("MathLab"            FILES ${Dir_MathLab})
+source_group("Platform"            FILES ${Dir_Platform})
 
 file(
     GLOB 
@@ -99,6 +116,7 @@ file(
     ${PROJECT_SOURCE_DIR}/Library/imgui/*.h
     )
 target_sources(${PROJECT_NAME} PUBLIC ${DIR_IMGUI})
+source_group("ImGui"            FILES ${DIR_IMGUI})
 
 file(
     GLOB_RECURSE
@@ -107,6 +125,17 @@ file(
     ${PROJECT_SOURCE_DIR}/Library/ImGuiFileDialog/*.cpp
     )
 target_sources(${PROJECT_NAME} PUBLIC ${DIR_IMGUI_FILE_DIALOG})
+source_group("ImGuiFileDialog"            FILES ${DIR_IMGUI_FILE_DIALOG})
+
+file(
+    GLOB_RECURSE
+    DIR_ICON_FONT_DIALOG
+    ${PROJECT_SOURCE_DIR}/Library/IconFontCppHeaders/*.h
+    ${PROJECT_SOURCE_DIR}/Library/IconFontCppHeaders/*.cpp
+    )
+target_sources(${PROJECT_NAME} PUBLIC ${DIR_ICON_FONT_DIALOG})
+source_group("IconFontCppHeaders"            FILES ${DIR_ICON_FONT_DIALOG})
+
 
 message("PROJECT_SOURCE_DIR" ${PROJECT_SOURCE_DIR})
 message("DEBUG_POSTFIX" ${DEBUG_POSTFIX})

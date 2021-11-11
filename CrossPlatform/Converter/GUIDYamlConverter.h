@@ -11,7 +11,7 @@ namespace YAML {
     template<>
     struct convert<xg::Guid> {
         static Node encode(const xg::Guid& rhs) {
-            return Node(rhs);
+            return Node(rhs.str());
         }
 
         static bool decode(const Node& node, xg::Guid& rhs) {

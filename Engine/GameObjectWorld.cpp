@@ -17,6 +17,7 @@ namespace XenonEngine
     GameObjectWorld::GameObjectWorld(const Algorithm::String& worldName)
     {
         m_physics2D = new Physics2D;
+        SetWorldName(worldName);
     }
 
     GameObjectWorld::~GameObjectWorld()

@@ -8,7 +8,6 @@
 #include "yaml-cpp/yaml.h"
 
 #include "CrossPlatform/Converter/GUIDYamlConverter.h"
-#include "CrossPlatform/Converter/StringYamlConverter.h"
 #include "CrossPlatform/Converter/FileTypeYamlConverter.h"
 
 namespace YAML {
@@ -24,6 +23,9 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, FileHeader& rhs) {
+            if (!node.IsSequence())
+                return false;
+
             rhs.SetFileType(node[0].as<CrossPlatform::FileType>());
             rhs.SetGUID(node[1].as<xg::Guid>());
             return true;

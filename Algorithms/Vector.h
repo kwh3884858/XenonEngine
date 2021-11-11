@@ -283,7 +283,11 @@ namespace Algorithm
     {
         assert(m_content != nullptr);
         assert(content != nullptr);
-        memcpy(m_content, content, size * sizeof(T));
+        for (int i = 0; i < size; i++)
+        {
+            m_content[i] = content[i];
+        }
+        //memcpy(m_content, content, size * sizeof(T));
         m_count = size;
         return true;
     }
