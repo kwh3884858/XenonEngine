@@ -1,7 +1,6 @@
 #include "FolderMeta.h"
 #include <filesystem>
-#include <fstream>
-#include "yaml-cpp/yaml.h"
+
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 
 namespace CrossPlatform
@@ -25,17 +24,10 @@ namespace CrossPlatform
     bool FolderMeta::CreateFolder() const
     {
         path folderPath(GetFileHeader().GetFilePath().CString());
-        if (exists(folderPath))
+        if (!exists(folderPath))
         {
-            return false;
+            create_directory(folderPath);
         }
-        create_directory(folderPath);
-
-        String metaPath = GetFileHeader().GetFilePath() + ".metadata";
-        ofstream outputStream(metaPath.CString());
-        YAML::Emitter out(outputStream);
-        out << YAML::Node(GetFileHeader());
-        outputStream.close();
         return true;
     }
 

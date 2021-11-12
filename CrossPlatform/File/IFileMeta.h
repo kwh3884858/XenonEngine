@@ -29,6 +29,8 @@ namespace CrossPlatform
         void SetFilePath(Algorithm::String filePath) { m_filePath = filePath; }
         const xg::Guid& GetGUID()const { return m_guid; }
         void SetGUID(xg::Guid guid) { m_guid = guid; }
+
+        void GenerateMetadata()const;
     private:
         FileType m_fileType = FileType::None;
         Algorithm::String m_filePath;

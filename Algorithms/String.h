@@ -63,7 +63,7 @@ namespace Algorithm
         int LastIndexOf(const T& subChar)const;
         bool Find(const StringBase& subString)const;
         void Append(const StringBase& subString);
-        StringBase<T> Substring(unsigned int start, unsigned int end)const; //[start,end)
+        StringBase<T> Substring(int start, int end)const; //[start,end)
         Vector<StringBase<T>> Split(T delimiter) const;
     private:
         void CStringlize();
@@ -485,7 +485,7 @@ namespace Algorithm
     }
 
     template<typename T>
-    Algorithm::StringBase<T> Algorithm::StringBase<T>::Substring(unsigned int start, unsigned int end)const
+    Algorithm::StringBase<T> Algorithm::StringBase<T>::Substring(int start, int end)const
     {
         assert(end - start >= 0);
         StringBase<T> result;

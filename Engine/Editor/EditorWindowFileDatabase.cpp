@@ -19,43 +19,21 @@ namespace XenonEngine
         m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".png", ImVec4(0.0f, 1.0f, 1.0f, 0.9f), ICON_FA_FILE); // add an icon for the filter type
         m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".gif", ImVec4(0.0f, 1.0f, 0.5f, 0.9f), "[GIF]"); // add an text for a filter type
         m_contentBrowser.SetFileStyle(IGFD_FileStyleByTypeDir, nullptr, ImVec4(0.5f, 1.0f, 0.9f, 0.9f), ICON_FA_FOLDER); // for all dirs
-        m_contentBrowser.SetFileStyle(IGFD_FileStyleByFullName, "doc", ImVec4(0.9f, 0.2f, 0.0f, 0.9f), ICON_FA_FILE);
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByFullName, ".doc", ImVec4(0.9f, 0.2f, 0.0f, 0.9f), ICON_FA_FILE);
     }
 
     void EditorWindowFileDatabase::UpdateMainWindow(const void* data /*= nullptr*/)
     {
         const EngineSyncData* syncData = static_cast<const EngineSyncData*>(data);
-        const FolderMeta* rootFolder = syncData->FolderGetter();
-        if (!rootFolder)
+        FileDatabase* database = (FileDatabase*) syncData->DatabaseGetter();
+        if (!database)
         {
             return;
         }
-        EditorDatabase::Get().SetRootFolder(rootFolder);
+        EditorDatabase::Get().SetFileDatabase(database);
 
-        //// open Dialog Simple
-        //if (ImGui::Button("Open File Dialog"))
-        //    ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".meta", rootFolder->GetFileHeader().GetFilePath().CString());
+        m_contentBrowser.OpenDialog("ContentBrowser", ICON_FA_FILE "Content Browser", nullptr, database->GetRootFolder()->GetFileHeader().GetVirtualPath().CString(), true);
 
-        //// display
-        //if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey"))
-        //{
-        //    // action if OK
-        //    if (ImGuiFileDialog::Instance()->IsOk())
-        //    {
-        //        std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-        //        std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-        //        // action
-        //    }
-
-        //    // close
-        //    ImGuiFileDialog::Instance()->Close();
-        //}
-
-        // open Dialog with Pane
-        m_contentBrowser.OpenDialog("ContentBrowser", ICON_FA_FILE "Content Browser", nullptr, rootFolder->GetFileHeader().GetVirtualPath().CString(), true);
-
-            //ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".cpp,.h,.hpp",
-            //    rootFolder->GetFileHeader().GetVirtualPath().CString(), "", std::bind(&InfosPane, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), 350.0f, 1, IGFDUserDatas("InfosPane"));
         ImVec2 maxSize = ImVec2((float)1280, (float)720);  // The full display area
         ImVec2 minSize = ImVec2((float)640, (float)360);  // Half the display area
 
@@ -79,10 +57,10 @@ namespace XenonEngine
             m_contentBrowser.Close();
         }
 
-        if (ImGui::Button(ICON_FA_FILE_IMPORT " Add new file"))
+        if (ImGui::Button(ICON_FA_ANGRY " Add new file"))
         {
-            const char *filters = "Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world}";
-            m_fileImporter.OpenDialog("ChooseFile", "Add file", nullptr, (rootFolder->GetFileHeader().GetFilePath()+"\\").CString());
+            const char *filters = "Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world},Folder{}";
+            m_fileImporter.OpenDialog("ChooseFile", ICON_FA_AMBULANCE "Add file", filters, (database->GetRootFolder()->GetFileHeader().GetFilePath()+"\\.").CString());
         }
         // display and action if ok
         if (m_fileImporter.Display("ChooseFile", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
@@ -97,7 +75,7 @@ namespace XenonEngine
                 if (m_fileImporter.GetUserDatas())
                     userDatas = std::string((const char*)m_fileImporter.GetUserDatas());
                 auto selection = m_fileImporter.GetSelection(); // multiselection
-
+                database->AddFile(filePathName.c_str());
                 // action
             }
             // close

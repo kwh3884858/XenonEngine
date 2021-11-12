@@ -10,18 +10,19 @@ namespace CrossPlatform
 }
 namespace XenonEngine
 {
+    class FileDatabase;
     class EditorDatabase:public CrossPlatform::XenonSingleton<EditorDatabase>
     {
     public:
 
-        const CrossPlatform::FolderMeta* GetRootFolder()const { assert(m_rootFolder != nullptr); return m_rootFolder; }
-        void SetRootFolder(const CrossPlatform::FolderMeta* root) { m_rootFolder = root; }
+        //const CrossPlatform::FolderMeta* GetRootFolder()const { assert(m_rootFolder != nullptr); return m_rootFolder; }
+        void SetFileDatabase(const XenonEngine::FileDatabase* database) { m_fileDatabase = database; }
 
         CrossPlatform::FolderMeta* GetFolder(const Algorithm::String& virtualPath) const;
-        bool CreateFolder(const Algorithm::String& virtualPath) const;
-        Algorithm::String ConvertVirtualPath(const Algorithm::String& virtualPath);
+        CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath) const;
+        Algorithm::String ConvertToRealPath(const Algorithm::String& virtualPath);
     private:
-        const CrossPlatform::FolderMeta* m_rootFolder = nullptr;
+        const XenonEngine::FileDatabase* m_fileDatabase = nullptr;
 
     };
 
