@@ -12,14 +12,14 @@ namespace XenonEngine
 
     void EditorWindowFileDatabase::Initialize()
     {
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".cpp", ImVec4(1.0f, 1.0f, 0.0f, 0.9f));
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".h", ImVec4(0.0f, 1.0f, 0.0f, 0.9f));
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".hpp", ImVec4(0.0f, 0.0f, 1.0f, 0.9f));
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".md", ImVec4(1.0f, 0.0f, 1.0f, 0.9f));
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".png", ImVec4(0.0f, 1.0f, 1.0f, 0.9f), ICON_FA_FILE); // add an icon for the filter type
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByExtention, ".gif", ImVec4(0.0f, 1.0f, 0.5f, 0.9f), "[GIF]"); // add an text for a filter type
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByTypeDir, nullptr, ImVec4(0.5f, 1.0f, 0.9f, 0.9f), ICON_FA_FOLDER); // for all dirs
-        ImGuiFileDialog::Instance()->SetFileStyle(IGFD_FileStyleByFullName, "doc", ImVec4(0.9f, 0.2f, 0.0f, 0.9f), ICON_FA_FILE);
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".cpp", ImVec4(1.0f, 1.0f, 0.0f, 0.9f));
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".h", ImVec4(0.0f, 1.0f, 0.0f, 0.9f));
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".hpp", ImVec4(0.0f, 0.0f, 1.0f, 0.9f));
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".md", ImVec4(1.0f, 0.0f, 1.0f, 0.9f));
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".png", ImVec4(0.0f, 1.0f, 1.0f, 0.9f), ICON_FA_FILE); // add an icon for the filter type
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByExtention, ".gif", ImVec4(0.0f, 1.0f, 0.5f, 0.9f), "[GIF]"); // add an text for a filter type
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByTypeDir, nullptr, ImVec4(0.5f, 1.0f, 0.9f, 0.9f), ICON_FA_FOLDER); // for all dirs
+        m_contentBrowser.SetFileStyle(IGFD_FileStyleByFullName, "doc", ImVec4(0.9f, 0.2f, 0.0f, 0.9f), ICON_FA_FILE);
     }
 
     void EditorWindowFileDatabase::UpdateMainWindow(const void* data /*= nullptr*/)
@@ -52,7 +52,7 @@ namespace XenonEngine
         //}
 
         // open Dialog with Pane
-        ImGuiFileDialog::Instance()->OpenDialog("ChooseDirDlgKey", "Choose a Directory", ".cpp,.h,.hpp", rootFolder->GetFileHeader().GetVirtualPath().CString());
+        m_contentBrowser.OpenDialog("ContentBrowser", ICON_FA_FILE "Content Browser", nullptr, rootFolder->GetFileHeader().GetVirtualPath().CString(), true);
 
             //ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".cpp,.h,.hpp",
             //    rootFolder->GetFileHeader().GetVirtualPath().CString(), "", std::bind(&InfosPane, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3), 350.0f, 1, IGFDUserDatas("InfosPane"));
@@ -60,23 +60,48 @@ namespace XenonEngine
         ImVec2 minSize = ImVec2((float)640, (float)360);  // Half the display area
 
         // display and action if ok
-        if (ImGuiFileDialog::Instance()->Display("ChooseDirDlgKey", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
+        if (m_contentBrowser.Display("ContentBrowser", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
         {
-            if (ImGuiFileDialog::Instance()->IsOk())
+            if (m_contentBrowser.IsOk())
             {
-                std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-                std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-                std::string filter = ImGuiFileDialog::Instance()->GetCurrentFilter();
+                std::string filePathName = m_contentBrowser.GetFilePathName();
+                std::string filePath = m_contentBrowser.GetCurrentPath();
+                std::string filter = m_contentBrowser.GetCurrentFilter();
                 // here convert from string because a string was passed as a userDatas, but it can be what you want
                 std::string userDatas;
-                if (ImGuiFileDialog::Instance()->GetUserDatas())
-                    userDatas = std::string((const char*)ImGuiFileDialog::Instance()->GetUserDatas());
-                auto selection = ImGuiFileDialog::Instance()->GetSelection(); // multiselection
+                if (m_contentBrowser.GetUserDatas())
+                    userDatas = std::string((const char*)m_contentBrowser.GetUserDatas());
+                auto selection = m_contentBrowser.GetSelection(); // multiselection
 
                 // action
             }
             // close
-            ImGuiFileDialog::Instance()->Close();
+            m_contentBrowser.Close();
+        }
+
+        if (ImGui::Button(ICON_FA_FILE_IMPORT " Add new file"))
+        {
+            const char *filters = "Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world}";
+            m_fileImporter.OpenDialog("ChooseFile", "Add file", nullptr, (rootFolder->GetFileHeader().GetFilePath()+"\\").CString());
+        }
+        // display and action if ok
+        if (m_fileImporter.Display("ChooseFile", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
+        {
+            if (m_fileImporter.IsOk())
+            {
+                std::string filePathName = m_fileImporter.GetFilePathName();
+                std::string filePath = m_fileImporter.GetCurrentPath();
+                std::string filter = m_fileImporter.GetCurrentFilter();
+                // here convert from string because a string was passed as a userDatas, but it can be what you want
+                std::string userDatas;
+                if (m_fileImporter.GetUserDatas())
+                    userDatas = std::string((const char*)m_fileImporter.GetUserDatas());
+                auto selection = m_fileImporter.GetSelection(); // multiselection
+
+                // action
+            }
+            // close
+            m_fileImporter.Close();
         }
     }
 }

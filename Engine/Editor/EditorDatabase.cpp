@@ -17,10 +17,12 @@ namespace XenonEngine
             return nullptr;
         }
         //Only for Windows
-        if (decompositionPath.Count() == 1)
+
+        if (decompositionPath[0] != FileHeader::Root_Drive)
         {
-            assert(decompositionPath[0] == FileHeader::Root_Drive);
+            return nullptr;
         }
+
         FolderMeta* currentFolder =(FolderMeta*) m_rootFolder;
         for (int i = 1; i < decompositionPath.Count(); i++)
         {

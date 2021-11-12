@@ -29,6 +29,8 @@ namespace XenonEngine
     protected:
         virtual void UpdateMainWindow(const void* data = nullptr) override;
 	private:
+        ImGuiFileDialog m_contentBrowser;
+        ImGuiFileDialog m_fileImporter;
 	};
 
 }
