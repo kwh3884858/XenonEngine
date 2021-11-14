@@ -35,7 +35,7 @@ namespace XenonEngine
 
         Algorithm::String m_worldName;
         Algorithm::Vector<GameObject*> m_worldObjects;
-        XenonPhysics::Physics2D* m_physics2D;
+        XenonPhysics::Physics2D* m_physics2D = nullptr;
     };
 
 }

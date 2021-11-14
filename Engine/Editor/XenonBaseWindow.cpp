@@ -104,17 +104,16 @@ int XenonBaseWindow::indexCount = 0;
 
         UpdateMainWindow(data);
 
-        // Menu Bar
-        if (ImGui::BeginMenuBar())
-        {
-            if (ImGui::BeginMenu("Menu"))
-            {
-                UpdateMenu();
-                ImGui::EndMenu();
-            }
+        //// Menu Bar
+        //if (ImGui::BeginMenuBar())
+        //{
+        //    if (ImGui::BeginMenu("Menu"))
+        //    {
+        //        ImGui::EndMenu();
+        //    }
 
-            ImGui::EndMenuBar();
-        }
+        //    ImGui::EndMenuBar();
+        //}
 
 
         ImGui::End();
@@ -125,21 +124,21 @@ int XenonBaseWindow::indexCount = 0;
         ImGui::Text("Placeholder");
     }
 
-    void XenonBaseWindow::UpdateMenu()
-    {
-        //   ImGui::MenuItem("(dummy menu)", NULL, false, false);
-        if (ImGui::MenuItem("New")) {
+    //void XenonBaseWindow::UpdateMenu()
+    //{
+    //    //   ImGui::MenuItem("(dummy menu)", NULL, false, false);
+    //    if (ImGui::MenuItem("New")) {
 
-        }
+    //    }
 
-        if (ImGui::MenuItem("Open", "Ctrl+O")) {
+    //    if (ImGui::MenuItem("Open", "Ctrl+O")) {
 
-        }
+    //    }
 
-        if (ImGui::MenuItem("Save", "Ctrl+S")) {
+    //    if (ImGui::MenuItem("Save", "Ctrl+S")) {
 
-        }
-    }
+    //    }
+    //}
     const char* XenonBaseWindow::GetWindiwName() const {
         return "WindowTemplate";
     }

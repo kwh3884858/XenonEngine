@@ -65,6 +65,7 @@ namespace Algorithm
         void Append(const StringBase& subString);
         StringBase<T> Substring(int start, int end)const; //[start,end)
         Vector<StringBase<T>> Split(T delimiter) const;
+        bool Empty()const { return Count() == 0; }
     private:
         void CStringlize();
 

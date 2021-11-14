@@ -18,7 +18,7 @@ namespace XenonEngine
 
     bool EngineManager::Shutdown()
     {
-        (*pGlobalSyncData).WorldSetter(nullptr);
+        (*pGlobalSyncData).WorldManagerSetter(nullptr);
         (*pGlobalSyncData).Graphic3DSetter(nullptr);
 
         m_fileDatabase.Shutdown();
@@ -34,7 +34,7 @@ namespace XenonEngine
     void EngineManager::Update()
     {
         m_worldManager.Update();
-        (*pGlobalSyncData).WorldSetter(m_worldManager.GetCurrentWorld());
+        (*pGlobalSyncData).WorldManagerSetter(&m_worldManager);
 
     }
 

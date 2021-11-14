@@ -31,8 +31,8 @@ namespace XenonEngine
             return;
         }
         EditorDatabase::Get().SetFileDatabase(database);
-
-        m_contentBrowser.OpenDialog("ContentBrowser", ICON_FA_FILE "Content Browser", nullptr, database->GetRootFolder()->GetFileHeader().GetVirtualPath().CString(), true);
+        const char *filters = "All (.*){.*},Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world}";
+        m_contentBrowser.OpenDialog("ContentBrowser", ICON_FA_FILE "Content Browser", ".*", database->GetRootFolder()->GetFileHeader().GetVirtualPath().CString(), true);
 
         ImVec2 maxSize = ImVec2((float)1280, (float)720);  // The full display area
         ImVec2 minSize = ImVec2((float)640, (float)360);  // Half the display area
@@ -59,7 +59,7 @@ namespace XenonEngine
 
         if (ImGui::Button(ICON_FA_ANGRY " Add new file"))
         {
-            const char *filters = "Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world},Folder{}";
+            const char *filters = "Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world},All (.*){.*}";
             m_fileImporter.OpenDialog("ChooseFile", ICON_FA_AMBULANCE "Add file", filters, (database->GetRootFolder()->GetFileHeader().GetFilePath()+"\\.").CString());
         }
         // display and action if ok

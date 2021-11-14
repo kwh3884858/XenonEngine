@@ -45,40 +45,36 @@ namespace XenonEngine
 
     void GameObjectWorldManager::LoadWorld(const Algorithm::String& worldMetaFilePath)
     {
-        path metaFilePath(worldMetaFilePath.CString());
-        if (!exists(metaFilePath))
-        {
-            return;
-        }
-        if (metaFilePath.extension() != "metadata")
-        {
-            return;
-        }
-        YAML::Node config = YAML::LoadFile(metaFilePath.generic_string());
-        FileHeader header = config.as<FileHeader>();
-        WorldMeta* metaFile = (WorldMeta*)EngineManager::Get().GetFileDatabase().GetFile(header.GetGUID());
+        //path metaFilePath(worldMetaFilePath.CString());
+        //if (!exists(metaFilePath))
+        //{
+        //    return;
+        //}
+        //if (metaFilePath.extension() != "metadata")
+        //{
+        //    return;
+        //}
+        //YAML::Node config = YAML::LoadFile(metaFilePath.generic_string());
+        //FileHeader header = config.as<FileHeader>();
+        //WorldMeta* metaFile = (WorldMeta*)EngineManager::Get().GetFileDatabase().GetFile(header.GetGUID());
 
-        AddGameWorld(metaFile->GetGameObject());
+        //AddGameWorld(metaFile->GetGameObjectWorld());
     }
 
     void GameObjectWorldManager::SaveWorld(const Algorithm::String& savePath) const
     {
-        String metaFilePath = savePath + ".metadata";
 
-        xg::Guid guid = xg::newGuid();
-        WorldMeta worldMeta(FileHeader(FileType::FileTypeWorld, savePath, guid));
-        {
-            ofstream outputStream(metaFilePath.CString());
-            YAML::Emitter out(outputStream);
-            out << YAML::Node(worldMeta.GetFileHeader());
-            outputStream.close();
-        }
-        {
-            ofstream outputStream(savePath.CString());
-            YAML::Emitter out(outputStream);
-            out << YAML::Node(*m_currentWorld);
-            outputStream.close();
-        }
+        //xg::Guid guid = xg::newGuid();
+        //WorldMeta worldMeta(FileHeader(FileType::FileTypeWorld, savePath, guid));
+        //{
+
+        //}
+        //{
+        //    ofstream outputStream(savePath.CString());
+        //    YAML::Emitter out(outputStream);
+        //    out << YAML::Node(*m_currentWorld);
+        //    outputStream.close();
+        //}
     }
 
     //void GameObjectWorldManager::AddGameObject(GameObject* gameobject)

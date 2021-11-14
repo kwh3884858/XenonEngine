@@ -51,7 +51,7 @@ public: \
 
     protected:
         virtual void UpdateMainWindow(const void* data = nullptr);
-        virtual void UpdateMenu();
+        //virtual void UpdateMenu();
         virtual const char* GetWindiwName() const = 0;
         virtual Window_Type GetWindowType() const = 0;
         void SetParentWindow(XenonBaseWindow * parent);

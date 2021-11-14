@@ -12,6 +12,8 @@ namespace CrossPlatform {
     class XenonManager: public XenonSingleton<T>
     {
     public:
+        XenonManager(const XenonManager&) = delete;
+        XenonManager& operator=(const XenonManager&) = delete;
         virtual ~XenonManager() override = default;
 
         //initilize function, take the place of constructor

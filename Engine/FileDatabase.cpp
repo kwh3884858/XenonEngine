@@ -10,6 +10,8 @@
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include "CrossPlatform/File/WorldMeta.h"
 #include "CrossPlatform/File/FolderMeta.h"
+#include "Engine/EngineManager.h"
+#include "GameObjectWorld.h"
 
 namespace XenonEngine
 {
@@ -64,6 +66,18 @@ namespace XenonEngine
     {
         assert(m_database.find(fileGuid) != m_database.end());
         return m_database[fileGuid];
+    }
+
+    const Algorithm::String& FileDatabase::GetExtension(CrossPlatform::FileType fileType)
+    {
+        for (int i = 0; i < m_typePair.Count(); i++)
+        {
+            if (m_typePair[i].m_fileType == fileType)
+            {
+                return m_typePair[i].m_fileSuffix;
+            }
+        }
+        assert(true == false);
     }
 
     CrossPlatform::FolderMeta* FileDatabase::GetFolderByVirtualPath(const Algorithm::String& virtualPath) const
@@ -159,9 +173,9 @@ namespace XenonEngine
         return FileHeader::Root_Drive + realPath.Substring(m_root->GetFileHeader().GetFilePath().Count(), realPath.Count());
     }
 
-    void FileDatabase::AddFile(const Algorithm::String& filePath)
+    const IFileMeta* FileDatabase::AddFile(const Algorithm::String& realPath)
     {
-        path originalFile(filePath.CString());
+        path originalFile(realPath.CString());
         FileType fileType = GetFileType(originalFile.extension().string());
         switch (fileType)
         {
@@ -182,15 +196,122 @@ namespace XenonEngine
                 ModelMeta* modeMeta = new ModelMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
                 modeMeta->GetFileHeader().GenerateMetadata();
                 folder->AddIFile(modeMeta);
+                return modeMeta;
             }
         }
             break;
         case CrossPlatform::FileTypeWorld:
+        {
+            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
+            {
+                xg::Guid guid = xg::newGuid();
+                WorldMeta* worldMeta = new WorldMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
+                worldMeta->GetFileHeader().GenerateMetadata();
+                folder->AddIFile(worldMeta);
+                return worldMeta;
+            }
+        }
             break;
         default:
             throw "Type Undefined";
             break;
         }
+        return nullptr;
+    }
+
+    void FileDatabase::LoadFile(const Algorithm::String& realPath)
+    {
+        String filePath(realPath);
+        if (IsVirtualPath(filePath))
+        {
+            filePath = ConvertToRealPath(filePath);
+        }
+        path originalFile(filePath.CString());
+        FileType fileType = GetFileType(originalFile.extension().string());
+        switch (fileType)
+        {
+        case CrossPlatform::None:
+            throw "Error Type";
+            break;
+        case CrossPlatform::FileTypeFolder:
+            throw "How?";
+            break;
+        case CrossPlatform::FileTypeMaterial:
+            break;
+        case CrossPlatform::FileTypeModel:
+        {
+        }
+        break;
+        case CrossPlatform::FileTypeWorld:
+        {
+            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            IFileMeta* file = folder->GetFile(originalFile.stem().string().c_str());
+            if (file)
+            {
+                WorldMeta* worldFile =static_cast<WorldMeta*>(file);
+                EngineManager::Get().GetWorldManager().AddGameWorld(worldFile->GetGameObjectWorld());
+            }
+        }
+        break;
+        default:
+            throw "Type Undefined";
+            break;
+        }
+    }
+
+    void FileDatabase::SaveFile(const Algorithm::String& realPath)
+    {
+        String filePath(realPath);
+        if (IsVirtualPath(filePath))
+        {
+            filePath = ConvertToRealPath(filePath);
+        }
+        path originalFile(filePath.CString());
+        FileType fileType = GetFileType(originalFile.extension().string());
+        switch (fileType)
+        {
+        case CrossPlatform::None:            
+            throw "Error Type";
+            break;
+        case CrossPlatform::FileTypeFolder:
+            throw "Error Type";
+            break;
+        case CrossPlatform::FileTypeMaterial:
+            throw "Error Type";
+            break;
+        case CrossPlatform::FileTypeModel:
+            throw "Error Type";
+            break;
+        case CrossPlatform::FileTypeWorld:
+        {
+            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            String fileName (originalFile.stem().string().c_str());
+            IFileMeta* file = folder->GetFile(fileName);
+            if (file)
+            {
+                WorldMeta* metaFile = (WorldMeta*)file;
+                metaFile->SaveGameObjectWorld();
+            }
+            else
+            {
+                WorldMeta* metaFile = (WorldMeta*)AddFile(filePath);
+                GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+                world->SetWorldName(fileName);
+                metaFile->SetGameObjectWorld(world);
+                metaFile->SaveGameObjectWorld();
+            }
+        }
+            break;
+        default:
+            throw "Error Type";
+            break;
+        }
+    }
+
+    bool FileDatabase::IsVirtualPath(const Algorithm::String& filePath) const
+    {
+        return filePath[0] == 'X';
     }
 
     void FileDatabase::RecursionFindFolder(FolderMeta& parentFolder)

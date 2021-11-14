@@ -7,6 +7,7 @@
 #include "CrossPlatform/File/IFileMeta.h"
 namespace XenonEngine
 {
+    class FileDatabase;
     class GameObjectWorld;
 }
 
@@ -15,11 +16,14 @@ namespace CrossPlatform
     class WorldMeta :public IFileMeta
     {
     public:
+        friend class XenonEngine::FileDatabase;
         WorldMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeWorld); }
         virtual ~WorldMeta()override;
-        XenonEngine::GameObjectWorld* GetGameObject();
+        XenonEngine::GameObjectWorld* GetGameObjectWorld();
+        void SaveGameObjectWorld()const;
     protected:
     private:
+        void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }
         XenonEngine::GameObjectWorld* m_gameobjectWorld = nullptr;
     };
 

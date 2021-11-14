@@ -2,6 +2,7 @@
 
 #include "Engine/Editor/XenonBaseWindow.h"
 #include "Algorithms/String.h"
+#include "Library/ImGuiFileDialog/ImGuiFileDialog.h"
 namespace XenonEngine
 {
 	class EditorWindowGameObjectWorld : public XenonBaseWindow{
@@ -15,5 +16,7 @@ namespace XenonEngine
         virtual const char* GetWindiwName() const override { return m_worldName.CString(); }
 	private:
         Algorithm::String m_worldName = "Empty";
+        ImGuiFileDialog m_saveDialog;
+        ImGuiFileDialog m_loadDialog;
 	};
 }

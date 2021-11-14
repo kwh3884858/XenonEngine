@@ -1,32 +1,26 @@
 #include "EditorWindowGameObjectWorld.h"
-#include "Engine/EngineSyncData.h"
 
+#include "Engine/EngineSyncData.h"
+#include "Engine/FileDatabase.h"
+#include "Engine/GameObjectWorldManager.h"
 #include "Engine/GameObjectWorld.h"
 #include "Engine/GameObject.h"
-
-#include "Library/imgui/imgui.h"
-
 #include "Engine/Editor/EditorGameObject.h"
 #include "Engine/Graphic/Graphic3D.h"
+
+#include "Library/imgui/imgui.h"
+#include "Library/IconFontCppHeaders/IconsFontAwesome5.h"
+
+#include "CrossPlatform/File/FolderMeta.h"
+#include <filesystem>
+#include "EditorDatabase.h"
+//#include "CrossPlatform/FileTypeEnum.h"
+
 namespace XenonEngine
 {
-
-    //void EditorGUI::Initialize(const EngineSyncData* data)
-    //{
-    //    m_worldData = data->m_gameWorld;
-    //    
-    //}
-
-    //void EditorGUI::Shutdown()
-    //{
-
-    //}
-
-    //void EditorGameObjectWorld::Update(const EngineSyncData* data)
-    //{
-
-    //}
-
+    using namespace CrossPlatform;
+    using namespace std;
+    using namespace std::filesystem;
     void EditorWindowGameObjectWorld::UpdateMainWindow(const void* data /*= nullptr*/)
     {
         const EngineSyncData* syncData = static_cast<const EngineSyncData*>(data);
@@ -35,8 +29,9 @@ namespace XenonEngine
         {
             return;
         }
+
         const Graphic3D::RenderType& renderType = graphic->GetRenderType();
-        const char* items[] = { "Wireframe", "FlatShdering", "GouraudShdering"};
+        const char* items[] = { "Wireframe", "FlatShdering", "GouraudShdering" };
         const char* item_current = items[renderType];            // Here our selection is a single pointer stored outside the object.
         if (ImGui::BeginCombo("combo 1", item_current)) // The second parameter is the label previewed before opening the combo.
         {
@@ -54,13 +49,69 @@ namespace XenonEngine
             ImGui::EndCombo();
         }
 
-        const GameObjectWorld* world = syncData->WorldGetter();
-        if (!world)
+        const GameObjectWorldManager* worldManager = syncData->WorldManagerGetter();
+        if (!worldManager)
         {
             return;
         }
+        GameObjectWorld*const world = worldManager->GetCurrentWorld();
         m_worldName = world->GetWorldName();
 
+        FileDatabase* database = (FileDatabase*)syncData->DatabaseGetter();
+        if (!database)
+        {
+            return;
+        }
+        EditorDatabase::Get().SetFileDatabase(database);
+
+        // Menu Bar
+        if (ImGui::BeginMenuBar())
+        {
+            if (ImGui::BeginMenu("Menu"))
+            {
+                if (ImGui::MenuItem("New World")) {
+
+                }
+                if (ImGui::MenuItem("Open World", "Ctrl+O"))
+                {
+                    const char *filters = "World (*.world){.world}";
+                    m_loadDialog.OpenDialog("LoadWorld", ICON_FA_FILE "Load World", filters, database->GetRootFolder()->GetFileHeader().GetVirtualPath().CString(), true);
+                }
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                {
+                    database->SaveFile(CrossPlatform::FileHeader::Root_Drive + std::filesystem::path::preferred_separator + m_worldName + database->GetExtension(FileType::FileTypeWorld));
+                }
+                if (ImGui::MenuItem("Save as World", "Ctrl+Shift+S")) {
+                    m_saveDialog.OpenDialog("ChooseFolder", ICON_FA_AMBULANCE "Choose Folder to Save World", nullptr, database->GetRootFolder()->GetFileHeader().GetVirtualPath().CString(), true);
+                }
+
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndMenuBar();
+        }
+        ImVec2 maxSize = ImVec2((float)1280, (float)720);
+        ImVec2 minSize = ImVec2((float)640, (float)360);
+        if (m_loadDialog.Display("LoadWorld", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
+        {
+            if (m_loadDialog.IsOk())
+            {
+                database->LoadFile(m_loadDialog.GetFilePathName().c_str());
+            }
+            m_loadDialog.Close();
+        }
+        if (m_saveDialog.Display("ChooseFolder", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
+        {
+            if (m_saveDialog.IsOk())
+            {
+                path filePathName = m_saveDialog.GetFilePathName();
+                filePathName.append((m_worldName + database->GetExtension(FileType::FileTypeWorld)).CString());
+                database->SaveFile(filePathName.string().c_str());
+            }
+            m_saveDialog.Close();
+        }
+
+        // Main Window
         EditorGameObject editorGameobject;
         if (ImGui::TreeNode("Scene"))
         {
@@ -77,5 +128,4 @@ namespace XenonEngine
             ImGui::TreePop();
         }
     }
-
 }

@@ -24,6 +24,7 @@ namespace CrossPlatform
     Algorithm::String FileHeader::GetFileName() const
     {
         int delimiterIndex =m_filePath.LastIndexOf(std::filesystem::path::preferred_separator);
+        assert(delimiterIndex >= 0);
         return m_filePath.Substring(delimiterIndex +1, m_filePath.Count());
     }
 
