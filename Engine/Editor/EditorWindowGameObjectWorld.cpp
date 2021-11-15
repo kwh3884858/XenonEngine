@@ -12,8 +12,11 @@
 #include "Library/IconFontCppHeaders/IconsFontAwesome5.h"
 
 #include "CrossPlatform/File/FolderMeta.h"
+#include "CrossPlatform/Editor/XenonEditorInterface.h"
 #include <filesystem>
 #include "EditorDatabase.h"
+#include "Engine/Component/PointLightComponent.h"
+#include "Engine/Component/DirectionLightComponent.h"
 //#include "CrossPlatform/FileTypeEnum.h"
 
 namespace XenonEngine
@@ -55,7 +58,16 @@ namespace XenonEngine
             return;
         }
         GameObjectWorld*const world = worldManager->GetCurrentWorld();
-        m_worldName = world->GetWorldName();
+        Algorithm:String worldName = world->GetWorldName();
+
+        // World Name
+
+        ImGui::Text("World Name:"); ImGui::SameLine();
+        ImGui::InputText("##InputworldName", worldName);
+        if (worldName != world->GetWorldName())
+        {
+            world->SetWorldName(worldName);
+        }
 
         FileDatabase* database = (FileDatabase*)syncData->DatabaseGetter();
         if (!database)
@@ -79,7 +91,7 @@ namespace XenonEngine
                 }
                 if (ImGui::MenuItem("Save", "Ctrl+S"))
                 {
-                    database->SaveFile(CrossPlatform::FileHeader::Root_Drive + std::filesystem::path::preferred_separator + m_worldName + database->GetExtension(FileType::FileTypeWorld));
+                    database->SaveFile(CrossPlatform::FileHeader::Root_Drive + std::filesystem::path::preferred_separator + worldName + database->GetExtension(FileType::FileTypeWorld));
                 }
                 if (ImGui::MenuItem("Save as World", "Ctrl+Shift+S")) {
                     m_saveDialog.OpenDialog("ChooseFolder", ICON_FA_AMBULANCE "Choose Folder to Save World", nullptr, database->GetRootFolder()->GetFileHeader().GetVirtualPath().CString(), true);
@@ -105,7 +117,7 @@ namespace XenonEngine
             if (m_saveDialog.IsOk())
             {
                 path filePathName = m_saveDialog.GetFilePathName();
-                filePathName.append((m_worldName + database->GetExtension(FileType::FileTypeWorld)).CString());
+                filePathName.append((worldName + database->GetExtension(FileType::FileTypeWorld)).CString());
                 database->SaveFile(filePathName.string().c_str());
             }
             m_saveDialog.Close();
@@ -115,12 +127,14 @@ namespace XenonEngine
         EditorGameObject editorGameobject;
         if (ImGui::TreeNode("Scene"))
         {
+            ContextMenu(world);
             const Algorithm::Vector<GameObject*>& objectList = world->GetWorldObjects();
             for (int i = 0; i < objectList.Count(); i++)
             {
-                const GameObject* go =objectList[i];
+                const GameObject* go = objectList[i];
                 if (ImGui::TreeNode((void*)(intptr_t)i, go->GetName().CString()))
                 {
+                    ContextMenu(world, (GameObject*)go);
                     editorGameobject.Update(go);
                     ImGui::TreePop();
                 }
@@ -128,4 +142,39 @@ namespace XenonEngine
             ImGui::TreePop();
         }
     }
+
+    void EditorWindowGameObjectWorld::ContextMenu(GameObjectWorld* world, GameObject* go /*= nullptr*/) const
+    {
+        if (ImGui::BeginPopupContextItem())
+        {
+            if (ImGui::MenuItem("Add GameObject")) {
+                world->AddGameObject(new GameObject());
+            }
+            if (go)
+            {
+                if (ImGui::BeginMenu("Add Component"))
+                {
+                    if (ImGui::MenuItem("Transform 3D")) {
+                        Transform3D* trans3D = new Transform3D(go);
+                        go->AddComponent(trans3D);
+                    }
+                    if (ImGui::MenuItem("Mesh 3D")) {
+                        Mesh3D* mesh3D = new Mesh3D(go);
+                        go->AddComponent(mesh3D);
+                    }
+                    if (ImGui::MenuItem("Direction Light")) {
+                        DirectionLightComponent* directLight = new DirectionLightComponent(go);
+                        go->AddComponent(directLight);
+                    }
+                    if (ImGui::MenuItem("Point Light")) {
+                        PointLightComponent* pointLight = new PointLightComponent(go);
+                        go->AddComponent(pointLight);
+                    }
+                    ImGui::EndMenu();
+                }
+            }
+            ImGui::EndPopup();
+        }
+    }
+
 }

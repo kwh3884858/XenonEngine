@@ -5,6 +5,7 @@
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/DirectionLightComponent.h"
 #include "Engine/Component/PointLightComponent.h"
+#include "Engine/Component/Mesh3D.h"
 
 
 namespace XenonEngine
@@ -14,41 +15,62 @@ namespace XenonEngine
 
     void EditorGameObject::Update(const GameObject* data /*= nullptr*/)
     {
-            for (int i = 0; i < data->GetComponentCount(); i++)
+        for (int i = 0; i < data->GetComponentCount(); i++)
+        {
+            const IComponent* component = data->GetComponentByIndex(i);
+            ComponentType type = component->GetComponentType();
+            if (type == ComponentType::ComponentType_Transform3D)
             {
-                const IComponent* component = data->GetComponentByIndex(i);
-                ComponentType type = component->GetComponentType();
-                if (type == ComponentType::ComponentType_Transform3D)
+                if (ImGui::TreeNode((void*)(intptr_t)i, "%d Transform3D", i))
                 {
-                    if (ImGui::TreeNode((void*)(intptr_t)i, "%d Transform3D", i))
+                    const Transform3D* trans3D = static_cast<const Transform3D*>(component);
+                    const Vector3f& pos = trans3D->GetPosition();
+                    DragFloat3("Transform", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
+                    const Vector3f& rot = trans3D->GetRotation();
+                    DragFloat3("Rotation", const_cast<Vector3f&>(rot), 0.01f, -100.0f, 100.0f);
+                    ImGui::TreePop();
+                }
+            }
+            if (type == ComponentType::ComponentType_Light)
+            {
+                const LightComponent* light = static_cast<const LightComponent*>(component);
+                LightComponent::LightType lightType = light->GetLightType();
+                if (lightType == LightComponent::LightType::Direction)
+                {
+                    if (ImGui::TreeNode((void*)(intptr_t)i, "%d Direction Light Component", i))
                     {
-                        const Transform3D* trans3D = static_cast<const Transform3D*>(component);
-                        const Vector3f& pos = trans3D->GetPosition();
-                        DragFloat3("Transform", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
-                        const Vector3f& rot = trans3D->GetRotation();
-                        DragFloat3("Rotation", const_cast<Vector3f&>(rot), 0.01f, -100.0f, 100.0f);
+                        DirectionLightComponent* directionLight = (DirectionLightComponent*)light;
+                        const Vector3f& pos = directionLight->GetDirection();
+                        DragFloat3("Direction", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
+                        const Vector4f& color = directionLight->GetRawColor();
+                        ColorEdit4("LightColor", const_cast<Vector4f&>(color));
                         ImGui::TreePop();
                     }
                 }
-                if (type == ComponentType::ComponentType_Light)
+            }
+            if (type == ComponentType::ComponentType_Mesh3D)
+            {
+                if (ImGui::TreeNode((void*)(intptr_t)i, "%d Transform3D", i))
                 {
-                    const LightComponent* light = static_cast<const LightComponent*>(component);
-                    LightComponent::LightType lightType = light->GetLightType();
-                    if (lightType == LightComponent::LightType::Direction)
+                    const Mesh3D* mesh = static_cast<const Mesh3D*>(component);
+                    ImGui::PushID(i);
+                    ImGui::Text("Model GUID: %s", mesh->GetModelGuid().str().c_str());
+                    if (ImGui::BeginDragDropTarget())
                     {
-                        if (ImGui::TreeNode((void*)(intptr_t)i, "%d Direction Light Component", i))
+                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
                         {
-                            DirectionLightComponent* directionLight =  (DirectionLightComponent*)light;
-                            const Vector3f& pos = directionLight->GetDirection();
-                            DragFloat3("Direction", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
-                            const Vector4f& color = directionLight->GetRawColor();
-                            ColorEdit4("LightColor", const_cast<Vector4f&>(color));
-                            ImGui::TreePop();
+                            IM_ASSERT(payload->DataSize == 37);
+                            char* payload_n = (char*)payload->Data;
+                            ( (Mesh3D*)mesh )->SetModelGuid(xg::Guid(payload_n));
                         }
+                        ImGui::EndDragDropTarget();
                     }
+                    ImGui::PopID();
+                    ImGui::Text("Max Radius: %f", mesh->GetMaxRadius());
+                    ImGui::TreePop();
                 }
             }
-
+        }
     }
 
     bool EditorGameObject::DragFloat3(const char* label, MathLab::Vector3f& v, float v_speed /*= 1.0f*/, float v_min /*= 0.0f*/, float v_max /*= 0.0f*/, const char* format /*= "%.3f"*/, float power /*= 1.0f*/)

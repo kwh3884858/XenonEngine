@@ -50,6 +50,7 @@ namespace Algorithm
 
         void Add(T value);
         int Count()const;
+        int Capacity()const { return m_string.Capacity(); }
         int ToInt()const;
         float ToFloat()const;
         char ToChar()const;
@@ -66,6 +67,7 @@ namespace Algorithm
         StringBase<T> Substring(int start, int end)const; //[start,end)
         Vector<StringBase<T>> Split(T delimiter) const;
         bool Empty()const { return Count() == 0; }
+        void Resize(int length);
     private:
         void CStringlize();
 
@@ -516,6 +518,13 @@ namespace Algorithm
                 arr.Add(token);
         }
         return arr;
+    }
+
+    template<typename T>
+    void Algorithm::StringBase<T>::Resize(int length)
+    {
+        m_string.Resize(length);
+        CStringlize();
     }
 
     template<typename T>

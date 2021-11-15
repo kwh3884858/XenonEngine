@@ -296,6 +296,7 @@ namespace XenonEngine
             else
             {
                 WorldMeta* metaFile = (WorldMeta*)AddFile(filePath);
+                assert(metaFile != nullptr);
                 GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
                 world->SetWorldName(fileName);
                 metaFile->SetGameObjectWorld(world);

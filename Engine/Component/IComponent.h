@@ -13,7 +13,7 @@ namespace XenonEngine
     public:
         enum IComponentType :int
         {
-            None,
+            None = 0,
             ComponentType_Transform2D,
 			ComponentType_Transform3D,
             ComponentType_Mesh2D,
@@ -25,7 +25,8 @@ namespace XenonEngine
             ComponentType_Script,
             ComponentType_Input,
 			ComponentType_Camera,
-            ComponentType_Light
+            ComponentType_Light,
+            ComponentType_Count
         };
         IComponent( GameObject* gameobject) :
             m_gameobject(gameobject)

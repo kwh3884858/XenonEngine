@@ -24,6 +24,7 @@ namespace Algorithm
 		bool Initialize(int size);
         void Replace(const T*const content,int size);
         bool Clear();
+        void Resize(int size);
 
 		int IndexOf(T element)const;
 		int Count()const;
@@ -101,6 +102,22 @@ namespace Algorithm
         //}
         m_count = 0;
         return true;
+    }
+
+    template<typename T>
+    void Algorithm::Vector<T>::Resize(int size)
+    {
+        if (size < m_count)
+        {
+            m_count = size;
+        }
+        if (size > m_count)
+        {
+            for (int i = m_count; i < size; i++)
+            {
+                Add(T());
+            }
+        }
     }
 
 	template<typename T>
