@@ -40,6 +40,7 @@ namespace WindowInput {
         virtual bool GetStickButton(unsigned buttonCode)const override;
 
     private:
+        static bool IsUseJoyStick;
         void InitializeKeyboardCode()const;
 
         LPDIRECTINPUT8 lpdi = nullptr;

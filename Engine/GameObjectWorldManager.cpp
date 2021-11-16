@@ -22,7 +22,7 @@ namespace XenonEngine
     {
         if (!m_currentWorld)
         {
-            CreateGameWorld("Untitled");
+            CreateGameWorld("Empty World");
         }
         return true;
     }

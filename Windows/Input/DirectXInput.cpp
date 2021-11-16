@@ -59,18 +59,21 @@ namespace WindowInput {
         result = lpdi->EnumDevices(DI8DEVCLASS_GAMECTRL, DirectInputEnumJoystick, &m_joyStickGUID, DIEDFL_ATTACHEDONLY);
         assert(result == DI_OK);
 
-        // If you get a error from here, please plug in a controller.
-        result = lpdi->CreateDevice(m_joyStickGUID, &lpdiJoystick, nullptr);
-        assert(result == DI_OK);
+        if (IsUseJoyStick)
+        {
+            // If you get a error from here, please plug in a controller.
+            result = lpdi->CreateDevice(m_joyStickGUID, &lpdiJoystick, nullptr);
+            assert(result == DI_OK);
 
-        result = lpdiJoystick->SetCooperativeLevel(m_hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
-        assert(result == DI_OK);
+            result = lpdiJoystick->SetCooperativeLevel(m_hwnd, DISCL_BACKGROUND | DISCL_NONEXCLUSIVE);
+            assert(result == DI_OK);
 
-        result = lpdiJoystick->SetDataFormat(&c_dfDIJoystick);
-        assert(result == DI_OK);
+            result = lpdiJoystick->SetDataFormat(&c_dfDIJoystick);
+            assert(result == DI_OK);
 
-        result = lpdiJoystick->Acquire();
-        assert(result == DI_OK);
+            result = lpdiJoystick->Acquire();
+            assert(result == DI_OK);
+        }
     }
 
     void DirectXInput::Update()
@@ -90,13 +93,15 @@ namespace WindowInput {
         result = lpdiMouse->GetDeviceState(sizeof(m_mouseState), (LPVOID)&m_mouseState);
         assert(result == DI_OK);
 
-        result = lpdiJoystick->Poll();
-        //TODO: why is false?
-        //assert(result == DI_OK);
+        if (lpdiJoystick)
+        {
+            result = lpdiJoystick->Poll();
+            //TODO: why is false?
+            //assert(result == DI_OK);
 
-        result = lpdiJoystick->GetDeviceState(sizeof(m_joystickState), (LPVOID)&m_joystickState);
-        assert(result == DI_OK);
-
+            result = lpdiJoystick->GetDeviceState(sizeof(m_joystickState), (LPVOID)&m_joystickState);
+            assert(result == DI_OK);
+        }
     }
 
     void DirectXInput::ShutDown()
@@ -163,6 +168,8 @@ namespace WindowInput {
         assert(buttonCode >= 0 && buttonCode <= 31);
         return m_joystickState.rgbButtons[buttonCode] & 0x80;
     }
+
+    bool DirectXInput::IsUseJoyStick = false;
 
     void DirectXInput::InitializeKeyboardCode() const
     {

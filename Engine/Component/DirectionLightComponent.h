@@ -31,13 +31,15 @@ namespace XenonEngine
         void SetConfig(const DirectionLightComponentConfig& config);
         //MathLab::Vector3f GetDirection()const;
         const MathLab::Vector3f& GetDirection();
+        void SetDirection(const MathLab::Vector3f& direction) { m_direction = direction; }
         //CrossPlatform::SColorRGBA GetColor()const { return m_color; }
         CrossPlatform::SColorRGBA GetColor()const { return m_color.ToColor(); }
         const MathLab::Vector4f& GetRawColor()const { return m_color; }
+        void SetRawColor(const MathLab::Vector4f& rawColor) { m_color = rawColor; }
 
         static ComponentType m_type;
     private:
-        MathLab::Vector3f m_direction;
+        MathLab::Vector3f m_direction = MathLab::Vector3f(0, 0, 1);
         MathLab::Vector4f m_color;
     };
 

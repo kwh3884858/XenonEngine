@@ -12,6 +12,7 @@ namespace XenonEngine
     {
     public:
         GameObjectWorld(const Algorithm::String& worldName = "Untitled");
+        GameObjectWorld(const GameObjectWorld& otherWorld);
         ~GameObjectWorld();
         const GameObjectWorld& operator=(const GameObjectWorld& world) = delete;
         GameObjectWorld* Copy()const;

@@ -246,7 +246,7 @@ namespace XenonEngine
         case CrossPlatform::FileTypeWorld:
         {
             FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
-            IFileMeta* file = folder->GetFile(originalFile.stem().string().c_str());
+            IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
             if (file)
             {
                 WorldMeta* worldFile =static_cast<WorldMeta*>(file);

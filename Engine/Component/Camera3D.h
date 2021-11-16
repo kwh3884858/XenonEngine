@@ -34,24 +34,26 @@ namespace XenonEngine
         void SetConfig(const Camera3DConfig*const config);
 
         float GetViewDistance()const;
-        float GetFov()const { return m_fov; }
-        MathLab::Vector2f GetViewPlane()const { return m_viewPlane; }
-        MathLab::Vector2f GetViewport()const { return m_viewport; }
+        //void SetLookAt(const MathLab::Vector3f& lookat);
+        const MathLab::Vector3f& GetLookAt()const { return m_lookAt; }
+        const float& GetFov()const { return m_fov; }
+        const MathLab::Vector2f& GetViewPlane()const { return m_viewPlane; }
+        const MathLab::Vector2f& GetViewport()const { return m_viewport; }
         float GetAspectRatio()const { return m_viewport.x / m_viewport.y; }
         MathLab::TMatrix4X4f GetCameraTransformInverseMatrix()const;
         float GetNearClipZ()const { return m_nearClipZ; }
+        //void SetNearClipz(float nearZ) { m_nearClipZ = nearZ; }
         float GetFarClipZ()const { return m_farClipZ; }
-
-        void SetLookAt(const MathLab::Vector3f& lookat);
+        //void SetFarClipZ(float farZ) { m_farClipZ = farZ; }
 
 		static ComponentType m_type;
 	private:
         void SetEularLookAt(const MathLab::Vector2f& headingAndElevation);
 		MathLab::Vector3f m_lookAt;
-		float m_fov;
+		float m_fov = 0.0f;
         MathLab::Vector2f m_viewPlane;
 		MathLab::Vector2f m_viewport;
-        float m_nearClipZ;
-        float m_farClipZ;
+        float m_nearClipZ = 0.0f;
+        float m_farClipZ = 0.0f;
 	};
 }

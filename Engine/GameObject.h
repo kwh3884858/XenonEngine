@@ -72,6 +72,12 @@ namespace XenonEngine
     template<typename T>
     T * GameObject::GetComponentPointer()
     {
+        return const_cast<T*>(static_cast<const GameObject&>(*this).GetComponentPointer<T>());
+    }
+
+    template<typename T>
+    const T* GameObject::GetComponentPointer() const
+    {
         ComponentType componentType = T::m_type;
 
         for (int i = 0; i < m_components.Count(); i++)
@@ -84,12 +90,6 @@ namespace XenonEngine
         }
 
         return nullptr;
-    }
-
-    template<typename T>
-    const T* GameObject::GetComponentPointer() const
-    {
-        return const_cast<const T*>(static_cast<const GameObject&>(*this).GetComponentPointer<T>());
     }
 
     template<typename T>

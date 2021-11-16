@@ -20,6 +20,14 @@ namespace XenonEngine
         SetWorldName(worldName);
     }
 
+    GameObjectWorld::GameObjectWorld(const GameObjectWorld& otherWorld): GameObjectWorld(otherWorld.GetWorldName())
+    {
+        for (int i = 0; i < m_worldObjects.Count(); i++)
+        {
+            AddGameObject(m_worldObjects[i]);
+        }
+    }
+
     GameObjectWorld::~GameObjectWorld()
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
@@ -28,16 +36,12 @@ namespace XenonEngine
             delete m_worldObjects[i];
         }
         delete m_physics2D;
+        m_physics2D = nullptr;
     }
 
     XenonEngine::GameObjectWorld* GameObjectWorld::Copy() const
     {
-        GameObjectWorld* newObjectWorld = new GameObjectWorld(m_worldName);
-
-        for (int i = 0; i < m_worldObjects.Count(); i++)
-        {
-            newObjectWorld->AddGameObject(m_worldObjects[i]);
-        }
+        GameObjectWorld* newObjectWorld = new GameObjectWorld(*this);
         return newObjectWorld;
     }
 

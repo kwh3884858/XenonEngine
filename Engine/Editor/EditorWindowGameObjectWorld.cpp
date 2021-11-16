@@ -17,6 +17,8 @@
 #include "EditorDatabase.h"
 #include "Engine/Component/PointLightComponent.h"
 #include "Engine/Component/DirectionLightComponent.h"
+#include "Engine/Component/Camera3D.h"
+#include "CrossPlatform/Database.h"
 //#include "CrossPlatform/FileTypeEnum.h"
 
 namespace XenonEngine
@@ -24,6 +26,7 @@ namespace XenonEngine
     using namespace CrossPlatform;
     using namespace std;
     using namespace std::filesystem;
+    using namespace MathLab;
     void EditorWindowGameObjectWorld::UpdateMainWindow(const void* data /*= nullptr*/)
     {
         const EngineSyncData* syncData = static_cast<const EngineSyncData*>(data);
@@ -148,7 +151,10 @@ namespace XenonEngine
         if (ImGui::BeginPopupContextItem())
         {
             if (ImGui::MenuItem("Add GameObject")) {
-                world->AddGameObject(new GameObject());
+                GameObject* newGo =new GameObject();
+                Transform3D* trans3d = new Transform3D(newGo);
+                newGo->AddComponent(trans3d);
+                world->AddGameObject(newGo);
             }
             if (go)
             {
@@ -156,19 +162,34 @@ namespace XenonEngine
                 {
                     if (ImGui::MenuItem("Transform 3D")) {
                         Transform3D* trans3D = new Transform3D(go);
+                        trans3D->Start();
                         go->AddComponent(trans3D);
                     }
                     if (ImGui::MenuItem("Mesh 3D")) {
                         Mesh3D* mesh3D = new Mesh3D(go);
+                        mesh3D->Start();
                         go->AddComponent(mesh3D);
                     }
                     if (ImGui::MenuItem("Direction Light")) {
                         DirectionLightComponent* directLight = new DirectionLightComponent(go);
+                        directLight->Start();
                         go->AddComponent(directLight);
                     }
                     if (ImGui::MenuItem("Point Light")) {
                         PointLightComponent* pointLight = new PointLightComponent(go);
+                        pointLight->Start();
                         go->AddComponent(pointLight);
+                    }
+                    if (ImGui::MenuItem("Camera")) {
+                        Camera3DConfig camera3DConfig;
+                        camera3DConfig.m_fov = 90;
+                        camera3DConfig.m_viewport = Vector2f(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
+                        camera3DConfig.m_farClipZ = 1000;
+                        camera3DConfig.m_nearClipZ = 1;
+                        Camera3D* camera = new Camera3D(go);
+                        camera->SetConfig(&camera3DConfig);
+                        camera->Start();
+                        go->AddComponent(camera);
                     }
                     ImGui::EndMenu();
                 }

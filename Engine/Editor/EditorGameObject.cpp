@@ -6,6 +6,7 @@
 #include "Engine/Component/DirectionLightComponent.h"
 #include "Engine/Component/PointLightComponent.h"
 #include "Engine/Component/Mesh3D.h"
+#include "Engine/Component/Camera3D.h"
 
 
 namespace XenonEngine
@@ -50,7 +51,7 @@ namespace XenonEngine
             }
             if (type == ComponentType::ComponentType_Mesh3D)
             {
-                if (ImGui::TreeNode((void*)(intptr_t)i, "%d Transform3D", i))
+                if (ImGui::TreeNode((void*)(intptr_t)i, "%d Mesh3D", i))
                 {
                     const Mesh3D* mesh = static_cast<const Mesh3D*>(component);
                     ImGui::PushID(i);
@@ -70,6 +71,20 @@ namespace XenonEngine
                     ImGui::TreePop();
                 }
             }
+            if (type == ComponentType::ComponentType_Camera)
+            {
+                if (ImGui::TreeNode((void*)(intptr_t)i, "%d Camera", i))
+                {
+                    const Camera3D* mesh = static_cast<const Camera3D*>(component);
+                    const Vector3f lookat = mesh->GetLookAt();
+                    ImGui::Text("Look At:"); ImGui::SameLine(); Text(lookat);
+                    ImGui::Text("Fov: %f", mesh->GetFov());
+                    ImGui::Text("View Distance: %f", mesh->GetViewDistance());
+                    ImGui::Text("View Plane"); ImGui::SameLine(); Text(mesh->GetViewPlane());
+                    ImGui::Text("View Plane"); ImGui::SameLine(); Text(mesh->GetViewport());
+                    ImGui::TreePop();
+                }
+            }
         }
     }
 
@@ -83,5 +98,14 @@ namespace XenonEngine
         float* color = reinterpret_cast<float*>(&col);
         return ImGui::ColorEdit4(label, color);
     }
+    void EditorGameObject::Text(const MathLab::Vector2f& value)
+    {
+        ImGui::Text("%f, %f", value.x, value.y);
+    }
 
-}
+    void EditorGameObject::Text(const MathLab::Vector3f& value)
+    {
+        ImGui::Text("%f, %f, %f", value.x, value.y, value.z);
+    }
+
+    }

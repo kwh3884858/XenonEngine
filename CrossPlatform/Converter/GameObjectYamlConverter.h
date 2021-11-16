@@ -5,6 +5,8 @@
 #include "Transform3DYamlConverter.h"
 #include "Mesh3DYamlConverter.h"
 #include "StringYamlConverter.h"
+#include "DirectionLightYamlConverter.h"
+#include "Camera3DYamlConverter.h"
 
 namespace YAML {
     using namespace XenonEngine;
@@ -54,8 +56,22 @@ namespace YAML {
                 case XenonEngine::IComponent::ComponentType_Input:
                     break;
                 case XenonEngine::IComponent::ComponentType_Camera:
+                {
+                    const Camera3D& camera3D = rhs.GetComponent<Camera3D>();
+                    node["Camera3D"] = camera3D;
+                }
                     break;
                 case XenonEngine::IComponent::ComponentType_Light:
+                {
+                    const LightComponent* light = rhs.GetComponentPointer<LightComponent>();
+                    LightComponent::LightType lightType = light->GetLightType();
+                    if (lightType == LightComponent::Direction)
+                    {
+                        const DirectionLightComponent& directionLight = rhs.GetComponent<DirectionLightComponent>();
+                        DirectionLightComponent lightType = rhs.GetComponent<DirectionLightComponent>();
+                        node["DirectionLight"] = directionLight;
+                    }
+                }
                     break;
                 default:
                     break;
@@ -80,6 +96,11 @@ namespace YAML {
             {
                 Mesh3D* mesh3D =(Mesh3D*) node["Mesh3D"].as<Mesh3D>().Copy(&rhs);
                 rhs.AddComponent(mesh3D);
+            }
+            if (node["DirectionLight"].IsDefined())
+            {
+                DirectionLightComponent* directionLight = (DirectionLightComponent*)node["DirectionLight"].as<DirectionLightComponent>().Copy(&rhs);
+                rhs.AddComponent(directionLight);
             }
 
             return true;
