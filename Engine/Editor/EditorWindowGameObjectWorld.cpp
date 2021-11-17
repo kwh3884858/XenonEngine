@@ -187,7 +187,7 @@ namespace XenonEngine
                         camera3DConfig.m_farClipZ = 1000;
                         camera3DConfig.m_nearClipZ = 1;
                         Camera3D* camera = new Camera3D(go);
-                        camera->SetConfig(&camera3DConfig);
+                        camera->SetConfig(camera3DConfig);
                         camera->Start();
                         go->AddComponent(camera);
                     }

@@ -43,15 +43,15 @@ namespace XenonEngine
         return true;
     }
 
-    void Camera3D::SetConfig(const Camera3DConfig*const config)
+    void Camera3D::SetConfig(const Camera3DConfig& config)
     {
-        assert(config->m_fov > 0);
-        m_fov = config->m_fov;
-        assert(config->m_viewport.x > 0 && config->m_viewport.y > 0);
-        m_viewport = config->m_viewport;
+        assert(config.m_fov > 0);
+        m_fov = config.m_fov;
+        assert(config.m_viewport.x > 0 && config.m_viewport.y > 0);
+        m_viewport = config.m_viewport;
         m_viewPlane = Vector2f(2, 2 * (m_viewport.x / m_viewport.y));
-        m_nearClipZ = config->m_nearClipZ;
-        m_farClipZ = config->m_farClipZ;
+        m_nearClipZ = config.m_nearClipZ;
+        m_farClipZ = config.m_farClipZ;
     }
 
     float Camera3D::GetViewDistance() const
@@ -90,13 +90,13 @@ namespace XenonEngine
         m_lookAt.z = -cos(elevationRadius) * sin(headingRadius);
     }
 
-    void Camera3D::SetLookAt(const MathLab::Vector3f& lookat)
-    {
-        float heading = MathLab::RadiansToDegree(atan(lookat.z / lookat.x));
-        float elevation = MathLab::RadiansToDegree(asin(lookat.y));
-        Transform3D* tranform3D = GetGameObject()->GetComponentPointer<Transform3D>();
-        tranform3D->SetRotation(Vector3f(elevation, heading, 0));
-    }
+    //void Camera3D::SetLookAt(const MathLab::Vector3f& lookat)
+    //{
+    //    float heading = MathLab::RadiansToDegree(atan(lookat.z / lookat.x));
+    //    float elevation = MathLab::RadiansToDegree(asin(lookat.y));
+    //    Transform3D* tranform3D = GetGameObject()->GetComponentPointer<Transform3D>();
+    //    tranform3D->SetRotation(Vector3f(elevation, heading, 0));
+    //}
 
     ComponentType Camera3D::m_type = ComponentType::ComponentType_Camera;
 }

@@ -22,9 +22,11 @@ namespace XenonEngine
 
     GameObjectWorld::GameObjectWorld(const GameObjectWorld& otherWorld): GameObjectWorld(otherWorld.GetWorldName())
     {
-        for (int i = 0; i < m_worldObjects.Count(); i++)
+        const Algorithm::Vector<GameObject*>& objects = otherWorld.GetWorldObjects();
+        for (int i = 0; i < objects.Count(); i++)
         {
-            AddGameObject(m_worldObjects[i]);
+            GameObject* newGo = objects[i]->Copy();
+            AddGameObject(newGo);
         }
     }
 

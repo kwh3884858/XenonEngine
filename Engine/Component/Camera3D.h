@@ -23,7 +23,7 @@ namespace XenonEngine
 	class Camera3D :public IComponent
 	{
 	public:
-		Camera3D(GameObject* gameobject) :
+		Camera3D(GameObject* gameobject = nullptr) :
 			IComponent(gameobject) {}
 		virtual ~Camera3D()override {}
 		virtual ComponentType GetComponentType() const override { return m_type; };
@@ -31,7 +31,7 @@ namespace XenonEngine
         virtual bool Start() override;
         virtual bool Update() override;
         virtual bool Destroy() override;
-        void SetConfig(const Camera3DConfig*const config);
+        void SetConfig(const Camera3DConfig& config);
 
         float GetViewDistance()const;
         //void SetLookAt(const MathLab::Vector3f& lookat);

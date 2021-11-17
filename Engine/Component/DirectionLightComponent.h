@@ -22,7 +22,7 @@ namespace XenonEngine
     public:
         static const float PI;
 
-        DirectionLightComponent(GameObject* gameobject) :
+        DirectionLightComponent(GameObject* gameobject = nullptr) :
             LightComponent(gameobject, LightType::Direction) {}
         virtual ~DirectionLightComponent()override{}
         virtual ComponentType GetComponentType() const override { return m_type; };

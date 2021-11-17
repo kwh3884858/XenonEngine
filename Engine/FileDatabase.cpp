@@ -86,7 +86,8 @@ namespace XenonEngine
         Vector<String> decompositionPath = virtualPath.Split(std::filesystem::path::preferred_separator);
         if (decompositionPath.Count() < 1)
         {
-            throw "Path Error";
+            assert(true == false);
+
             return nullptr;
         }
         //Only for Windows
@@ -123,7 +124,8 @@ namespace XenonEngine
         Vector<String> decompositionPath = virtualPath.Split(std::filesystem::path::preferred_separator);
         if (decompositionPath.Count() < 1)
         {
-            throw "Path Error";
+            assert(true == false);
+
             return nullptr;
         }
         //Only for Windows
@@ -150,7 +152,8 @@ namespace XenonEngine
             }
             if (tmpFolder->GetFileHeader().GetFileType() != FileType::FileTypeFolder)
             {
-                throw "Same Name File";
+                assert(true == false);
+
                 return false;
             }
             currentFolder = tmpFolder;
@@ -180,10 +183,12 @@ namespace XenonEngine
         switch (fileType)
         {
         case CrossPlatform::None:
-            throw "Error Type";
+            assert(true == false);
+
             break;
         case CrossPlatform::FileTypeFolder:
-            throw "How?";
+            assert(true == false);
+
             break;
         case CrossPlatform::FileTypeMaterial:
             break;
@@ -214,7 +219,8 @@ namespace XenonEngine
         }
             break;
         default:
-            throw "Type Undefined";
+            assert(true == false);
+
             break;
         }
         return nullptr;
@@ -232,10 +238,10 @@ namespace XenonEngine
         switch (fileType)
         {
         case CrossPlatform::None:
-            throw "Error Type";
+            assert(true == false);
             break;
         case CrossPlatform::FileTypeFolder:
-            throw "How?";
+            assert(true == false);
             break;
         case CrossPlatform::FileTypeMaterial:
             break;
@@ -255,7 +261,7 @@ namespace XenonEngine
         }
         break;
         default:
-            throw "Type Undefined";
+            assert(true == false);
             break;
         }
     }
@@ -272,16 +278,20 @@ namespace XenonEngine
         switch (fileType)
         {
         case CrossPlatform::None:            
-            throw "Error Type";
+            assert(true == false);
+
             break;
         case CrossPlatform::FileTypeFolder:
-            throw "Error Type";
+            assert(true == false);
+
             break;
         case CrossPlatform::FileTypeMaterial:
-            throw "Error Type";
+            assert(true == false);
+
             break;
         case CrossPlatform::FileTypeModel:
-            throw "Error Type";
+            assert(true == false);
+
             break;
         case CrossPlatform::FileTypeWorld:
         {
@@ -305,7 +315,8 @@ namespace XenonEngine
         }
             break;
         default:
-            throw "Error Type";
+            assert(true == false);
+
             break;
         }
     }
@@ -378,7 +389,8 @@ namespace XenonEngine
             switch (type)
             {
             case CrossPlatform::None:
-                throw "File Type Is Undefined";
+                assert(true == false);
+
                 break;
             case CrossPlatform::FileTypeFolder:
             {
@@ -390,7 +402,8 @@ namespace XenonEngine
             default:
             {
                 delete file;
-                throw "File Type Is Undefined";
+                assert(true == false);
+
             }
                 break;
             } 

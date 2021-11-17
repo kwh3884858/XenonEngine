@@ -42,7 +42,7 @@ namespace Gameplay
         camera3DConfig.m_farClipZ = 1000;
         camera3DConfig.m_nearClipZ = 1;
         Camera3D* camera3D = new Camera3D(this);
-        camera3D->SetConfig(&camera3DConfig);
+        camera3D->SetConfig(camera3DConfig);
         AddComponent(camera3D);
     }
 

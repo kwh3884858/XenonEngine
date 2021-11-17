@@ -102,6 +102,11 @@ namespace YAML {
                 DirectionLightComponent* directionLight = (DirectionLightComponent*)node["DirectionLight"].as<DirectionLightComponent>().Copy(&rhs);
                 rhs.AddComponent(directionLight);
             }
+            if (node["Camera3D"].IsDefined())
+            {
+                Camera3D* camera = (Camera3D*)node["Camera3D"].as<Camera3D>().Copy(&rhs);
+                rhs.AddComponent(camera);
+            }
 
             return true;
         }

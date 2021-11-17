@@ -45,7 +45,6 @@ namespace XenonEngine
     void Mesh3D::SetModelGuid(const xg::Guid& modelGuid)
     {
         m_modelId = modelGuid;
-        LoadModel();
     }
 
 

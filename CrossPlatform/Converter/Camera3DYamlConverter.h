@@ -4,7 +4,7 @@
 #include "Engine/Component/Camera3D.h"
 
 namespace YAML {
-    using XenonEngine::Camera3D;
+    using namespace XenonEngine;
     template<>
     struct convert<Camera3D> {
         static Node encode(const Camera3D& rhs) {

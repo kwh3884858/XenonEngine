@@ -4,7 +4,7 @@
 #include "Engine/Component/DirectionLightComponent.h"
 
 namespace YAML {
-    using XenonEngine::DirectionLightComponent;
+    using namespace XenonEngine;
     template<>
     struct convert<DirectionLightComponent> {
         static Node encode(const DirectionLightComponent& rhs) {
