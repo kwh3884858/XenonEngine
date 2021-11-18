@@ -20,7 +20,7 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, Vector2f& rhs) {
-            if (!node.IsSequence() || node.size() != 3) {
+            if (!node.IsSequence() || node.size() != 2) {
                 return false;
             }
             rhs.x = node[0].as<float>();

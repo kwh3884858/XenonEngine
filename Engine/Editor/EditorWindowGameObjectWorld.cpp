@@ -172,6 +172,10 @@ namespace XenonEngine
                     }
                     if (ImGui::MenuItem("Direction Light")) {
                         DirectionLightComponent* directLight = new DirectionLightComponent(go);
+                        DirectionLightComponentConfig config;
+                        config.m_color = CrossPlatform::GERY;
+                        config.m_direction = Vector3f(0, 0, 1);
+                        directLight->SetConfig(config);
                         directLight->Start();
                         go->AddComponent(directLight);
                     }

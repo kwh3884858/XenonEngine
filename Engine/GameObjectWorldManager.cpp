@@ -43,63 +43,6 @@ namespace XenonEngine
         assert(m_worlds.Count() == 0);
     }
 
-    void GameObjectWorldManager::LoadWorld(const Algorithm::String& worldMetaFilePath)
-    {
-        //path metaFilePath(worldMetaFilePath.CString());
-        //if (!exists(metaFilePath))
-        //{
-        //    return;
-        //}
-        //if (metaFilePath.extension() != "metadata")
-        //{
-        //    return;
-        //}
-        //YAML::Node config = YAML::LoadFile(metaFilePath.generic_string());
-        //FileHeader header = config.as<FileHeader>();
-        //WorldMeta* metaFile = (WorldMeta*)EngineManager::Get().GetFileDatabase().GetFile(header.GetGUID());
-
-        //AddGameWorld(metaFile->GetGameObjectWorld());
-    }
-
-    void GameObjectWorldManager::SaveWorld(const Algorithm::String& savePath) const
-    {
-
-        //xg::Guid guid = xg::newGuid();
-        //WorldMeta worldMeta(FileHeader(FileType::FileTypeWorld, savePath, guid));
-        //{
-
-        //}
-        //{
-        //    ofstream outputStream(savePath.CString());
-        //    YAML::Emitter out(outputStream);
-        //    out << YAML::Node(*m_currentWorld);
-        //    outputStream.close();
-        //}
-    }
-
-    //void GameObjectWorldManager::AddGameObject(GameObject* gameobject)
-    //{
-    //    if (m_currentWorld != nullptr)
-    //    {
-    //        m_currentWorld->AddGameObject(gameobject);
-    //    }
-    //    for (int i = 0; i < m_worlds.Count(); i++)
-    //    {
-    //    }
-    //     m_worlds.Add(gameobject); 
-    //}
-
-    //XenonEngine::GameObject* GameObjectWorldManager::GetGameObject(const Algorithm::String& GameObjectName) const
-    //{
-    //    for (int i = 0; i < m_worlds.Count(); i++)
-    //    {
-    //        if (m_worlds[i]->GetName() == GameObjectName)
-    //        {
-    //            return m_worlds[i];
-    //        }
-    //    }
-    //}
-
     void GameObjectWorldManager::Update()
     {
         assert(m_currentWorld != nullptr);
@@ -119,10 +62,10 @@ namespace XenonEngine
         return m_currentWorld;
     }
 
-    void GameObjectWorldManager::AddGameWorld(GameObjectWorld* world)
+    void GameObjectWorldManager::AddGameWorld(GameObjectWorld* world, bool isSetAsCurrentWorld /*= false*/)
     {
         m_worlds.Add(world);
-        if (m_currentWorld == nullptr)
+        if (m_currentWorld == nullptr || isSetAsCurrentWorld)
         {
             m_currentWorld = world;
         }

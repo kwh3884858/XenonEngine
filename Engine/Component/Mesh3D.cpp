@@ -16,7 +16,7 @@ namespace XenonEngine
 	IComponent* Mesh3D::Copy(GameObject*const gameObject) const
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
-		that->m_polygon3D = m_polygon3D;
+		that->m_polygon3D = new Polygon3D(*m_polygon3D);
         that->m_maxRadius = m_maxRadius;
 		return that;
 	}
@@ -45,6 +45,7 @@ namespace XenonEngine
     void Mesh3D::SetModelGuid(const xg::Guid& modelGuid)
     {
         m_modelId = modelGuid;
+        LoadModel();
     }
 
 

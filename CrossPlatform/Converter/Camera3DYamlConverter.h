@@ -10,7 +10,7 @@ namespace YAML {
         static Node encode(const Camera3D& rhs) {
             Node node;
             node["Fov"] = rhs.GetFov();
-            node["Viewport"] = rhs.GetViewPlane();
+            node["Viewport"] = rhs.GetViewport();
             node["NearZ"] = rhs.GetNearClipZ();
             node["FarZ"] = rhs.GetFarClipZ();
             return node;

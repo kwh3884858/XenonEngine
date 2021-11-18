@@ -22,13 +22,10 @@ namespace XenonEngine
         bool Shutdown() ;
         ~GameObjectWorldManager() ;
 
-        void LoadWorld(const Algorithm::String& worldMetaFilePath);
-        void SaveWorld(const Algorithm::String& savePath)const;
-
         void Update();
         GameObjectWorld*const CreateGameWorld(const Algorithm::String& worldName);
         GameObjectWorld*const GetCurrentWorld() const;
-        void AddGameWorld(GameObjectWorld* world);
+        void AddGameWorld(GameObjectWorld* world, bool isSetAsCurrentWorld = false);
     private:
         GameObjectWorld* m_currentWorld = nullptr;
         Algorithm::Vector<GameObjectWorld*> m_worlds;

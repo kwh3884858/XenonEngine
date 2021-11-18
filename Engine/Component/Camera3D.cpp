@@ -26,6 +26,10 @@ namespace XenonEngine
     bool Camera3D::Start()
     {
         Graphic3D::Get().AddCamera(this);
+
+		const Transform3D* tranform3D = GetGameObject()->GetComponentPointer<Transform3D>();
+		Vector3f rotation = tranform3D->GetRotation();
+		SetEularLookAt(Vector2f(rotation.y, rotation.x));
         return true;
     }
 

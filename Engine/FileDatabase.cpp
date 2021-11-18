@@ -256,7 +256,7 @@ namespace XenonEngine
             if (file)
             {
                 WorldMeta* worldFile =static_cast<WorldMeta*>(file);
-                EngineManager::Get().GetWorldManager().AddGameWorld(worldFile->GetGameObjectWorld());
+                EngineManager::Get().GetWorldManager().AddGameWorld(worldFile->GetGameObjectWorld(), true);
             }
         }
         break;
@@ -296,7 +296,7 @@ namespace XenonEngine
         case CrossPlatform::FileTypeWorld:
         {
             FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
-            String fileName (originalFile.stem().string().c_str());
+            String fileName (originalFile.filename().string().c_str());
             IFileMeta* file = folder->GetFile(fileName);
             if (file)
             {
@@ -308,7 +308,7 @@ namespace XenonEngine
                 WorldMeta* metaFile = (WorldMeta*)AddFile(filePath);
                 assert(metaFile != nullptr);
                 GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
-                world->SetWorldName(fileName);
+                world->SetWorldName(originalFile.stem().string().c_str());
                 metaFile->SetGameObjectWorld(world);
                 metaFile->SaveGameObjectWorld();
             }
