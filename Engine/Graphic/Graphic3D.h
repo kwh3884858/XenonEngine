@@ -84,9 +84,6 @@ namespace XenonEngine
         virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
 
-		void AddGameobjectToRenderList( GameObject* gameobject);
-		void RemoveGameobjectFromRenderList( GameObject* gameobject);
-		
         void AddCamera(Camera3D* camera) { m_cameraList.Add(camera); }
         void RemoveCamera(Camera3D* camera){ m_cameraList.Remove(camera); }
 
@@ -109,7 +106,6 @@ namespace XenonEngine
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort)const;
 
         RenderType m_renderType = RenderType::GouraudShdering;
-		Algorithm::Vector<GameObject*> m_renderList;
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;
 	};

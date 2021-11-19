@@ -4,7 +4,6 @@
 #include <cassert>
 
 //#include "MathLab/Vector2.h"
-
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Camera3D.h"
@@ -15,9 +14,11 @@
 #include "CrossPlatform/Polygon/Polygon3D.h"
 #include <stdio.h> // for printf
 #include <assert.h>
-#include "../Component/DirectionLightComponent.h"
-#include "../Component/PointLightComponent.h"
+#include "Engine/Component/DirectionLightComponent.h"
+#include "Engine/Component/PointLightComponent.h"
 #include "Algorithms/Sort.h"
+#include "Engine/EngineManager.h"
+#include "Engine/GameObjectWorld.h"
 namespace XenonEngine
 {
 	using MathLab::TMatrix4X3f;
@@ -146,16 +147,6 @@ namespace XenonEngine
         return true;
     }
 
-    void Graphic3D::AddGameobjectToRenderList(GameObject* gameobject)
-	{
-		m_renderList.Add(gameobject);
-	}
-
-	void Graphic3D::RemoveGameobjectFromRenderList( GameObject* gameobject)
-	{
-		m_renderList.Remove(gameobject);
-	}
-
 	void Graphic3D::Update() const
 	{
         const Camera3D* majorCamera = GetMajorCamera();
@@ -163,9 +154,15 @@ namespace XenonEngine
         {
             return;
         }
-		for (int i = 0; i < m_renderList.Count(); i++)
+		const GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+		if (!world)
 		{
-			GameObject* iter = m_renderList[i];
+			return;
+		}
+		const Algorithm::Vector<GameObject*>& renderList = world->GetRenderList();
+		for (int i = 0; i < renderList.Count(); i++)
+		{
+			GameObject* iter = renderList[i];
 			Transform3D* transform = iter->GetComponentPointer<Transform3D>();
             Mesh3D* mesh = iter->GetComponentPointer<Mesh3D>();
             if (!mesh || !transform)

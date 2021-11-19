@@ -16,6 +16,7 @@ namespace CrossPlatform {
         if (!m_polygon3D)
         {
             m_polygon3D = ObjectLoader::Get().LoadObj(m_header.GetFilePath());
+			const_cast<Polygon3D*>(m_polygon3D)->SetModelGUID(GetFileHeader().GetGUID());
         }
         return m_polygon3D;
     }

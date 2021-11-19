@@ -15,6 +15,7 @@ namespace CrossPlatform
 
 	Polygon3D::Polygon3D(const Polygon3D& that)
 	{
+		m_modelId = that.m_modelId;
 		m_numOfIndex = that.m_numOfIndex;
 		m_vertexIndexList = new VertexIndexs[m_numOfIndex];
 		for (int i = 0 ; i < m_numOfIndex; i++)

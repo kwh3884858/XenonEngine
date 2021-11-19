@@ -9,21 +9,29 @@ namespace XenonEngine
 	{
 	}
 
+	GameObject::GameObject(const GameObject& that)
+	{
+		for (int i = 0; i < that.m_components.Count(); i++)
+		{
+			IComponent* comp = that.m_components[i]->Copy(this);
+			AddComponent(comp);
+		}
+	}
+
 	GameObject* GameObject::Copy()const
     {
-		GameObject* newGameObject = new GameObject(m_name);
-
-        for (int i = 0; i < m_components.Count(); i++)
-        {
-            IComponent* comp = m_components[i]->Copy(newGameObject);
-            newGameObject->AddComponent(comp);
-        }
-        return newGameObject;
+		GameObject* newGameObject = new GameObject(*this);
+		return newGameObject;
     }
 
     GameObject::~GameObject()
     {
-
+		for (int i = 0; i < m_components.Count(); i++)
+		{
+			delete m_components[i];
+			m_components[i] = nullptr;
+		}
+		m_components.Clear();
     }
 
     void GameObject::GameObjectStart()
@@ -46,7 +54,16 @@ namespace XenonEngine
 		}
 	}
 
-    void GameObject::Start()
+	void GameObject::GameObjectDestory()
+	{
+		Destroy();
+		for (int i = 0; i < m_components.Count(); i++)
+		{
+			m_components[i]->Destroy();
+		}
+	}
+
+	void GameObject::Start()
     {
 
     }
@@ -58,14 +75,7 @@ namespace XenonEngine
 
     void GameObject::Destroy()
     {
-        for (int i = 0; i < m_components.Count(); i++)
-        {
-            m_components[i]->Destroy();
 
-            delete m_components[i];
-            m_components[i] = nullptr;
-        }
-        m_components.Clear();
     }
 
 	void GameObject::CheckName(String& name) const

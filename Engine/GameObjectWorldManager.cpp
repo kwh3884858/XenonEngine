@@ -29,6 +29,7 @@ namespace XenonEngine
 
     bool GameObjectWorldManager::Shutdown() 
     {
+		m_currentWorld->Destroy();
         m_currentWorld = nullptr;
         for (int i = 0; i < m_worlds.Count(); i++)
         {
@@ -67,7 +68,12 @@ namespace XenonEngine
         m_worlds.Add(world);
         if (m_currentWorld == nullptr || isSetAsCurrentWorld)
         {
+			if (m_currentWorld)
+			{
+				m_currentWorld->Destroy();
+			}
             m_currentWorld = world;
+			world->Start();
         }
     }
 

@@ -6,6 +6,7 @@
 
 #include "Engine/Graphic/Graphic3D.h"
 #include <cstdio> //for printf
+#include "Engine/Component/Mesh3D.h"
 
 namespace XenonEngine
 {
@@ -34,7 +35,6 @@ namespace XenonEngine
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
-            m_worldObjects[i]->Destroy();
             delete m_worldObjects[i];
         }
         delete m_physics2D;
@@ -72,7 +72,6 @@ namespace XenonEngine
 			}
 		}
 
-        gameobject->GameObjectStart();
         bool addedToPhysicsWorld = m_physics2D->AddGameObject(gameobject);
         if (!addedToPhysicsWorld)
         {
@@ -120,21 +119,56 @@ namespace XenonEngine
 		return list;
 	}
 
-    void GameObjectWorld::Update()
+	void GameObjectWorld::Start()
+	{
+		for (int i = 0; i < m_worldObjects.Count(); i++)
+		{
+			m_worldObjects[i]->GameObjectStart();
+			Mesh3D* mesh3D = m_worldObjects[i]->GetComponentPointer<Mesh3D>();
+			if (mesh3D)
+			{
+				m_renderList.Add(m_worldObjects[i]);
+			}
+		}
+	}
+
+	void GameObjectWorld::Update()
     {
         ClearMarkForDelete();
         m_physics2D->FixedUpdate();
-		ObjectUpdate();
+		for (int i = 0; i < m_worldObjects.Count(); i++)
+		{
+			m_worldObjects[i]->GameObjectUpdate();
+		}
         RenderUpdate();
     }
 
-    void GameObjectWorld::ClearMarkForDelete()
+	void GameObjectWorld::Destroy()
+	{
+		for (int i = 0; i < m_worldObjects.Count(); i++)
+		{
+			m_physics2D->RemoveGameObject(m_worldObjects[i]);
+			Mesh3D* mesh3D = m_worldObjects[i]->GetComponentPointer<Mesh3D>();
+			if (mesh3D)
+			{
+				m_renderList.Remove(m_worldObjects[i]);
+			}
+			m_worldObjects[i]->GameObjectDestory();
+		}
+	}
+
+	void GameObjectWorld::ClearMarkForDelete()
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
             if (m_worldObjects[i]->IsMarkForDelete())
             {
-                m_physics2D->RemoveGameObject(m_worldObjects[i]);
+				m_physics2D->RemoveGameObject(m_worldObjects[i]);
+				Mesh3D* mesh3D = m_worldObjects[i]->GetComponentPointer<Mesh3D>();
+				if (mesh3D)
+				{
+					m_renderList.Remove(m_worldObjects[i]);
+				}
 				m_worldObjects[i]->Destroy();
                 m_worldObjects.Remove(i);
                 i--;
@@ -158,10 +192,7 @@ namespace XenonEngine
 
 	void GameObjectWorld::ObjectUpdate()
 	{
-		for (int i = 0; i < m_worldObjects.Count(); i++)
-		{
-			m_worldObjects[i]->GameObjectUpdate();
-		}
+
 	}
 
 }

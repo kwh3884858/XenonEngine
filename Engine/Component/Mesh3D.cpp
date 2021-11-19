@@ -16,7 +16,7 @@ namespace XenonEngine
 	IComponent* Mesh3D::Copy(GameObject*const gameObject) const
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
-		that->m_polygon3D = new Polygon3D(*m_polygon3D);
+		that->m_polygon3D = m_polygon3D;
         that->m_maxRadius = m_maxRadius;
 		return that;
 	}
@@ -24,8 +24,6 @@ namespace XenonEngine
 	bool Mesh3D::Start()
 	{
         LoadModel();
-
-        Graphic3D::Get().AddGameobjectToRenderList(GetGameObject());
         return true;
 	}
 
@@ -36,8 +34,6 @@ namespace XenonEngine
 
 	bool Mesh3D::Destroy()
 	{
-        Graphic3D::Get().RemoveGameobjectFromRenderList(GetGameObject());
-		delete m_polygon3D;
 		m_polygon3D = nullptr;
 		return true;
 	}
@@ -63,6 +59,14 @@ namespace XenonEngine
         }
 
         const ModelMeta* model = static_cast<const ModelMeta*>(dataRoot);
+		if (m_polygon3D)
+		{
+			xg::Guid modelGuid = m_polygon3D->GetModelGUID();
+			if (modelGuid.isValid() && modelGuid == m_modelId)
+			{
+				return;
+			}
+		}
         m_polygon3D = model->GetPolygon();
 
         CalculateModelMaxRadius();

@@ -154,6 +154,7 @@ namespace XenonEngine
                 GameObject* newGo =new GameObject();
                 Transform3D* trans3d = new Transform3D(newGo);
                 newGo->AddComponent(trans3d);
+				newGo->GameObjectStart();
                 world->AddGameObject(newGo);
             }
             if (go)

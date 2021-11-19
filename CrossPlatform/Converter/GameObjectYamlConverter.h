@@ -85,12 +85,12 @@ namespace YAML {
             if (node["Transform2D"].IsDefined())
             {
                 Transform2D* transform2d =(Transform2D*) node["Transform2D"].as<Transform2D>().Copy(&rhs);
-                rhs.AddComponent(transform2d);
+				rhs.AddComponent(transform2d);
             }
             if (node["Transform3D"].IsDefined())
             {
                 Transform3D* transform3d =(Transform3D*) node["Transform3D"].as<Transform3D>().Copy(&rhs);
-                rhs.AddComponent(transform3d);
+				rhs.AddComponent(transform3d);
             }
             if (node["Mesh3D"].IsDefined())
             {
@@ -100,12 +100,12 @@ namespace YAML {
             if (node["DirectionLight"].IsDefined())
             {
                 DirectionLightComponent* directionLight = (DirectionLightComponent*)node["DirectionLight"].as<DirectionLightComponent>().Copy(&rhs);
-                rhs.AddComponent(directionLight);
+				rhs.AddComponent(directionLight);
             }
             if (node["Camera3D"].IsDefined())
             {
                 Camera3D* camera = (Camera3D*)node["Camera3D"].as<Camera3D>().Copy(&rhs);
-                rhs.AddComponent(camera);
+				rhs.AddComponent(camera);
             }
 
             return true;

@@ -20,6 +20,8 @@ namespace XenonEngine
         const Algorithm::String& GetWorldName()const { return m_worldName; }
         void SetWorldName(const Algorithm::String& name) { m_worldName = name; }
 
+		const Algorithm::Vector<GameObject*>& GetRenderList() const { return m_renderList; }
+
         void AddGameObject(GameObject* const gameobject);
         GameObject* GetGameObject(const Algorithm::String& gameObjectName) const;
 		Algorithm::Vector<GameObject*> GetGameObjectList(const Algorithm::String& gameObjectName)const;
@@ -37,6 +39,9 @@ namespace XenonEngine
         Algorithm::String m_worldName;
         Algorithm::Vector<GameObject*> m_worldObjects;
         XenonPhysics::Physics2D* m_physics2D = nullptr;
+
+		Algorithm::Vector<GameObject*> m_renderList;
+
     };
 
 }

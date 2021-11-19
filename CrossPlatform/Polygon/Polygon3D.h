@@ -1,6 +1,7 @@
 #pragma once
 #include "MathLab/Vector3.h"
 #include "CrossPlatform/SColorRGBA.h"
+#include "crossguid/guid.hpp"
 
 namespace CrossPlatform {
 	using MathLab::Vector3f;
@@ -34,7 +35,10 @@ namespace CrossPlatform {
         int GetNumOfVertex()const { return m_numOfVertex; }
         int GetNumOfNormal()const { return m_numOfNormal; }
 
+		const xg::Guid& GetModelGUID()const { return m_modelId; }
+		void SetModelGUID(const xg::Guid& guid) { m_modelId = guid; }
 	private:
+		xg::Guid m_modelId;
 		int m_numOfIndex = 0;
         VertexIndexs* m_vertexIndexList = nullptr;
 		int m_numOfVertex = 0;

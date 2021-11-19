@@ -56,11 +56,6 @@ namespace XenonEngine
         }
 
         int numOfMaterial = materials.size();
-        //Vector<XenonMaterial*>* xenonMaterials = new Vector<XenonMaterial*>;
-        //for (size_t i = 0; i < attrib.normals.size(); i += 3)
-        //{
-        //}
-
 
         int numOfIndex = 0;
 		size_t vindex = 0;

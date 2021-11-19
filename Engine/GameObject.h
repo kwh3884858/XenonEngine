@@ -23,7 +23,8 @@ namespace XenonEngine
             Enable,
             MarkForDelete
         };
-        GameObject(const String& name = "Untitled");
+		GameObject(const String& name = "Untitled");
+		GameObject(const GameObject& that);
         virtual GameObject* Copy()const;
         virtual ~GameObject();
 
@@ -48,8 +49,12 @@ namespace XenonEngine
         int GetComponentCount()const { return m_components.Count(); }
         const IComponent* GetComponentByIndex(int index)const { assert(index >= 0 && index < m_components.Count()); return m_components[index]; }
 
+		// For all component and gameobject self
 		void GameObjectStart();
 		void GameObjectUpdate();
+		void GameObjectDestory();
+
+		// For only gameobject self
         virtual void Start();
         virtual void Update();
         virtual void Destroy();
@@ -96,6 +101,7 @@ namespace XenonEngine
     T& GameObject::GetComponent()
     {
         T* result = GetComponentPointer<T>();
+		assert(result != nullptr);
         return *result;
     }
 
@@ -103,6 +109,7 @@ namespace XenonEngine
     const T& GameObject::GetComponent() const
     {
         const T* result = GetComponentPointer<T>();
+		assert(result != nullptr);
         return *result;
     }
 
