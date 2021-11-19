@@ -31,13 +31,13 @@ namespace XenonEngine
 		virtual bool Destroy() override;
 
         const xg::Guid& GetModelGuid()const { return m_modelId; }
-        void SetModelGuid(const xg::Guid& modelGuid);;
+        void SetModelGuid(const xg::Guid& modelGuid);
+		void LoadModel();
         const CrossPlatform::Polygon3D* GetPolygon3D()const { return m_polygon3D; }
         float GetMaxRadius()const { return m_maxRadius; }
 
         static ComponentType m_type;
 	private:
-        void LoadModel();
         void CalculateModelMaxRadius();
 
         xg::Guid m_modelId;

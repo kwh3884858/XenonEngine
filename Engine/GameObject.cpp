@@ -9,7 +9,7 @@ namespace XenonEngine
 	{
 	}
 
-	GameObject::GameObject(const GameObject& that)
+	GameObject::GameObject(const GameObject& that):GameObject(that.m_name)
 	{
 		for (int i = 0; i < that.m_components.Count(); i++)
 		{

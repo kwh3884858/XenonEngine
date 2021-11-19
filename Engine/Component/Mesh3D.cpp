@@ -17,6 +17,7 @@ namespace XenonEngine
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
 		that->m_polygon3D = m_polygon3D;
+		that->m_modelId = m_modelId;
         that->m_maxRadius = m_maxRadius;
 		return that;
 	}
@@ -41,9 +42,7 @@ namespace XenonEngine
     void Mesh3D::SetModelGuid(const xg::Guid& modelGuid)
     {
         m_modelId = modelGuid;
-        LoadModel();
     }
-
 
     void Mesh3D::LoadModel()
     {

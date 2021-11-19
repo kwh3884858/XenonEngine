@@ -63,6 +63,7 @@ namespace XenonEngine
                             IM_ASSERT(payload->DataSize == 37);
                             char* payload_n = (char*)payload->Data;
                             ( (Mesh3D*)mesh )->SetModelGuid(xg::Guid(payload_n));
+							( (Mesh3D*)mesh )->LoadModel();
                         }
                         ImGui::EndDragDropTarget();
                     }

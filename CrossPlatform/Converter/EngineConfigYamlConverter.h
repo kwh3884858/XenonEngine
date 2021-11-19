@@ -34,7 +34,7 @@ namespace YAML {
             rhs.m_minX = 0;
             rhs.m_minY = 0;
             rhs.m_maxX = rhs.m_width - 1;
-            rhs.m_minY = rhs.m_height - 1;;
+            rhs.m_maxY = rhs.m_height - 1;;
             return true;
         }
     };
