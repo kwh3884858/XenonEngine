@@ -46,7 +46,7 @@ namespace CrossPlatform
             YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
             m_gameobjectWorld = config.as<GameObjectWorld>().Copy();
         }
-        return m_gameobjectWorld;
+        return m_gameobjectWorld->Copy();
     }
 
     void WorldMeta::SaveGameObjectWorld()const

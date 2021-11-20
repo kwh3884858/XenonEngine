@@ -279,7 +279,6 @@ namespace XenonEngine
 			{
 				folder->RemoveFile(file);
 				WorldMeta* worldFile = static_cast<WorldMeta*>(file);
-				EngineManager::Get().GetWorldManager().RemoveGameWorld(worldFile->GetGameObjectWorld());
 				worldFile->Delete();
 				delete worldFile;
 				worldFile = nullptr;
@@ -323,7 +322,7 @@ namespace XenonEngine
             if (file)
             {
                 WorldMeta* worldFile =static_cast<WorldMeta*>(file);
-                EngineManager::Get().GetWorldManager().AddGameWorld(worldFile->GetGameObjectWorld(), true);
+                EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
             }
         }
         break;

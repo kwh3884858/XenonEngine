@@ -20,7 +20,7 @@ namespace XenonEngine
 
     bool GameObjectWorldManager::Initialize()
     {
-        if (!m_currentWorld)
+        if (!m_world)
         {
             CreateGameWorld("Empty World");
         }
@@ -29,65 +29,49 @@ namespace XenonEngine
 
     bool GameObjectWorldManager::Shutdown() 
     {
-		if (m_currentWorld)
-		{
-			m_currentWorld->Destroy();
-			m_currentWorld = nullptr;
-		}
-        for (int i = 0; i < m_worlds.Count(); i++)
-        {
-            delete m_worlds[i];
-        }
+		RemoveGameWorld();
         return true;
     }
 
     GameObjectWorldManager::~GameObjectWorldManager()
     {
-        assert(m_currentWorld == nullptr);
-        assert(m_worlds.Count() == 0);
+        assert(m_world == nullptr);
     }
 
     void GameObjectWorldManager::Update()
     {
-        assert(m_currentWorld != nullptr);
-        m_currentWorld->Update();
+        assert(m_world != nullptr);
+		m_world->Update();
     }
 
     XenonEngine::GameObjectWorld*const GameObjectWorldManager::CreateGameWorld(const Algorithm::String& worldName)
     {
         GameObjectWorld* newWorld = new GameObjectWorld(worldName);
-        AddGameWorld(newWorld);
+        SetCurrentWorld(newWorld);
         return newWorld;
     }
 
     GameObjectWorld*const GameObjectWorldManager::GetCurrentWorld() const
     {
-        assert(m_currentWorld != nullptr);
-        return m_currentWorld;
+        assert(m_world != nullptr);
+        return m_world;
     }
 
-    void GameObjectWorldManager::AddGameWorld(GameObjectWorld* world, bool isSetAsCurrentWorld /*= false*/)
+    void GameObjectWorldManager::SetCurrentWorld(GameObjectWorld* world)
     {
-        m_worlds.Add(world);
-        if (m_currentWorld == nullptr || isSetAsCurrentWorld)
-        {
-			if (m_currentWorld)
-			{
-				m_currentWorld->Destroy();
-			}
-            m_currentWorld = world;
-			world->Start();
-        }
+		RemoveGameWorld();
+		m_world = world;
+		m_world->Start();
     }
 
-	void GameObjectWorldManager::RemoveGameWorld(GameObjectWorld* world)
+	void GameObjectWorldManager::RemoveGameWorld()
 	{
-		if (m_currentWorld && m_currentWorld == world)
+		if (m_world)
 		{
-			m_currentWorld = nullptr;
+			m_world->Destroy();
+			delete m_world;
+			m_world = nullptr;
 		}
-		world->Destroy();
-		m_worlds.Remove(world);
 	}
 
 }

@@ -20,7 +20,10 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, GameObjectWorld& rhs) {
-            rhs.SetWorldName(node["Name"].as<Algorithm::String>());
+			if (node["WorldObjects"].IsDefined())
+			{
+				rhs.SetWorldName(node["Name"].as<Algorithm::String>());
+			}
             if (node["WorldObjects"].IsDefined())
             {
                 if (node["WorldObjects"].IsSequence())
