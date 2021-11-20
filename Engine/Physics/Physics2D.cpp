@@ -307,21 +307,23 @@ namespace XenonPhysics
         }
     }
 
-    void Physics2D::RemoveGameObject(GameObject* const gameobject)
+    bool Physics2D::RemoveGameObject(GameObject* const gameobject)
     {
         Rigidbody2D* rigidbody = gameobject->GetComponentPointer<Rigidbody2D>();
         Collider2D* collider = gameobject->GetComponentPointer<Collider2D>();
         if (rigidbody != nullptr)
         {
             RemoveRigidbody2D(rigidbody);
-        }
+			return true;
+		}
         else if (collider != nullptr)
         {
             RemoveCollider2D(collider);
-        }
+			return true;
+		}
         else
         {
-            assert(true == false);
+			return false;
         }
     }
 

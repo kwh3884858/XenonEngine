@@ -23,6 +23,7 @@ namespace XenonEngine
 		const Algorithm::Vector<GameObject*>& GetRenderList() const { return m_renderList; }
 
         void AddGameObject(GameObject* const gameobject);
+		void RemoveGameObject(GameObject* const gameobject);
         GameObject* GetGameObject(const Algorithm::String& gameObjectName) const;
 		Algorithm::Vector<GameObject*> GetGameObjectList(const Algorithm::String& gameObjectName)const;
 		Algorithm::Vector<const Algorithm::String*> GetGameObjectNameList(const Algorithm::String& gameObjectName)const;
@@ -33,8 +34,8 @@ namespace XenonEngine
         void Destroy();
     private:
         void ClearMarkForDelete();
+		void DeleteGameObject(GameObject* gameobject);
         void RenderUpdate();
-		void ObjectUpdate();
 
         Algorithm::String m_worldName;
         Algorithm::Vector<GameObject*> m_worldObjects;

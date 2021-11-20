@@ -80,18 +80,22 @@ int ImGUIMain()
     //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
     //IM_ASSERT(font != NULL);
 
+	//  for icon
     ImGui::GetIO().Fonts->AddFontDefault();
     static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
     ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
     ImGui::GetIO().Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAR, 15.0f, &icons_config, icons_ranges);
-
+	// For docking
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     // Our state
     bool show_demo_window = false;
     bool show_another_window = false;
     static XenonEngine::EditorWindowGameObjectWorld editorWorld;
     static XenonEngine::EditorWindowFileDatabase fileDatabase;
     bool* show_xenon_window = editorWorld.GetHandle();
+	editorWorld.OpenWindow();
     bool* show_file_database = fileDatabase.GetHandle();
+	fileDatabase.OpenWindow();
     fileDatabase.Initialize();
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

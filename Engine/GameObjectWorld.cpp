@@ -33,10 +33,6 @@ namespace XenonEngine
 
     GameObjectWorld::~GameObjectWorld()
     {
-        for (int i = 0; i < m_worldObjects.Count(); i++)
-        {
-            delete m_worldObjects[i];
-        }
         delete m_physics2D;
         m_physics2D = nullptr;
     }
@@ -80,7 +76,13 @@ namespace XenonEngine
         m_worldObjects.Add(gameobject);
     }
 
-    GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& gameObjectName) const
+	void GameObjectWorld::RemoveGameObject(GameObject* const gameobject)
+	{
+		bool addedToPhysicsWorld = m_physics2D->RemoveGameObject(gameobject);
+		m_worldObjects.Remove(gameobject);
+	}
+
+	GameObject* GameObjectWorld::GetGameObject(const Algorithm::String& gameObjectName) const
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
@@ -147,13 +149,7 @@ namespace XenonEngine
 	{
 		for (int i = 0; i < m_worldObjects.Count(); i++)
 		{
-			m_physics2D->RemoveGameObject(m_worldObjects[i]);
-			Mesh3D* mesh3D = m_worldObjects[i]->GetComponentPointer<Mesh3D>();
-			if (mesh3D)
-			{
-				m_renderList.Remove(m_worldObjects[i]);
-			}
-			m_worldObjects[i]->GameObjectDestory();
+			DeleteGameObject(m_worldObjects[i]);
 		}
 	}
 
@@ -163,20 +159,27 @@ namespace XenonEngine
         {
             if (m_worldObjects[i]->IsMarkForDelete())
             {
-				m_physics2D->RemoveGameObject(m_worldObjects[i]);
-				Mesh3D* mesh3D = m_worldObjects[i]->GetComponentPointer<Mesh3D>();
-				if (mesh3D)
-				{
-					m_renderList.Remove(m_worldObjects[i]);
-				}
-				m_worldObjects[i]->Destroy();
+				DeleteGameObject(m_worldObjects[i]);
                 m_worldObjects.Remove(i);
                 i--;
             }
         }
     }
 
-    void GameObjectWorld::RenderUpdate()
+	void GameObjectWorld::DeleteGameObject(GameObject* gameobject)
+	{
+		m_physics2D->RemoveGameObject(gameobject);
+		Mesh3D* mesh3D = gameobject->GetComponentPointer<Mesh3D>();
+		if (mesh3D)
+		{
+			m_renderList.Remove(gameobject);
+		}
+		gameobject->GameObjectDestory();
+		delete gameobject;
+		gameobject = nullptr;
+	}
+
+	void GameObjectWorld::RenderUpdate()
     {
         for (int i = 0; i < m_worldObjects.Count(); i++)
         {
@@ -189,10 +192,4 @@ namespace XenonEngine
 
         Graphic3D::Get().Update();
     }
-
-	void GameObjectWorld::ObjectUpdate()
-	{
-
-	}
-
 }

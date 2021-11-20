@@ -24,7 +24,7 @@ namespace XenonEngine
             {
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%d Transform3D", i))
                 {
-                    const Transform3D* trans3D = static_cast<const Transform3D*>(component);
+					const Transform3D* trans3D = static_cast<const Transform3D*>(component);
                     const Vector3f& pos = trans3D->GetPosition();
                     DragFloat3("Transform", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
                     const Vector3f& rot = trans3D->GetRotation();
@@ -34,13 +34,14 @@ namespace XenonEngine
             }
             if (type == ComponentType::ComponentType_Light)
             {
-                const LightComponent* light = static_cast<const LightComponent*>(component);
+				const LightComponent* light = static_cast<const LightComponent*>(component);
                 LightComponent::LightType lightType = light->GetLightType();
                 if (lightType == LightComponent::LightType::Direction)
                 {
                     if (ImGui::TreeNode((void*)(intptr_t)i, "%d Direction Light Component", i))
                     {
-                        DirectionLightComponent* directionLight = (DirectionLightComponent*)light;
+						ContextMenu((GameObject*)data, (IComponent*)component);
+						DirectionLightComponent* directionLight = (DirectionLightComponent*)light;
                         const Vector3f& pos = directionLight->GetDirection();
                         DragFloat3("Direction", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
                         const Vector4f& color = directionLight->GetRawColor();
@@ -53,7 +54,8 @@ namespace XenonEngine
             {
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%d Mesh3D", i))
                 {
-                    const Mesh3D* mesh = static_cast<const Mesh3D*>(component);
+					ContextMenu((GameObject*)data, (IComponent*)component);
+					const Mesh3D* mesh = static_cast<const Mesh3D*>(component);
                     ImGui::PushID(i);
                     ImGui::Text("Model GUID: %s", mesh->GetModelGuid().str().c_str());
                     if (ImGui::BeginDragDropTarget())
@@ -76,6 +78,7 @@ namespace XenonEngine
             {
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%d Camera", i))
                 {
+					ContextMenu((GameObject*)data, (IComponent*)component);
                     const Camera3D* mesh = static_cast<const Camera3D*>(component);
                     const Vector3f lookat = mesh->GetLookAt();
                     ImGui::Text("Look At:"); ImGui::SameLine(); Text(lookat);
@@ -89,7 +92,18 @@ namespace XenonEngine
         }
     }
 
-    bool EditorGameObject::DragFloat3(const char* label, MathLab::Vector3f& v, float v_speed /*= 1.0f*/, float v_min /*= 0.0f*/, float v_max /*= 0.0f*/, const char* format /*= "%.3f"*/, float power /*= 1.0f*/)
+	void EditorGameObject::ContextMenu(GameObject* gameobject, IComponent* component) const
+	{
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Remove Component")) {
+				component->SetState(IComponent::ObjectState::MarkForDelete);
+			}
+			ImGui::EndPopup();
+		}
+	}
+
+	bool EditorGameObject::DragFloat3(const char* label, MathLab::Vector3f& v, float v_speed /*= 1.0f*/, float v_min /*= 0.0f*/, float v_max /*= 0.0f*/, const char* format /*= "%.3f"*/, float power /*= 1.0f*/)
     {
         return ImGui::DragScalarN(label, ImGuiDataType_Float, &v, 3, v_speed, &v_min, &v_max, format, power);
     }

@@ -19,8 +19,10 @@ namespace CrossPlatform
         friend class XenonEngine::FileDatabase;
         WorldMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeWorld); }
         virtual ~WorldMeta()override;
+		void Delete() override;
         XenonEngine::GameObjectWorld* GetGameObjectWorld();
         void SaveGameObjectWorld()const;
+		//void DeleteGameObjectWorld();
     protected:
     private:
         void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }

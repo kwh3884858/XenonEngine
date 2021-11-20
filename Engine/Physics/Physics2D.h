@@ -54,7 +54,7 @@ namespace XenonPhysics
 
         bool FixedUpdate();
         bool AddGameObject(GameObject* const gameobject);
-        void RemoveGameObject(GameObject* const gameobject);
+        bool RemoveGameObject(GameObject* const gameobject);
     private:
         struct Rectangle
         {

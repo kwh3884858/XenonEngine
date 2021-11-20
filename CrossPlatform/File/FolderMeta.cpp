@@ -9,7 +9,17 @@ namespace CrossPlatform
     using namespace std::filesystem;
     using namespace Algorithm;
 
-    CrossPlatform::IFileMeta* FolderMeta::GetFile(const Algorithm::String& fileName) const
+	void FolderMeta::Delete()
+	{
+		for (int i =0 ; i < m_content.Count(); i++)
+		{
+			m_content[i]->Delete();
+			RemoveFile(m_content[i]);
+		}
+		assert(m_content.Count() == 0); 
+	}
+
+	CrossPlatform::IFileMeta* FolderMeta::GetFile(const Algorithm::String& fileName) const
     {
         for (int i = 0 ; i < m_content.Count(); i++)
         {

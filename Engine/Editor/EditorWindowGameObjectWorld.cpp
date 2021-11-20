@@ -159,6 +159,10 @@ namespace XenonEngine
             }
             if (go)
             {
+				if (ImGui::MenuItem("Remove GameObject"))
+				{
+					go->SetState(GameObject::ObjectState::MarkForDelete);
+				}
                 if (ImGui::BeginMenu("Add Component"))
                 {
                     if (ImGui::MenuItem("Transform 3D")) {

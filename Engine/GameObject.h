@@ -55,14 +55,16 @@ namespace XenonEngine
 		void GameObjectDestory();
 
 		// For only gameobject self
-        virtual void Start();
-        virtual void Update();
-        virtual void Destroy();
+		virtual void Start() {};
+		virtual void Update() {};
+		virtual void Destroy() {};
         virtual void OnTrigger(GameObject* gameobject) { return; }
     protected:
         
     private:
 		void CheckName(String& name)const;
+		void ClearMarkForDelete();
+		void DeleteComponent(IComponent* component);
         String m_name;
         ObjectState m_state;
         Vector<IComponent*> m_components;

@@ -29,8 +29,11 @@ namespace XenonEngine
 
     bool GameObjectWorldManager::Shutdown() 
     {
-		m_currentWorld->Destroy();
-        m_currentWorld = nullptr;
+		if (m_currentWorld)
+		{
+			m_currentWorld->Destroy();
+			m_currentWorld = nullptr;
+		}
         for (int i = 0; i < m_worlds.Count(); i++)
         {
             delete m_worlds[i];
@@ -76,5 +79,15 @@ namespace XenonEngine
 			world->Start();
         }
     }
+
+	void GameObjectWorldManager::RemoveGameWorld(GameObjectWorld* world)
+	{
+		if (m_currentWorld && m_currentWorld == world)
+		{
+			m_currentWorld = nullptr;
+		}
+		world->Destroy();
+		m_worlds.Remove(world);
+	}
 
 }

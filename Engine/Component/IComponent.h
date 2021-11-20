@@ -46,8 +46,17 @@ namespace XenonEngine
         void SetGameobject(GameObject* object) { m_gameobject = object; }
 
         static IComponentType m_type;
+		
+		enum ObjectState
+		{
+			Enable,
+			MarkForDelete
+		};
+		bool IsMarkForDelete() { return m_state == ObjectState::MarkForDelete; }
+		void SetState(ObjectState state) { m_state = state; }
+
     protected:
-        
+		ObjectState m_state = ObjectState::Enable;
         GameObject* m_gameobject = nullptr;
 
     };

@@ -26,11 +26,6 @@ namespace XenonEngine
 
     GameObject::~GameObject()
     {
-		for (int i = 0; i < m_components.Count(); i++)
-		{
-			delete m_components[i];
-			m_components[i] = nullptr;
-		}
 		m_components.Clear();
     }
 
@@ -46,6 +41,7 @@ namespace XenonEngine
 
     void GameObject::GameObjectUpdate()
 	{
+		ClearMarkForDelete();
         Update();
 		for (int i = 0; i < m_components.Count(); i++)
 		{
@@ -59,24 +55,9 @@ namespace XenonEngine
 		Destroy();
 		for (int i = 0; i < m_components.Count(); i++)
 		{
-			m_components[i]->Destroy();
+			DeleteComponent(m_components[i]);
 		}
 	}
-
-	void GameObject::Start()
-    {
-
-    }
-
-	void GameObject::Update()
-	{
-
-	}
-
-    void GameObject::Destroy()
-    {
-
-    }
 
 	void GameObject::CheckName(String& name) const
 	{
@@ -93,6 +74,26 @@ namespace XenonEngine
 			name = name.Substring(0, pos + 1);
 			name.Append(static_cast<char>(numOfGameObject));
 		}
+	}
+
+	void GameObject::ClearMarkForDelete()
+	{
+		for (int i = 0; i < m_components.Count(); i++)
+		{
+			if (m_components[i]->IsMarkForDelete())
+			{
+				DeleteComponent(m_components[i]);
+				m_components.Remove(i);
+				i--;
+			}
+		}
+	}
+
+	void GameObject::DeleteComponent(IComponent* component)
+	{
+		component->Destroy();
+		delete component;
+		component = nullptr;
 	}
 
 }

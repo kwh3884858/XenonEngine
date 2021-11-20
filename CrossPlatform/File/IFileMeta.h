@@ -42,6 +42,7 @@ namespace CrossPlatform
     public:
         IFileMeta(const FileHeader& header) : m_header(header) {}
         virtual ~IFileMeta() {};
+		virtual void Delete() = 0;
         const FileHeader& GetFileHeader()const { return m_header; }
     protected:
         FileHeader m_header;
@@ -53,6 +54,7 @@ namespace CrossPlatform
     public:
         MaterialMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMaterial); }
         CrossPlatform::XenonMaterial* Get() {}
+		virtual void Delete()override {}
     private:
 
     };

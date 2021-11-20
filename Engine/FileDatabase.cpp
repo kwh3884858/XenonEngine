@@ -22,7 +22,8 @@ namespace XenonEngine
 
     void FileDatabase::Initialize()
     {
-        m_typePair.Add(DataPair(CrossPlatform::FileTypeModel, ".obj"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeFolder, ""));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeModel, ".obj"));
         m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, ".mtl"));
         m_typePair.Add(DataPair(CrossPlatform::FileTypeWorld, ".world"));
 
@@ -80,8 +81,13 @@ namespace XenonEngine
         assert(true == false);
     }
 
-    CrossPlatform::FolderMeta* FileDatabase::GetFolderByVirtualPath(const Algorithm::String& virtualPath) const
+    CrossPlatform::FolderMeta* FileDatabase::GetFolder(const Algorithm::String& inPath) const
     {
+		String virtualPath(inPath);
+		if (!IsVirtualPath(virtualPath))
+		{
+			virtualPath = ConvertToVirtualPath(virtualPath);
+		}
         int rootIndex = m_root->GetFileHeader().GetFilePath().Count();
         Vector<String> decompositionPath = virtualPath.Split(std::filesystem::path::preferred_separator);
         if (decompositionPath.Count() < 1)
@@ -113,14 +119,19 @@ namespace XenonEngine
         return currentFolder;
     }
 
-    CrossPlatform::FolderMeta* FileDatabase::GetFolderByRealPath(const Algorithm::String& realPath) const
-    {
-        String virtualPath = ConvertToVirtualPath(realPath);
-        return GetFolderByVirtualPath(virtualPath);
-    }
+    //CrossPlatform::FolderMeta* FileDatabase::GetFolderByRealPath(const Algorithm::String& realPath) const
+    //{
+    //    String virtualPath = ConvertToVirtualPath(realPath);
+    //    return GetFolderByVirtualPath(virtualPath);
+    //}
 
-    CrossPlatform::FolderMeta* FileDatabase::CreateFolderByVirtualPath(const Algorithm::String& virtualPath) const
+    CrossPlatform::FolderMeta* FileDatabase::CreateFolder(const Algorithm::String& inPath) const
     {
+		String virtualPath(inPath);
+		if (!IsVirtualPath(virtualPath))
+		{
+			virtualPath = ConvertToVirtualPath(virtualPath);
+		}
         Vector<String> decompositionPath = virtualPath.Split(std::filesystem::path::preferred_separator);
         if (decompositionPath.Count() < 1)
         {
@@ -161,10 +172,10 @@ namespace XenonEngine
         return currentFolder;
     }
 
-    CrossPlatform::FolderMeta* FileDatabase::CreateFolderByRealPath(const Algorithm::String& realPath) const
-    {
-        return CreateFolderByVirtualPath(ConvertToVirtualPath(realPath));
-    }
+    //CrossPlatform::FolderMeta* FileDatabase::CreateFolderByRealPath(const Algorithm::String& realPath) const
+    //{
+    //    return CreateFolderByVirtualPath(ConvertToVirtualPath(realPath));
+    //}
 
     Algorithm::String FileDatabase::ConvertToRealPath(const Algorithm::String& virtualPath)const
     {
@@ -194,7 +205,7 @@ namespace XenonEngine
             break;
         case CrossPlatform::FileTypeModel:
         {
-            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
             if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
             {
                 xg::Guid guid = xg::newGuid();
@@ -207,7 +218,7 @@ namespace XenonEngine
             break;
         case CrossPlatform::FileTypeWorld:
         {
-            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
             if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
             {
                 xg::Guid guid = xg::newGuid();
@@ -225,6 +236,62 @@ namespace XenonEngine
         }
         return nullptr;
     }
+
+	void FileDatabase::DeleteFile(const Algorithm::String& inPath)
+	{
+		String filePath(inPath);
+		if (IsVirtualPath(filePath))
+		{
+			filePath = ConvertToRealPath(filePath);
+		}
+		path originalFile(filePath.CString());
+		FileType fileType = GetFileType(originalFile.extension().string());
+		switch (fileType)
+		{
+		case CrossPlatform::None:
+			assert(true == false);
+			break;
+		case CrossPlatform::FileTypeFolder:
+		{
+			FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
+			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
+			if (file)
+			{
+				folder->RemoveFile(file);
+				FolderMeta* worldFile = static_cast<FolderMeta*>(file);
+				worldFile->Delete();
+				delete worldFile;
+				worldFile = nullptr;
+			}
+		}
+			break;
+		case CrossPlatform::FileTypeMaterial:
+			break;
+		case CrossPlatform::FileTypeModel:
+		{
+		}
+		break;
+		case CrossPlatform::FileTypeWorld:
+		{
+			FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
+			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
+			if (file)
+			{
+				folder->RemoveFile(file);
+				WorldMeta* worldFile = static_cast<WorldMeta*>(file);
+				EngineManager::Get().GetWorldManager().RemoveGameWorld(worldFile->GetGameObjectWorld());
+				worldFile->Delete();
+				delete worldFile;
+				worldFile = nullptr;
+			}
+
+		}
+		break;
+		default:
+			assert(true == false);
+			break;
+		}
+	}
 
     void FileDatabase::LoadFile(const Algorithm::String& realPath)
     {
@@ -251,7 +318,7 @@ namespace XenonEngine
         break;
         case CrossPlatform::FileTypeWorld:
         {
-            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
             IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
             if (file)
             {
@@ -295,7 +362,7 @@ namespace XenonEngine
             break;
         case CrossPlatform::FileTypeWorld:
         {
-            FolderMeta* folder = CreateFolderByRealPath(originalFile.parent_path().string().c_str());
+            FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
             String fileName (originalFile.filename().string().c_str());
             IFileMeta* file = folder->GetFile(fileName);
             if (file)
@@ -409,5 +476,4 @@ namespace XenonEngine
             } 
         }
     }
-
 }

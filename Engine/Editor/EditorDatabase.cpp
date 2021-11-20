@@ -8,17 +8,22 @@ namespace XenonEngine
 
     CrossPlatform::FolderMeta* EditorDatabase::GetFolder(const Algorithm::String& virtualPath) const
     {
-        return m_fileDatabase->GetFolderByVirtualPath(virtualPath);
+        return m_fileDatabase->GetFolder(virtualPath);
     }
 
     CrossPlatform::FolderMeta* EditorDatabase::CreateFolder(const Algorithm::String& virtualPath) const
     {
-        return m_fileDatabase->CreateFolderByVirtualPath(virtualPath);
+        return m_fileDatabase->CreateFolder(virtualPath);
     }
 
     Algorithm::String EditorDatabase::ConvertToRealPath(const Algorithm::String& virtualPath)
     {
         return m_fileDatabase->ConvertToRealPath(virtualPath);
     }
+
+	void EditorDatabase::Delete(const Algorithm::String& virtualPath)
+	{
+		return const_cast<FileDatabase*>(m_fileDatabase)->DeleteFile(virtualPath);
+	}
 
 }
