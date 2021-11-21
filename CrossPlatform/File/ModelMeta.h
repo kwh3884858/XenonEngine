@@ -6,16 +6,18 @@
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
 namespace CrossPlatform {
-
+	using Algorithm::Vector;
     class Polygon3D;
+	class Material;
     class ModelMeta :public IFileMeta
     {
     public:
         ModelMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeModel); }
         virtual ~ModelMeta() override;
 		virtual void Delete() override;
-        const Polygon3D* GetPolygon()const;
+        const Vector<Polygon3D*>& GetPolygon()const;
     private:
-        mutable const Polygon3D* m_polygon3D = nullptr;
+		Vector<Polygon3D*> m_polygons;
+		Vector<Material*> m_materials;
     };
 }

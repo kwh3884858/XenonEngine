@@ -1,10 +1,13 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
 #include "Algorithms/String.h"
-namespace CrossPlatform
-{
-	class Polygon3D;
-}
+#include "CrossPlatform/Polygon/Polygon3D.h"
+#include "CrossPlatform/Material/Material.h"
+//#include "CrossPlatform/Polygon/Polygon3D.h"
+//namespace CrossPlatform
+//{
+//	class Polygon3D;
+//}
 namespace XenonEngine
 {
 	class ObjectLoader : public CrossPlatform::XenonManager<ObjectLoader>
@@ -13,7 +16,7 @@ namespace XenonEngine
 		virtual bool Initialize() override { return true; }
         virtual bool Shutdown() override { return true; }
 
-		const CrossPlatform::Polygon3D* LoadObj(const Algorithm::String& fileName );
+		bool LoadObj(const Algorithm::String& fileName, Algorithm::Vector<CrossPlatform::Polygon3D*>& polygons, Algorithm::Vector<CrossPlatform::Material*>& materials ) const;
 	private:
 
 	};

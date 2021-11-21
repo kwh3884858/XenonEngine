@@ -10,14 +10,32 @@ namespace CrossPlatform {
 	using namespace std::filesystem;
     ModelMeta::~ModelMeta()
     {
-        delete m_polygon3D;
-        m_polygon3D = nullptr;
+		for (int i = 0; i < m_polygons.Count(); i++)
+		{
+			delete m_polygons[i];
+			m_polygons[i] = nullptr;
+		}
+
+		for (int i = 0; i < m_materials.Count(); i++)
+		{
+			delete m_materials[i];
+			m_materials[i] = nullptr;
+		}
     }
 
 	void ModelMeta::Delete()
 	{
-		delete m_polygon3D;
-		m_polygon3D = nullptr;
+		for (int i = 0; i < m_polygons.Count(); i++)
+		{
+			delete m_polygons[i];
+			m_polygons[i] = nullptr;
+		}
+
+		for (int i = 0; i < m_materials.Count(); i++)
+		{
+			delete m_materials[i];
+			m_materials[i] = nullptr;
+		}
 
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())
@@ -35,16 +53,27 @@ namespace CrossPlatform {
 			bool result = remove(modelMetaFile);
 			assert(result == true);
 		}
+		if (m_materials.Count() != 0)
+		{
+			path materialFile(filePath.CString());
+			materialFile.replace_extension("mtl");
+			bool result = remove(materialFile);
+			assert(result == true);
+		}
 	}
 
-	const CrossPlatform::Polygon3D* ModelMeta::GetPolygon()const
+	const Vector<Polygon3D*>& ModelMeta::GetPolygon()const
     {
-        if (!m_polygon3D)
+        if (m_polygons.Count() == 0)
         {
-            m_polygon3D = ObjectLoader::Get().LoadObj(m_header.GetFilePath());
-			const_cast<Polygon3D*>(m_polygon3D)->SetModelGUID(GetFileHeader().GetGUID());
+            bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);
+			assert(result == true);
+			for (int i = 0; i < m_polygons.Count(); i++)
+			{
+				m_polygons[i]->SetModelGUID(GetFileHeader().GetGUID());
+			}
         }
-        return m_polygon3D;
+        return m_polygons;
     }
 
 }

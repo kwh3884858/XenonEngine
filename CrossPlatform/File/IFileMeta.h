@@ -4,7 +4,7 @@
 #include "CrossPlatform/FileTypeEnum.h"
 namespace CrossPlatform
 {
-    class XenonMaterial;
+    class Material;
 
     class FileHeader
     {
@@ -49,13 +49,4 @@ namespace CrossPlatform
     private:
     };
 
-    class MaterialMeta :public IFileMeta
-    {
-    public:
-        MaterialMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMaterial); }
-        CrossPlatform::XenonMaterial* Get() {}
-		virtual void Delete()override {}
-    private:
-
-    };
 }

@@ -1,7 +1,8 @@
 #include "ObjLoader.h"
-#include "CrossPlatform/Polygon/Polygon3D.h"
-#include "CrossPlatform/Material/XenonMaterial.h"
+
 #include "MathLab/Vector3.h"
+#include "MathLab/Vector2.h"
+
 #include <iostream>
 
 #define TINYOBJLOADER_IMPLEMENTATION 
@@ -11,10 +12,11 @@ namespace XenonEngine
 	using Algorithm::String;
     using Algorithm::Vector;
 	using CrossPlatform::Polygon3D;
-	using CrossPlatform::XenonMaterial;
+	using CrossPlatform::Material;
 	using MathLab::Vector3f;
+	using MathLab::Vector2f;
 
-	const Polygon3D* ObjectLoader::LoadObj(const Algorithm::String & fileName)
+	bool ObjectLoader::LoadObj(const Algorithm::String& fileName, Vector<Polygon3D*>& polygons, Vector<Material*>& materials)const
 	{
 		std::string inputfile (fileName.Beign(), fileName.Count());
 		tinyobj::ObjReaderConfig reader_config;
@@ -27,6 +29,7 @@ namespace XenonEngine
 				std::cerr << "TinyObjReader: " << reader.Error();
 			}
 			assert(true == false);
+			return false;
 		}
 
 		if (!reader.Warning().empty()) {
@@ -35,7 +38,7 @@ namespace XenonEngine
 
 		auto& attrib = reader.GetAttrib();
 		auto& shapes = reader.GetShapes();
-		auto& materials = reader.GetMaterials();
+		auto& objMaterials = reader.GetMaterials();
 
 		int numOfVertex = attrib.vertices.size() / 3;
 		Vector3f* vertices = new Vector3f[numOfVertex];
@@ -55,7 +58,26 @@ namespace XenonEngine
             normals[i / 3].z = attrib.normals[i + 2];
         }
 
-        int numOfMaterial = materials.size();
+		int numOfTextureCoordinate = attrib.texcoords.size() / 2;
+		Vector2f* uv = new Vector2f[numOfTextureCoordinate];
+		for (int i  =0 ; i  <numOfTextureCoordinate; i++)
+		{
+			uv[i / 2].x = attrib.texcoords[i + 0];
+			uv[i / 2].y = attrib.texcoords[i + 1];
+		}
+
+        int numOfMaterial = objMaterials.size();
+		for (int i = 0; i < numOfMaterial; i++)
+		{
+			String materialName(objMaterials[i].name.c_str());
+			Vector3f ambient(objMaterials[i].ambient[0], objMaterials[i].ambient[1], objMaterials[i].ambient[2]);
+			Vector3f diffuse(objMaterials[i].diffuse[0], objMaterials[i].diffuse[1], objMaterials[i].diffuse[2]);
+			Vector3f specular(objMaterials[i].specular[0], objMaterials[i].specular[1], objMaterials[i].specular[2]);
+			Vector3f emission(objMaterials[i].emission[0], objMaterials[i].emission[1], objMaterials[i].emission[2]);
+			String texturePath(objMaterials[i].diffuse_texname.c_str());
+			Material* material = new Material(materialName, objMaterials[i].shininess, ambient, diffuse, specular, emission, texturePath);
+			materials.Add(material);
+		}
 
         int numOfIndex = 0;
 		size_t vindex = 0;
@@ -84,11 +106,12 @@ namespace XenonEngine
                     vindex++;
 				}
 				index_offset += fv;
+				vertexIndexList[vindex].m_material = shapes[s].mesh.material_ids[f];
 			}
             Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals);
-            return polygon;
+			polygons.Add(polygon);
 		}
 
-        return nullptr;
+		return true;
 	}
 }

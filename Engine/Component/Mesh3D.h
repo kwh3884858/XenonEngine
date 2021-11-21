@@ -41,7 +41,7 @@ namespace XenonEngine
         void CalculateModelMaxRadius();
 
         xg::Guid m_modelId;
-		const CrossPlatform::Polygon3D* m_polygon3D = nullptr;
+		const Vector<CrossPlatform::Polygon3D*> m_polygon3D;
         float m_maxRadius = 0.0f;
 
 	};

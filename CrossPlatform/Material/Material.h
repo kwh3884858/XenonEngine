@@ -5,12 +5,11 @@
 
 namespace CrossPlatform
 {
-    class XenonMaterial
+    class Material
     {
     public:
-        XenonMaterial() {}
-        XenonMaterial(Algorithm::String name,float exponent,MathLab::Vector3f ambient,MathLab::Vector3f diffuse,MathLab::Vector3f specular,MathLab::Vector3f emission,Algorithm::String diffuseTexture);
-        ~XenonMaterial();
+        Material(const Algorithm::String& name,float exponent,const MathLab::Vector3f& ambient,const MathLab::Vector3f& diffuse,const MathLab::Vector3f& specular,const MathLab::Vector3f& emission,const Algorithm::String& diffuseTexture);
+        ~Material();
 
     private:
         Algorithm::String m_name;
