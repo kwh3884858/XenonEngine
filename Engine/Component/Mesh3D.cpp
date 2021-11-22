@@ -35,7 +35,8 @@ namespace XenonEngine
 
 	bool Mesh3D::Destroy()
 	{
-		m_polygon3D = nullptr;
+		m_polygon3D.Clear();
+		m_materials.Clear();
 		return true;
 	}
 
@@ -58,9 +59,9 @@ namespace XenonEngine
         }
 
         const ModelMeta* model = static_cast<const ModelMeta*>(dataRoot);
-		if (m_polygon3D)
+		if (m_polygon3D.Count() > 0)
 		{
-			xg::Guid modelGuid = m_polygon3D->GetModelGUID();
+			xg::Guid modelGuid = m_polygon3D[0]->GetModelGUID();
 			if (modelGuid.isValid() && modelGuid == m_modelId)
 			{
 				return;
@@ -73,16 +74,20 @@ namespace XenonEngine
 
     void Mesh3D::CalculateModelMaxRadius()
     {
-        assert(m_polygon3D != nullptr);
+        assert(m_polygon3D.Count() > 0);
         float maxRadius = 0;
-        for (int i = 0; i < m_polygon3D->GetNumOfVertex(); i++)
-        {
-            float radius = (*m_polygon3D)[i].m_vertex.x *(*m_polygon3D)[i].m_vertex.x + (*m_polygon3D)[i].m_vertex.y *(*m_polygon3D)[i].m_vertex.y + (*m_polygon3D)[i].m_vertex.z *(*m_polygon3D)[i].m_vertex.z;
-            if (radius > maxRadius)
-            {
-                maxRadius = radius;
-            }
-        }
+		for (int index = 0 ; index < m_polygon3D.Count(); index++)
+		{
+			for (int i = 0; i < m_polygon3D[i]->GetNumOfVertex(); i++)
+			{
+				float radius = (*m_polygon3D[index])[i].m_vertex.x *(*m_polygon3D[index])[i].m_vertex.x + (*m_polygon3D[index])[i].m_vertex.y *(*m_polygon3D[index])[i].m_vertex.y + (*m_polygon3D[index])[i].m_vertex.z *(*m_polygon3D[index])[i].m_vertex.z;
+				if (radius > maxRadius)
+				{
+					maxRadius = radius;
+				}
+			}
+		}
+
         m_maxRadius = sqrt(maxRadius);
     }
 
