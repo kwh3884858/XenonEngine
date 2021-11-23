@@ -62,18 +62,32 @@ namespace CrossPlatform {
 		}
 	}
 
-	const Vector<Polygon3D*>& ModelMeta::GetPolygon()const
+	const Vector<Polygon3D*>& ModelMeta::GetPolygons()
     {
         if (m_polygons.Count() == 0)
         {
-            bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);
-			assert(result == true);
-			for (int i = 0; i < m_polygons.Count(); i++)
-			{
-				m_polygons[i]->SetModelGUID(GetFileHeader().GetGUID());
-			}
+			LoadModel();
         }
         return m_polygons;
     }
+
+	const CrossPlatform::Vector<Material*>& ModelMeta::GetMaterials()
+	{
+		if (m_materials.Count() == 0)
+		{
+			LoadModel();
+		}
+		return m_materials;
+	}
+
+	void ModelMeta::LoadModel()
+	{
+		bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);
+		assert(result == true);
+		for (int i = 0; i < m_polygons.Count(); i++)
+		{
+			m_polygons[i]->SetModelGUID(GetFileHeader().GetGUID());
+		}
+	}
 
 }

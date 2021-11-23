@@ -70,6 +70,10 @@ namespace XenonEngine
                         ImGui::EndDragDropTarget();
                     }
                     ImGui::PopID();
+					const Vector<Material*> materials = mesh->GetMaterials();
+					for (int i = 0 ; i < materials.Count(); i++)
+					{
+					}
                     ImGui::Text("Max Radius: %f", mesh->GetMaxRadius());
                     ImGui::TreePop();
                 }

@@ -15,8 +15,10 @@ namespace CrossPlatform {
         ModelMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeModel); }
         virtual ~ModelMeta() override;
 		virtual void Delete() override;
-        const Vector<Polygon3D*>& GetPolygon()const;
-    private:
+        const Vector<Polygon3D*>& GetPolygons();
+		const Vector<Material*>& GetMaterials();
+	private:
+		void LoadModel();
 		Vector<Polygon3D*> m_polygons;
 		Vector<Material*> m_materials;
     };

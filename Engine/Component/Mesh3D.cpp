@@ -58,7 +58,7 @@ namespace XenonEngine
             return;
         }
 
-        const ModelMeta* model = static_cast<const ModelMeta*>(dataRoot);
+        ModelMeta* model = (ModelMeta*)(dataRoot);
 		if (m_polygon3D.Count() > 0)
 		{
 			xg::Guid modelGuid = m_polygon3D[0]->GetModelGUID();
@@ -67,7 +67,8 @@ namespace XenonEngine
 				return;
 			}
 		}
-        m_polygon3D = model->GetPolygon();
+        m_polygon3D = model->GetPolygons();
+		m_materials = model->GetMaterials();
 
         CalculateModelMaxRadius();
     }

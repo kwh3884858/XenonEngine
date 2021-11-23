@@ -11,6 +11,7 @@
 
 namespace CrossPlatform {
 	class Polygon3D;
+	class Material;
 }
 
 namespace XenonEngine
@@ -33,7 +34,8 @@ namespace XenonEngine
         const xg::Guid& GetModelGuid()const { return m_modelId; }
         void SetModelGuid(const xg::Guid& modelGuid);
 		void LoadModel();
-        const CrossPlatform::Polygon3D* GetPolygon3D(int index)const { return m_polygon3D[index]; }
+        const Vector< CrossPlatform::Polygon3D*>& GetPolygon3D()const { return m_polygon3D; }
+		const Vector< CrossPlatform::Material*>& GetMaterials()const { return m_materials; }
         float GetMaxRadius()const { return m_maxRadius; }
 
         static ComponentType m_type;
