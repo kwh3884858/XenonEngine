@@ -7,6 +7,7 @@
 #include "Engine/Component/PointLightComponent.h"
 #include "Engine/Component/Mesh3D.h"
 #include "Engine/Component/Camera3D.h"
+#include "CrossPlatform/Material/Material.h"
 
 
 namespace XenonEngine
@@ -73,6 +74,14 @@ namespace XenonEngine
 					const Vector<Material*> materials = mesh->GetMaterials();
 					for (int i = 0 ; i < materials.Count(); i++)
 					{
+						const Material* material = materials[i];
+						ImGui::Text("Material Name: %s", material->GetName().CString());
+						ImGui::Text("Exponent: %f", material->GetExponent());
+						ImGui::Text("Ambient: "); ImGui::SameLine(); Text(material->GetAmbient());
+						ImGui::Text("Diffuse: "); ImGui::SameLine(); Text(material->GetDiffuse());
+						ImGui::Text("Specular: "); ImGui::SameLine(); Text(material->GetSpecular());
+						ImGui::Text("Emission: "); ImGui::SameLine(); Text(material->GetEmission());
+						ImGui::Text("Material Texture Name: %s", material->GetDiffuseTexture().CString());
 					}
                     ImGui::Text("Max Radius: %f", mesh->GetMaxRadius());
                     ImGui::TreePop();
@@ -88,8 +97,8 @@ namespace XenonEngine
                     ImGui::Text("Look At:"); ImGui::SameLine(); Text(lookat);
                     ImGui::Text("Fov: %f", mesh->GetFov());
                     ImGui::Text("View Distance: %f", mesh->GetViewDistance());
-                    ImGui::Text("View Plane"); ImGui::SameLine(); Text(mesh->GetViewPlane());
-                    ImGui::Text("View Plane"); ImGui::SameLine(); Text(mesh->GetViewport());
+                    ImGui::Text("View Plane: "); ImGui::SameLine(); Text(mesh->GetViewPlane());
+                    ImGui::Text("View Port: "); ImGui::SameLine(); Text(mesh->GetViewport());
                     ImGui::TreePop();
                 }
             }
@@ -126,5 +135,4 @@ namespace XenonEngine
     {
         ImGui::Text("%f, %f, %f", value.x, value.y, value.z);
     }
-
-    }
+}

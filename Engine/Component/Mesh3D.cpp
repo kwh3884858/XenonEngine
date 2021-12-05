@@ -16,7 +16,8 @@ namespace XenonEngine
 	IComponent* Mesh3D::Copy(GameObject*const gameObject) const
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
-		that->m_polygon3D = m_polygon3D;
+		that->m_polygons = m_polygons;
+		that->m_materials = m_materials;
 		that->m_modelId = m_modelId;
         that->m_maxRadius = m_maxRadius;
 		return that;
@@ -35,7 +36,7 @@ namespace XenonEngine
 
 	bool Mesh3D::Destroy()
 	{
-		m_polygon3D.Clear();
+		m_polygons.Clear();
 		m_materials.Clear();
 		return true;
 	}
@@ -59,15 +60,15 @@ namespace XenonEngine
         }
 
         ModelMeta* model = (ModelMeta*)(dataRoot);
-		if (m_polygon3D.Count() > 0)
+		if (m_polygons.Count() > 0)
 		{
-			xg::Guid modelGuid = m_polygon3D[0]->GetModelGUID();
+			xg::Guid modelGuid = m_polygons[0]->GetModelGUID();
 			if (modelGuid.isValid() && modelGuid == m_modelId)
 			{
 				return;
 			}
 		}
-        m_polygon3D = model->GetPolygons();
+        m_polygons = model->GetPolygons();
 		m_materials = model->GetMaterials();
 
         CalculateModelMaxRadius();
@@ -75,13 +76,13 @@ namespace XenonEngine
 
     void Mesh3D::CalculateModelMaxRadius()
     {
-        assert(m_polygon3D.Count() > 0);
+        assert(m_polygons.Count() > 0);
         float maxRadius = 0;
-		for (int index = 0 ; index < m_polygon3D.Count(); index++)
+		for (int index = 0 ; index < m_polygons.Count(); index++)
 		{
-			for (int i = 0; i < m_polygon3D[i]->GetNumOfVertex(); i++)
+			for (int i = 0; i < m_polygons[index]->GetNumOfVertex(); i++)
 			{
-				float radius = (*m_polygon3D[index])[i].m_vertex.x *(*m_polygon3D[index])[i].m_vertex.x + (*m_polygon3D[index])[i].m_vertex.y *(*m_polygon3D[index])[i].m_vertex.y + (*m_polygon3D[index])[i].m_vertex.z *(*m_polygon3D[index])[i].m_vertex.z;
+				float radius = (*m_polygons[index])[i].m_vertex.x *(*m_polygons[index])[i].m_vertex.x + (*m_polygons[index])[i].m_vertex.y *(*m_polygons[index])[i].m_vertex.y + (*m_polygons[index])[i].m_vertex.z *(*m_polygons[index])[i].m_vertex.z;
 				if (radius > maxRadius)
 				{
 					maxRadius = radius;

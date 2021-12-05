@@ -10,8 +10,10 @@
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include "CrossPlatform/File/WorldMeta.h"
 #include "CrossPlatform/File/FolderMeta.h"
+#include "CrossPlatform/File/MaterialMeta.h"
 #include "Engine/EngineManager.h"
 #include "GameObjectWorld.h"
+
 
 namespace XenonEngine
 {

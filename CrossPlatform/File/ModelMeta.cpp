@@ -71,7 +71,7 @@ namespace CrossPlatform {
         return m_polygons;
     }
 
-	const CrossPlatform::Vector<Material*>& ModelMeta::GetMaterials()
+	const Vector<Material*>& ModelMeta::GetMaterials()
 	{
 		if (m_materials.Count() == 0)
 		{

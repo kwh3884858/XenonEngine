@@ -34,8 +34,8 @@ namespace XenonEngine
         const xg::Guid& GetModelGuid()const { return m_modelId; }
         void SetModelGuid(const xg::Guid& modelGuid);
 		void LoadModel();
-        const Vector< CrossPlatform::Polygon3D*>& GetPolygon3D()const { return m_polygon3D; }
-		const Vector< CrossPlatform::Material*>& GetMaterials()const { return m_materials; }
+        const Algorithm::Vector< CrossPlatform::Polygon3D*>& GetPolygon3D()const { return m_polygons; }
+		const Algorithm::Vector< CrossPlatform::Material*>& GetMaterials()const { return m_materials; }
         float GetMaxRadius()const { return m_maxRadius; }
 
         static ComponentType m_type;
@@ -43,8 +43,8 @@ namespace XenonEngine
         void CalculateModelMaxRadius();
 
         xg::Guid m_modelId;
-		Vector<CrossPlatform::Polygon3D*> m_polygon3D;
-		Vector<CrossPlatform::Material*> m_materials;
+		Algorithm::Vector<CrossPlatform::Polygon3D*> m_polygons;
+		Algorithm::Vector<CrossPlatform::Material*> m_materials;
         float m_maxRadius = 0.0f;
 
 	};

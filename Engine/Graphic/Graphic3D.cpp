@@ -182,8 +182,8 @@ namespace XenonEngine
 
             DrawCoordinateLines(worldToScreenTranform);
 
-            const Polygon3D* polygon = mesh->GetPolygon3D();
-            if (polygon == nullptr)
+			const Vector< CrossPlatform::Polygon3D*>& polygons = mesh->GetPolygon3D();
+            if (polygons.Count() == 0)
             {
                 continue;
             }
@@ -193,129 +193,129 @@ namespace XenonEngine
                 continue;
             }
 
-            int triangleCount = polygon->Count() / 3;
-            Triangle* triangleList = new Triangle[triangleCount];
-            Triangle* normalList = new Triangle[triangleCount];
-            TriangleIndex* triangleIndexList = new TriangleIndex[triangleCount];
-            for (int polyIndex = 0; polyIndex < triangleCount; polyIndex ++)
-            {
-                Vertex3D node0 = (*polygon)[polyIndex * 3];
-                Vertex3D node1 = (*polygon)[polyIndex * 3 + 1];
-                Vertex3D node2 = (*polygon)[polyIndex * 3 + 2];
+			for (int polygonIndex = 0; polygonIndex < polygons.Count(); polygonIndex++)
+			{
+				const Polygon3D* polygon = polygons[polygonIndex];
 
-                const Vector3f& vertex0 = node0.m_vertex;
-                const Vector3f& vertex1 = node1.m_vertex;
-                const Vector3f& vertex2 = node2.m_vertex;
-                TVector4f homogeneousVertex0 = ConvertFromNonHomogeneous(vertex0);
-                TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex1);
-                TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex2);
-                homogeneousVertex0 = homogeneousVertex0 * localToCameraTranform;
-                homogeneousVertex1 = homogeneousVertex1 * localToCameraTranform;
-                homogeneousVertex2 = homogeneousVertex2 * localToCameraTranform;
-                triangleList[polyIndex][0] = homogeneousVertex0;
-                triangleList[polyIndex][1] = homogeneousVertex1;
-                triangleList[polyIndex][2] = homogeneousVertex2;
+				int triangleCount = polygon->Count() / 3;
+				Triangle* triangleList = new Triangle[triangleCount];
+				Triangle* normalList = new Triangle[triangleCount];
+				TriangleIndex* triangleIndexList = new TriangleIndex[triangleCount];
+				for (int polyIndex = 0; polyIndex < triangleCount; polyIndex++)
+				{
+					Vertex3D node0 = (*polygon)[polyIndex * 3];
+					Vertex3D node1 = (*polygon)[polyIndex * 3 + 1];
+					Vertex3D node2 = (*polygon)[polyIndex * 3 + 2];
 
-                triangleIndexList[polyIndex].m_index = polyIndex;
-                triangleIndexList[polyIndex].m_zAixs = (homogeneousVertex0[2] + homogeneousVertex1[2] + homogeneousVertex2[2]) / 3;
+					const Vector3f& vertex0 = node0.m_vertex;
+					const Vector3f& vertex1 = node1.m_vertex;
+					const Vector3f& vertex2 = node2.m_vertex;
+					TVector4f homogeneousVertex0 = ConvertFromNonHomogeneous(vertex0);
+					TVector4f homogeneousVertex1 = ConvertFromNonHomogeneous(vertex1);
+					TVector4f homogeneousVertex2 = ConvertFromNonHomogeneous(vertex2);
+					homogeneousVertex0 = homogeneousVertex0 * localToCameraTranform;
+					homogeneousVertex1 = homogeneousVertex1 * localToCameraTranform;
+					homogeneousVertex2 = homogeneousVertex2 * localToCameraTranform;
+					triangleList[polyIndex][0] = homogeneousVertex0;
+					triangleList[polyIndex][1] = homogeneousVertex1;
+					triangleList[polyIndex][2] = homogeneousVertex2;
 
-                const Vector3f& normal0 = node0.m_normal;
-                const Vector3f& normal1 = node1.m_normal;
-                const Vector3f& normal2 = node2.m_normal;
-                TVector4f homogeneousNormal0 = ConvertFromNonHomogeneous(normal0);
-                TVector4f homogeneousNormal1 = ConvertFromNonHomogeneous(normal1);
-                TVector4f homogeneousNormal2 = ConvertFromNonHomogeneous(normal2);
-                homogeneousNormal0 = homogeneousNormal0 * worldToCameraRotationMatrix;
-                homogeneousNormal1 = homogeneousNormal1 * worldToCameraRotationMatrix;
-                homogeneousNormal2 = homogeneousNormal2 * worldToCameraRotationMatrix;
-                normalList[polyIndex][0] = homogeneousNormal0.Normalize();
-                normalList[polyIndex][1] = homogeneousNormal1.Normalize();
-                normalList[polyIndex][2] = homogeneousNormal2.Normalize();
-            }
+					triangleIndexList[polyIndex].m_index = polyIndex;
+					triangleIndexList[polyIndex].m_zAixs = (homogeneousVertex0[2] + homogeneousVertex1[2] + homogeneousVertex2[2]) / 3;
 
-            Algorithm::Sort<TriangleIndex> sort;
-            sort.Quick(triangleIndexList, triangleCount, IsIndexZAxisBigger);
+					const Vector3f& normal0 = node0.m_normal;
+					const Vector3f& normal1 = node1.m_normal;
+					const Vector3f& normal2 = node2.m_normal;
+					TVector4f homogeneousNormal0 = ConvertFromNonHomogeneous(normal0);
+					TVector4f homogeneousNormal1 = ConvertFromNonHomogeneous(normal1);
+					TVector4f homogeneousNormal2 = ConvertFromNonHomogeneous(normal2);
+					homogeneousNormal0 = homogeneousNormal0 * worldToCameraRotationMatrix;
+					homogeneousNormal1 = homogeneousNormal1 * worldToCameraRotationMatrix;
+					homogeneousNormal2 = homogeneousNormal2 * worldToCameraRotationMatrix;
+					normalList[polyIndex][0] = homogeneousNormal0.Normalize();
+					normalList[polyIndex][1] = homogeneousNormal1.Normalize();
+					normalList[polyIndex][2] = homogeneousNormal2.Normalize();
+				}
 
-            //Algorithm::Sort<Triangle> sort;
-            //sort.Quick(triangleList, triangleCount, IsZAxisBigger);
+				Algorithm::Sort<TriangleIndex> sort;
+				sort.Quick(triangleIndexList, triangleCount, IsIndexZAxisBigger);
 
-            for (int polyIndex = 0; polyIndex < triangleCount; polyIndex ++)
-            {
-                //const Triangle& triangle = triangleList[polyIndex];
-                const Triangle& triangle = triangleList[triangleIndexList[polyIndex].m_index];
-                CullingState state = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
-                if (state == CullingState::Culled)
-                {
-                    continue;
-                }
+				for (int polyIndex = 0; polyIndex < triangleCount; polyIndex++)
+				{
+					//const Triangle& triangle = triangleList[polyIndex];
+					const Triangle& triangle = triangleList[triangleIndexList[polyIndex].m_index];
+					CullingState state = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
+					if (state == CullingState::Culled)
+					{
+						continue;
+					}
 
-                if (m_renderType == RenderType::Wireframe || m_renderType == RenderType::FlatShdering)
-                {
-                    VertexShaderDataInputFlat input;
-                    input.m_triangle = triangle;
-                    input.m_faceColor = CrossPlatform::WHITE;
-                    VertexShaderDataOutputFlat output;
-                    VertexShaderFlat(input, output, worldToCameraTransform, cameraToScreenTranform);
-                    if (m_renderType == RenderType::FlatShdering)
-                    {
-                        Graphic2D::Get().DrawTriangle(output.m_screenPoint0, output.m_screenPoint1, output.m_screenPoint2, output.m_faceColor);
-                    }
-                    if (m_renderType == RenderType::Wireframe)
-                    {
-                        Vector2f tmp0;
-                        Vector2f tmp1;
-                        tmp0 = output.m_screenPoint0;
-                        tmp1 = output.m_screenPoint1;
-                        Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-                        if (state == Graphic2D::ClipLineState::Accpet)
-                        {
-                            Graphic2D::Get().DrawLine(tmp0, tmp1);
-                        }
-                        tmp0 = output.m_screenPoint1;
-                        tmp1 = output.m_screenPoint2;
-                        state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-                        if (state == Graphic2D::ClipLineState::Accpet)
-                        {
-                            Graphic2D::Get().DrawLine(tmp0, tmp1);
-                        }
-                        tmp0 = output.m_screenPoint2;
-                        tmp1 = output.m_screenPoint0;
-                        state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-                        if (state == Graphic2D::ClipLineState::Accpet)
-                        {
-                            Graphic2D::Get().DrawLine(tmp0, tmp1);
-                        }
-                    }
-                }
+					if (m_renderType == RenderType::Wireframe || m_renderType == RenderType::FlatShdering)
+					{
+						VertexShaderDataInputFlat input;
+						input.m_triangle = triangle;
+						input.m_faceColor = CrossPlatform::WHITE;
+						VertexShaderDataOutputFlat output;
+						VertexShaderFlat(input, output, worldToCameraTransform, cameraToScreenTranform);
+						if (m_renderType == RenderType::FlatShdering)
+						{
+							Graphic2D::Get().DrawTriangle(output.m_screenPoint0, output.m_screenPoint1, output.m_screenPoint2, output.m_faceColor);
+						}
+						if (m_renderType == RenderType::Wireframe)
+						{
+							Vector2f tmp0;
+							Vector2f tmp1;
+							tmp0 = output.m_screenPoint0;
+							tmp1 = output.m_screenPoint1;
+							Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+							if (state == Graphic2D::ClipLineState::Accpet)
+							{
+								Graphic2D::Get().DrawLine(tmp0, tmp1);
+							}
+							tmp0 = output.m_screenPoint1;
+							tmp1 = output.m_screenPoint2;
+							state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+							if (state == Graphic2D::ClipLineState::Accpet)
+							{
+								Graphic2D::Get().DrawLine(tmp0, tmp1);
+							}
+							tmp0 = output.m_screenPoint2;
+							tmp1 = output.m_screenPoint0;
+							state = Graphic2D::Get().ClipLine(tmp0, tmp1);
+							if (state == Graphic2D::ClipLineState::Accpet)
+							{
+								Graphic2D::Get().DrawLine(tmp0, tmp1);
+							}
+						}
+					}
 
-                if (m_renderType == RenderType::GouraudShdering)
-                {
-                    const Triangle& normal = normalList[triangleIndexList[polyIndex].m_index];
-                    VertexShaderDataInputGouraud input;
-                    input.m_vertex = triangle;
-                    input.m_normal = normal;
-                    input.m_baseColor[0] = CrossPlatform::WHITE;
-                    input.m_baseColor[1] = CrossPlatform::WHITE;
-                    input.m_baseColor[2] = CrossPlatform::WHITE;
-                    VertexShaderDataOutputGouraud output;
-                    VertexShaderGouraud(input, output, worldToCameraTransform, cameraToScreenTranform);
-                    VertexData vertexData;
-                    vertexData.p0 = output.m_screenPoint[0];
-                    vertexData.p1 = output.m_screenPoint[1];
-                    vertexData.p2 = output.m_screenPoint[2];
-                    vertexData.vcolor0 = output.m_vertexColor[0];
-                    vertexData.vcolor1 = output.m_vertexColor[1];
-                    vertexData.vcolor2 = output.m_vertexColor[2];
-                    //vertexData.vcolor0 = CrossPlatform::RED;
-                    //vertexData.vcolor1 = CrossPlatform::GREEN;
-                    //vertexData.vcolor2 = CrossPlatform::BLUE;
-                    Graphic2D::Get().DrawTriangle(vertexData);
-                }
-            }
+					if (m_renderType == RenderType::GouraudShdering)
+					{
+						const Triangle& normal = normalList[triangleIndexList[polyIndex].m_index];
+						VertexShaderDataInputGouraud input;
+						input.m_vertex = triangle;
+						input.m_normal = normal;
+						input.m_baseColor[0] = CrossPlatform::WHITE;
+						input.m_baseColor[1] = CrossPlatform::WHITE;
+						input.m_baseColor[2] = CrossPlatform::WHITE;
+						VertexShaderDataOutputGouraud output;
+						VertexShaderGouraud(input, output, worldToCameraTransform, cameraToScreenTranform);
+						VertexData vertexData;
+						vertexData.p0 = output.m_screenPoint[0];
+						vertexData.p1 = output.m_screenPoint[1];
+						vertexData.p2 = output.m_screenPoint[2];
+						vertexData.vcolor0 = output.m_vertexColor[0];
+						vertexData.vcolor1 = output.m_vertexColor[1];
+						vertexData.vcolor2 = output.m_vertexColor[2];
 
-            delete[] triangleList;
-            delete[] normalList;
-            delete[] triangleIndexList;
+						Graphic2D::Get().DrawTriangle(vertexData);
+					}
+				}
+
+				delete[] triangleList;
+				delete[] normalList;
+				delete[] triangleIndexList;
+			}
 		}
 	}
 

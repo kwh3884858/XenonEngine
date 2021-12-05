@@ -70,7 +70,7 @@
   </Type>
   <Type Name="CrossPlatform::Polygon3D">
     <DisplayString>{{index = {m_numOfIndex}}}</DisplayString>
-    <DisplayString>{{vertex = {m_numOfVertex}}}</DisplayString>
+    <!--<DisplayString>{{vertex = {m_numOfVertex}}}</DisplayString>-->
     <Expand>
       <!--<Item Name="m_matrix">m_matrix, [3]nag</Item>-->
       <CustomListItems>
@@ -93,9 +93,9 @@
     <DisplayString>{{{0xff &amp; m_value}, {0xff &amp; (m_value >> 8)}, {0xff &amp; (m_value >> 16)}, {0xff &amp; (m_value >> 24)}}}</DisplayString>
   </Type>
   <Type Name="xg::Guid">
-    <!--<DisplayString>{_bytes}</DisplayString>-->
-    <!--<StringView>*((GUID*)_bytes)</StringView>-->
-    <DisplayString>{_bytes[0],c}{_bytes[1],c}{_bytes[2],c}{_bytes[3],c}{_bytes[4],c}{_bytes[5],c}{_bytes[6],c}{_bytes[7],c}{_bytes[8],c}{_bytes[9],c}{_bytes[10],c}{_bytes[11],c}{_bytes[12],c}{_bytes[13],c}{_bytes[14],c}{_bytes[15],c}</DisplayString>
+    <DisplayString>{_bytes._Elems,16}</DisplayString>
+    <!--<DisplayString>{_bytes[0],c}{_bytes[1],c}{_bytes[2],c}{_bytes[3],c}{_bytes[4],c}{_bytes[5],c}{_bytes[6],c}{_bytes[7],c}{_bytes[8],c}{_bytes[9],c}{_bytes[10],c}{_bytes[11],c}{_bytes[12],c}{_bytes[13],c}{_bytes[14],c}{_bytes[15],c}</DisplayString>-->
+	<StringView>_bytes._Elems,16</StringView>
   </Type>
   <!--<Type Name="XenonEngine::Graphic2D::ClipCode">
     <DisplayString Condition="this==FooFormat::FooFormat_Foo">Foo</DisplayString>
