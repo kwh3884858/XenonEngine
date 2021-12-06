@@ -55,20 +55,27 @@ namespace XenonEngine
 		}
 
 		int numOfNormal = attrib.normals.size() / 3;
-		Vector3f* normals = new Vector3f[numOfNormal];
-		for (size_t i = 0; i < attrib.normals.size(); i += 3)
+		Vector3f* normals = nullptr;
+		if (numOfNormal > 0)
 		{
-			normals[i / 3].x = attrib.normals[i + 0];
-			normals[i / 3].y = attrib.normals[i + 1];
-			normals[i / 3].z = attrib.normals[i + 2];
+			normals = new Vector3f[numOfNormal];
+			for (size_t i = 0; i < attrib.normals.size(); i += 3)
+			{
+				normals[i / 3].x = attrib.normals[i + 0];
+				normals[i / 3].y = attrib.normals[i + 1];
+				normals[i / 3].z = attrib.normals[i + 2];
+			}
 		}
-
 		int numOfTextureCoordinate = attrib.texcoords.size() / 2;
-		Vector2f* uv = new Vector2f[numOfTextureCoordinate];
-		for (int i = 0; i < numOfTextureCoordinate; i++)
+		Vector2f* uv = nullptr;
+		if (numOfTextureCoordinate > 0)
 		{
-			uv[i / 2].x = attrib.texcoords[i + 0];
-			uv[i / 2].y = attrib.texcoords[i + 1];
+			uv = new Vector2f[numOfTextureCoordinate];
+			for (int i = 0; i < numOfTextureCoordinate; i++)
+			{
+				uv[i / 2].x = attrib.texcoords[i + 0];
+				uv[i / 2].y = attrib.texcoords[i + 1];
+			}
 		}
 
 		int numOfMaterial = objMaterials.size();
@@ -113,7 +120,7 @@ namespace XenonEngine
 				index_offset += fv;
 				vertexIndexList[vindex].m_material = shapes[s].mesh.material_ids[f];
 			}
-			Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals);
+			Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals, numOfTextureCoordinate, uv);
 			polygons.Add(polygon);
 		}
 

@@ -20,6 +20,8 @@ namespace MathLab {
         T z;
 
     public:
+		static Vector3 Zero;
+
         friend void SwapVector(Vector3* vectorA, Vector3* vectorB);
         friend bool LessY(const Vector3& origin, const Vector3& compare);
         //friend void Exchange(Vector3*const a, Vector3*const b);
@@ -31,6 +33,8 @@ namespace MathLab {
         Vector3& operator*(T rvalue);
         Vector3& operator/=(T rvalue);
         Vector3& operator/(T rvalue);
+		bool operator==(const Vector3& that)const;
+		bool operator!=(const Vector3& that)const;
 
         T Dot(const Vector3& vec)const;
         Vector3 Cross(const Vector3& vec)const;
@@ -48,6 +52,9 @@ namespace MathLab {
         T Magnitude()const;
         T DoubleMagnitude()const;
     };
+
+	template<typename T>
+	__declspec(selectany) Vector3<T> Vector3<T>::Zero = Vector3f(0, 0, 0);
 
     template<typename T>
     Vector3<T> operator+(const Vector3<T>& v1, const Vector3<T>& v2);
@@ -160,6 +167,28 @@ namespace MathLab {
         result /= rvalue;
         return result;
     }
+
+	template<typename T>
+	bool MathLab::Vector3<T>::operator==(const Vector3& that) const
+	{
+		if (this == &that)
+		{
+			return true;
+		}
+		if (MathLab::Abs(x - that.x) > EPSILON ||
+			MathLab::Abs(y - that.y) > EPSILON ||
+			MathLab::Abs(z - that.z) > EPSILON)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	template<typename T>
+	bool MathLab::Vector3<T>::operator!=(const Vector3& that) const
+	{
+		return !((*this) == that);
+	}
 
     template<typename T>
     T Vector3<T>::Dot(const Vector3& vec) const

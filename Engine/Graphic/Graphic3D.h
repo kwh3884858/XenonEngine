@@ -25,10 +25,10 @@ namespace XenonEngine
 
     struct Triangle
     {
-        MathLab::TVector4f m_vertex[3];
         const MathLab::TVector4f& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
         MathLab::TVector4f& operator[](int index) { return const_cast<MathLab::TVector4f&>(static_cast<const Triangle&>(*this)[index]); }
-    };
+		MathLab::TVector4f m_vertex[3];
+	};
     struct TriangleIndex
     {
         int m_index;

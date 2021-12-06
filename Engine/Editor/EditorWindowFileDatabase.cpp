@@ -68,8 +68,6 @@ namespace XenonEngine
             if (m_fileImporter.IsOk())
             {
                 std::string filePathName = m_fileImporter.GetFilePathName();
-                std::string filePath = m_fileImporter.GetCurrentPath();
-                std::string filter = m_fileImporter.GetCurrentFilter();
                 // here convert from string because a string was passed as a userDatas, but it can be what you want
                 std::string userDatas;
                 if (m_fileImporter.GetUserDatas())

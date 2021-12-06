@@ -226,6 +226,13 @@ namespace XenonEngine
 					const Vector3f& normal0 = node0.m_normal;
 					const Vector3f& normal1 = node1.m_normal;
 					const Vector3f& normal2 = node2.m_normal;
+					if (normal0 == Vector3f::Zero || normal1 == Vector3f::Zero || normal2 == Vector3f::Zero)
+					{
+						normalList[polyIndex][0] = TVector4f::Zero;
+						normalList[polyIndex][1] = TVector4f::Zero;
+						normalList[polyIndex][2] = TVector4f::Zero;
+						continue;
+					}
 					TVector4f homogeneousNormal0 = ConvertFromNonHomogeneous(normal0);
 					TVector4f homogeneousNormal1 = ConvertFromNonHomogeneous(normal1);
 					TVector4f homogeneousNormal2 = ConvertFromNonHomogeneous(normal2);
@@ -292,6 +299,11 @@ namespace XenonEngine
 					if (m_renderType == RenderType::GouraudShdering)
 					{
 						const Triangle& normal = normalList[triangleIndexList[polyIndex].m_index];
+						if(normal[0] == TVector4f::Zero || normal[1] == TVector4f::Zero || normal[2] == TVector4f::Zero)
+						{
+							printf("Gouraud Shadering must contain normal");
+							break;
+						}
 						VertexShaderDataInputGouraud input;
 						input.m_vertex = triangle;
 						input.m_normal = normal;

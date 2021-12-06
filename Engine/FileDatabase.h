@@ -29,7 +29,7 @@ namespace XenonEngine
         // Virtual Path
         CrossPlatform::FolderMeta* GetFolder(const Algorithm::String& virtualPath) const;
         //CrossPlatform::FolderMeta* GetFolderByRealPath(const Algorithm::String& realPath) const;
-        CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath) const;
+        CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath);
         //CrossPlatform::FolderMeta* CreateFolderByRealPath(const Algorithm::String& realPath) const;
         Algorithm::String ConvertToVirtualPath(const Algorithm::String& virtualPath)const;
         Algorithm::String ConvertToRealPath(const Algorithm::String& realPath)const;
@@ -44,6 +44,8 @@ namespace XenonEngine
         bool IsVirtualPath(const Algorithm::String& filePath)const;
         void RecursionFindFolder(CrossPlatform::FolderMeta& folder);
         void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
+
+		void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file){ m_database[guid] = file; }
         CrossPlatform::FolderMeta* m_root = nullptr;
         Algorithm::Vector<CrossPlatform::DataPair> m_typePair;
         std::map<xg::Guid, CrossPlatform::IFileMeta*> m_database;

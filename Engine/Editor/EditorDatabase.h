@@ -19,8 +19,8 @@ namespace XenonEngine
         void SetFileDatabase(const XenonEngine::FileDatabase* database) { m_fileDatabase = database; }
 
         CrossPlatform::FolderMeta* GetFolder(const Algorithm::String& virtualPath) const;
-        CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath) const;
-        Algorithm::String ConvertToRealPath(const Algorithm::String& virtualPath);
+        CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath);
+        Algorithm::String ConvertToRealPath(const Algorithm::String& virtualPath) const;
 		void Delete(const Algorithm::String& virtualPath);
     private:
          const XenonEngine::FileDatabase* m_fileDatabase = nullptr;

@@ -127,7 +127,7 @@ namespace XenonEngine
     //    return GetFolderByVirtualPath(virtualPath);
     //}
 
-    CrossPlatform::FolderMeta* FileDatabase::CreateFolder(const Algorithm::String& inPath) const
+    CrossPlatform::FolderMeta* FileDatabase::CreateFolder(const Algorithm::String& inPath)
     {
 		String virtualPath(inPath);
 		if (!IsVirtualPath(virtualPath))
@@ -162,6 +162,7 @@ namespace XenonEngine
                 tmpFolder->GetFileHeader().GenerateMetadata();
                 tmpFolder->CreateFolder();
                 currentFolder->AddIFile(tmpFolder);
+				AddFileToDatabase(guid, tmpFolder);
             }
             if (tmpFolder->GetFileHeader().GetFileType() != FileType::FileTypeFolder)
             {
@@ -200,6 +201,7 @@ namespace XenonEngine
 
             break;
         case CrossPlatform::FileTypeFolder:
+			// Folder will be created by function CreateFolder
             assert(true == false);
 
             break;
@@ -214,6 +216,7 @@ namespace XenonEngine
                 ModelMeta* modeMeta = new ModelMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
                 modeMeta->GetFileHeader().GenerateMetadata();
                 folder->AddIFile(modeMeta);
+				AddFileToDatabase(guid, modeMeta);
                 return modeMeta;
             }
         }
@@ -227,6 +230,7 @@ namespace XenonEngine
                 WorldMeta* worldMeta = new WorldMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
                 worldMeta->GetFileHeader().GenerateMetadata();
                 folder->AddIFile(worldMeta);
+				AddFileToDatabase(guid, worldMeta);
                 return worldMeta;
             }
         }
@@ -443,7 +447,7 @@ namespace XenonEngine
                 }
                 assert(file != nullptr);
                 parentFolder.AddIFile(file);
-                m_database[header.GetGUID()] = file;
+				AddFileToDatabase(header.GetGUID(), file);
             }
         }
     }

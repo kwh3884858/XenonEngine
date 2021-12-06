@@ -69,7 +69,7 @@
     </Expand>
   </Type>
   <Type Name="CrossPlatform::Polygon3D">
-    <DisplayString>{{index = {m_numOfIndex}}}</DisplayString>
+    <DisplayString>{{index = {m_numOfIndex}, normal = {m_numOfNormal}, UV = {m_numOfTextureCoordinate}}}</DisplayString>
     <!--<DisplayString>{{vertex = {m_numOfVertex}}}</DisplayString>-->
     <Expand>
       <!--<Item Name="m_matrix">m_matrix, [3]nag</Item>-->

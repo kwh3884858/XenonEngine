@@ -50,7 +50,8 @@ namespace MathLab
 		TVector operator*(T value)const;
 		TVector operator/(T value)const;
 
-		bool operator==(const TVector& that);
+		bool operator==(const TVector& that)const;
+		bool operator!=(const TVector& that)const;
 
 		TVector();
         TVector(const TVector& that);
@@ -223,17 +224,23 @@ namespace MathLab
 	}
 
 	template<typename T, int COUNT>
-	bool MathLab::TVector<T, COUNT>::operator==(const TVector& that)
+	bool MathLab::TVector<T, COUNT>::operator==(const TVector& that)const
 	{
 		assert(Count() == that.Count());
-		for (int i = 0 ; i < Count() i ++)
+		for (int i = 0 ; i < Count(); i ++)
 		{
-			if (MathLab(m_vector[i] - that[i]) > EPSILON)
+			if (MathLab::Abs(m_vector[i] - that[i]) > EPSILON)
 			{
 				return false;
 			}
 		}
 		return true;
+	}
+
+	template<typename T, int COUNT>
+	bool MathLab::TVector<T, COUNT>::operator!=(const TVector& that) const
+	{
+		return !((*this) == that);
 	}
 
 	template<typename T, int COUNT>
