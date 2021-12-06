@@ -22,6 +22,7 @@ namespace XenonEngine
         CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath);
         Algorithm::String ConvertToRealPath(const Algorithm::String& virtualPath) const;
 		void Delete(const Algorithm::String& virtualPath);
+        void ShowInExplorer(const Algorithm::String& virtualPath)const;
     private:
          const XenonEngine::FileDatabase* m_fileDatabase = nullptr;
 	};

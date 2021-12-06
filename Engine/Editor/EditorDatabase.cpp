@@ -1,6 +1,8 @@
 #include "EditorDatabase.h"
 #include "Engine/FileDatabase.h"
 
+
+
 namespace XenonEngine
 {
     using namespace Algorithm;
@@ -24,6 +26,19 @@ namespace XenonEngine
 	void EditorDatabase::Delete(const Algorithm::String& virtualPath)
 	{
 		return const_cast<FileDatabase*>(m_fileDatabase)->DeleteFile(virtualPath);
+	}
+
+#ifdef _WIN32
+#include <windows.h>
+#include <ShellAPI.h>
+#endif
+
+	void EditorDatabase::ShowInExplorer(const Algorithm::String& virtualPath) const
+	{
+        String absolutedPath = m_fileDatabase->ConvertToRealPath(virtualPath);
+#ifdef _WIN32
+        ShellExecuteA(nullptr, "open", absolutedPath.CString(), nullptr, nullptr, SW_SHOWDEFAULT);
+#endif
 	}
 
 }
