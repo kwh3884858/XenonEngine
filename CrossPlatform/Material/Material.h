@@ -10,8 +10,8 @@ namespace CrossPlatform
     class Material
     {
     public:
-        Material(const String& name,float exponent,const MathLab::Vector3f& ambient,const MathLab::Vector3f& diffuse,const MathLab::Vector3f& specular,const MathLab::Vector3f& emission,const Algorithm::String& diffuseTexture);
-        ~Material();
+		Material() = default;
+		~Material() = default;
 
 		const String& GetName()const { return m_name; }
 		const float& GetExponent()const { return m_exponent; }
@@ -20,7 +20,9 @@ namespace CrossPlatform
 		const Vector3f& GetSpecular()const { return m_specular; }
 		const Vector3f& GetEmission()const { return m_emission; }
 		const String& GetDiffuseTexture()const { return m_diffuseTexture; }
-    private:
+		const String& GetBumpTexture()const { return m_bumpTexture; }
+	
+	public:
         String m_name;
         float m_exponent = 0.0f;                        //Ns
         Vector3f m_ambient;                    //Ka
@@ -28,6 +30,7 @@ namespace CrossPlatform
         Vector3f m_specular;                   //Ks
         Vector3f m_emission;                   //Ke
         String m_diffuseTexture;              // map_Kd
+		String m_bumpTexture;					// map_bump
     };
 
 }

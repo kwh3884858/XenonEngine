@@ -82,6 +82,7 @@ namespace XenonEngine
 						ImGui::Text("Specular: "); ImGui::SameLine(); Text(material->GetSpecular());
 						ImGui::Text("Emission: "); ImGui::SameLine(); Text(material->GetEmission());
 						ImGui::Text("Material Texture Name: %s", material->GetDiffuseTexture().CString());
+						ImGui::Text("Bump Texture Name: %s", material->GetBumpTexture().CString());
 					}
                     ImGui::Text("Max Radius: %f", mesh->GetMaxRadius());
                     ImGui::TreePop();

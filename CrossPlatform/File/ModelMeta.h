@@ -18,6 +18,7 @@ namespace CrossPlatform {
         const Vector<Polygon3D*>& GetPolygons();
 		const Vector<Material*>& GetMaterials();
 	private:
+		void Clear();
 		void LoadModel();
 		Vector<Polygon3D*> m_polygons;
 		Vector<Material*> m_materials;

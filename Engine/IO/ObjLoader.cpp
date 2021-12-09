@@ -25,7 +25,7 @@ namespace XenonEngine
 	{
 		std::string inputfile(fileName.Beign(), fileName.Count());
 		tinyobj::ObjReaderConfig reader_config;
-		reader_config.mtl_search_path = "./"; // Path to material files
+		//reader_config.mtl_search_path = "./"; // Path to material files
 
 		tinyobj::ObjReader reader;
 
@@ -81,13 +81,14 @@ namespace XenonEngine
 		int numOfMaterial = objMaterials.size();
 		for (int i = 0; i < numOfMaterial; i++)
 		{
-			String materialName(objMaterials[i].name.c_str());
-			Vector3f ambient(objMaterials[i].ambient[0], objMaterials[i].ambient[1], objMaterials[i].ambient[2]);
-			Vector3f diffuse(objMaterials[i].diffuse[0], objMaterials[i].diffuse[1], objMaterials[i].diffuse[2]);
-			Vector3f specular(objMaterials[i].specular[0], objMaterials[i].specular[1], objMaterials[i].specular[2]);
-			Vector3f emission(objMaterials[i].emission[0], objMaterials[i].emission[1], objMaterials[i].emission[2]);
-			String texturePath(objMaterials[i].diffuse_texname.c_str());
-			Material* material = new Material(materialName, objMaterials[i].shininess, ambient, diffuse, specular, emission, texturePath);
+			Material* material = new Material;
+			material->m_name = objMaterials[i].name.c_str();
+			material->m_ambient = Vector3f(objMaterials[i].ambient[0], objMaterials[i].ambient[1], objMaterials[i].ambient[2]);
+			material->m_diffuse = Vector3f(objMaterials[i].diffuse[0], objMaterials[i].diffuse[1], objMaterials[i].diffuse[2]);
+			material->m_specular = Vector3f(objMaterials[i].specular[0], objMaterials[i].specular[1], objMaterials[i].specular[2]);
+			material->m_emission = Vector3f(objMaterials[i].emission[0], objMaterials[i].emission[1], objMaterials[i].emission[2]);
+			material->m_diffuseTexture = objMaterials[i].diffuse_texname.c_str();
+			material->m_bumpTexture = objMaterials[i].bump_texname.c_str();
 			materials.Add(material);
 		}
 

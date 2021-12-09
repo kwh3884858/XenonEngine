@@ -10,17 +10,7 @@ namespace CrossPlatform {
 	using namespace std::filesystem;
     ModelMeta::~ModelMeta()
     {
-		for (int i = 0; i < m_polygons.Count(); i++)
-		{
-			delete m_polygons[i];
-			m_polygons[i] = nullptr;
-		}
-
-		for (int i = 0; i < m_materials.Count(); i++)
-		{
-			delete m_materials[i];
-			m_materials[i] = nullptr;
-		}
+		Clear();
     }
 
 	void ModelMeta::Delete()
@@ -73,15 +63,31 @@ namespace CrossPlatform {
 
 	const Vector<Material*>& ModelMeta::GetMaterials()
 	{
-		if (m_materials.Count() == 0)
+		if (m_polygons.Count() == 0)
 		{
 			LoadModel();
 		}
 		return m_materials;
 	}
 
+	void ModelMeta::Clear()
+	{
+		for (int i = 0; i < m_polygons.Count(); i++)
+		{
+			delete m_polygons[i];
+			m_polygons[i] = nullptr;
+		}
+
+		for (int i = 0; i < m_materials.Count(); i++)
+		{
+			delete m_materials[i];
+			m_materials[i] = nullptr;
+		}
+	}
+
 	void ModelMeta::LoadModel()
 	{
+		Clear();
 		bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);
 		assert(result == true);
 		for (int i = 0; i < m_polygons.Count(); i++)
