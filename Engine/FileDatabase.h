@@ -38,7 +38,7 @@ namespace XenonEngine
         const CrossPlatform::IFileMeta* AddFile(const Algorithm::String& realPath);
 		void DeleteFile(const Algorithm::String& path);
         // For Engine
-        void LoadFile(const Algorithm::String& realPath);
+		CrossPlatform::IFileMeta* LoadFile(const Algorithm::String& realPath);
         void SaveFile(const Algorithm::String& realPath);
     private:
         bool IsVirtualPath(const Algorithm::String& filePath)const;

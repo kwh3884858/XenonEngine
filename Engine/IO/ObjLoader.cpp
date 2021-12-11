@@ -87,8 +87,9 @@ namespace XenonEngine
 			material->m_diffuse = Vector3f(objMaterials[i].diffuse[0], objMaterials[i].diffuse[1], objMaterials[i].diffuse[2]);
 			material->m_specular = Vector3f(objMaterials[i].specular[0], objMaterials[i].specular[1], objMaterials[i].specular[2]);
 			material->m_emission = Vector3f(objMaterials[i].emission[0], objMaterials[i].emission[1], objMaterials[i].emission[2]);
-			material->m_diffuseTexture = objMaterials[i].diffuse_texname.c_str();
-			material->m_bumpTexture = objMaterials[i].bump_texname.c_str();
+			material->m_diffuseTextureFileName = objMaterials[i].diffuse_texname.c_str();
+			material->m_bumpTextureFileName = objMaterials[i].bump_texname.c_str();
+			material->loadTextureData();
 			materials.Add(material);
 		}
 

@@ -13,7 +13,7 @@
 #include "CrossPlatform/File/MaterialMeta.h"
 #include "Engine/EngineManager.h"
 #include "GameObjectWorld.h"
-
+#include "CrossPlatform/File/ImageMeta.h"
 
 namespace XenonEngine
 {
@@ -298,7 +298,7 @@ namespace XenonEngine
 		}
 	}
 
-    void FileDatabase::LoadFile(const Algorithm::String& realPath)
+	IFileMeta* FileDatabase::LoadFile(const Algorithm::String& realPath)
     {
         String filePath(realPath);
         if (IsVirtualPath(filePath))
@@ -321,15 +321,41 @@ namespace XenonEngine
         {
         }
         break;
-        case CrossPlatform::FileTypeWorld:
+		case CrossPlatform::FileTypeImage:
+		{
+			FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
+			if (!folder)
+			{
+				assert(true == false);
+				return nullptr;
+			}
+			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
+			if (!file)
+			{
+				assert(true == false);
+				return nullptr;
+			}
+			ImageMeta* image = static_cast<ImageMeta*>(file);
+			return image;
+		}
+		break;
+		case CrossPlatform::FileTypeWorld:
         {
             FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
+			if (folder)
+			{
+				assert(true == false);
+				return nullptr;
+			}
             IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
-            if (file)
-            {
-                WorldMeta* worldFile =static_cast<WorldMeta*>(file);
-                EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
-            }
+            if (!file)
+			{
+				assert(true == false);
+				return nullptr;
+			}
+			WorldMeta* worldFile = static_cast<WorldMeta*>(file);
+			EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
+			return worldFile;
         }
         break;
         default:

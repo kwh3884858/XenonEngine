@@ -136,6 +136,14 @@ file(
 target_sources(${PROJECT_NAME} PUBLIC ${DIR_ICON_FONT_DIALOG})
 source_group("IconFontCppHeaders"            FILES ${DIR_ICON_FONT_DIALOG})
 
+file(
+    GLOB_RECURSE
+    DIR_STB
+    ${PROJECT_SOURCE_DIR}/Library/stb/stb_image.h
+    )
+target_sources(${PROJECT_NAME} PUBLIC ${DIR_STB})
+source_group("Stb"            FILES ${DIR_STB})
+
 
 message("PROJECT_SOURCE_DIR" ${PROJECT_SOURCE_DIR})
 message("DEBUG_POSTFIX" ${DEBUG_POSTFIX})

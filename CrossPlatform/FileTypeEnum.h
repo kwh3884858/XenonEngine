@@ -9,6 +9,7 @@ namespace CrossPlatform
         FileTypeMaterial,
         FileTypeModel,
         FileTypeWorld,
+		FileTypeImage
     };
 
 }
