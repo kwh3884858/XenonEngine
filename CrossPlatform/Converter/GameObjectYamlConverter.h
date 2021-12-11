@@ -9,29 +9,27 @@
 #include "Camera3DYamlConverter.h"
 
 namespace YAML {
-    using namespace XenonEngine;
-
     template<>
-    struct convert<GameObject> {
-        static Node encode(const GameObject& rhs) {
+    struct convert<XenonEngine::GameObject> {
+        static Node encode(const XenonEngine::GameObject& rhs) {
             Node node;
             node["Name"] = rhs.GetName();
             for (int i = 0; i < rhs.GetComponentCount(); i++)
             {
-                const IComponent* comp = rhs.GetComponentByIndex(i);
+                const XenonEngine::IComponent* comp = rhs.GetComponentByIndex(i);
                 switch (comp->GetComponentType())
                 {
                 case XenonEngine::IComponent::None:
                     break;
                 case XenonEngine::IComponent::ComponentType_Transform2D:
                 {
-                    const Transform2D& transform2D = rhs.GetComponent<Transform2D>();
+                    const XenonEngine::Transform2D& transform2D = rhs.GetComponent<XenonEngine::Transform2D>();
                     node["Transform2D"] = transform2D;
                 }
                 break;
                 case XenonEngine::IComponent::ComponentType_Transform3D:
                 {
-                    const Transform3D& transform3D = rhs.GetComponent<Transform3D>();
+                    const XenonEngine::Transform3D& transform3D = rhs.GetComponent<XenonEngine::Transform3D>();
                     node["Transform3D"] = transform3D;
                 }
                 break;
@@ -39,7 +37,7 @@ namespace YAML {
                     break;
                 case XenonEngine::IComponent::ComponentType_Mesh3D:
                 {
-                    const Mesh3D& mesh3D = rhs.GetComponent<Mesh3D>();
+                    const XenonEngine::Mesh3D& mesh3D = rhs.GetComponent<XenonEngine::Mesh3D>();
                     node["Mesh3D"] = mesh3D;
                 }
                     break;
@@ -57,18 +55,18 @@ namespace YAML {
                     break;
                 case XenonEngine::IComponent::ComponentType_Camera:
                 {
-                    const Camera3D& camera3D = rhs.GetComponent<Camera3D>();
+                    const XenonEngine::Camera3D& camera3D = rhs.GetComponent<XenonEngine::Camera3D>();
                     node["Camera3D"] = camera3D;
                 }
                     break;
                 case XenonEngine::IComponent::ComponentType_Light:
                 {
-                    const LightComponent* light = rhs.GetComponentPointer<LightComponent>();
-                    LightComponent::LightType lightType = light->GetLightType();
-                    if (lightType == LightComponent::Direction)
+                    const XenonEngine::LightComponent* light = rhs.GetComponentPointer<XenonEngine::LightComponent>();
+					XenonEngine::LightComponent::LightType lightType = light->GetLightType();
+                    if (lightType == XenonEngine::LightComponent::Direction)
                     {
-                        const DirectionLightComponent& directionLight = rhs.GetComponent<DirectionLightComponent>();
-                        DirectionLightComponent lightType = rhs.GetComponent<DirectionLightComponent>();
+                        const XenonEngine::DirectionLightComponent& directionLight = rhs.GetComponent<XenonEngine::DirectionLightComponent>();
+						XenonEngine::DirectionLightComponent lightType = rhs.GetComponent<XenonEngine::DirectionLightComponent>();
                         node["DirectionLight"] = directionLight;
                     }
                 }
@@ -80,31 +78,31 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, GameObject& rhs) {
+        static bool decode(const Node& node, XenonEngine::GameObject& rhs) {
             rhs.SetName(node["Name"].as<Algorithm::String>());
             if (node["Transform2D"].IsDefined())
             {
-                Transform2D* transform2d =(Transform2D*) node["Transform2D"].as<Transform2D>().Copy(&rhs);
+				XenonEngine::Transform2D* transform2d =(XenonEngine::Transform2D*) node["Transform2D"].as<XenonEngine::Transform2D>().Copy(&rhs);
 				rhs.AddComponent(transform2d);
             }
             if (node["Transform3D"].IsDefined())
             {
-                Transform3D* transform3d =(Transform3D*) node["Transform3D"].as<Transform3D>().Copy(&rhs);
+				XenonEngine::Transform3D* transform3d =(XenonEngine::Transform3D*) node["Transform3D"].as<XenonEngine::Transform3D>().Copy(&rhs);
 				rhs.AddComponent(transform3d);
             }
             if (node["Mesh3D"].IsDefined())
             {
-                Mesh3D* mesh3D =(Mesh3D*) node["Mesh3D"].as<Mesh3D>().Copy(&rhs);
+				XenonEngine::Mesh3D* mesh3D =(XenonEngine::Mesh3D*) node["Mesh3D"].as<XenonEngine::Mesh3D>().Copy(&rhs);
                 rhs.AddComponent(mesh3D);
             }
             if (node["DirectionLight"].IsDefined())
             {
-                DirectionLightComponent* directionLight = (DirectionLightComponent*)node["DirectionLight"].as<DirectionLightComponent>().Copy(&rhs);
+				XenonEngine::DirectionLightComponent* directionLight = (XenonEngine::DirectionLightComponent*)node["DirectionLight"].as<XenonEngine::DirectionLightComponent>().Copy(&rhs);
 				rhs.AddComponent(directionLight);
             }
             if (node["Camera3D"].IsDefined())
             {
-                Camera3D* camera = (Camera3D*)node["Camera3D"].as<Camera3D>().Copy(&rhs);
+				XenonEngine::Camera3D* camera = (XenonEngine::Camera3D*)node["Camera3D"].as<XenonEngine::Camera3D>().Copy(&rhs);
 				rhs.AddComponent(camera);
             }
 

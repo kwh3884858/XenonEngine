@@ -1,11 +1,12 @@
 #pragma once
 #include <cassert>
-#include <Algorithms/Vector.h>
 #include <initializer_list>
+
+#include "Algorithms/Vector.h"
+#include "MathLab/Vector3.h"
 
 namespace MathLab
 {
-    using Algorithm::Vector;
 
 	template<typename T, int COUNT>
     class TVector;
@@ -56,8 +57,8 @@ namespace MathLab
 		TVector();
         TVector(const TVector& that);
         TVector(std::initializer_list<T>& param);
-        TVector(const Vector<T>& vector);
-        TVector(const Vector3f& vector3f);
+        TVector(const Algorithm::Vector<T>& vector);
+        TVector(const MathLab::Vector3f& vector3f);
 		~TVector();
 		
 		inline int Count()const { return COUNT; }
@@ -104,7 +105,7 @@ namespace MathLab
     }
 
     template<typename T, int COUNT>
-    MathLab::TVector<T, COUNT>::TVector(const Vector<T>& vector) :TVector()
+    MathLab::TVector<T, COUNT>::TVector(const Algorithm::Vector<T>& vector) :TVector()
     {
         assert(COUNT >= vector.Count());
         for (int i = 0; i < vector.Count(); i++)
@@ -114,7 +115,7 @@ namespace MathLab
     }
 
     template<typename T, int COUNT>
-    MathLab::TVector<T, COUNT>::TVector(const Vector3f& vector3f) :TVector()
+    MathLab::TVector<T, COUNT>::TVector(const MathLab::Vector3f& vector3f) :TVector()
     {
         assert(COUNT >= 3);
         m_vector[0] = vector3f.x;

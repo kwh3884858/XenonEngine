@@ -21,7 +21,7 @@ namespace Timer {
     double StoryTimer::GetTimeMilliSecond() const
     {
 
-        milliseconds runtime = std::chrono::duration_cast<milliseconds> ( std::chrono::system_clock::now() - m_currentTime );
+		std::chrono::milliseconds runtime = std::chrono::duration_cast<std::chrono::milliseconds> ( std::chrono::system_clock::now() - m_currentTime );
         return runtime.count();
     }
 

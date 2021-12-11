@@ -8,10 +8,9 @@
 #include "MathLab/Vector4.h"
 
 namespace YAML {
-    using MathLab::Vector4f;
     template<>
-    struct convert<Vector4f> {
-        static Node encode(const Vector4f& rhs) {
+    struct convert<MathLab::Vector4f> {
+        static Node encode(const MathLab::Vector4f& rhs) {
             Node node;
             node.push_back(rhs.x);
             node.push_back(rhs.y);
@@ -20,7 +19,7 @@ namespace YAML {
             return node;
         }
 
-        static bool decode(const Node& node, Vector4f& rhs) {
+        static bool decode(const Node& node, MathLab::Vector4f& rhs) {
             if (!node.IsSequence() || node.size() != 4) {
                 return false;
             }

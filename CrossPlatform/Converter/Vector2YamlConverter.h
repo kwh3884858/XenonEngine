@@ -8,18 +8,17 @@
 #include "MathLab/Vector2.h"
 
 namespace YAML {
-    using MathLab::Vector2f;
 
     template<>
-    struct convert<Vector2f> {
-        static Node encode(const Vector2f& rhs) {
+    struct convert<MathLab::Vector2f> {
+        static Node encode(const MathLab::Vector2f& rhs) {
             Node node;
             node.push_back(rhs.x);
             node.push_back(rhs.y);
             return node;
         }
 
-        static bool decode(const Node& node, Vector2f& rhs) {
+        static bool decode(const Node& node, MathLab::Vector2f& rhs) {
             if (!node.IsSequence() || node.size() != 2) {
                 return false;
             }

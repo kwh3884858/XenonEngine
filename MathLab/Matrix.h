@@ -131,7 +131,7 @@ namespace MathLab {
     MathLab::TVector<T, ROW> MathLab::TMatrix<T, ROW, COLUMN>::GetColumn(int index) const
     {
         assert(index >= 0 && index < COLUMN);
-        Vector<T> params;
+        Algorithm::Vector<T> params;
         for (int i = 0; i < ROW; i++)
         {
             params.Add((*this)[i][index]);
