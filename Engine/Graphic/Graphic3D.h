@@ -80,6 +80,16 @@ namespace XenonEngine
 
         };
         bool VertexShaderGouraud(const VertexShaderDataInputGouraud& input, VertexShaderDataOutputGouraud& output, const MathLab::TMatrix4X4f& worldToCameraTransform, const MathLab::TMatrix4X4f& cameraToScreenTranform) const;
+		
+		struct PixelShaderDataInputGouraud
+		{
+
+		};
+		struct PixelShaderDataOutputGouraud
+		{
+
+		};
+		bool PixelShaderGouraud(const PixelShaderDataInputGouraud& input, PixelShaderDataOutputGouraud& output);
 
         virtual bool Initialize() override { return true; }
 		virtual bool Shutdown() override { return true; }
