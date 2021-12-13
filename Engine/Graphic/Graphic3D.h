@@ -12,6 +12,7 @@
 #include "MathLab/Vector3.h"
 #include "CrossPlatform/SColorRGBA.h"
 #include "Engine/Component/Mesh3D.h"
+#include "CrossPlatform/Image/Image.h"
 
 namespace CrossPlatform 
 {
@@ -77,13 +78,14 @@ namespace XenonEngine
         {
             MathLab::Vector2f m_screenPoint[3];
             CrossPlatform::SColorRGBA m_vertexColor[3];
-
         };
         bool VertexShaderGouraud(const VertexShaderDataInputGouraud& input, VertexShaderDataOutputGouraud& output, const MathLab::TMatrix4X4f& worldToCameraTransform, const MathLab::TMatrix4X4f& cameraToScreenTranform) const;
 		
 		struct PixelShaderDataInputGouraud
 		{
-
+			MathLab::Vector2f m_screenPoint[3];
+			CrossPlatform::SColorRGBA m_vertexColor[3];
+			CrossPlatform::Image m_diffuse;
 		};
 		struct PixelShaderDataOutputGouraud
 		{

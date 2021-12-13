@@ -13,7 +13,8 @@ namespace CrossPlatform
 	{
 	public:
 		Image(const Algorithm::String& fileName);
-		~Image() = default;
+		Image(const Image& that);
+		~Image();
 
 		MathLab::TVector4f GetColor(int x, int y)const;
 	public:

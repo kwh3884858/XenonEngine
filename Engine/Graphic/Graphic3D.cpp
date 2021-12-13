@@ -320,6 +320,14 @@ namespace XenonEngine
 						vertexData.vcolor1 = output.m_vertexColor[1];
 						vertexData.vcolor2 = output.m_vertexColor[2];
 
+						if (polygon->GetNumOFUV() != 0)
+						{
+							VertexWithMaterialData data;
+							data.m_data = vertexData;
+							data.uv0 = (*polygon)[polyIndex].m_uv;
+							data.uv1 = (*polygon)[polyIndex + 1].m_uv;
+							data.uv1 = (*polygon)[polyIndex + 2].m_uv;
+						}
 						Graphic2D::Get().DrawTriangle(vertexData);
 					}
 				}

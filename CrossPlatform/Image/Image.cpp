@@ -11,8 +11,26 @@ namespace CrossPlatform
 		m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
 	}
 
+	Image::Image(const Image& that)
+	{
+		int size = that.m_height*m_width*m_channel;
+		m_data = new unsigned char[size];
+		memcpy(m_data, that.m_data, size);
+	}
+
+	Image::~Image()
+	{
+		delete m_data;
+		m_data = nullptr;
+		m_width = -1;
+		m_height = -1;
+		m_channel = -1;
+	}
+
 	MathLab::TVector4f Image::GetColor(int x, int y) const
 	{
+		assert(x >= 0 && x < m_width);
+		assert(y >= 0 && y < m_height);
 		TVector4f result;
 		result[0] = m_data[x * m_width + y];
 		result[1] = m_data[x * m_width + y + 1];

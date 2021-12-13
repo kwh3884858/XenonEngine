@@ -38,6 +38,14 @@ namespace XenonEngine {
         Vector4f vcolor2;
     };
 
+	struct VertexWithMaterialData
+	{
+		VertexData m_data;
+		Vector2f uv0;
+		Vector2f uv1;
+		Vector2f uv2;
+	};
+
     class Graphic2D :public CrossPlatform::XenonManager<Graphic2D>
     {
     public:
