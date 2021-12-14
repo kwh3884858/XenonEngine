@@ -13,37 +13,34 @@
 
 namespace CrossPlatform {
     class IDrawerSurface;
+	class Image;
 }
-using CrossPlatform::SColorRGBA;
-using MathLab::Vector2i;
-using MathLab::Vector2f;
-using MathLab::Vector4f;
-using CrossPlatform::Polygon2D;
 
 namespace XenonEngine {
     struct Primitive2DConfig {
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
-        Vector2f m_MinDrawPosition;
-        Vector2f m_MaxDrawPosition;
+        MathLab::Vector2f m_MinDrawPosition;
+        MathLab::Vector2f m_MaxDrawPosition;
     };
 
     struct VertexData
     {
-        Vector2f p0;
-        Vector2f p1;
-        Vector2f p2;
-        Vector4f vcolor0;
-        Vector4f vcolor1;
-        Vector4f vcolor2;
+        MathLab::Vector2f p0;
+        MathLab::Vector2f p1;
+        MathLab::Vector2f p2;
+        MathLab::Vector4f vcolor0;
+        MathLab::Vector4f vcolor1;
+        MathLab::Vector4f vcolor2;
     };
 
 	struct VertexWithMaterialData
 	{
 		VertexData m_data;
-		Vector2f uv0;
-		Vector2f uv1;
-		Vector2f uv2;
+		MathLab::Vector2f uv0;
+		MathLab::Vector2f uv1;
+		MathLab::Vector2f uv2;
+		CrossPlatform::Image* m_diffuse;
 	};
 
     class Graphic2D :public CrossPlatform::XenonManager<Graphic2D>
@@ -71,40 +68,57 @@ namespace XenonEngine {
 
         virtual bool Shutdown() override;
 
-        void DrawPixel(const Vector2i& pos, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawPixel(unsigned int x, unsigned int y, const SColorRGBA& rgba = CrossPlatform::WHITE) const;
-        unsigned int GetZbuffer(const Vector2i& pos)const;
-        void SetZBuffer(const Vector2i& pos, unsigned int value);
-        void DrawLine(const Vector2i& lhs, const Vector2i& rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawStraightLine(const int xStart, const int xEnd, const int y, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        //void DrawLine(const Vector2f* lhs, const Vector2f*rhs, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawPolygon(const Polygon2D& polygon2D)const;
-        void DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawPixel(const MathLab::Vector2i& pos, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawPixel(unsigned int x, unsigned int y, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE) const;
+        unsigned int GetZbuffer(const MathLab::Vector2i& pos)const;
+        void SetZBuffer(const MathLab::Vector2i& pos, unsigned int value);
+        void DrawLine(const MathLab::Vector2i& lhs, const MathLab::Vector2i& rhs, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawLine(const MathLab::Vector2f& lhs, const MathLab::Vector2f&rhs, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawStraightLine(const int xStart, const int xEnd, const int y, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        //void DrawLine(const MathLab::Vector2f* lhs, const MathLab::Vector2f*rhs, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawPolygon(const CrossPlatform::Polygon2D& polygon2D)const;
+        void DrawTriangle(MathLab::Vector2f p0, MathLab::Vector2f p1, MathLab::Vector2f p2, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTriangle(const VertexData& originalData)const;
-        ClipLineState ClipLine(Vector2f& p0, Vector2f& p1)const;
-        ClipLineState ClipLine(Vector2i& p0, Vector2i& p1)const;
+		void DrawTriangle(const VertexWithMaterialData& data)const;
+        ClipLineState ClipLine(MathLab::Vector2f& p0, MathLab::Vector2f& p1)const;
+        ClipLineState ClipLine(MathLab::Vector2i& p0, MathLab::Vector2i& p1)const;
 
     private:
         const int Y_AXIS_STEP = 1;
 
-        void DrawBottomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawBottomTriangle(Vector2f buttom, Vector2f p1, Vector2f p2, 
-            Vector4f vcolorButtom, Vector4f vcolor1, Vector4f vcolor2)const;
-        void DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2,
-            Vector4f vcolorTop, Vector4f vcolor1, Vector4f vcolor2)const;
+        void DrawBottomTriangle(MathLab::Vector2f buttom, MathLab::Vector2f p1, MathLab::Vector2f p2, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawTopTriangle(MathLab::Vector2f top, MathLab::Vector2f p1, MathLab::Vector2f p2, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
+        void DrawBottomTriangle(MathLab::Vector2f buttom, MathLab::Vector2f p1, MathLab::Vector2f p2, 
+            MathLab::Vector4f vcolorButtom, MathLab::Vector4f vcolor1, MathLab::Vector4f vcolor2)const;
+        void DrawTopTriangle(MathLab::Vector2f top, MathLab::Vector2f p1, MathLab::Vector2f p2,
+            MathLab::Vector4f vcolorTop, MathLab::Vector4f vcolor1, MathLab::Vector4f vcolor2)const;
 
-        ClipCode InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition)const;
-        bool InternalClipPoint(ClipCode clipCode,Vector2f& point, const Vector2f& anotherPoint)const;
-        Vector2f InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX)const;
-        Vector2f InternalClipYPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipY)const;
-        Vector4f InternalClipColor(const Vector2f& point, const Vector2f& anontherPoint, int clipY, const Vector4f& color, const Vector4f& anotherColor) const;
+		struct TriangleData
+		{
+			MathLab::Vector2f p0;
+			MathLab::Vector2f p1;
+			MathLab::Vector2f p2;
+			MathLab::Vector4f vcolor0;
+			MathLab::Vector4f vcolor1;
+			MathLab::Vector4f vcolor2;
+			MathLab::Vector2f uv0;
+			MathLab::Vector2f uv1;
+			MathLab::Vector2f uv2;
+			CrossPlatform::Image* m_diffuse;
+		};
+		void DrawBottomTriangle(const TriangleData& data)const;
+		void DrawTopTriangle(const TriangleData& data)const;
+
+        ClipCode InternalClipCode(const MathLab::Vector2f& point, const MathLab::Vector2f &minPosition, const MathLab::Vector2f &maxPosition)const;
+        bool InternalClipPoint(ClipCode clipCode,MathLab::Vector2f& point, const MathLab::Vector2f& anotherPoint)const;
+        MathLab::Vector2f InternalClipXPoint(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipX)const;
+        MathLab::Vector2f InternalClipYPoint(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY)const;
+        MathLab::Vector4f InternalClipColor(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY, const MathLab::Vector4f& color, const MathLab::Vector4f& anotherColor) const;
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
-        Vector2f m_minDrawPosition;
-        Vector2f m_maxDrawPosition;
+        MathLab::Vector2f m_minDrawPosition;
+        MathLab::Vector2f m_maxDrawPosition;
     };
 
 

@@ -7,11 +7,8 @@
 
 #include <cassert>
 
-using CrossPlatform::IDrawerSurface;
-using MathLab::Vector2f;
-using MathLab::Vector3f;
-//using MathLab::operator+;
-//using MathLab::operator-;
+using namespace CrossPlatform;
+using namespace MathLab;
 
 namespace XenonEngine
 {
@@ -269,7 +266,204 @@ namespace XenonEngine
         }
     }
 
-    Graphic2D::ClipLineState Graphic2D::ClipLine(Vector2f& p0, Vector2f& p1) const
+	void Graphic2D::DrawTriangle(const VertexWithMaterialData& data) const
+	{
+		const VertexData& originalData = data.m_data;
+		if ((originalData.p0.x == originalData.p1.x && originalData.p1.x == originalData.p2.x) ||
+			(originalData.p0.y == originalData.p1.y && originalData.p1.y == originalData.p2.y))
+		{
+			return;
+		}
+		Vector2f p0(originalData.p0);
+		Vector2f p1(originalData.p1);
+		Vector2f p2(originalData.p2);
+
+		// p0 < p1 < p2 (y-axis)
+		// c0 < c1 < c2
+		if (p0.y > p1.y)
+		{
+			MathLab::SwapVector(p0, p1);
+		}
+
+		if (p0.y > p2.y)
+		{
+			MathLab::SwapVector(p0, p2);
+		}
+
+		if (p1.y > p2.y)
+		{
+			MathLab::SwapVector(p1, p2);
+		}
+
+		Vector4f colorTop(originalData.vcolor2);
+		Vector4f colorCenter(originalData.vcolor1);
+		Vector4f colorBottom(originalData.vcolor0);
+		Vector2f uvTop(data.uv2);
+		Vector2f uvCenter(data.uv1);
+		Vector2f uvBottom(data.uv0);
+		if (p2 == originalData.p1)
+		{
+			colorTop = originalData.vcolor1;
+			uvTop = data.uv1;
+		}
+		if (p2 == originalData.p0)
+		{
+			colorTop = originalData.vcolor0;
+			uvTop = data.uv0;
+		}
+		if (p1 == originalData.p0)
+		{
+			colorCenter = originalData.vcolor0;
+			uvCenter = data.uv0;
+		}
+		if (p1 == originalData.p2)
+		{
+			colorCenter = originalData.vcolor2;
+			uvCenter = data.uv2;
+		}
+		if (p0 == originalData.p1)
+		{
+			colorBottom = originalData.vcolor1;
+			uvBottom = data.uv1;
+		}
+		if (p0 == originalData.p2)
+		{
+			colorBottom = originalData.vcolor2;
+			uvBottom = data.uv2;
+		}
+		if (p0.y == p1.y)
+		{
+			//clockwise
+			if (p1.x < p0.x)
+			{
+				TriangleData materialData;
+				materialData.p0 = p2;
+				materialData.p1 = p0;
+				materialData.p2 = p1;
+				materialData.vcolor0 = colorTop;
+				materialData.vcolor1 = colorBottom;
+				materialData.vcolor2 = colorCenter;
+				materialData.uv0 = uvTop;
+				materialData.uv1 = uvBottom;
+				materialData.uv2 = uvCenter;
+				materialData.m_diffuse = data.m_diffuse;
+				DrawTopTriangle(materialData);
+			}
+			else
+			{
+				TriangleData materialData;
+				materialData.p0 = p2;
+				materialData.p1 = p1;
+				materialData.p2 = p0;
+				materialData.vcolor0 = colorTop;
+				materialData.vcolor1 = colorCenter;
+				materialData.vcolor2 = colorBottom;
+				materialData.uv0 = uvTop;
+				materialData.uv1 = uvCenter;
+				materialData.uv2 = uvBottom;
+				materialData.m_diffuse = data.m_diffuse;
+				DrawTopTriangle(materialData);
+			}
+		}
+		else if (p1.y == p2.y)
+		{
+			if (p2.x < p1.x)
+			{
+				TriangleData materialData;
+				materialData.p0 = p0;
+				materialData.p1 = p2;
+				materialData.p2 = p1;
+				materialData.vcolor0 = colorBottom;
+				materialData.vcolor1 = colorTop;
+				materialData.vcolor2 = colorCenter;
+				materialData.uv0 = uvBottom;
+				materialData.uv1 = uvTop;
+				materialData.uv2 = uvCenter;
+				materialData.m_diffuse = data.m_diffuse;
+				DrawBottomTriangle(materialData);
+			}
+			else
+			{
+				TriangleData materialData;
+				materialData.p0 = p0;
+				materialData.p1 = p1;
+				materialData.p2 = p2;
+				materialData.vcolor0 = colorBottom;
+				materialData.vcolor1 = colorCenter;
+				materialData.vcolor2 = colorTop;
+				materialData.uv0 = uvBottom;
+				materialData.uv1 = uvCenter;
+				materialData.uv2 = uvTop;
+				materialData.m_diffuse = data.m_diffuse;
+				DrawBottomTriangle(materialData);
+			}
+		}
+		else
+		{
+			Vector2f middlePoint = p1;
+			middlePoint.x = (p1.y - p2.y) / (p0.y - p2.y) *  (p0.x - p2.x) + p2.x;
+			Vector4f middleColor = (p1.y - p2.y) / (p0.y - p2.y) * (colorBottom - colorTop) + colorTop;
+			Vector2f uvMiddle = (p1.y - p2.y) / (p0.y - p2.y) * (uvBottom - uvTop) + uvTop;
+			if (middlePoint.x < p1.x)
+			{
+				TriangleData materialDataTop;
+				materialDataTop.p0 = p2;
+				materialDataTop.p1 = p1;
+				materialDataTop.p2 = middlePoint;
+				materialDataTop.vcolor0 = colorTop;
+				materialDataTop.vcolor1 = colorCenter;
+				materialDataTop.vcolor2 = middleColor;
+				materialDataTop.uv0 = uvTop;
+				materialDataTop.uv1 = uvCenter;
+				materialDataTop.uv2 = uvMiddle;
+				materialDataTop.m_diffuse = data.m_diffuse;
+				DrawTopTriangle(materialDataTop);
+
+				TriangleData materialDataBottom;
+				materialDataBottom.p0 = p0;
+				materialDataBottom.p1 = middlePoint;
+				materialDataBottom.p2 = p1;
+				materialDataBottom.vcolor0 = colorBottom;
+				materialDataBottom.vcolor1 = middleColor;
+				materialDataBottom.vcolor2 = colorCenter;
+				materialDataBottom.uv0 = uvBottom;
+				materialDataBottom.uv1 = uvMiddle;
+				materialDataBottom.uv2 = uvCenter;
+				materialDataBottom.m_diffuse = data.m_diffuse;
+				DrawBottomTriangle(p0, middlePoint, p1, colorBottom, middleColor, colorCenter);
+			}
+			else
+			{
+				TriangleData materialDataTop;
+				materialDataTop.p0 = p2;
+				materialDataTop.p1 = middlePoint;
+				materialDataTop.p2 = p1;
+				materialDataTop.vcolor0 = colorTop;
+				materialDataTop.vcolor1 = middleColor;
+				materialDataTop.vcolor2 = colorCenter;
+				materialDataTop.uv0 = uvTop;
+				materialDataTop.uv1 = uvMiddle;
+				materialDataTop.uv2 = uvCenter;
+				materialDataTop.m_diffuse = data.m_diffuse;
+				DrawTopTriangle(materialDataTop);
+
+				TriangleData materialDataBottom;
+				materialDataBottom.p0 = p0;
+				materialDataBottom.p1 = p1;
+				materialDataBottom.p2 = middlePoint;
+				materialDataBottom.vcolor0 = colorBottom;
+				materialDataBottom.vcolor1 = colorCenter;
+				materialDataBottom.vcolor2 = middleColor;
+				materialDataBottom.uv0 = uvBottom;
+				materialDataBottom.uv1 = uvCenter;
+				materialDataBottom.uv2 = uvMiddle;
+				materialDataBottom.m_diffuse = data.m_diffuse;
+				DrawBottomTriangle(p0, p1, middlePoint, colorBottom, colorCenter, middleColor);
+			}
+		}
+	}
+
+	Graphic2D::ClipLineState Graphic2D::ClipLine(Vector2f& p0, Vector2f& p1) const
     {
         ClipCode p0Code = InternalClipCode(p0, m_minDrawPosition, m_maxDrawPosition);
         ClipCode p1Code = InternalClipCode(p1, m_minDrawPosition, m_maxDrawPosition);
@@ -506,7 +700,12 @@ namespace XenonEngine
         }
     }
 
-    void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+	void Graphic2D::DrawBottomTriangle(const TriangleData& data) const
+	{
+
+	}
+
+	void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         //verse-clock: top->p2->p1
         if (p1.x < p2.x)
@@ -698,7 +897,12 @@ namespace XenonEngine
         }
     }
 
-    Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
+	void Graphic2D::DrawTopTriangle(const TriangleData& data) const
+	{
+
+	}
+
+	Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
     {
         char clipCode = 0;
         if (point.x < minPosition.x)
