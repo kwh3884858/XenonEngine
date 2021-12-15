@@ -106,8 +106,8 @@ namespace XenonEngine {
 			MathLab::Vector2f uv2;
 			CrossPlatform::Image* m_diffuse;
 		};
-		void DrawBottomTriangle(const TriangleData& data)const;
-		void DrawTopTriangle(const TriangleData& data)const;
+		void DrawBottomTriangle( TriangleData& data)const;
+		void DrawTopTriangle( TriangleData& data)const;
 
         ClipCode InternalClipCode(const MathLab::Vector2f& point, const MathLab::Vector2f &minPosition, const MathLab::Vector2f &maxPosition)const;
         bool InternalClipPoint(ClipCode clipCode,MathLab::Vector2f& point, const MathLab::Vector2f& anotherPoint)const;

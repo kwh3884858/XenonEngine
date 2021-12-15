@@ -700,9 +700,124 @@ namespace XenonEngine
         }
     }
 
-	void Graphic2D::DrawBottomTriangle(const TriangleData& data) const
+	void Graphic2D::DrawBottomTriangle(TriangleData& data) const
 	{
+        Vector2f& bottom = data.p0;
+        Vector2f& p1 = data.p1;
+        Vector2f p2 = data.p2;
+        Vector4f& vcolorBottom = data.vcolor0;
+        Vector4f& vcolor1 = data.vcolor1;
+        Vector4f& vcolor2 = data.vcolor2;
 
+		//verse-clock: bottom->p1->p2
+		if (p1.x > p2.x)
+		{
+			SwapVector(p1, p2);
+		}
+
+		Vector2f rightDelta = p2 - bottom;
+		Vector2f rightIndex = bottom;
+		Vector2f rightStep(0, Y_AXIS_STEP);
+		rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
+
+		Vector2f leftDelta = p1 - bottom;
+		Vector2f leftIndex = bottom;
+		Vector2f leftStep(0, Y_AXIS_STEP);
+		leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
+
+		int yBottom = MathLab::Ceil(bottom.y);
+		int yTop = MathLab::Ceil(p1.y) - 1;
+		if (bottom.y < m_minDrawPosition.y)
+		{
+			yBottom = m_minDrawPosition.y;
+		}
+		if (yTop > m_maxDrawPosition.y)
+		{
+			yTop = m_maxDrawPosition.y - 1;
+		}
+		leftIndex = InternalClipYPoint(bottom, p1, yBottom);
+		rightIndex = InternalClipYPoint(bottom, p2, yBottom);
+
+		Vector4f leftColor = InternalClipColor(bottom, p1, yBottom, vcolorBottom, vcolor1);
+		Vector4f RightColor = InternalClipColor(bottom, p2, yBottom, vcolorBottom, vcolor2);
+		Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
+		Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom);
+		Vector4f lColorIndex = leftColor;
+		Vector4f rColorIndex = RightColor;
+
+		if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
+			p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
+			bottom.x >= m_minDrawPosition.x && bottom.x <= m_maxDrawPosition.x)
+		{
+			while (yBottom <= yTop)
+			{
+				int xStart = MathLab::Ceil(leftIndex.x);
+				int xEnd = MathLab::Ceil(rightIndex.x) - 1;
+				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+				Vector4f strightLineIndex = lColorIndex;
+				for (; xStart <= xEnd; xStart++)
+				{
+					DrawPixel(xStart, yBottom, strightLineIndex.ToColor());
+					strightLineIndex += strightLineDelta;
+				}
+				leftIndex += leftStep;
+				rightIndex += rightStep;
+				lColorIndex += lColorDelta;
+				rColorIndex += rColorDelta;
+				yBottom++;
+			}
+		}
+		else
+		{
+			Vector2f left;
+			Vector2f right;
+			Vector4f strightLineDelta;
+			Vector4f strightLineIndex;
+			while (yBottom <= yTop)
+			{
+				left = leftIndex;
+				right = rightIndex;
+				strightLineDelta = (rColorIndex - lColorIndex) / (right.x - left.x);
+				strightLineIndex = lColorIndex;
+				if (left.x < m_minDrawPosition.x)
+				{
+					left.x = m_minDrawPosition.x;
+					strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
+					if (right.x <= m_minDrawPosition.x)
+					{
+						leftIndex += leftStep;
+						rightIndex += rightStep;
+						lColorIndex += lColorDelta;
+						rColorIndex += rColorDelta;
+						yBottom++;
+						continue;
+					}
+				}
+				if (right.x > m_maxDrawPosition.x)
+				{
+					right.x = m_maxDrawPosition.x;
+					if (left.x >= m_maxDrawPosition.x)
+					{
+						leftIndex += leftStep;
+						rightIndex += rightStep;
+						lColorIndex += lColorDelta;
+						rColorIndex += rColorDelta;
+						yBottom++;
+						continue;
+					}
+				}
+				for (float i = left.x; i <= right.x; i++)
+				{
+					DrawPixel(i, yBottom, strightLineIndex.ToColor());
+					strightLineIndex += strightLineDelta;
+				}
+				leftIndex += leftStep;
+				rightIndex += rightStep;
+				lColorIndex += lColorDelta;
+				rColorIndex += rColorDelta;
+				yBottom++;
+			}
+		}
 	}
 
 	void Graphic2D::DrawTopTriangle(Vector2f top, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
@@ -897,12 +1012,123 @@ namespace XenonEngine
         }
     }
 
-	void Graphic2D::DrawTopTriangle(const TriangleData& data) const
+	void Graphic2D::DrawTopTriangle(TriangleData& data) const
 	{
+        Vector2f& top = data.p0;
+        Vector2f& p1 = data.p1;
+        Vector2f& p2 = data.p2;
+        Vector4f& vcolorTop = data.vcolor0;
+        Vector4f& vcolor1 = data.vcolor1;
+        Vector4f& vcolor2 = data.vcolor2;
 
+		//verse-clock: buttom->p1->p2
+		if (p1.x < p2.x)
+		{
+			SwapVector(p1, p2);
+		}
+		Vector2f rightDelta = p1 - top;
+		Vector2f rightIndex = top;
+		Vector2f rightStep(0, -Y_AXIS_STEP);
+		rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
+		Vector2f leftDelta = p2 - top;
+		Vector2f leftIndex = top;
+		Vector2f leftStep(0, -Y_AXIS_STEP);
+		leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
+
+		int yBottom = MathLab::Ceil(p1.y);
+		int yTop = MathLab::Ceil(top.y) - 1;
+		if (yBottom < m_minDrawPosition.y)
+		{
+			yBottom = m_minDrawPosition.y;
+		}
+		if (yTop > m_maxDrawPosition.y)
+		{
+			yTop = m_maxDrawPosition.y - 1;
+		}
+		rightIndex = InternalClipYPoint(top, p1, yTop);
+		leftIndex = InternalClipYPoint(top, p2, yTop);
+
+		Vector4f rightColor = InternalClipColor(top, p1, yTop, vcolorTop, vcolor1);
+		Vector4f leftColor = InternalClipColor(top, p2, yTop, vcolorTop, vcolor2);
+		Vector4f rColorDelta = (vcolor1 - rightColor) / (yTop - yBottom);
+		Vector4f lColorDelta = (vcolor2 - leftColor) / (yTop - yBottom);
+		Vector4f rColorIndex = rightColor;
+		Vector4f lColorIndex = leftColor;
+
+		if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
+			p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
+			top.x >= m_minDrawPosition.x && top.x <= m_maxDrawPosition.x)
+		{
+			while (yTop >= yBottom)
+			{
+				int xStart = MathLab::Ceil(leftIndex.x);
+				int xEnd = MathLab::Ceil(rightIndex.x);
+				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+				Vector4f strightLineIndex = lColorIndex;
+				for (; xStart <= xEnd; xStart++)
+				{
+					DrawPixel(xStart, yTop, strightLineIndex.ToColor());
+					strightLineIndex += strightLineDelta;
+				}
+				leftIndex += leftStep;
+				rightIndex += rightStep;
+				rColorIndex += rColorDelta;
+				lColorIndex += lColorDelta;
+				yTop--;
+			}
+		}
+		else
+		{
+			Vector2f left;
+			Vector2f right;
+			while (yTop >= yBottom)
+			{
+				left = leftIndex;
+				right = rightIndex;
+				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (right.x - left.x);
+				Vector4f strightLineIndex = lColorIndex;
+				if (left.x < m_minDrawPosition.x)
+				{
+					left.x = m_minDrawPosition.x;
+					strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
+					if (right.x <= m_minDrawPosition.x)
+					{
+						leftIndex += leftStep;
+						rightIndex += rightStep;
+						rColorIndex += rColorDelta;
+						lColorIndex += lColorDelta;
+						yTop--;
+						continue;
+					}
+				}
+				if (right.x > m_maxDrawPosition.x)
+				{
+					right.x = m_maxDrawPosition.x;
+					if (left.x >= m_maxDrawPosition.x)
+					{
+						leftIndex += leftStep;
+						rightIndex += rightStep;
+						rColorIndex += rColorDelta;
+						lColorIndex += lColorDelta;
+						yTop--;
+						continue;
+					}
+				}
+				for (float i = left.x; i <= right.x; i++)
+				{
+					DrawPixel(i, yTop, strightLineIndex.ToColor());
+					strightLineIndex += strightLineDelta;
+				}
+				leftIndex += leftStep;
+				rightIndex += rightStep;
+				rColorIndex += rColorDelta;
+				lColorIndex += lColorDelta;
+				yTop--;
+			}
+		}
 	}
 
-	Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f &minPosition, const Vector2f &maxPosition) const
+	Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f& minPosition, const Vector2f& maxPosition) const
     {
         char clipCode = 0;
         if (point.x < minPosition.x)
