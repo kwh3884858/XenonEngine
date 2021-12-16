@@ -113,7 +113,8 @@ namespace XenonEngine {
         bool InternalClipPoint(ClipCode clipCode,MathLab::Vector2f& point, const MathLab::Vector2f& anotherPoint)const;
         MathLab::Vector2f InternalClipXPoint(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipX)const;
         MathLab::Vector2f InternalClipYPoint(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY)const;
-        MathLab::Vector4f InternalClipColor(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY, const MathLab::Vector4f& color, const MathLab::Vector4f& anotherColor) const;
+		MathLab::Vector4f InternalClipColor(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY, const MathLab::Vector4f& color, const MathLab::Vector4f& anotherColor) const;
+		MathLab::Vector2f InternalClipUV(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY, const MathLab::Vector2f& UV, const MathLab::Vector2f& anotherUV) const;
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;

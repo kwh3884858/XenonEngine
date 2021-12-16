@@ -3,6 +3,7 @@
 
 #include "MathLab/MathLib.h"
 #include "MathLab/Vector2.h"
+#include "CrossPlatform/Image/Image.h"
 #include <cstdio>
 
 #include <cassert>
@@ -708,6 +709,9 @@ namespace XenonEngine
         Vector4f& vcolorBottom = data.vcolor0;
         Vector4f& vcolor1 = data.vcolor1;
         Vector4f& vcolor2 = data.vcolor2;
+		Vector2f& uvBottom = data.uv0;
+		Vector2f& uv1 = data.uv1;
+		Vector2f& uv2 = data.uv2;
 
 		//verse-clock: bottom->p1->p2
 		if (p1.x > p2.x)
@@ -745,6 +749,12 @@ namespace XenonEngine
 		Vector4f lColorIndex = leftColor;
 		Vector4f rColorIndex = RightColor;
 
+		Vector2f LeftUV = InternalClipUV(bottom, p1, yBottom, uvBottom, uv1);
+		Vector2f RightUV = InternalClipUV(bottom, p1, yBottom, uvBottom, uv2);
+		Vector2f lUVDelta = (uv1 - LeftUV) / (yTop - yBottom);
+		Vector2f rUVDelta = (uv2 - RightUV) / (yTop - yBottom);
+		Vector2f lUVIndex = LeftUV;
+		Vector2f rUVIndex = RightUV;
 		if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
 			p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
 			bottom.x >= m_minDrawPosition.x && bottom.x <= m_maxDrawPosition.x)
@@ -755,15 +765,22 @@ namespace XenonEngine
 				int xEnd = MathLab::Ceil(rightIndex.x) - 1;
 				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
 				Vector4f strightLineIndex = lColorIndex;
+				Vector2f strightLineUVDelta = (rUVIndex - lUVIndex) / (xEnd - xStart);
+				Vector2f strightLineUVIndex = lUVIndex;
 				for (; xStart <= xEnd; xStart++)
 				{
-					DrawPixel(xStart, yBottom, strightLineIndex.ToColor());
+					Vector4f samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+					SColorRGBA color = strightLineIndex.ToColor() * samplingColor.ToColor();
+					DrawPixel(xStart, yBottom, color);
 					strightLineIndex += strightLineDelta;
+					strightLineUVIndex += strightLineUVDelta;
 				}
 				leftIndex += leftStep;
 				rightIndex += rightStep;
 				lColorIndex += lColorDelta;
 				rColorIndex += rColorDelta;
+				lUVIndex += lUVDelta;
+				rUVIndex += rUVDelta;
 				yBottom++;
 			}
 		}
@@ -773,22 +790,29 @@ namespace XenonEngine
 			Vector2f right;
 			Vector4f strightLineDelta;
 			Vector4f strightLineIndex;
+			Vector2f strightLineUVDelta;
+			Vector2f strightLineUVIndex;
 			while (yBottom <= yTop)
 			{
 				left = leftIndex;
 				right = rightIndex;
 				strightLineDelta = (rColorIndex - lColorIndex) / (right.x - left.x);
 				strightLineIndex = lColorIndex;
+				strightLineUVDelta = (rUVIndex - lUVIndex) / (right.x - left.x);
+				strightLineUVIndex = lUVIndex;
 				if (left.x < m_minDrawPosition.x)
 				{
 					left.x = m_minDrawPosition.x;
 					strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
+					strightLineUVIndex += strightLineUVDelta * (m_minDrawPosition.x - leftIndex.x);
 					if (right.x <= m_minDrawPosition.x)
 					{
 						leftIndex += leftStep;
 						rightIndex += rightStep;
 						lColorIndex += lColorDelta;
 						rColorIndex += rColorDelta;
+						lUVIndex += lUVDelta;
+						rUVIndex += rUVDelta;
 						yBottom++;
 						continue;
 					}
@@ -802,19 +826,26 @@ namespace XenonEngine
 						rightIndex += rightStep;
 						lColorIndex += lColorDelta;
 						rColorIndex += rColorDelta;
+						lUVIndex += lUVDelta;
+						rUVIndex += rUVDelta;
 						yBottom++;
 						continue;
 					}
 				}
 				for (float i = left.x; i <= right.x; i++)
 				{
-					DrawPixel(i, yBottom, strightLineIndex.ToColor());
+					Vector4f samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+					SColorRGBA color = strightLineIndex.ToColor() * samplingColor.ToColor();
+					DrawPixel(i, yBottom, color);
 					strightLineIndex += strightLineDelta;
+					strightLineUVIndex += strightLineUVDelta;
 				}
 				leftIndex += leftStep;
 				rightIndex += rightStep;
 				lColorIndex += lColorDelta;
 				rColorIndex += rColorDelta;
+				lUVIndex += lUVDelta;
+				rUVIndex += rUVDelta;
 				yBottom++;
 			}
 		}
@@ -1268,4 +1299,19 @@ namespace XenonEngine
         }
         return finalColor;
     }
+
+	MathLab::Vector2f Graphic2D::InternalClipUV(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY, const MathLab::Vector2f& UV, const MathLab::Vector2f& anotherUV) const
+	{
+		Vector2f finalUV(UV);
+		//assert((point.y - clipY) * (anontherPoint.y - clipY) <= 0);
+		if ((point.y - clipY) * (anontherPoint.y - clipY) <= 0)
+		{
+			if ((point.y - anontherPoint.y) * (point.x - anontherPoint.x) != 0)
+			{
+				finalUV = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (UV - anotherUV) + anotherUV;
+			}
+		}
+		return finalUV;
+	}
+
 }

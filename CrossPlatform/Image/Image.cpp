@@ -27,23 +27,28 @@ namespace CrossPlatform
 		m_channel = -1;
 	}
 
-	MathLab::TVector4f Image::GetColor(int x, int y) const
+	MathLab::Vector4f Image::GetColor(int x, int y) const
 	{
 		assert(x >= 0 && x < m_width);
 		assert(y >= 0 && y < m_height);
-		TVector4f result;
-		result[0] = m_data[x * m_width + y];
-		result[1] = m_data[x * m_width + y + 1];
-		result[2] = m_data[x * m_width + y + 2];
+		Vector4f result;
+		result.x = m_data[x * m_width + y];
+		result.y = m_data[x * m_width + y + 1];
+		result.z = m_data[x * m_width + y + 2];
 		if (m_channel == 3)
 		{
-			result[3] = 255;
+			result.w = 255;
 		}
 		else if(m_channel == 4)
 		{
-			result[3] = m_data[x * m_width + y + 3];
+			result.w = m_data[x * m_width + y + 3];
 		}
 		return result;
+	}
+
+	MathLab::Vector4f Image::GetColor(float x, float y) const
+	{
+		return GetColor((int)x, (int)y);
 	}
 
 }

@@ -5,7 +5,7 @@
 //  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 
-#include "MathLab/Vector.h"
+#include "MathLab/Vector4.h"
 #include "Algorithms/String.h"
 namespace CrossPlatform
 {
@@ -16,7 +16,8 @@ namespace CrossPlatform
 		Image(const Image& that);
 		~Image();
 
-		MathLab::TVector4f GetColor(int x, int y)const;
+		MathLab::Vector4f GetColor(int x, int y)const;
+		MathLab::Vector4f GetColor(float x, float y)const;
 	public:
 		unsigned char* m_data = nullptr;
 		int m_height = -1;

@@ -25,8 +25,7 @@ namespace XenonEngine
 	using MathLab::TVector4f;
     using MathLab::Vector2f;
     using MathLab::Vector3f;
-    using CrossPlatform::Polygon3D;
-    using CrossPlatform::Vertex3D;
+	using namespace CrossPlatform;
 
     bool Graphic3D::VertexShaderFlat(const VertexShaderDataInputFlat& input, VertexShaderDataOutputFlat& output, const TMatrix4X4f& worldToCameraTransform, const TMatrix4X4f& cameraToScreenTranform) const
     {
