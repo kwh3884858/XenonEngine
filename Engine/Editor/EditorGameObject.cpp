@@ -66,11 +66,12 @@ namespace XenonEngine
                             IM_ASSERT(payload->DataSize == 37);
                             char* payload_n = (char*)payload->Data;
                             ( (Mesh3D*)mesh )->SetModelGuid(xg::Guid(payload_n));
-							( (Mesh3D*)mesh )->LoadModel();
+							( (Mesh3D*)mesh )->RequestReloadModel();
                         }
                         ImGui::EndDragDropTarget();
                     }
                     ImGui::PopID();
+
 					const Vector<Material*> materials = mesh->GetMaterials();
 					for (int i = 0 ; i < materials.Count(); i++)
 					{
