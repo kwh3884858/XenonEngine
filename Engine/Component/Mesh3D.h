@@ -34,6 +34,7 @@ namespace XenonEngine
         const xg::Guid& GetModelGuid()const { return m_modelId; }
         void SetModelGuid(const xg::Guid& modelGuid);
 		void LoadModel();
+		void RequestReloadModel();
         const Algorithm::Vector< CrossPlatform::Polygon3D*>& GetPolygon3D()const { return m_polygons; }
 		const Algorithm::Vector< CrossPlatform::Material*>& GetMaterials()const { return m_materials; }
         float GetMaxRadius()const { return m_maxRadius; }
@@ -47,5 +48,6 @@ namespace XenonEngine
 		Algorithm::Vector<CrossPlatform::Material*> m_materials;
         float m_maxRadius = 0.0f;
 
+		bool m_requestToReload = false;
 	};
 }

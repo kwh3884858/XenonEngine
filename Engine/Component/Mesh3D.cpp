@@ -31,6 +31,10 @@ namespace XenonEngine
 
 	bool Mesh3D::Update()
 	{
+		if (m_requestToReload)
+		{
+			LoadModel();
+		}
 		return true;
 	}
 
@@ -92,6 +96,11 @@ namespace XenonEngine
 
         m_maxRadius = sqrt(maxRadius);
     }
+
+	void Mesh3D::RequestReloadModel()
+	{
+		m_requestToReload = true;
+	}
 
 	ComponentType Mesh3D::m_type = ComponentType::ComponentType_Mesh3D;
 }
