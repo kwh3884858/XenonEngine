@@ -27,9 +27,8 @@ namespace CrossPlatform {
             int m_vertexIndex = -1;
             int m_normalIndex = -1;
             int m_textureCoordinateIndex = -1;
-			int m_material = -1;
         };
-		Polygon3D(int numOfPtr, VertexIndexs* vertexPointerList, int numOfVertex, Vector3f* vertexList,int numOfNormal, Vector3f* normalList, int numofCoordinate = 0, Vector2f* textureCoordinate = nullptr);
+		Polygon3D(int numOfPtr, VertexIndexs* vertexPointerList, int numOfVertex, Vector3f* vertexList,int numOfNormal, Vector3f* normalList, int numofCoordinate = 0, Vector2f* textureCoordinate = nullptr, int numOfMaterialIndex = 0, int* materialIndex = nullptr);
 		Polygon3D(const Polygon3D& that);
 
 		int Count()const { return m_numOfIndex; }
@@ -52,5 +51,7 @@ namespace CrossPlatform {
         Vector3f* m_normalList = nullptr;
 		int m_numOfTextureCoordinate = 0;
 		Vector2f* m_textureCoordinate = nullptr;
+		int m_numOfMaterialIndex = 0;
+		int* m_materialIndex = nullptr;
 	};
 }

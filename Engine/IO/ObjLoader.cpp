@@ -100,6 +100,12 @@ namespace XenonEngine
 		{
 			int numOfIndex = shapes[s].mesh.indices.size();
 			Polygon3D::VertexIndexs* vertexIndexList = new Polygon3D::VertexIndexs[numOfIndex];
+			int numOfMaterial = shapes[s].mesh.material_ids.size();
+			int* materialIndex = nullptr;
+			if (numOfMaterial > 0)
+			{
+				materialIndex = new int[numOfMaterial];
+			}
 			// Loop over faces(polygon)
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
@@ -120,9 +126,9 @@ namespace XenonEngine
 					vindex++;
 				}
 				index_offset += fv;
-				vertexIndexList[f].m_material = shapes[s].mesh.material_ids[f];
+				materialIndex[f] = shapes[s].mesh.material_ids[f];
 			}
-			Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals, numOfTextureCoordinate, uv);
+			Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals, numOfTextureCoordinate, uv, numOfMaterial, materialIndex);
 			polygons.Add(polygon);
 		}
 

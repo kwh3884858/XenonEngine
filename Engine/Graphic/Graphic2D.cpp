@@ -431,7 +431,7 @@ namespace XenonEngine
 				materialDataBottom.uv1 = uvMiddle;
 				materialDataBottom.uv2 = uvCenter;
 				materialDataBottom.m_diffuse = data.m_diffuse;
-				DrawBottomTriangle(p0, middlePoint, p1, colorBottom, middleColor, colorCenter);
+				DrawBottomTriangle(materialDataBottom);
 			}
 			else
 			{
@@ -459,7 +459,7 @@ namespace XenonEngine
 				materialDataBottom.uv1 = uvCenter;
 				materialDataBottom.uv2 = uvMiddle;
 				materialDataBottom.m_diffuse = data.m_diffuse;
-				DrawBottomTriangle(p0, p1, middlePoint, colorBottom, colorCenter, middleColor);
+				DrawBottomTriangle(materialDataTop);
 			}
 		}
 	}
@@ -705,7 +705,7 @@ namespace XenonEngine
 	{
         Vector2f& bottom = data.p0;
         Vector2f& p1 = data.p1;
-        Vector2f p2 = data.p2;
+        Vector2f& p2 = data.p2;
         Vector4f& vcolorBottom = data.vcolor0;
         Vector4f& vcolor1 = data.vcolor1;
         Vector4f& vcolor2 = data.vcolor2;
@@ -1088,12 +1088,12 @@ namespace XenonEngine
 		Vector4f lColorDelta = (vcolor2 - leftColor) / (yTop - yBottom);
 		Vector4f rColorIndex = rightColor;
 		Vector4f lColorIndex = leftColor;
-		Vector2f LeftUV = InternalClipUV(top, p1, yBottom, uvTop, uv1);
-		Vector2f RightUV = InternalClipUV(top, p1, yBottom, uvTop, uv2);
-		Vector2f lUVDelta = (uv1 - LeftUV) / (yTop - yBottom);
-		Vector2f rUVDelta = (uv2 - RightUV) / (yTop - yBottom);
-		Vector2f lUVIndex = LeftUV;
+		Vector2f RightUV = InternalClipUV(top, p1, yTop, uvTop, uv1);
+		Vector2f LeftUV = InternalClipUV(top, p2, yTop, uvTop, uv2);
+		Vector2f rUVDelta = (uv1 - RightUV) / (yTop - yBottom);
+		Vector2f lUVDelta = (uv2 - LeftUV) / (yTop - yBottom);
 		Vector2f rUVIndex = RightUV;
+		Vector2f lUVIndex = LeftUV;
 		if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
 			p2.x >= m_minDrawPosition.x && p2.x <= m_maxDrawPosition.x &&
 			top.x >= m_minDrawPosition.x && top.x <= m_maxDrawPosition.x)
@@ -1110,7 +1110,7 @@ namespace XenonEngine
 				{
 					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
 					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
-					DrawPixel(xStart, yBottom, color);
+					DrawPixel(xStart, yTop, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
 				}
@@ -1175,7 +1175,7 @@ namespace XenonEngine
 				{
 					Vector4f samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
 					SColorRGBA color = strightLineIndex.ToColor() * samplingColor.ToColor();
-					DrawPixel(i, yBottom, color);
+					DrawPixel(i, yTop, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
 				}
