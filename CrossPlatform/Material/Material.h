@@ -22,9 +22,9 @@ namespace CrossPlatform
 		const Algorithm::String& GetDiffuseTextureFileName()const { return m_diffuseTextureFileName; }
 		const Algorithm::String& GetBumpTextureName()const { return m_bumpTextureFileName; }
 
-		void loadTextureData();
-		const Image* GetDiffuseTexture();
-		const Image* GetBumpTexture();
+		void loadTextureData(const Algorithm::String& modelPath);
+		Image* GetDiffuseTexture();
+		Image* GetBumpTexture();
 	public:
 		Algorithm::String m_name;
         float m_exponent = 0.0f;                        //Ns

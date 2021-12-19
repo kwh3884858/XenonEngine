@@ -40,8 +40,11 @@ namespace XenonEngine
         // For Engine
 		CrossPlatform::IFileMeta* LoadFile(const Algorithm::String& realPath);
         void SaveFile(const Algorithm::String& realPath);
+
+		Algorithm::String ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder);
     private:
-        bool IsVirtualPath(const Algorithm::String& filePath)const;
+		bool IsVirtualPath(const Algorithm::String& filePath)const;
+		bool IsRealPath(const Algorithm::String& filePath)const;
         void RecursionFindFolder(CrossPlatform::FolderMeta& folder);
         void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
 

@@ -71,7 +71,7 @@ namespace XenonEngine
 		if (numOfTextureCoordinate > 0)
 		{
 			uv = new Vector2f[numOfTextureCoordinate];
-			for (int i = 0; i < numOfTextureCoordinate; i++)
+			for (int i = 0; i < attrib.texcoords.size(); i+= 2)
 			{
 				uv[i / 2].x = attrib.texcoords[i + 0];
 				uv[i / 2].y = attrib.texcoords[i + 1];
@@ -89,7 +89,7 @@ namespace XenonEngine
 			material->m_emission = Vector3f(objMaterials[i].emission[0], objMaterials[i].emission[1], objMaterials[i].emission[2]);
 			material->m_diffuseTextureFileName = objMaterials[i].diffuse_texname.c_str();
 			material->m_bumpTextureFileName = objMaterials[i].bump_texname.c_str();
-			material->loadTextureData();
+			material->loadTextureData(fileName);
 			materials.Add(material);
 		}
 
@@ -120,7 +120,7 @@ namespace XenonEngine
 					vindex++;
 				}
 				index_offset += fv;
-				vertexIndexList[vindex].m_material = shapes[s].mesh.material_ids[f];
+				vertexIndexList[f].m_material = shapes[s].mesh.material_ids[f];
 			}
 			Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals, numOfTextureCoordinate, uv);
 			polygons.Add(polygon);

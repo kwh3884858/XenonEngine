@@ -3,22 +3,25 @@
 
 #include <cassert>
 
-//#include "MathLab/Vector2.h"
 #include "Engine/GameObject.h"
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Camera3D.h"
 #include "Engine/Component/LightComponent.h"
-
-#include "Engine/Graphic/Graphic2D.h"
-
-#include "CrossPlatform/Polygon/Polygon3D.h"
-#include <stdio.h> // for printf
-#include <assert.h>
 #include "Engine/Component/DirectionLightComponent.h"
 #include "Engine/Component/PointLightComponent.h"
-#include "Algorithms/Sort.h"
+
+#include "Engine/Graphic/Graphic2D.h"
 #include "Engine/EngineManager.h"
 #include "Engine/GameObjectWorld.h"
+
+#include "CrossPlatform/Polygon/Polygon3D.h"
+#include "CrossPlatform/Material/Material.h"
+
+#include <stdio.h> // for printf
+#include <assert.h>
+
+#include "Algorithms/Sort.h"
+
 namespace XenonEngine
 {
 	using MathLab::TMatrix4X3f;
@@ -181,7 +184,8 @@ namespace XenonEngine
 
             DrawCoordinateLines(worldToScreenTranform);
 
-			const Vector< CrossPlatform::Polygon3D*>& polygons = mesh->GetPolygon3D();
+			const Vector<Material*>& materials = mesh->GetMaterials();
+			const Vector<Polygon3D*>& polygons = mesh->GetPolygon3D();
             if (polygons.Count() == 0)
             {
                 continue;
@@ -199,7 +203,7 @@ namespace XenonEngine
 				int triangleCount = polygon->Count() / 3;
 				Triangle* triangleList = new Triangle[triangleCount];
 				Triangle* normalList = new Triangle[triangleCount];
-				TriangleIndex* triangleIndexList = new TriangleIndex[triangleCount];
+				TriangleIndex* sortingTriangleIndexList = new TriangleIndex[triangleCount];
 				for (int polyIndex = 0; polyIndex < triangleCount; polyIndex++)
 				{
 					Vertex3D node0 = (*polygon)[polyIndex * 3];
@@ -219,8 +223,8 @@ namespace XenonEngine
 					triangleList[polyIndex][1] = homogeneousVertex1;
 					triangleList[polyIndex][2] = homogeneousVertex2;
 
-					triangleIndexList[polyIndex].m_index = polyIndex;
-					triangleIndexList[polyIndex].m_zAixs = (homogeneousVertex0[2] + homogeneousVertex1[2] + homogeneousVertex2[2]) / 3;
+					sortingTriangleIndexList[polyIndex].m_index = polyIndex;
+					sortingTriangleIndexList[polyIndex].m_zAixs = (homogeneousVertex0[2] + homogeneousVertex1[2] + homogeneousVertex2[2]) / 3;
 
 					const Vector3f& normal0 = node0.m_normal;
 					const Vector3f& normal1 = node1.m_normal;
@@ -244,12 +248,12 @@ namespace XenonEngine
 				}
 
 				Algorithm::Sort<TriangleIndex> sort;
-				sort.Quick(triangleIndexList, triangleCount, IsIndexZAxisBigger);
+				sort.Quick(sortingTriangleIndexList, triangleCount, IsIndexZAxisBigger);
 
 				for (int polyIndex = 0; polyIndex < triangleCount; polyIndex++)
 				{
 					//const Triangle& triangle = triangleList[polyIndex];
-					const Triangle& triangle = triangleList[triangleIndexList[polyIndex].m_index];
+					const Triangle& triangle = triangleList[sortingTriangleIndexList[polyIndex].m_index];
 					CullingState state = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
 					if (state == CullingState::Culled)
 					{
@@ -297,7 +301,7 @@ namespace XenonEngine
 
 					if (m_renderType == RenderType::GouraudShdering)
 					{
-						const Triangle& normal = normalList[triangleIndexList[polyIndex].m_index];
+						const Triangle& normal = normalList[sortingTriangleIndexList[polyIndex].m_index];
 						if(normal[0] == TVector4f::Zero || normal[1] == TVector4f::Zero || normal[2] == TVector4f::Zero)
 						{
 							printf("Gouraud Shadering must contain normal");
@@ -319,21 +323,30 @@ namespace XenonEngine
 						vertexData.vcolor1 = output.m_vertexColor[1];
 						vertexData.vcolor2 = output.m_vertexColor[2];
 
-						if (polygon->GetNumOFUV() != 0)
+						if (polygon->GetNumOFUV() != 0 && materials.Count() != 0)
 						{
+							int realIndex = sortingTriangleIndexList[polyIndex].m_index * 3;
+							int matIndex = (*polygon)[realIndex].m_material;
+							Material* mat = materials[matIndex];
 							VertexWithMaterialData data;
 							data.m_data = vertexData;
-							data.uv0 = (*polygon)[polyIndex].m_uv;
-							data.uv1 = (*polygon)[polyIndex + 1].m_uv;
-							data.uv1 = (*polygon)[polyIndex + 2].m_uv;
+							data.m_diffuse = mat->GetDiffuseTexture();
+							data.uv0 = (*polygon)[realIndex].m_uv;
+							data.uv1 = (*polygon)[realIndex + 1].m_uv;
+							data.uv2 = (*polygon)[realIndex + 2].m_uv;
+							Graphic2D::Get().DrawTriangle(data);
+
 						}
-						Graphic2D::Get().DrawTriangle(vertexData);
+						else
+						{
+							Graphic2D::Get().DrawTriangle(vertexData);
+						}
 					}
 				}
 
 				delete[] triangleList;
 				delete[] normalList;
-				delete[] triangleIndexList;
+				delete[] sortingTriangleIndexList;
 			}
 		}
 	}

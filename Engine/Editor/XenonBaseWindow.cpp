@@ -53,6 +53,7 @@ int XenonBaseWindow::indexCount = 0;
 
         switch (GetWindowType())
         {
+		case Window_Type::SingleWindow:
         case Window_Type::MultiWindow:
         {
             // We specify a default position/size in case there's no data in the .ini file. Typically this isn't required! We only do it to make the Demo applications a little more welcoming.

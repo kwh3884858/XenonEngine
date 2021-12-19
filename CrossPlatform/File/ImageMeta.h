@@ -23,7 +23,7 @@ namespace CrossPlatform
         virtual ~ImageMeta()override;
 		void Delete() override;
 
-		const Image* GetImage();
+		Image* GetImage();
     private:
 		void Clear();
 		Image* m_image = nullptr;

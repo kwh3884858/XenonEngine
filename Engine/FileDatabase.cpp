@@ -27,7 +27,10 @@ namespace XenonEngine
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeFolder, ""));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeModel, ".obj"));
         m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, ".mtl"));
-        m_typePair.Add(DataPair(CrossPlatform::FileTypeWorld, ".world"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeWorld, ".world"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".jpg"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".png"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".dds"));
 
         path Project(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
         Project.make_preferred();
@@ -235,10 +238,24 @@ namespace XenonEngine
             }
         }
             break;
+		case CrossPlatform::FileTypeImage:
+		{
+			FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+			if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
+			{
+				xg::Guid guid = xg::newGuid();
+				ImageMeta* imageMeta = new ImageMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
+				imageMeta->GetFileHeader().GenerateMetadata();
+				folder->AddIFile(imageMeta);
+				AddFileToDatabase(guid, imageMeta);
+				return imageMeta;
+			}
+		}
+		break;
         default:
             assert(true == false);
 
-            break;
+			break;
         }
         return nullptr;
     }
@@ -332,7 +349,6 @@ namespace XenonEngine
 			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
 			if (!file)
 			{
-				assert(true == false);
 				return nullptr;
 			}
 			ImageMeta* image = static_cast<ImageMeta*>(file);
@@ -342,7 +358,7 @@ namespace XenonEngine
 		case CrossPlatform::FileTypeWorld:
         {
             FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
-			if (folder)
+			if (!folder)
 			{
 				assert(true == false);
 				return nullptr;
@@ -419,12 +435,36 @@ namespace XenonEngine
         }
     }
 
-    bool FileDatabase::IsVirtualPath(const Algorithm::String& filePath) const
+	Algorithm::String FileDatabase::ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder)
+	{
+		if (IsVirtualPath(fileName))
+		{
+			return fileName;
+		}
+		if (IsRealPath(fileName))
+		{
+			return fileName;
+		}
+		// "./fileName.txt" "/fileName.txt" "fileName.txt"
+		if ((fileName[0] == '.' && fileName[1] == filesystem::path::preferred_separator) ||
+			(fileName[0] == filesystem::path::preferred_separator) ||
+			fileName.Find(filesystem::path::preferred_separator) == false)
+		{
+			return currentFolder + fileName;
+		}
+	}
+
+	bool FileDatabase::IsVirtualPath(const Algorithm::String& filePath) const
     {
         return filePath[0] == 'X';
     }
 
-    void FileDatabase::RecursionFindFolder(FolderMeta& parentFolder)
+	bool FileDatabase::IsRealPath(const Algorithm::String& filePath) const
+	{
+		return filePath.Find(m_root->GetFileHeader().GetFilePath());
+	}
+
+	void FileDatabase::RecursionFindFolder(FolderMeta& parentFolder)
     {
         directory_iterator dataRoot(parentFolder.GetFileHeader().GetFilePath().CString());
         for (auto& it : dataRoot)
@@ -453,24 +493,41 @@ namespace XenonEngine
                 header.SetFilePath(relatedFile.string().c_str());
 
                 IFileMeta* file = nullptr;
-                if (header.GetFileType() == FileType::FileTypeFolder)
-                {
-                    FolderMeta* folder= new FolderMeta(header);
-                    RecursionFindFolder(*folder);
-                    file = (IFileMeta*)folder;
-                }
-                if (header.GetFileType() == FileType::FileTypeMaterial)
-                {
-                    file = new MaterialMeta(header);
-                }
-                if (header.GetFileType() == FileType::FileTypeModel)
-                {
-                    file = new ModelMeta(header);
-                }
-                if (header.GetFileType() == FileType::FileTypeWorld)
-                {
-                    file = new WorldMeta(header);
-                }
+				FileType fileType = header.GetFileType();
+				switch (fileType)
+				{
+				case CrossPlatform::None:
+					break;
+				case CrossPlatform::FileTypeFolder:
+				{
+					FolderMeta* folder = new FolderMeta(header);
+					RecursionFindFolder(*folder);
+					file = (IFileMeta*)folder;
+				}
+					break;
+				case CrossPlatform::FileTypeMaterial:
+				{
+					file = new MaterialMeta(header);
+				}
+					break;
+				case CrossPlatform::FileTypeModel:
+				{
+					file = new ModelMeta(header);
+				}
+					break;
+				case CrossPlatform::FileTypeWorld:
+				{
+					file = new WorldMeta(header);
+				}
+					break;
+				case CrossPlatform::FileTypeImage:
+				{
+					file = new ImageMeta(header);
+				}
+					break;
+				default:
+					break;
+				}
                 assert(file != nullptr);
                 parentFolder.AddIFile(file);
 				AddFileToDatabase(header.GetGUID(), file);

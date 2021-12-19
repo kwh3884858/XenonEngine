@@ -33,7 +33,7 @@ namespace CrossPlatform {
 		}
 	}
 
-	const CrossPlatform::Image* ImageMeta::GetImage() 
+	CrossPlatform::Image* ImageMeta::GetImage() 
 	{
 		if (!m_image)
 		{

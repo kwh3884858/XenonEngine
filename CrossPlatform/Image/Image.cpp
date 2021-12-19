@@ -2,6 +2,7 @@
 
 //#define STB_IMAGE_IMPLEMENTATION
 #include "Library/stb/stb_image.h"
+#include "MathLab/Vector4.h"
 
 namespace CrossPlatform
 {
@@ -9,6 +10,7 @@ namespace CrossPlatform
 	Image::Image(const Algorithm::String& fileName)
 	{
 		m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
+		assert(m_data != nullptr);
 	}
 
 	Image::Image(const Image& that)
@@ -27,8 +29,9 @@ namespace CrossPlatform
 		m_channel = -1;
 	}
 
-	MathLab::Vector4f Image::GetColor(int x, int y) const
+	CrossPlatform::SColorRGBA Image::GetColor(int x, int y) const
 	{
+		assert(m_data != nullptr);
 		assert(x >= 0 && x < m_width);
 		assert(y >= 0 && y < m_height);
 		Vector4f result;
@@ -43,10 +46,11 @@ namespace CrossPlatform
 		{
 			result.w = m_data[x * m_width + y + 3];
 		}
-		return result;
+		result /= 255;
+		return result.ToColor();
 	}
 
-	MathLab::Vector4f Image::GetColor(float x, float y) const
+	CrossPlatform::SColorRGBA Image::GetColor(float x, float y) const
 	{
 		return GetColor((int)x, (int)y);
 	}
