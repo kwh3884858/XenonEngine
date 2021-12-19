@@ -35,16 +35,16 @@ namespace CrossPlatform
 		assert(x >= 0 && x < m_width);
 		assert(y >= 0 && y < m_height);
 		Vector4f result;
-		result.x = m_data[x * m_width + y];
-		result.y = m_data[x * m_width + y + 1];
-		result.z = m_data[x * m_width + y + 2];
+		result.x = m_data[(x * m_width + y) * m_channel];
+		result.y = m_data[(x * m_width + y) * m_channel + 1];
+		result.z = m_data[(x * m_width + y) * m_channel + 2];
 		if (m_channel == 3)
 		{
 			result.w = 255;
 		}
 		else if(m_channel == 4)
 		{
-			result.w = m_data[x * m_width + y + 3];
+			result.w = m_data[(x * m_width + y) * m_channel + 3];
 		}
 		result /= 255;
 		return result.ToColor();
@@ -52,7 +52,11 @@ namespace CrossPlatform
 
 	CrossPlatform::SColorRGBA Image::GetColor(float x, float y) const
 	{
-		return GetColor((int)x, (int)y);
+		assert(x >= 0 && x <= 1);
+		assert(y >= 0 && y <= 1);
+		int extendX = x * m_width;
+		int extendY = y * m_height;
+		return GetColor(extendX, extendY);
 	}
 
 }

@@ -459,7 +459,7 @@ namespace XenonEngine
 				materialDataBottom.uv1 = uvCenter;
 				materialDataBottom.uv2 = uvMiddle;
 				materialDataBottom.m_diffuse = data.m_diffuse;
-				DrawBottomTriangle(materialDataTop);
+				DrawBottomTriangle(materialDataBottom);
 			}
 		}
 	}
@@ -750,7 +750,7 @@ namespace XenonEngine
 		Vector4f rColorIndex = RightColor;
 
 		Vector2f LeftUV = InternalClipUV(bottom, p1, yBottom, uvBottom, uv1);
-		Vector2f RightUV = InternalClipUV(bottom, p1, yBottom, uvBottom, uv2);
+		Vector2f RightUV = InternalClipUV(bottom, p2, yBottom, uvBottom, uv2);
 		Vector2f lUVDelta = (uv1 - LeftUV) / (yTop - yBottom);
 		Vector2f rUVDelta = (uv2 - RightUV) / (yTop - yBottom);
 		Vector2f lUVIndex = LeftUV;
@@ -769,8 +769,8 @@ namespace XenonEngine
 				Vector2f strightLineUVIndex = lUVIndex;
 				for (; xStart <= xEnd; xStart++)
 				{
-					Vector4f samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor.ToColor();
+					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
 					DrawPixel(xStart, yBottom, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
@@ -834,8 +834,8 @@ namespace XenonEngine
 				}
 				for (float i = left.x; i <= right.x; i++)
 				{
-					Vector4f samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor.ToColor();
+					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
 					DrawPixel(i, yBottom, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
@@ -1173,8 +1173,8 @@ namespace XenonEngine
 				}
 				for (float i = left.x; i <= right.x; i++)
 				{
-					Vector4f samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor.ToColor();
+					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
 					DrawPixel(i, yTop, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
