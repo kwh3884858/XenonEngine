@@ -1,4 +1,4 @@
-#include "CameraController.h"
+#include "Camera3DController.h"
 #include "Transform3D.h"
 #include "Engine/IO/InputSystem.h"
 #include "CrossPlatform/XenonKey.h"
@@ -11,18 +11,18 @@ using namespace MathLab;
 namespace XenonEngine
 {
 
-	XenonEngine::IComponent* CameraControllerComponent::Copy(GameObject*const gameObject) const
+	XenonEngine::IComponent* Camera3DController::Copy(GameObject*const gameObject) const
 	{
-		CameraControllerComponent* cameraController = new CameraControllerComponent(gameObject);
+		Camera3DController* cameraController = new Camera3DController(gameObject);
 		return cameraController;
 	}
 
-	bool CameraControllerComponent::Start()
+	bool Camera3DController::Start()
 	{
-
+		return true;
 	}
 
-	bool CameraControllerComponent::Update()
+	bool Camera3DController::Update()
 	{
 		Transform3D* trans = GetGameObject()->GetComponentPointer<Transform3D>();
 		float xAxisDelta = 0;
@@ -78,13 +78,15 @@ namespace XenonEngine
 			ElevationDelta = -1;
 		}
 		trans->AddRotation(Vector3f(ElevationDelta, headingDelta, 0));
+		return true;
 	}
 
-	bool CameraControllerComponent::Destroy()
+	bool Camera3DController::Destroy()
 	{
+		return true;
 
 	}
 
-	XenonEngine::ComponentType CameraControllerComponent::m_type = ComponentType::ComponentType_CameraController;
+	XenonEngine::ComponentType Camera3DController::m_type = ComponentType::ComponentType_CameraController;
 
 }

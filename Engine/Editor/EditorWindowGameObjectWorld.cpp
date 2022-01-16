@@ -19,6 +19,7 @@
 #include "Engine/Component/DirectionLightComponent.h"
 #include "Engine/Component/Camera3D.h"
 #include "CrossPlatform/Database.h"
+#include "Engine/Component/Camera3DController.h"
 //#include "CrossPlatform/FileTypeEnum.h"
 
 namespace XenonEngine
@@ -200,6 +201,12 @@ namespace XenonEngine
                         camera->Start();
                         go->AddComponent(camera);
                     }
+					if (ImGui::MenuItem("CameraController"))
+					{
+						Camera3DController* cameraController = new Camera3DController(go);
+						cameraController->Start();
+						go->AddComponent(cameraController);
+					}
                     ImGui::EndMenu();
                 }
             }

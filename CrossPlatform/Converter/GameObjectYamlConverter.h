@@ -7,6 +7,7 @@
 #include "StringYamlConverter.h"
 #include "DirectionLightYamlConverter.h"
 #include "Camera3DYamlConverter.h"
+#include "CameraControllerConverter.h"
 
 namespace YAML {
     template<>
@@ -71,8 +72,17 @@ namespace YAML {
                     }
                 }
                     break;
+				case XenonEngine::IComponent::ComponentType_CameraController:
+				{
+					const XenonEngine::Camera3DController& camera3D = rhs.GetComponent<XenonEngine::Camera3DController>();
+					node["Camera3DController"] = camera3D;
+				}
+					break;
+				case XenonEngine::IComponent::ComponentType_Count:
+					break;
                 default:
-                    break;
+					break;
+
                 }
             }
             return node;
@@ -105,6 +115,11 @@ namespace YAML {
 				XenonEngine::Camera3D* camera = (XenonEngine::Camera3D*)node["Camera3D"].as<XenonEngine::Camera3D>().Copy(&rhs);
 				rhs.AddComponent(camera);
             }
+			if (node["Camera3DController"].IsDefined())
+			{
+				XenonEngine::Camera3DController* camera = (XenonEngine::Camera3DController*)node["Camera3DController"].as<XenonEngine::Camera3DController>().Copy(&rhs);
+				rhs.AddComponent(camera);
+			}
 
             return true;
         }

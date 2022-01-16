@@ -118,6 +118,15 @@ namespace XenonEngine
                     ImGui::TreePop();
                 }
             }
+			if (type == ComponentType::ComponentType_CameraController)
+			{
+				if (ImGui::TreeNode((void*)(intptr_t)i, "%d Camera Controller", i))
+				{
+					ContextMenu((GameObject*)data, (IComponent*)component);
+					ImGui::Text("Camera Controller");
+					ImGui::TreePop();
+				}
+			}
         }
     }
 
