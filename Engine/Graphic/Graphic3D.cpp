@@ -376,7 +376,12 @@ namespace XenonEngine
         return CullingState::Inside;
     }
 
-    Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
+	XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Triangle& triagnle, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const
+	{
+
+	}
+
+	Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
     {
         TVector4f u = p1 - p0;
         TVector4f v = p2 - p1;

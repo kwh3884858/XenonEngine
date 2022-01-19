@@ -108,7 +108,8 @@ namespace XenonEngine
         void Update()const;
 	private:
         CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
-        CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2)const;
+        CullingState Culling(const Triangle& triagnle, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
+		CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2)const;
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform)const;
         

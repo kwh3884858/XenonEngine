@@ -50,9 +50,9 @@ namespace XenonEngine
 	private:
         void SetEularLookAt(const MathLab::Vector2f& headingAndElevation);
 		MathLab::Vector3f m_lookAt;
-		float m_fov = 0.0f;
-        MathLab::Vector2f m_viewPlane;
-		MathLab::Vector2f m_viewport;
+		float m_fov = 0.0f;				//View Degree, 0 ~ 180
+        MathLab::Vector2f m_viewPlane;  //Normalized plane, 2 * 1.125 
+		MathLab::Vector2f m_viewport;   //Resolution,    1920 * 1080
         float m_nearClipZ = 0.0f;
         float m_farClipZ = 0.0f;
 	};
