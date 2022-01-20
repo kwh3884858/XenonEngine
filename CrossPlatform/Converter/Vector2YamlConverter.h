@@ -9,21 +9,21 @@
 
 namespace YAML {
 
-    template<>
-    struct convert<MathLab::Vector2f> {
-        static Node encode(const MathLab::Vector2f& rhs) {
+    template<typename T>
+    struct convert<MathLab::Vector2<T>> {
+        static Node encode(const MathLab::Vector2<T>& rhs) {
             Node node;
             node.push_back(rhs.x);
             node.push_back(rhs.y);
             return node;
         }
 
-        static bool decode(const Node& node, MathLab::Vector2f& rhs) {
+        static bool decode(const Node& node, MathLab::Vector2<T>& rhs) {
             if (!node.IsSequence() || node.size() != 2) {
                 return false;
             }
-            rhs.x = node[0].as<float>();
-            rhs.y = node[1].as<float>();
+            rhs.x = node[0].as<T>();
+            rhs.y = node[1].as<T>();
             return true;
         }
     };

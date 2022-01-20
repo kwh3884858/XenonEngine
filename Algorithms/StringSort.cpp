@@ -11,7 +11,6 @@ namespace Algorithm
 
 	void MSD(Vector<const String*>& pOutFileList)
 	{
-		int count = pOutFileList.Count();
 		Vector<const String*> auxiliaryArray(pOutFileList);
 		MSDStringSort(pOutFileList, 0, pOutFileList.Count() - 1, 0, auxiliaryArray);
 	}
@@ -57,7 +56,7 @@ namespace Algorithm
 		}
 	}
 
-	int CharAt(const String& conetnt, int d) 
+	char CharAt(const String& conetnt, int d) 
 	{
 		return d < conetnt.Count() ? conetnt[d] : -1;
 	}

@@ -84,7 +84,6 @@ namespace MathLab {
         TMatrix()
 	{
 		assert(param.size() == ROW * COLUMN);
-        int i = 0;
         std::initializer_list<T>::const_iterator iter = param.begin();
         for (int row = 0; row < ROW; row++)
         {

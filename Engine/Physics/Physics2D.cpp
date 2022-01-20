@@ -48,7 +48,7 @@ namespace XenonPhysics
         //Update position
         for (int i = 0; i < m_dynamicRigidbodys.Count(); i++)
         {
-            m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
+            m_dynamicRigidbodys[i]->PreFixedUpdate();
             m_dynamicRigidbodys[i]->FixedUpdate(deltaTime);
         }
 
@@ -95,10 +95,10 @@ namespace XenonPhysics
 								deltaTime /= 2;
 								tryAgain = true;
 								m_dynamicRigidbodys[i]->FallbackUpdate();
-								m_dynamicRigidbodys[i]->PreFixedUpdate(deltaTime);
+								m_dynamicRigidbodys[i]->PreFixedUpdate();
 								m_dynamicRigidbodys[i]->FixedUpdate(deltaTime);
 								m_dynamicRigidbodys[j]->FallbackUpdate();
-								m_dynamicRigidbodys[j]->PreFixedUpdate(deltaTime);
+								m_dynamicRigidbodys[j]->PreFixedUpdate();
 								m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
 							}
 							else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
@@ -160,7 +160,7 @@ namespace XenonPhysics
 								deltaTime /= 2;
 								tryAgain = true;
 								m_dynamicRigidbodys[j]->FallbackUpdate();
-								m_dynamicRigidbodys[j]->PreFixedUpdate(deltaTime);
+								m_dynamicRigidbodys[j]->PreFixedUpdate();
 								m_dynamicRigidbodys[j]->FixedUpdate(deltaTime);
 							}
 							else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
@@ -223,7 +223,7 @@ namespace XenonPhysics
                         deltaTime /= 2;
                         tryAgain = true;
                         m_dynamicRigidbodys[rigidbodyIndex]->FallbackUpdate();
-                        m_dynamicRigidbodys[rigidbodyIndex]->PreFixedUpdate(deltaTime);
+                        m_dynamicRigidbodys[rigidbodyIndex]->PreFixedUpdate();
                         m_dynamicRigidbodys[rigidbodyIndex]->FixedUpdate(deltaTime);
                     }
                     else if (collisionInfo.m_collisionType == CollisionType::IsCollision)
@@ -241,7 +241,7 @@ namespace XenonPhysics
                     {
                         Vector2f velocityNormal = dynamicBody->GetVelocity().Normalize();
                         dynamicBody->FallbackUpdate();
-                        dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                        dynamicBody->PreFixedUpdate();
 
                         Rigidbody2D::FixedUpdateData& currentData = dynamicBody->GetCurrentUpdataData();
                         float relatedForce = currentData.m_sumOfForces.Dot(velocityNormal);
@@ -261,7 +261,7 @@ namespace XenonPhysics
 
                         dynamicBody->FallbackUpdate();
                         dynamicBody->AddForce(force2D);
-                        dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                        dynamicBody->PreFixedUpdate();
                         dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
                     }
                 }
@@ -867,7 +867,7 @@ namespace XenonPhysics
             if (dynamicBody->GetVelocity().Magnitude() * Physics2D::TIMESTEP < 1.0f)
             {
                 dynamicBody->FallbackUpdate();
-                dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                dynamicBody->PreFixedUpdate();
                 Rigidbody2D::FixedUpdateData& updateData = dynamicBody->GetLastUpdataData();
                 float relatedForce = updateData.m_sumOfForces.Dot(-info.m_collisionNormalVec);
                 updateData.m_sumOfForces += info.m_collisionNormalVec * MathLab::Abs(relatedForce);
@@ -882,7 +882,7 @@ namespace XenonPhysics
 
                 dynamicBody->FallbackUpdate();
                 dynamicBody->AddForce(force2D);
-                dynamicBody->PreFixedUpdate(Physics2D::TIMESTEP);
+                dynamicBody->PreFixedUpdate();
                 dynamicBody->FixedUpdate(Physics2D::TIMESTEP);
             }
 

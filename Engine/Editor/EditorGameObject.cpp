@@ -41,7 +41,7 @@ namespace XenonEngine
                 {
                     if (ImGui::TreeNode((void*)(intptr_t)i, "%d Direction Light Component", i))
                     {
-						ContextMenu((GameObject*)data, (IComponent*)component);
+						ContextMenu((IComponent*)component);
 						DirectionLightComponent* directionLight = (DirectionLightComponent*)light;
                         const Vector3f& pos = directionLight->GetDirection();
                         DragFloat3("Direction", const_cast<Vector3f&>(pos), 0.01f, -100.0f, 100.0f);
@@ -55,7 +55,7 @@ namespace XenonEngine
             {
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%d Mesh3D", i))
                 {
-					ContextMenu((GameObject*)data, (IComponent*)component);
+					ContextMenu((IComponent*)component);
 					const Mesh3D* mesh = static_cast<const Mesh3D*>(component);
                     ImGui::PushID(i);
                     ImGui::Text("Model GUID: %s", mesh->GetModelGuid().str().c_str());
@@ -73,9 +73,9 @@ namespace XenonEngine
                     ImGui::PopID();
 
 					const Vector<Material*> materials = mesh->GetMaterials();
-					for (int i = 0 ; i < materials.Count(); i++)
+					for (int materialIndex = 0 ; materialIndex < materials.Count(); materialIndex++)
 					{
-						const Material* material = materials[i];
+						const Material* material = materials[materialIndex];
 						ImGui::Text("Material Name: %s", material->GetName().CString());
 						ImGui::Text("Exponent: %f", material->GetExponent());
 						ImGui::Text("Ambient: "); ImGui::SameLine(); Text(material->GetAmbient());
@@ -107,7 +107,7 @@ namespace XenonEngine
             {
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%d Camera", i))
                 {
-					ContextMenu((GameObject*)data, (IComponent*)component);
+					ContextMenu((IComponent*)component);
                     const Camera3D* mesh = static_cast<const Camera3D*>(component);
                     const Vector3f lookat = mesh->GetLookAt();
                     ImGui::Text("Look At:"); ImGui::SameLine(); Text(lookat);
@@ -122,7 +122,7 @@ namespace XenonEngine
 			{
 				if (ImGui::TreeNode((void*)(intptr_t)i, "%d Camera Controller", i))
 				{
-					ContextMenu((GameObject*)data, (IComponent*)component);
+					ContextMenu((IComponent*)component);
 					ImGui::Text("Camera Controller");
 					ImGui::TreePop();
 				}
@@ -130,7 +130,7 @@ namespace XenonEngine
         }
     }
 
-	void EditorGameObject::ContextMenu(GameObject* gameobject, IComponent* component) const
+	void EditorGameObject::ContextMenu(IComponent* component) const
 	{
 		if (ImGui::BeginPopupContextItem())
 		{
@@ -160,4 +160,10 @@ namespace XenonEngine
     {
         ImGui::Text("%f, %f, %f", value.x, value.y, value.z);
     }
+
+	void EditorGameObject::Text(const MathLab::Vector2i& value)
+	{
+        ImGui::Text("%f, %f", value.x, value.y);
+	}
+
 }

@@ -43,7 +43,7 @@ namespace XenonEngine
         virtual ComponentType GetComponentType() const override { return m_type; };
         virtual IComponent* Copy(GameObject*const gameObject)const override;
 
-        const FixedUpdateData& PreFixedUpdate(float deltaTime);
+        const FixedUpdateData& PreFixedUpdate();
         bool FixedUpdate(float deltaTime);     //One time step
         bool FallbackUpdate();
         bool AddForce(const XenonPhysics::Force2D& force);
@@ -66,8 +66,8 @@ namespace XenonEngine
         FixedUpdateData& GetLastUpdataData() { return m_lastFrameFixedUpdateData; }
         bool AddForce(const Vector2f& force);
         //Aggregates forces acting on rigidbody
-        FixedUpdateData& CalculateForcesAndMoments(FixedUpdateData& currentData, double deltaTime);
-        void CalculateRigidbodyByUpdateData( FixedUpdateData& currentData, double deltaTime)const;
+        FixedUpdateData& CalculateForcesAndMoments(FixedUpdateData& currentData);
+        void CalculateRigidbodyByUpdateData( FixedUpdateData& currentData, float deltaTime)const;
         void AffectGameobjectInWorld(const FixedUpdateData& data);
 
         bool m_isEnableAirDrag = false;

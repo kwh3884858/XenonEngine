@@ -18,7 +18,7 @@ namespace YAML {
         static bool decode(const Node& node, XenonEngine::Camera3D& rhs) {
 			XenonEngine::Camera3DConfig config;
             config.m_fov = node["Fov"].as<float>();
-            config.m_viewport = node["Viewport"].as<MathLab::Vector2f>();
+            config.m_viewport = node["Viewport"].as<MathLab::Vector2i>();
             config.m_nearClipZ = node["NearZ"].as<float>();
             config.m_farClipZ = node["FarZ"].as<float>();
             rhs.SetConfig(config);

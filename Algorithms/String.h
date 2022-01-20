@@ -346,7 +346,7 @@ namespace Algorithm
         nonCharacterCount = 0;
         for (int i = 0; i < 265; i++) {
             if (character[i] != 0) {
-                pOutDFA->m_character[nonCharacterCount++] = i;
+                pOutDFA->m_character[nonCharacterCount++] = static_cast<T>( i );
             }
         }
 
@@ -356,8 +356,8 @@ namespace Algorithm
         
         int restartPos = 0;
         for (int currentSubStringIndex = 1; currentSubStringIndex < pOutDFA->m_countentlength; currentSubStringIndex++) {
-            for (int character = 0; character < pOutDFA->m_characterCount; character++) {
-                pOutDFA->Set(character, currentSubStringIndex, pOutDFA->Get(character, restartPos));
+            for (int characterIndex = 0; characterIndex < pOutDFA->m_characterCount; characterIndex++) {
+                pOutDFA->Set(characterIndex, currentSubStringIndex, pOutDFA->Get(characterIndex, restartPos));
             }
             int characterTablePos = pOutDFA->GetCharacterPos(subString[currentSubStringIndex]);
 

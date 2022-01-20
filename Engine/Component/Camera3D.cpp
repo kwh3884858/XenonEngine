@@ -53,7 +53,7 @@ namespace XenonEngine
         m_fov = config.m_fov;
         assert(config.m_viewport.x > 0 && config.m_viewport.y > 0);
         m_viewport = config.m_viewport;
-        m_viewPlane = Vector2f(2, 2 * (m_viewport.x / m_viewport.y));
+        m_viewPlane = Vector2f(2, 2 * ((float)m_viewport.x / (float)m_viewport.y));
         m_nearClipZ = config.m_nearClipZ;
         m_farClipZ = config.m_farClipZ;
     }

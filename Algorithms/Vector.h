@@ -53,7 +53,7 @@ namespace Algorithm
 
 	private:
 		bool Reallocation();
-        bool InternalReplace(const T*const content, unsigned int size);
+        bool InternalReplace(const T*const content, int size);
         bool Destory();
 	};
 
@@ -296,7 +296,7 @@ namespace Algorithm
 	}
 
     template<typename T>
-    bool Algorithm::Vector<T>::InternalReplace(const T*const content, unsigned int size)
+    bool Algorithm::Vector<T>::InternalReplace(const T*const content, int size)
     {
         assert(m_content != nullptr);
         assert(content != nullptr);

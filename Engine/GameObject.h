@@ -58,7 +58,7 @@ namespace XenonEngine
 		virtual void Start() {};
 		virtual void Update() {};
 		virtual void Destroy() {};
-        virtual void OnTrigger(GameObject* gameobject) { return; }
+        virtual void OnTrigger(GameObject* gameobject);
     protected:
         
     private:

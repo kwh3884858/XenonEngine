@@ -78,7 +78,7 @@ namespace XenonEngine
 
 	void GameObjectWorld::RemoveGameObject(GameObject* const gameobject)
 	{
-		bool addedToPhysicsWorld = m_physics2D->RemoveGameObject(gameobject);
+		m_physics2D->RemoveGameObject(gameobject);
 		m_worldObjects.Remove(gameobject);
 	}
 

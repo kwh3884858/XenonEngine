@@ -93,7 +93,7 @@ namespace XenonEngine
 		{
 			virtualPath = ConvertToVirtualPath(virtualPath);
 		}
-        int rootIndex = m_root->GetFileHeader().GetFilePath().Count();
+        //int rootIndex = m_root->GetFileHeader().GetFilePath().Count();
         Vector<String> decompositionPath = virtualPath.Split(std::filesystem::path::preferred_separator);
         if (decompositionPath.Count() < 1)
         {
@@ -549,9 +549,9 @@ namespace XenonEngine
                 break;
             case CrossPlatform::FileTypeFolder:
             {
-                FolderMeta* folder = (FolderMeta*)file;
-                RecursionClearFolder(*folder);
-                delete folder;
+                FolderMeta* fileFolder = (FolderMeta*)file;
+                RecursionClearFolder(*fileFolder);
+                delete fileFolder;
             }
                 break;
             default:

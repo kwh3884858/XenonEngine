@@ -39,7 +39,7 @@ namespace CrossPlatform
 
 	private:
         static int COLORLIMIT;
-		unsigned int m_value;
+		int m_value;
 	};
 
     //template<typename T, int COUNT>

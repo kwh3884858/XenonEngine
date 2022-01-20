@@ -54,8 +54,8 @@ namespace CrossPlatform
 	{
 		assert(x >= 0 && x <= 1);
 		assert(y >= 0 && y <= 1);
-		int extendX = x * m_width;
-		int extendY = y * m_height;
+		int extendX = (int)( x * m_width);
+		int extendY = (int)( y * m_height);
 		return GetColor(extendX, extendY);
 	}
 

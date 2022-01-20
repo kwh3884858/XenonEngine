@@ -6,11 +6,14 @@ namespace YAML {
     template<>
     struct convert<XenonEngine::Camera3DController> {
 		static Node encode(const XenonEngine::Camera3DController& rhs) {
+			rhs;
 			Node node;
 			return node;
 		}
 
 		static bool decode(const Node& node, XenonEngine::Camera3DController& rhs) {
+			node;
+			rhs;
 			return true;
 		}
     };

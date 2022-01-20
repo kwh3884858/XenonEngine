@@ -27,8 +27,8 @@ namespace XenonEngine
     {
     }
 
-    const Rigidbody2D::FixedUpdateData& Rigidbody2D::PreFixedUpdate(float deltaTime)
-    {
+    const XenonEngine::Rigidbody2D::FixedUpdateData& Rigidbody2D::PreFixedUpdate()
+{
         FixedUpdateData newUpdateData;
         // When collision is happen, only accept collision impulse.
         //if (m_isCollision)
@@ -43,7 +43,7 @@ namespace XenonEngine
         m_addedForces = Vector2f::Zero;
         newUpdateData.m_addedMoments = m_addedMoments;
         m_addedMoments = 0;
-        CalculateForcesAndMoments(newUpdateData, deltaTime);
+        CalculateForcesAndMoments(newUpdateData);
 
         m_lastFrameFixedUpdateData = m_currentData;
         m_currentData = newUpdateData;
@@ -114,7 +114,7 @@ namespace XenonEngine
         return true;
     }
 
-    Rigidbody2D::FixedUpdateData& Rigidbody2D::CalculateForcesAndMoments(FixedUpdateData& currentData, double deltaTime)
+    XenonEngine::Rigidbody2D::FixedUpdateData& Rigidbody2D::CalculateForcesAndMoments(FixedUpdateData& currentData)
     {
         assert(m_gameobject != nullptr);
 
@@ -182,7 +182,7 @@ namespace XenonEngine
         return currentData;
     }
 
-    void Rigidbody2D::CalculateRigidbodyByUpdateData( FixedUpdateData& currentData, double deltaTime) const
+    void Rigidbody2D::CalculateRigidbodyByUpdateData( FixedUpdateData& currentData, float deltaTime) const
     {
         //Integrate linear equation of motion
         Vector2f acceleration = currentData.m_sumOfForces / m_mass;

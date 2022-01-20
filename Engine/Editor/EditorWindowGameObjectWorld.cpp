@@ -62,7 +62,7 @@ namespace XenonEngine
             return;
         }
         GameObjectWorld*const world = worldManager->GetCurrentWorld();
-        Algorithm:String worldName = world->GetWorldName();
+        Algorithm::String worldName = world->GetWorldName();
 
         // World Name
 
@@ -193,7 +193,7 @@ namespace XenonEngine
                     if (ImGui::MenuItem("Camera")) {
                         Camera3DConfig camera3DConfig;
                         camera3DConfig.m_fov = 90;
-                        camera3DConfig.m_viewport = Vector2f(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
+                        camera3DConfig.m_viewport = Vector2i(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
                         camera3DConfig.m_farClipZ = 1000;
                         camera3DConfig.m_nearClipZ = 1;
                         Camera3D* camera = new Camera3D(go);

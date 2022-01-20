@@ -1,5 +1,7 @@
-#include "MaterialMeta.h"
 #include <filesystem>
+#include "MaterialMeta.h"
+#include "CrossPlatform/Material/Material.h"
+
 namespace CrossPlatform
 {
 	using namespace Algorithm;

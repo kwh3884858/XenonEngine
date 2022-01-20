@@ -93,7 +93,7 @@ namespace CrossPlatform
         r = r * rhs.GetR() / COLORLIMIT;
         g = g * rhs.GetG() / COLORLIMIT;
         b = b * rhs.GetB() / COLORLIMIT;
-        SColorRGBA result(r, g, b);
+        SColorRGBA result((int)r, (int)g, (int)b);
         return result;
     }
 
@@ -102,11 +102,11 @@ namespace CrossPlatform
         int r = (*this).GetR();
         int g = (*this).GetG();
         int b = (*this).GetB();
-        r = r * rhs;
+        r = (int)(r * rhs);
         r = r >= COLORLIMIT ? COLORLIMIT - 1 : r;
-        g = g * rhs;
+        g = (int)(g * rhs);
         g = g >= COLORLIMIT ? COLORLIMIT - 1 : g;
-        b = b * rhs;
+        b = (int)(b * rhs);
         b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
         SColorRGBA result(r, g, b);
         return result;
@@ -117,13 +117,13 @@ namespace CrossPlatform
         int r = (*this).GetR();
         int g = (*this).GetG();
         int b = (*this).GetB();
-        r = r / rhs;
+        r = (int)(r / rhs);
         r = r >= COLORLIMIT ? COLORLIMIT - 1 : r;
-        g = g / rhs;
+        g = (int)(g / rhs);
         g = g >= COLORLIMIT ? COLORLIMIT - 1 : g;
-        b = b / rhs;
+        b = (int)(b / rhs);
         b = b >= COLORLIMIT ? COLORLIMIT - 1 : b;
-        SColorRGBA result(r, g, b);
+        SColorRGBA result((int)r, (int)g, (int)b);
         return result;
     }
 

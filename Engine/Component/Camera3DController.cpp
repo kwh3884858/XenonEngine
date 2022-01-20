@@ -28,7 +28,7 @@ namespace XenonEngine
 		float xAxisDelta = 0;
 		float yAxisDelta = 0;
 		float zAxisDelta = 0;
-		static float velocity = 0.1;
+		static float velocity = 0.1f;
 
 		if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_W))
 		{

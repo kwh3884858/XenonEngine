@@ -240,7 +240,7 @@ namespace MathLab {
     template<typename T>
     T Vector3<T>::Magnitude() const
     {
-        return sqrt(DoubleMagnitude());
+        return (T) sqrt(DoubleMagnitude());
     }
 
     template<typename T>

@@ -254,8 +254,6 @@ namespace XenonEngine
 				{
 					//const Triangle& triangle = triangleList[polyIndex];
 					const Triangle& triangle = triangleList[sortingTriangleIndexList[polyIndex].m_index];
-					CullingState state;
-					state = Culling(triangle, *majorCamera);
 
 					CullingState state = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
 					if (state == CullingState::Culled)
@@ -529,7 +527,7 @@ namespace XenonEngine
         });
     }
 
-    MathLab::TMatrix4X4f Graphic3D::GetScreenMatrix(const Vector2f& viewPort) const
+    MathLab::TMatrix4X4f Graphic3D::GetScreenMatrix(const MathLab::Vector2i& viewPort) const
     {
         float alpha = 0.5f * viewPort.x - 0.5;
         float beta = 0.5f * viewPort.y - 0.5;
@@ -542,7 +540,7 @@ namespace XenonEngine
         });
     }
 
-    MathLab::TMatrix4X4f Graphic3D::GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort) const
+	MathLab::TMatrix4X4f Graphic3D::GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort) const
     {
         float viewDistance = tan(fov/2) * (viewPort.x / 2);
         float alpha = 0.5f * viewPort.x - 0.5;

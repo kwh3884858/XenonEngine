@@ -59,6 +59,12 @@ namespace XenonEngine
 		}
 	}
 
+	void GameObject::OnTrigger(GameObject* gameobject)
+	{
+		gameobject; 
+		return;
+	}
+
 	void GameObject::CheckName(String& name) const
 	{
 		int pos = name.IndexOf("_");

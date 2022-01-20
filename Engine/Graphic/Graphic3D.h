@@ -128,7 +128,7 @@ namespace XenonEngine
         
         const Camera3D* GetMajorCamera() const;
         MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio) const;
-        MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort) const;
+		MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2i& viewPort) const;
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort) const;
 
         RenderType m_renderType = RenderType::GouraudShdering;

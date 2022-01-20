@@ -216,7 +216,7 @@ namespace MathLab {
     template<typename T>
     CrossPlatform::SColorRGBA MathLab::Vector4<T>::ToColor() const
     {
-        return CrossPlatform::SColorRGBA(x*255, y*255, z*255, w*255);
+        return CrossPlatform::SColorRGBA((int)(x*255), (int)(y*255), (int)(z*255), (int)(w*255));
     }
 
     template<typename T>

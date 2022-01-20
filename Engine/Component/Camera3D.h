@@ -14,7 +14,7 @@ namespace XenonEngine
     {
     public:
         float m_fov;
-        MathLab::Vector2f m_viewport;
+        MathLab::Vector2i m_viewport;
         float m_nearClipZ = 1;
         float m_farClipZ = 1000;
     };
@@ -38,8 +38,8 @@ namespace XenonEngine
         const MathLab::Vector3f& GetLookAt()const { return m_lookAt; }
         const float& GetFov()const { return m_fov; }
         const MathLab::Vector2f& GetViewPlane()const { return m_viewPlane; }
-        const MathLab::Vector2f& GetViewport()const { return m_viewport; }
-        float GetAspectRatio()const { return m_viewport.x / m_viewport.y; }
+        const MathLab::Vector2i& GetViewport()const { return m_viewport; }
+        float GetAspectRatio()const { return (float)m_viewport.x / (float)m_viewport.y; }
         MathLab::TMatrix4X4f GetCameraTransformInverseMatrix()const;
         float GetNearClipZ()const { return m_nearClipZ; }
         //void SetNearClipz(float nearZ) { m_nearClipZ = nearZ; }
@@ -52,7 +52,7 @@ namespace XenonEngine
 		MathLab::Vector3f m_lookAt;
 		float m_fov = 0.0f;				//View Degree, 0 ~ 180
         MathLab::Vector2f m_viewPlane;  //Normalized plane, 2 * 1.125 
-		MathLab::Vector2f m_viewport;   //Resolution,    1920 * 1080
+		MathLab::Vector2i m_viewport;   //Resolution,    1920 * 1080
         float m_nearClipZ = 0.0f;
         float m_farClipZ = 0.0f;
 	};

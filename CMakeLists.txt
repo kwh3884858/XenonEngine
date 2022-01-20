@@ -11,11 +11,6 @@ set(FLAGS "-DUNICODE" "-D_UNICODE")
 add_subdirectory(${PROJECT_SOURCE_DIR}/Library/yaml-cpp)
 add_subdirectory(${PROJECT_SOURCE_DIR}/Library/crossguid)
 
-target_compile_options(${PROJECT_NAME} PRIVATE
-  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
-  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
-)
-
 IF (WIN32)
     message(STATUS "current platform: win32 ")
     add_executable(${PROJECT_NAME} WIN32)
@@ -63,6 +58,11 @@ ELSEIF (UNIX)
 ENDIF()
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
 
 target_include_directories( ${PROJECT_NAME} 
     PRIVATE

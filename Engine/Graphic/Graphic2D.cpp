@@ -79,7 +79,7 @@ namespace XenonEngine
 
         //error = k - 0.5
         //2error = 2k - 1
-        float errorY = 2 * deltaY - deltaX;
+        float errorY = 2 * (float)deltaY - (float)deltaX;
         while (startPos.x != endPos.x)
         {
             if (isFlip)
@@ -95,11 +95,11 @@ namespace XenonEngine
 
             //error +=k
             //2error += 2k
-            errorY += 2 * deltaY;
+            errorY += 2 * (float)deltaY;
             if (errorY >= 0)
             {
                 startPos.y += increasementY;
-                errorY -= 2 * deltaX;
+                errorY -= 2 * (float)deltaX;
             }
         }
     }

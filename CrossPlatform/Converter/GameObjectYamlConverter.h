@@ -67,7 +67,6 @@ namespace YAML {
                     if (lightType == XenonEngine::LightComponent::Direction)
                     {
                         const XenonEngine::DirectionLightComponent& directionLight = rhs.GetComponent<XenonEngine::DirectionLightComponent>();
-						XenonEngine::DirectionLightComponent lightType = rhs.GetComponent<XenonEngine::DirectionLightComponent>();
                         node["DirectionLight"] = directionLight;
                     }
                 }
