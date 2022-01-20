@@ -47,6 +47,19 @@ namespace XenonEngine
             Culled
         };
 
+		enum PlaneTestState
+		{
+			LessThanXMin,
+			LessThanYMin,
+			LessThanZMin,
+			GreaterThanXMax,
+			GreaterThanYMax,
+			GreaterThanZMax,
+			InsideX,
+			InsideY,
+			InsideZ
+		};
+
         enum RenderType
         {
             Wireframe,
@@ -107,16 +120,16 @@ namespace XenonEngine
 
         void Update()const;
 	private:
-        CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
-        CullingState Culling(const Triangle& triagnle, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera)const;
-		CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2)const;
-        void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform)const;
+        CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const;
+		CullingState Culling(const Triangle& triagnle, const Camera3D& camera) const;
+		CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2) const;
+        void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE) const;
+        void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform) const;
         
-        const Camera3D* GetMajorCamera()const;
-        MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio)const;
-        MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort)const;
-        MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort)const;
+        const Camera3D* GetMajorCamera() const;
+        MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio) const;
+        MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2f& viewPort) const;
+        MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort) const;
 
         RenderType m_renderType = RenderType::GouraudShdering;
         Algorithm::Vector<Camera3D*> m_cameraList;

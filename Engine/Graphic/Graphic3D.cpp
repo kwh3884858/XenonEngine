@@ -254,6 +254,9 @@ namespace XenonEngine
 				{
 					//const Triangle& triangle = triangleList[polyIndex];
 					const Triangle& triangle = triangleList[sortingTriangleIndexList[polyIndex].m_index];
+					CullingState state;
+					state = Culling(triangle, *majorCamera);
+
 					CullingState state = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
 					if (state == CullingState::Culled)
 					{
@@ -376,9 +379,78 @@ namespace XenonEngine
         return CullingState::Inside;
     }
 
-	XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Triangle& triagnle, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const
+	XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Triangle& triagnle, const Camera3D& camera) const
 	{
+		float distance = camera.GetViewDistance();
+		PlaneTestState state[3];
+		
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
+			float xLimit = 0.5f * camera.GetViewPlane().x * center.z / distance;
+			if (center.x > xLimit)
+			{
+				state[i] = PlaneTestState::GreaterThanXMax;
+			}
+			else if (center.x < -xLimit)
+			{
+				state[i] = PlaneTestState::LessThanXMin;
+			}
+			else
+			{
+				state[i] = PlaneTestState::InsideX;
+			}
+		}
+		if ((state[0] == PlaneTestState::GreaterThanXMax && state[1] == PlaneTestState::GreaterThanXMax && state[2] == PlaneTestState::GreaterThanXMax) ||
+			(state[0] == PlaneTestState::LessThanXMin && state[1] == PlaneTestState::LessThanXMin && state[2] == PlaneTestState::LessThanXMin))
+		{
+			return CullingState::Culled;
+		}
 
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
+			float yLimit = 0.5f * camera.GetViewPlane().y * center.z / distance;
+			if (center.y > yLimit)
+			{
+				state[i] = PlaneTestState::GreaterThanYMax;
+			}
+			else if (center.y < -yLimit)
+			{
+				state[i] = PlaneTestState::LessThanYMin;
+			}
+			else
+			{
+				state[i] = PlaneTestState::InsideY;
+			}
+		}
+		if ((state[0] == PlaneTestState::GreaterThanYMax && state[1] == PlaneTestState::GreaterThanYMax && state[2] == PlaneTestState::GreaterThanYMax) ||
+			(state[0] == PlaneTestState::LessThanYMin && state[1] == PlaneTestState::LessThanYMin && state[2] == PlaneTestState::LessThanYMin))
+		{
+			return CullingState::Culled;
+		}
+
+		for (int i = 0; i < 3; i++)
+		{
+			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
+			if (center.z < camera.GetNearClipZ())
+			{
+				state[i] = PlaneTestState::LessThanZMin;
+			}
+			else if (center.z > camera.GetFarClipZ())
+			{
+				state[i] = PlaneTestState::GreaterThanZMax;
+			}
+			else
+			{
+				state[i] = PlaneTestState::InsideZ;
+			}
+		}
+		if ((state[0] == PlaneTestState::LessThanZMin && state[1] == PlaneTestState::LessThanZMin && state[2] == PlaneTestState::LessThanZMin) ||
+			(state[0] == PlaneTestState::GreaterThanZMax && state[1] == PlaneTestState::GreaterThanZMax && state[2] == PlaneTestState::GreaterThanZMax))
+		{
+			return CullingState::Culled;
+		}
 	}
 
 	Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
