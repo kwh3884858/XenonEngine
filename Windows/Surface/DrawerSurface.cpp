@@ -9,7 +9,7 @@ namespace WindowSurface
         m_width = width;
         m_height = height;
 
-        if (!IsResolutionValid()) { return; }
+        //if (!IsResolutionValid()) { return; }
 
         m_buffer = new SColorRGBA[m_width * m_height];
     }
@@ -54,14 +54,14 @@ namespace WindowSurface
         m_lock = false;
     }
 
-    bool DrawerSurface::IsResolutionValid() const
-    {
-        if (m_width == UNINITIALUZE_VALUE || m_height == UNINITIALUZE_VALUE)
-        {
-            return false;
-        }
-        return true;
-    }
+    //bool DrawerSurface::IsResolutionValid() const
+    //{
+    //    if (m_width == UNINITIALUZE_VALUE || m_height == UNINITIALUZE_VALUE)
+    //    {
+    //        return false;
+    //    }
+    //    return true;
+    //}
 
     bool DrawerSurface::IsBufferValid() const
     {

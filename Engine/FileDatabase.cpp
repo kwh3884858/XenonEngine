@@ -89,7 +89,7 @@ namespace XenonEngine
             }
         }
         assert(true == false);
-		return Algorithm::String::INVALID_VALUE;
+		return Algorithm::String::INVALID_STRING;
     }
 
     CrossPlatform::FolderMeta* FileDatabase::GetFolder(const Algorithm::String& inPath) const

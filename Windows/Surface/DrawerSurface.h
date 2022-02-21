@@ -31,7 +31,7 @@ namespace WindowSurface {
 
     private:
         const int UNINITIALUZE_VALUE = -1;
-        bool IsResolutionValid()const;
+        //bool IsResolutionValid()const;
         bool IsBufferValid() const;
         bool IsPositionValid(unsigned int x, unsigned int y)const;
 

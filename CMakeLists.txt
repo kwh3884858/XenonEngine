@@ -33,6 +33,11 @@ IF (WIN32)
     #             ${yaml-cpp_INCLUDE_DIR})
     #     target_link_libraries(${PROJECT_NAME} yaml-cpp)
     # ENDIF()
+
+    if(MSVC)
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    endif()
+
     add_custom_command(
         TARGET ${PROJECT_NAME} 
         POST_BUILD

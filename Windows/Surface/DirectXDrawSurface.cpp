@@ -60,7 +60,7 @@ namespace WindowSurface {
         {
             //non-linear memory
             UINT* destPtr = backBuffer;
-            for (int i = 0; i < m_height; i++)
+            for (unsigned int i = 0; i < m_height; i++)
             {
                 memset(destPtr, 0, m_width * sizeof(UINT));
                 destPtr += m_directDrawSurfaceDescription.lPitch;

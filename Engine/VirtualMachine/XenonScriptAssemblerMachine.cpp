@@ -904,7 +904,7 @@ namespace XenonEngine
         assert(true == false);
     }
 
-    bool XenonScriptAssemblerMachine::CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction *>& instructionStream)
+    bool XenonScriptAssemblerMachine::CreateInstructionList(TokenVector* const tokenVector/*, const Vector<Instruction *>& instructionStream*/)
     {
         FunctionElement* currentFunction = nullptr;
         int currentFunctionParamCount = 0;
@@ -1016,7 +1016,7 @@ namespace XenonEngine
                     case TokenType_Delimiter:
                     case TokenTypeCount:
                     {
-                        if (currentInstructionLookup->m_opFlags[parameterIndex] & (1 << currentToken->m_tokenType) == 0)
+                        if ((currentInstructionLookup->m_opFlags[parameterIndex] & (1i64 << currentToken->m_tokenType) ) == 0)
                         {
                             CreateInstructionListError(currentToken, index);
                             return false;
@@ -1300,7 +1300,7 @@ namespace XenonEngine
             printf("No\n");
     }
 
-    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize)
+    bool XenonScriptAssemblerMachine::CreateSymbol(TokenVector* const tokenVector/*, Token* currentToken*/, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize)
     {
         Token* symbolToken = MoveToNextToken(*tokenVector, refIndex);
         if (!symbolToken || symbolToken->m_tokenType != TokenType::TokenType_Identifier)

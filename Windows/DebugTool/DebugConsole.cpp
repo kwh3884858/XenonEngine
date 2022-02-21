@@ -72,7 +72,7 @@ namespace DebugTool {
             lpszFunction, dw, lpMsgBuf);
 
         MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
-        _tprintf(_T("%s\n"), lpDisplayBuf);
+        //_tprintf(_T("%s\n"), lpDisplayBuf);
 
         LocalFree(lpMsgBuf);
         LocalFree(lpDisplayBuf);

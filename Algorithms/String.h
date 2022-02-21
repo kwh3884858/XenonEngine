@@ -28,6 +28,7 @@ namespace Algorithm
     {
     public:
         static const int INVALID_VALUE;
+        static const StringBase<char> INVALID_STRING;
 
         template<typename T>
         friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
@@ -73,6 +74,9 @@ namespace Algorithm
 
         Vector<T> m_string;
     };
+
+	template<typename T>
+	__declspec(selectany) const StringBase<char> Algorithm::StringBase<T>::INVALID_STRING = "Invalid String";
 
     template<typename T>
     __declspec(selectany) const int Algorithm::StringBase<T>::INVALID_VALUE = -1;;

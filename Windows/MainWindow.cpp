@@ -194,8 +194,8 @@ void MainWindow::Shutdown()
 void MainWindow::Run()
 {
     MSG msg = {};
-    bool done = false, result = false, isKey = false;
-    unsigned long int frameAmount = 0;
+    bool done = false;
+    //unsigned long int frameAmount = 0;
 
     //Color
     COLORREF colorRed = RGB(255, 0, 0);
@@ -229,14 +229,6 @@ void MainWindow::Run()
         {
             done = true;
         }
-        else
-        {
-            if (result)
-            {
-                done = true;
-                break;
-            }
-        }
 
         double timeInterval = m_timer->GetTimeMilliSecond();
         if (timeInterval > m_timeInterval)
@@ -262,22 +254,22 @@ void MainWindow::Run()
                 static unsigned long int paintAmount = 0;
                 paintAmount++;
                 _stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
-                TextOut(workingDC, 0, 10, debugTextBuffer2, _tcslen(debugTextBuffer2));
+                TextOut(workingDC, 0, 10, debugTextBuffer2, (int) _tcslen(debugTextBuffer2));
                 SetTextColor(workingDC, colorRed);
 
-                float secondPerFrame = timeInterval / 1000.0;
+                double secondPerFrame = timeInterval / 1000.0;
                 TCHAR debugTimeInterval[80];
-                _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %f s"), secondPerFrame);
-                TextOut(workingDC, 0, 30, debugTimeInterval, _tcslen(debugTimeInterval));
+                _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %d s"), secondPerFrame);
+                TextOut(workingDC, 0, 30, debugTimeInterval, (int)_tcslen(debugTimeInterval));
 
-                float fps = 1000.0f / timeInterval;
+                double fps = 1000.0f / timeInterval;
                 TCHAR debugTextBuffer[80];
                 _stprintf_s(debugTextBuffer, 80, _T("FPS: %f"), fps);
-                TextOut(workingDC, 0, 50, debugTextBuffer, _tcslen(debugTextBuffer));
+                TextOut(workingDC, 0, 50, debugTextBuffer, (int) _tcslen(debugTextBuffer));
 
                 directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
             }
-            bool result = m_windowDrawer->Draw(m_directXDrawSurface);
+            /*bool result = */m_windowDrawer->Draw(m_directXDrawSurface);
         }
     }
     Gameplay::GameplayShutdown();
@@ -288,9 +280,9 @@ void MainWindow::Run()
 
 LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
 {
-    COLORREF colorRed = RGB(255, 0, 0);
-    COLORREF colorGreen = RGB(0, 255, 0);
-    COLORREF colorBlue = RGB(0, 0, 255);
+    //COLORREF colorRed = RGB(255, 0, 0);
+    //COLORREF colorGreen = RGB(0, 255, 0);
+    //COLORREF colorBlue = RGB(0, 0, 255);
 
 	//TODO: only work after imgui is enable.
 	//if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
@@ -330,7 +322,7 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
     case WM_KEYDOWN:
     {
         int virtualCode = (int)wParam;
-        int keyState = (int)lParam;
+        //int keyState = (int)lParam;
 
         if (virtualCode == 0x50) //P
         {

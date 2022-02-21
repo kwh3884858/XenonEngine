@@ -328,8 +328,8 @@ namespace MathLab
 	{
         assert(COUNT == 3 || COUNT == 4);
         assert(COUNT == vec.Count());
-		float result = 0;
-		for (size_t i = 0; i < 3; i++)
+		T result = 0;
+		for (int i = 0; i < 3; i++)
 		{
 			result += m_vector[i] * vec[i];
 		}

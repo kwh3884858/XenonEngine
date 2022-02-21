@@ -78,7 +78,7 @@ int XenonBaseWindow::indexCount = 0;
         {
             char name[128];
             int index = GetWindowIndex();
-            sprintf(name, "%s_%d", windowName, index);
+            sprintf_s(name, "%s_%d", windowName, index);
             // Main body of the Demo window starts here.
             if (!ImGui::Begin(name, &m_open, window_flags))
             {
@@ -122,6 +122,7 @@ int XenonBaseWindow::indexCount = 0;
 
     void XenonBaseWindow::UpdateMainWindow(const void* data)
     {
+        data;
         ImGui::Text("Placeholder");
     }
 

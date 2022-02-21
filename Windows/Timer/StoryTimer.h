@@ -11,7 +11,7 @@ namespace Timer {
         virtual ~StoryTimer() override = default;
 
         void Update();
-        virtual double GetTimeMilliSecond() const override;
+        virtual long GetTimeMilliSecond() const override;
 
     private:
         std::chrono::system_clock::time_point m_currentTime;

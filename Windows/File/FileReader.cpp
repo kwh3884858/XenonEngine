@@ -70,7 +70,7 @@ namespace File
         if (fins.good())
         {
             fins >> std::noskipws;
-            int fileSize = fins.tellg();
+            int fileSize = (int) fins.tellg();
             char* memoryBlock = new char[fileSize];
             fins.seekg(0, std::ios::beg);
             fins.read(memoryBlock, fileSize);

@@ -35,9 +35,9 @@ namespace WindowDrawer {
         unsigned int width = surface->GetWidth();
         unsigned int height = surface->GetHeight();
 
-        for (int i = 0; i < width; i++)
+        for (unsigned int i = 0; i < width; i++)
         {
-            for (int j = 0; j < height; j++)
+            for (unsigned int j = 0; j < height; j++)
             {
                 SetPixel(m_hdc, i, j, buffer[j * width + i].ToRGBALittleEndian());
             }

@@ -120,11 +120,11 @@ namespace XenonEngine
         bool Parsing(TokenVector* const tokenVector);
         bool BuildSymbolAndFunctionAndLabelTable(TokenVector* const tokenVector);
         void BuildTableError(const Token*const token, int index);
-        bool CreateInstructionList(TokenVector* const tokenVector, const Vector<Instruction*>& instructionStream);
+        bool CreateInstructionList(TokenVector* const tokenVector/*, const Vector<Instruction*>& instructionStream*/);
         void CreateInstructionListError(const Token* const token, int index);
         void PrintAssemblerState(XenonFile*const xenonFile)const;
 
-        bool CreateSymbol(TokenVector* const tokenVector, Token* currentToken, InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize);
+        bool CreateSymbol(TokenVector* const tokenVector, /*Token* currentToken,*/ InstructionOpType tokenType, FunctionElement* const functionElement, int& refIndex, unsigned int& refGlobalStackSize);
 
         bool IsNewLine(char character)const;
         bool IsCharWhitespace(char character)const;
@@ -142,10 +142,10 @@ namespace XenonEngine
 
         // Local stack index start from 1, the position 1 of stack always store current function index, 
         // so the local data index of current function always start from 2.
-        unsigned int Local_Stack_Start_Index = 2;
+        int Local_Stack_Start_Index = 2;
 
         // Local function return index need 1 space of stack
-        unsigned int Function_Return_Index_Space = 1;
+        int Function_Return_Index_Space = 1;
 
         ScriptHeader m_scriptHeader;
 
