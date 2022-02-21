@@ -43,9 +43,9 @@ namespace MathLab {
         Vector4& operator+=(const Vector4& rvalue);
         Vector4& operator-=(const Vector4& rvalue);
         Vector4& operator*=(T rvalue);
-        Vector4& operator*(T rvalue) const;
+        Vector4 operator*(T rvalue) const;
         Vector4& operator/=(T rvalue);
-        Vector4& operator/(T rvalue) const;
+        Vector4 operator/(T rvalue) const;
 
         T Dot(const Vector4& vec)const;
         Vector4 Cross(const Vector4& vec)const;
@@ -136,7 +136,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector4<T>& MathLab::Vector4<T>::operator*(T rvalue)const
+    Vector4<T> MathLab::Vector4<T>::operator*(T rvalue)const
     {
         Vector4<T> result(*this);
         result *= rvalue;
@@ -154,7 +154,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector4<T>& MathLab::Vector4<T>::operator/(T rvalue)const
+    Vector4<T> MathLab::Vector4<T>::operator/(T rvalue)const
     {
         Vector4<T> result(*this);
         result /= rvalue;

@@ -13,6 +13,6 @@ namespace Gameplay
 		virtual void Update() override;
 		virtual void OnTrigger(GameObject* gameobject);
 	private:
-		float m_lastTime = 0.0f;
+		double m_lastTime = 0.0f;
 	};
 }

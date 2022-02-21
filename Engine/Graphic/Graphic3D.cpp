@@ -108,14 +108,14 @@ namespace XenonEngine
                 direction = -direction;
                 TVector4f tDirection = ConvertFromNonHomogeneous(direction);
                 tDirection = tDirection * worldToCameraRotationMatrix;
-                for (int i = 0; i < 3; i++)
+                for (int faceIndex = 0; faceIndex < 3; faceIndex++)
                 {
-                    TVector4f faceNormal = input.m_normal[i];
+                    TVector4f faceNormal = input.m_normal[faceIndex];
                     float face = tDirection.Dot(faceNormal);
                     if (face > 0)
                     {
-                        CrossPlatform::SColorRGBA baseColor = input.m_baseColor[i];
-                        output.m_vertexColor[i] += directionLight->GetColor() * baseColor * face;
+                        CrossPlatform::SColorRGBA baseColor = input.m_baseColor[faceIndex];
+                        output.m_vertexColor[faceIndex] += directionLight->GetColor() * baseColor * face;
                     }
                 }
             }
@@ -125,17 +125,17 @@ namespace XenonEngine
                 Vector3f lightPosition = pointLight->GetGameObject()->GetComponentPointer<Transform3D>()->GetPosition();
                 TVector4f lightPoistionHomogeneous = MathLab::ConvertFromNonHomogeneous(lightPosition);
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
-                for (int i = 0; i < 3; i++)
+                for (int faceIndex = 0; faceIndex < 3; faceIndex++)
                 {
-                    TVector4f direction = lightPoistionHomogeneous - input.m_vertex[i];
+                    TVector4f direction = lightPoistionHomogeneous - input.m_vertex[faceIndex];
                     float kc = pointLight->GetKc();
                     float kl = pointLight->GetKl();
-                    float face = direction.Normalize().Dot(input.m_normal[i]);
+                    float face = direction.Normalize().Dot(input.m_normal[faceIndex]);
                     if (face > 0)
                     {
                         float attenuation = kc + kl * direction.Magnitude();
-                        CrossPlatform::SColorRGBA baseColor = input.m_baseColor[i];
-                        output.m_vertexColor[i] += pointLight->GetColor() * baseColor *  face / attenuation;
+                        CrossPlatform::SColorRGBA baseColor = input.m_baseColor[faceIndex];
+                        output.m_vertexColor[faceIndex] += pointLight->GetColor() * baseColor *  face / attenuation;
                     }
                 }
 
@@ -255,8 +255,8 @@ namespace XenonEngine
 					//const Triangle& triangle = triangleList[polyIndex];
 					const Triangle& triangle = triangleList[sortingTriangleIndexList[polyIndex].m_index];
 
-					CullingState state = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
-					if (state == CullingState::Culled)
+					CullingState removeBackFacesState = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
+					if (removeBackFacesState == CullingState::Culled)
 					{
 						continue;
 					}
@@ -278,22 +278,22 @@ namespace XenonEngine
 							Vector2f tmp1;
 							tmp0 = output.m_screenPoint0;
 							tmp1 = output.m_screenPoint1;
-							Graphic2D::ClipLineState state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-							if (state == Graphic2D::ClipLineState::Accpet)
+							Graphic2D::ClipLineState lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
+							if (lineClipState == Graphic2D::ClipLineState::Accpet)
 							{
 								Graphic2D::Get().DrawLine(tmp0, tmp1);
 							}
 							tmp0 = output.m_screenPoint1;
 							tmp1 = output.m_screenPoint2;
-							state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-							if (state == Graphic2D::ClipLineState::Accpet)
+							lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
+							if (lineClipState == Graphic2D::ClipLineState::Accpet)
 							{
 								Graphic2D::Get().DrawLine(tmp0, tmp1);
 							}
 							tmp0 = output.m_screenPoint2;
 							tmp1 = output.m_screenPoint0;
-							state = Graphic2D::Get().ClipLine(tmp0, tmp1);
-							if (state == Graphic2D::ClipLineState::Accpet)
+							lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
+							if (lineClipState == Graphic2D::ClipLineState::Accpet)
 							{
 								Graphic2D::Get().DrawLine(tmp0, tmp1);
 							}
@@ -449,6 +449,7 @@ namespace XenonEngine
 		{
 			return CullingState::Culled;
 		}
+		return CullingState::Inside;
 	}
 
 	Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
@@ -529,8 +530,8 @@ namespace XenonEngine
 
     MathLab::TMatrix4X4f Graphic3D::GetScreenMatrix(const MathLab::Vector2i& viewPort) const
     {
-        float alpha = 0.5f * viewPort.x - 0.5;
-        float beta = 0.5f * viewPort.y - 0.5;
+        float alpha = 0.5f * viewPort.x - 0.5f;
+        float beta = 0.5f * viewPort.y - 0.5f;
         return TMatrix4X4f(
             std::initializer_list<float>{
                 alpha, 0, 0, 0,
@@ -540,11 +541,11 @@ namespace XenonEngine
         });
     }
 
-	MathLab::TMatrix4X4f Graphic3D::GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2f& viewPort) const
+	MathLab::TMatrix4X4f Graphic3D::GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2i& viewPort) const
     {
         float viewDistance = tan(fov/2) * (viewPort.x / 2);
-        float alpha = 0.5f * viewPort.x - 0.5;
-        float beta = 0.5f * viewPort.y - 0.5;
+        float alpha = 0.5f * viewPort.x - 0.5f;
+        float beta = 0.5f * viewPort.y - 0.5f;
         return TMatrix4X4f(
             std::initializer_list<float>{
                 viewDistance, 0, 0, 0,

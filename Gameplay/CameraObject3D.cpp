@@ -38,7 +38,7 @@ namespace Gameplay
 
         Camera3DConfig camera3DConfig;
         camera3DConfig.m_fov = 90;
-        camera3DConfig.m_viewport = Vector2f(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
+        camera3DConfig.m_viewport = Vector2i(Database::Get().engineConfig.m_width, Database::Get().engineConfig.m_height);
         camera3DConfig.m_farClipZ = 1000;
         camera3DConfig.m_nearClipZ = 1;
         Camera3D* camera3D = new Camera3D(this);
@@ -52,7 +52,7 @@ namespace Gameplay
         float xAxisDelta = 0;
         float yAxisDelta = 0;
         float zAxisDelta = 0;
-        static float velocity = 0.1;
+        float velocity = 0.1f;
 
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_W))
         {
@@ -106,6 +106,6 @@ namespace Gameplay
 
     void CameraObject3D::OnTrigger(GameObject* gameobject)
     {
-
+		gameobject;
     }
 }

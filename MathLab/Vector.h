@@ -56,7 +56,7 @@ namespace MathLab
 
 		TVector();
         TVector(const TVector& that);
-        TVector(std::initializer_list<T>& param);
+        TVector(std::initializer_list<T> param);
         TVector(const Algorithm::Vector<T>& vector);
         TVector(const MathLab::Vector3f& vector3f);
 		~TVector();
@@ -93,7 +93,7 @@ namespace MathLab
 	}
 
     template<typename T, int COUNT>
-    MathLab::TVector<T, COUNT>::TVector(std::initializer_list<T>& param):TVector()
+    MathLab::TVector<T, COUNT>::TVector(std::initializer_list<T> param):TVector()
     {
         assert(param.size() == COUNT);
         std::initializer_list<T>::const_iterator iter = param.begin();
@@ -345,7 +345,7 @@ namespace MathLab
 				m_vector[1]* vec[2] - m_vector[2] * vec[1],
 				m_vector[2]* vec[0] - m_vector[0] * vec[2],
 				m_vector[0]* vec[1] - m_vector[1] * vec[0],
-				1});
+				(T)1});
 		return result;
 	}
 

@@ -146,8 +146,8 @@ void MainWindow::Initialize()
 	XenonEngine::Primitive2DConfig primitive2DConfig;
     primitive2DConfig.m_drawerSurface = m_directXDrawSurface;
     primitive2DConfig.m_zBuffer = m_zBuffer;
-    primitive2DConfig.m_MinDrawPosition = MathLab::Vector2f(Database::Get().engineConfig.m_minX, Database::Get().engineConfig.m_minY);
-    primitive2DConfig.m_MaxDrawPosition = MathLab::Vector2f(Database::Get().engineConfig.m_maxX, Database::Get().engineConfig.m_maxY);
+    primitive2DConfig.m_MinDrawPosition = MathLab::Vector2i(Database::Get().engineConfig.m_minX, Database::Get().engineConfig.m_minY);
+    primitive2DConfig.m_MaxDrawPosition = MathLab::Vector2i(Database::Get().engineConfig.m_maxX, Database::Get().engineConfig.m_maxY);
 	XenonEngine::Graphic2D::Get().SetConfig(&primitive2DConfig);
 
     m_fileReader = new File::FileReader;

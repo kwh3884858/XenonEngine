@@ -246,7 +246,7 @@ namespace Algorithm
         T* content = new T[size];
         memcpy(content, m_string.Begin(), m_string.Count());
         content[m_string.Count()] = '\0';
-        float result = atof(content);
+        float result = (float) atof(content);
         delete content;
         return result;
     }

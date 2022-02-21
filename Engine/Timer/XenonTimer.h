@@ -10,7 +10,7 @@ namespace XenonEngine {
 		virtual bool Shutdown() override;
 
 		void SetFileReader(CrossPlatform::ITimer*const timer);
-		float GetTime()const;
+		double GetTime()const;
 	private:
 		CrossPlatform::ITimer* m_timer;
 	};

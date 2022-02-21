@@ -117,8 +117,8 @@ namespace XenonEngine
         }
     }
 
-    void Graphic2D::DrawPolygon(const Polygon2D& polygon2D) const
-    {
+    //void Graphic2D::DrawPolygon(const Polygon2D& polygon2D) const
+    //{
         //if (polygon2D.m_state == Polygon2D::EState::Enable)
         //{
         //    int index;
@@ -132,7 +132,7 @@ namespace XenonEngine
         //        polygon2D.m_position + polygon2D.m_vertexList[0],
         //        polygon2D.m_color);
         //}
-    }
+    //}
 
     void Graphic2D::DrawTriangle(Vector2f p0, Vector2f p1, Vector2f p2, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
@@ -493,11 +493,11 @@ namespace XenonEngine
 
     Graphic2D::ClipLineState Graphic2D::ClipLine(Vector2i& p0, Vector2i& p1) const
     {
-        Vector2f fp0(p0.x, p0.y);
-        Vector2f fp1(p1.x, p1.y);
+        Vector2f fp0((float)p0.x, (float)p0.y);
+        Vector2f fp1((float)p1.x, (float)p1.y);
         ClipLineState state = ClipLine(fp0, fp1);
-        p0 = Vector2i(fp0.x,fp0.y);
-        p1 = Vector2i(fp1.x,fp1.y);
+        p0 = Vector2i((int)fp0.x, (int)fp0.y);
+        p1 = Vector2i((int)fp1.x, (int)fp1.y);
 
         return state;
     }
@@ -512,12 +512,12 @@ namespace XenonEngine
 
         Vector2f rightDelta = p2 - buttom;
         Vector2f rightIndex = buttom;
-        Vector2f rightStep(0, Y_AXIS_STEP);
+        Vector2f rightStep(0, (float)Y_AXIS_STEP);
         rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p1 - buttom;
         Vector2f leftIndex = buttom;
-        Vector2f leftStep(0, Y_AXIS_STEP);
+        Vector2f leftStep(0, (float)Y_AXIS_STEP);
         leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
         int yBottom = MathLab::Ceil(buttom.y);
@@ -564,7 +564,7 @@ namespace XenonEngine
 
                 if (left.x < m_minDrawPosition.x)
                 {
-                    left.x = m_minDrawPosition.x;
+                    left.x = (float)m_minDrawPosition.x;
                     if (right.x <= m_minDrawPosition.x)
                     {
                         yBottom++;
@@ -573,14 +573,14 @@ namespace XenonEngine
                 }
                 if (right.x > m_maxDrawPosition.x)
                 {
-                    right.x = m_maxDrawPosition.x;
+                    right.x = (float)m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
                         yBottom++;
                         continue;
                     }
                 }
-                DrawStraightLine(left.x, right.x, yBottom, rgba);
+                DrawStraightLine((int)left.x, (int)right.x, yBottom, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
                 yBottom++;
@@ -598,12 +598,12 @@ namespace XenonEngine
 
         Vector2f rightDelta = p2 - bottom;
         Vector2f rightIndex = bottom;
-        Vector2f rightStep(0, Y_AXIS_STEP);
+        Vector2f rightStep(0, (float)Y_AXIS_STEP);
         rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p1 - bottom;
         Vector2f leftIndex = bottom;
-        Vector2f leftStep(0, Y_AXIS_STEP);
+        Vector2f leftStep(0, (float)Y_AXIS_STEP);
         leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
         int yBottom = MathLab::Ceil(bottom.y);
@@ -621,8 +621,8 @@ namespace XenonEngine
 
         Vector4f leftColor = InternalClipColor(bottom, p1, yBottom, vcolorBottom, vcolor1);
         Vector4f RightColor = InternalClipColor(bottom, p2, yBottom, vcolorBottom, vcolor2);
-        Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
-        Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom);
+        Vector4f lColorDelta = (vcolor1 - leftColor) / (float)(yTop - yBottom);
+        Vector4f rColorDelta = (vcolor2 - RightColor) / (float)(yTop - yBottom);
         Vector4f lColorIndex = leftColor;
         Vector4f rColorIndex = RightColor;
 
@@ -634,7 +634,7 @@ namespace XenonEngine
             {
                 int xStart = MathLab::Ceil(leftIndex.x);
                 int xEnd = MathLab::Ceil(rightIndex.x) - 1;
-                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (float)(xEnd - xStart);
                 Vector4f strightLineIndex = lColorIndex;
                 for (; xStart <= xEnd; xStart++)
                 {
@@ -662,7 +662,7 @@ namespace XenonEngine
                 strightLineIndex = lColorIndex;
                 if (left.x < m_minDrawPosition.x)
                 {
-                    left.x = m_minDrawPosition.x;
+                    left.x = (float)m_minDrawPosition.x;
                     strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
                     if (right.x <= m_minDrawPosition.x)
                     {
@@ -676,7 +676,7 @@ namespace XenonEngine
                 }
                 if (right.x > m_maxDrawPosition.x)
                 {
-                    right.x = m_maxDrawPosition.x;
+                    right.x = (float)m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
                         leftIndex += leftStep;
@@ -689,7 +689,7 @@ namespace XenonEngine
                 }
                 for (float i = left.x; i <= right.x; i++)
                 {
-                    DrawPixel(i, yBottom, strightLineIndex.ToColor());
+                    DrawPixel((int)i, yBottom, strightLineIndex.ToColor());
                     strightLineIndex += strightLineDelta;
                 }
                 leftIndex += leftStep;
@@ -721,12 +721,12 @@ namespace XenonEngine
 
 		Vector2f rightDelta = p2 - bottom;
 		Vector2f rightIndex = bottom;
-		Vector2f rightStep(0, Y_AXIS_STEP);
+		Vector2f rightStep(0, (float)Y_AXIS_STEP);
 		rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
 
 		Vector2f leftDelta = p1 - bottom;
 		Vector2f leftIndex = bottom;
-		Vector2f leftStep(0, Y_AXIS_STEP);
+		Vector2f leftStep(0, (float)Y_AXIS_STEP);
 		leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
 		int yBottom = MathLab::Ceil(bottom.y);
@@ -744,15 +744,15 @@ namespace XenonEngine
 
 		Vector4f leftColor = InternalClipColor(bottom, p1, yBottom, vcolorBottom, vcolor1);
 		Vector4f RightColor = InternalClipColor(bottom, p2, yBottom, vcolorBottom, vcolor2);
-		Vector4f lColorDelta = (vcolor1 - leftColor) / (yTop - yBottom);
-		Vector4f rColorDelta = (vcolor2 - RightColor) / (yTop - yBottom);
+		Vector4f lColorDelta = (vcolor1 - leftColor) / (float)(yTop - yBottom);
+		Vector4f rColorDelta = (vcolor2 - RightColor) / (float)(yTop - yBottom);
 		Vector4f lColorIndex = leftColor;
 		Vector4f rColorIndex = RightColor;
 
 		Vector2f LeftUV = InternalClipUV(bottom, p1, yBottom, uvBottom, uv1);
 		Vector2f RightUV = InternalClipUV(bottom, p2, yBottom, uvBottom, uv2);
-		Vector2f lUVDelta = (uv1 - LeftUV) / (yTop - yBottom);
-		Vector2f rUVDelta = (uv2 - RightUV) / (yTop - yBottom);
+		Vector2f lUVDelta = (uv1 - LeftUV) / (float)(yTop - yBottom);
+		Vector2f rUVDelta = (uv2 - RightUV) / (float)(yTop - yBottom);
 		Vector2f lUVIndex = LeftUV;
 		Vector2f rUVIndex = RightUV;
 		if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
@@ -763,9 +763,9 @@ namespace XenonEngine
 			{
 				int xStart = MathLab::Ceil(leftIndex.x);
 				int xEnd = MathLab::Ceil(rightIndex.x) - 1;
-				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (float)(xEnd - xStart);
 				Vector4f strightLineIndex = lColorIndex;
-				Vector2f strightLineUVDelta = (rUVIndex - lUVIndex) / (xEnd - xStart);
+				Vector2f strightLineUVDelta = (rUVIndex - lUVIndex) / (float)(xEnd - xStart);
 				Vector2f strightLineUVIndex = lUVIndex;
 				for (; xStart <= xEnd; xStart++)
 				{
@@ -802,7 +802,7 @@ namespace XenonEngine
 				strightLineUVIndex = lUVIndex;
 				if (left.x < m_minDrawPosition.x)
 				{
-					left.x = m_minDrawPosition.x;
+					left.x = (float)m_minDrawPosition.x;
 					strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
 					strightLineUVIndex += strightLineUVDelta * (m_minDrawPosition.x - leftIndex.x);
 					if (right.x <= m_minDrawPosition.x)
@@ -819,7 +819,7 @@ namespace XenonEngine
 				}
 				if (right.x > m_maxDrawPosition.x)
 				{
-					right.x = m_maxDrawPosition.x;
+					right.x = (float)m_maxDrawPosition.x;
 					if (left.x >= m_maxDrawPosition.x)
 					{
 						leftIndex += leftStep;
@@ -836,7 +836,7 @@ namespace XenonEngine
 				{
 					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
 					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
-					DrawPixel(i, yBottom, color);
+					DrawPixel((int)i, yBottom, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
 				}
@@ -860,12 +860,12 @@ namespace XenonEngine
         }
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
-        Vector2f rightStep(0, -Y_AXIS_STEP);
+        Vector2f rightStep(0, (float)-Y_AXIS_STEP);
         rightStep.x =( rightDelta.x > 0 ? 1.0f : -1.0f )* MathLab::Abs(rightDelta.x / rightDelta.y);
 
         Vector2f leftDelta = p2 - top;
         Vector2f leftIndex = top;
-        Vector2f leftStep(0, -Y_AXIS_STEP);
+        Vector2f leftStep(0, (float)-Y_AXIS_STEP);
         leftStep.x =( leftDelta.x > 0 ? 1.0f : -1.0f )* MathLab::Abs(leftDelta.x / leftDelta.y);
 
         int yBottom = MathLab::Ceil(p1.y);
@@ -910,7 +910,7 @@ namespace XenonEngine
                 right = rightIndex;
                 if (left.x < m_minDrawPosition.x)
                 {
-                    left.x = m_minDrawPosition.x;
+                    left.x = (float)m_minDrawPosition.x;
                     if (right.x <= m_minDrawPosition.x)
                     {
                         yTop--;
@@ -919,14 +919,14 @@ namespace XenonEngine
                 }
                 if (right.x > m_maxDrawPosition.x)
                 {
-                    right.x = m_maxDrawPosition.x;
+                    right.x = (float)m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
                         yTop--;
                         continue;
                     }
                 }
-                DrawStraightLine(left.x, right.x, yTop, rgba);
+                DrawStraightLine((int)left.x, (int)right.x, yTop, rgba);
                 leftIndex += leftStep;
                 rightIndex += rightStep;
                 yTop--;
@@ -943,11 +943,11 @@ namespace XenonEngine
         }
         Vector2f rightDelta = p1 - top;
         Vector2f rightIndex = top;
-        Vector2f rightStep(0, -Y_AXIS_STEP);
+        Vector2f rightStep(0, (float)-Y_AXIS_STEP);
         rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f)* MathLab::Abs(rightDelta.x / rightDelta.y);
         Vector2f leftDelta = p2 - top;
         Vector2f leftIndex = top;
-        Vector2f leftStep(0, -Y_AXIS_STEP);
+        Vector2f leftStep(0, (float)-Y_AXIS_STEP);
         leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f)* MathLab::Abs(leftDelta.x / leftDelta.y);
 
         int yBottom = MathLab::Ceil(p1.y);
@@ -965,8 +965,8 @@ namespace XenonEngine
 
         Vector4f rightColor = InternalClipColor(top, p1, yTop, vcolorTop, vcolor1);
         Vector4f leftColor = InternalClipColor(top, p2, yTop, vcolorTop, vcolor2);
-        Vector4f rColorDelta = (vcolor1 - rightColor) / (yTop - yBottom);
-        Vector4f lColorDelta = (vcolor2 - leftColor) / (yTop - yBottom );
+        Vector4f rColorDelta = (vcolor1 - rightColor) / (float)(yTop - yBottom);
+        Vector4f lColorDelta = (vcolor2 - leftColor) / (float)(yTop - yBottom );
         Vector4f rColorIndex = rightColor;
         Vector4f lColorIndex = leftColor;
 
@@ -978,7 +978,7 @@ namespace XenonEngine
             {
                 int xStart = MathLab::Ceil(leftIndex.x);
                 int xEnd = MathLab::Ceil(rightIndex.x);
-                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+                Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (float)(xEnd - xStart);
                 Vector4f strightLineIndex = lColorIndex;
                 for (;xStart <= xEnd; xStart++)
                 {
@@ -1004,7 +1004,7 @@ namespace XenonEngine
                 Vector4f strightLineIndex = lColorIndex;
                 if (left.x < m_minDrawPosition.x)
                 {
-                    left.x = m_minDrawPosition.x;
+                    left.x = (float)m_minDrawPosition.x;
                     strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
                     if (right.x <= m_minDrawPosition.x)
                     {
@@ -1018,7 +1018,7 @@ namespace XenonEngine
                 }
                 if (right.x > m_maxDrawPosition.x)
                 {
-                    right.x = m_maxDrawPosition.x;
+                    right.x = (float)m_maxDrawPosition.x;
                     if (left.x >= m_maxDrawPosition.x)
                     {
                         leftIndex += leftStep;
@@ -1031,7 +1031,7 @@ namespace XenonEngine
                 }
                 for (float i = left.x; i <= right.x; i++)
                 {
-                    DrawPixel(i, yTop, strightLineIndex.ToColor());
+                    DrawPixel((int)i, yTop, strightLineIndex.ToColor());
                     strightLineIndex += strightLineDelta;
                 }
                 leftIndex += leftStep;
@@ -1062,11 +1062,11 @@ namespace XenonEngine
 		}
 		Vector2f rightDelta = p1 - top;
 		Vector2f rightIndex = top;
-		Vector2f rightStep(0, -Y_AXIS_STEP);
+		Vector2f rightStep(0, (float)-Y_AXIS_STEP);
 		rightStep.x = (rightDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(rightDelta.x / rightDelta.y);
 		Vector2f leftDelta = p2 - top;
 		Vector2f leftIndex = top;
-		Vector2f leftStep(0, -Y_AXIS_STEP);
+		Vector2f leftStep(0, (float)-Y_AXIS_STEP);
 		leftStep.x = (leftDelta.x > 0 ? 1.0f : -1.0f) * MathLab::Abs(leftDelta.x / leftDelta.y);
 
 		int yBottom = MathLab::Ceil(p1.y);
@@ -1084,14 +1084,14 @@ namespace XenonEngine
 
 		Vector4f rightColor = InternalClipColor(top, p1, yTop, vcolorTop, vcolor1);
 		Vector4f leftColor = InternalClipColor(top, p2, yTop, vcolorTop, vcolor2);
-		Vector4f rColorDelta = (vcolor1 - rightColor) / (yTop - yBottom);
-		Vector4f lColorDelta = (vcolor2 - leftColor) / (yTop - yBottom);
+		Vector4f rColorDelta = (vcolor1 - rightColor) / (float)(yTop - yBottom);
+		Vector4f lColorDelta = (vcolor2 - leftColor) / (float)(yTop - yBottom);
 		Vector4f rColorIndex = rightColor;
 		Vector4f lColorIndex = leftColor;
 		Vector2f RightUV = InternalClipUV(top, p1, yTop, uvTop, uv1);
 		Vector2f LeftUV = InternalClipUV(top, p2, yTop, uvTop, uv2);
-		Vector2f rUVDelta = (uv1 - RightUV) / (yTop - yBottom);
-		Vector2f lUVDelta = (uv2 - LeftUV) / (yTop - yBottom);
+		Vector2f rUVDelta = (uv1 - RightUV) / (float)(yTop - yBottom);
+		Vector2f lUVDelta = (uv2 - LeftUV) / (float)(yTop - yBottom);
 		Vector2f rUVIndex = RightUV;
 		Vector2f lUVIndex = LeftUV;
 		if (p1.x >= m_minDrawPosition.x && p1.x <= m_maxDrawPosition.x &&
@@ -1102,9 +1102,9 @@ namespace XenonEngine
 			{
 				int xStart = MathLab::Ceil(leftIndex.x);
 				int xEnd = MathLab::Ceil(rightIndex.x);
-				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (xEnd - xStart);
+				Vector4f strightLineDelta = (rColorIndex - lColorIndex) / (float)(xEnd - xStart);
 				Vector4f strightLineIndex = lColorIndex;
-				Vector2f strightLineUVDelta = (rUVIndex - lUVIndex) / (xEnd - xStart);
+				Vector2f strightLineUVDelta = (rUVIndex - lUVIndex) / (float)(xEnd - xStart);
 				Vector2f strightLineUVIndex = lUVIndex;
 				for (; xStart <= xEnd; xStart++)
 				{
@@ -1141,7 +1141,7 @@ namespace XenonEngine
 				strightLineUVIndex = lUVIndex;
 				if (left.x < m_minDrawPosition.x)
 				{
-					left.x = m_minDrawPosition.x;
+					left.x = (float)m_minDrawPosition.x;
 					strightLineIndex += strightLineDelta * (m_minDrawPosition.x - leftIndex.x);
 					strightLineUVIndex += strightLineUVDelta * (m_minDrawPosition.x - leftIndex.x);
 					if (right.x <= m_minDrawPosition.x)
@@ -1158,7 +1158,7 @@ namespace XenonEngine
 				}
 				if (right.x > m_maxDrawPosition.x)
 				{
-					right.x = m_maxDrawPosition.x;
+					right.x = (float)m_maxDrawPosition.x;
 					if (left.x >= m_maxDrawPosition.x)
 					{
 						leftIndex += leftStep;
@@ -1175,7 +1175,7 @@ namespace XenonEngine
 				{
 					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
 					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
-					DrawPixel(i, yTop, color);
+					DrawPixel((int)i, yTop, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
 				}
@@ -1190,7 +1190,7 @@ namespace XenonEngine
 		}
 	}
 
-	Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2f& minPosition, const Vector2f& maxPosition) const
+	Graphic2D::ClipCode Graphic2D::InternalClipCode(const Vector2f& point, const Vector2i& minPosition, const Vector2i& maxPosition) const
     {
         char clipCode = 0;
         if (point.x < minPosition.x)
@@ -1286,7 +1286,7 @@ namespace XenonEngine
     Vector2f Graphic2D::InternalClipXPoint(const Vector2f& point, const Vector2f& anontherPoint, int clipX) const
     {
         Vector2f newPoint(point);
-        newPoint.x = clipX;
+        newPoint.x = (float)clipX;
         if ((point.x - anontherPoint.x) * (point.y - anontherPoint.y) == 0)
         {
             newPoint.y = anontherPoint.y;
@@ -1312,7 +1312,7 @@ namespace XenonEngine
             {
                 newPoint.x = (clipY - anontherPoint.y) / (point.y - anontherPoint.y) * (point.x - anontherPoint.x) + anontherPoint.x;
             }
-            newPoint.y = clipY;
+            newPoint.y = (float)clipY;
         }
         return newPoint;
     }

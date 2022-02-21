@@ -191,7 +191,7 @@ namespace XenonEngine
                     assert(result == true);
                     assert(typeFlag != 0);
                     OpBitfiledFlag currentFlag = instrction->m_opFlags[currentTokenOpCount];
-                    currentFlag |= (1 << typeFlag );
+                    currentFlag |= (1i64 << typeFlag );
                     instrction->m_opFlags[currentTokenOpCount] = currentFlag;
                 }
                 break;
@@ -270,7 +270,7 @@ namespace XenonEngine
         for (int index = 0; index < m_instructionList.Count(); index++)
         {
             executeStream.Add(&m_instructionList[index]->m_opCode, sizeof(m_instructionList[index]->m_opCode));
-            unsigned int opCount = m_instructionList[index]->m_opCount;
+            int opCount = m_instructionList[index]->m_opCount;
             executeStream.Add(&opCount, sizeof(opCount));
             for (int opIndex = 0; opIndex < opCount; opIndex++)
             {
@@ -298,8 +298,8 @@ namespace XenonEngine
         //    executeStream.Add(&m_symbolTable[index]->m_symbolToken->m_)
         //}
         {
-            int count = m_functionTable.Count();
-            executeStream.Add(&count, sizeof(count));
+            int functionCount = m_functionTable.Count();
+            executeStream.Add(&functionCount, sizeof(functionCount));
             for (int index = 0; index < m_functionTable.Count(); index++)
             {
                 executeStream.Add(&m_functionTable[index]->m_functionIndex, sizeof(m_functionTable[index]->m_functionIndex));
@@ -310,8 +310,8 @@ namespace XenonEngine
         }
 
         {
-            int count = m_labelTable.Count();
-            executeStream.Add(&count, sizeof(count));
+            int labelCount = m_labelTable.Count();
+            executeStream.Add(&labelCount, sizeof(labelCount));
             for (int index = 0; index < m_labelTable.Count(); index++)
             {
                 executeStream.Add(&(m_labelTable[index]->m_instructionStreamIndex), sizeof(m_labelTable[index]->m_instructionStreamIndex));
@@ -319,8 +319,8 @@ namespace XenonEngine
         }
 
         {
-            int count = m_stringTable.Count();
-            executeStream.Add(&count, sizeof(count));
+            int stringCount = m_stringTable.Count();
+            executeStream.Add(&stringCount, sizeof(stringCount));
             for (int index = 0; index < m_stringTable.Count(); index++)
             {
                 int stringLength = m_stringTable[index].Count();
@@ -330,8 +330,8 @@ namespace XenonEngine
         }
 
         {
-            int count = m_hostAPITable.Count();
-            executeStream.Add(&count, sizeof(count));
+            int hostAPICount = m_hostAPITable.Count();
+            executeStream.Add(&hostAPICount, sizeof(hostAPICount));
             for (int index = 0; index < m_hostAPITable.Count(); index++)
             {
                 int hostAPITableLength = m_hostAPITable[index].Count();
@@ -740,7 +740,7 @@ namespace XenonEngine
 
                 if (token->m_delimiter == DelimiterWord::DelimiterWord_Colon)
                 {
-                    Token* token = MoveToNextToken(*tokenVector, index);
+                    /*Token* token = */MoveToNextToken(*tokenVector, index);
 
                     LabelElement* const label = new LabelElement;
                     label->m_token = currentToken;
@@ -900,7 +900,7 @@ namespace XenonEngine
 
     void XenonScriptAssemblerMachine::BuildTableError(const Token* const token, int index)
     {
-        printf("Fetal Error: Parsing Error\n Character %c In the index %d \n", token->m_character.CString(), index);
+        printf("Fetal Error: Parsing Error\n Character %s In the index %d \n", token->m_character.CString(), index);
         assert(true == false);
     }
 
@@ -1254,7 +1254,7 @@ namespace XenonEngine
 
     void XenonScriptAssemblerMachine::CreateInstructionListError(const Token* const token, int index)
     {
-        printf("Fetal Error: Parsing Create Instruction List Error\n Character %c In the index %d \n", token->m_character.CString(), index);
+        printf("Fetal Error: Parsing Create Instruction List Error\n Character %s In the index %d \n", token->m_character.CString(), index);
         assert(true == false);
     }
 
@@ -1279,7 +1279,7 @@ namespace XenonEngine
         }
 
         // Print out final calculations
-        printf("%Created successfully!\n\n");
+        printf("Created successfully!\n\n");
         printf("File Path: %s\n", xenonFile->m_fileName.CString());
         printf("Global Data Size: %d\n", m_scriptHeader.m_globalDataSize);
 

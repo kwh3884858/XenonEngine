@@ -12,7 +12,7 @@ namespace XenonEngine
 		m_timer = timer;
 	}
 
-	float XenonTimer::GetTime() const
+	double XenonTimer::GetTime() const
 	{
 		return m_timer->GetTimeMilliSecond();
 	}

@@ -136,7 +136,7 @@ namespace XenonEngine
     struct Instruction
     {
         KeyWord m_opCode;
-        unsigned int m_opCount;
+        int m_opCount;
         Vector<InstructionOp*> m_ops;
     };
 

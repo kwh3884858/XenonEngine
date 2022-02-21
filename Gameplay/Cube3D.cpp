@@ -55,6 +55,6 @@ namespace Gameplay
 
     void Cube3D::OnTrigger(GameObject* gameobject)
     {
-
+		(gameobject);
     }
 }

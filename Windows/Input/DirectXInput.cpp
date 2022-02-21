@@ -144,7 +144,7 @@ namespace WindowInput {
 
     Vector2f DirectXInput::GetMouseMove() const
     {
-        return Vector2f(m_mouseState.lX, m_mouseState.lY);
+        return Vector2f((float)m_mouseState.lX, (float)m_mouseState.lY);
     }
 
     bool DirectXInput::GetMouseButton(unsigned char mouseCode) const
@@ -155,12 +155,12 @@ namespace WindowInput {
  
     Vector2f DirectXInput::GetAxisRaw() const
     {
-        return Vector2f(m_joystickState.lX, m_joystickState.lY);
+        return Vector2f((float)m_joystickState.lX, (float)m_joystickState.lY);
     }
 
     Vector2f DirectXInput::GetAxis() const
     {
-        return Vector2f((m_joystickState.lX - 32767.0f) / 32767.0f, (m_joystickState.lY - 32767.0f )/ 32767.0f);
+        return Vector2f(((float)m_joystickState.lX - 32767.0f) / 32767.0f, ((float)m_joystickState.lY - 32767.0f )/ 32767.0f);
     }
 
     bool DirectXInput::GetStickButton(unsigned buttonCode) const

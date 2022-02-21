@@ -20,8 +20,8 @@ namespace XenonEngine {
     struct Primitive2DConfig {
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
-        MathLab::Vector2f m_MinDrawPosition;
-        MathLab::Vector2f m_MaxDrawPosition;
+        MathLab::Vector2i m_MinDrawPosition;
+        MathLab::Vector2i m_MaxDrawPosition;
     };
 
     struct VertexData
@@ -76,7 +76,7 @@ namespace XenonEngine {
         void DrawLine(const MathLab::Vector2f& lhs, const MathLab::Vector2f&rhs, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawStraightLine(const int xStart, const int xEnd, const int y, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
         //void DrawLine(const MathLab::Vector2f* lhs, const MathLab::Vector2f*rhs, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
-        void DrawPolygon(const CrossPlatform::Polygon2D& polygon2D)const;
+        //void DrawPolygon(const CrossPlatform::Polygon2D& polygon2D)const;
         void DrawTriangle(MathLab::Vector2f p0, MathLab::Vector2f p1, MathLab::Vector2f p2, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE)const;
         void DrawTriangle(const VertexData& originalData)const;
 		void DrawTriangle(const VertexWithMaterialData& data)const;
@@ -109,7 +109,7 @@ namespace XenonEngine {
 		void DrawBottomTriangle( TriangleData& data)const;
 		void DrawTopTriangle( TriangleData& data)const;
 
-        ClipCode InternalClipCode(const MathLab::Vector2f& point, const MathLab::Vector2f &minPosition, const MathLab::Vector2f &maxPosition)const;
+        ClipCode InternalClipCode(const MathLab::Vector2f& point, const MathLab::Vector2i &minPosition, const MathLab::Vector2i &maxPosition)const;
         bool InternalClipPoint(ClipCode clipCode,MathLab::Vector2f& point, const MathLab::Vector2f& anotherPoint)const;
         MathLab::Vector2f InternalClipXPoint(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipX)const;
         MathLab::Vector2f InternalClipYPoint(const MathLab::Vector2f& point, const MathLab::Vector2f& anontherPoint, int clipY)const;
@@ -118,8 +118,8 @@ namespace XenonEngine {
 
         CrossPlatform::IDrawerSurface* m_drawerSurface = nullptr;
         CrossPlatform::IDrawerSurface* m_zBuffer = nullptr;
-        MathLab::Vector2f m_minDrawPosition;
-        MathLab::Vector2f m_maxDrawPosition;
+        MathLab::Vector2i m_minDrawPosition;
+        MathLab::Vector2i m_maxDrawPosition;
     };
 
 

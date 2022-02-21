@@ -71,15 +71,14 @@ namespace XenonEngine
 		if (numOfTextureCoordinate > 0)
 		{
 			uv = new Vector2f[numOfTextureCoordinate];
-			for (int i = 0; i < attrib.texcoords.size(); i+= 2)
+			for (size_t i = 0; i < attrib.texcoords.size(); i+= 2)
 			{
 				uv[i / 2].x = attrib.texcoords[i + 0];
 				uv[i / 2].y = attrib.texcoords[i + 1];
 			}
 		}
 
-		int numOfMaterial = objMaterials.size();
-		for (int i = 0; i < numOfMaterial; i++)
+		for (size_t i = 0; i < objMaterials.size(); i++)
 		{
 			Material* material = new Material;
 			material->m_name = objMaterials[i].name.c_str();
@@ -93,14 +92,13 @@ namespace XenonEngine
 			materials.Add(material);
 		}
 
-		int numOfIndex = 0;
 		size_t vindex = 0;
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++)
 		{
-			int numOfIndex = shapes[s].mesh.indices.size();
+			int numOfIndex = (int) shapes[s].mesh.indices.size();
 			Polygon3D::VertexIndexs* vertexIndexList = new Polygon3D::VertexIndexs[numOfIndex];
-			int numOfMaterial = shapes[s].mesh.material_ids.size();
+			int numOfMaterial = (int) shapes[s].mesh.material_ids.size();
 			int* materialIndex = nullptr;
 			if (numOfMaterial > 0)
 			{

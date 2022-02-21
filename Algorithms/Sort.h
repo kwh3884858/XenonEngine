@@ -282,12 +282,12 @@ namespace Algorithm
 	}
 
 	template<typename T>
-	Sort<T>::Sort<T>()
+	Algorithm::Sort<T>::Sort()
 	{
 	}
 
 	template<typename T>
-	Sort<T>::~Sort<T>()
+	Algorithm::Sort<T>::~Sort()
 	{
 	}
 

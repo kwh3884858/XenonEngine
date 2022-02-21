@@ -74,7 +74,7 @@ namespace Gameplay
 		GameObject* gameobject = EngineManager::Get().GetWorldManager().GetCurrentWorld()->GetGameObject("Player");
 		if (gameobject!= nullptr)
 		{
-			float currentTime = XenonTimer::Get().GetTime();
+			double currentTime = XenonTimer::Get().GetTime();
 			if (currentTime - m_lastTime > 5000.0f)
 			{
 				Transform2D* tranform = GetComponentPointer<Transform2D>();

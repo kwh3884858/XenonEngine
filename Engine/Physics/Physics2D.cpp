@@ -40,7 +40,7 @@ namespace XenonPhysics
 
         //CollisionInfo collisionInfo;
 
-        int count = 0;
+        //int count = 0;
 
         //Delta time must bigger than 0
         assert(deltaTime > EPSILON);

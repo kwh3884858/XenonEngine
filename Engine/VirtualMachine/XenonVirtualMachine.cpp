@@ -23,7 +23,7 @@ namespace XenonEngine
 
 	bool XenonVirtualMachine::Initialize()
 	{
-		XenonFile* const fileContent = FileManager::Get().ReadFile("main.xon");
+		/*XenonFile* const fileContent =*/ FileManager::Get().ReadFile("main.xon");
 
 		return true;
 	}

@@ -28,7 +28,7 @@ namespace MathLab {
 
         Vector3& operator+=(const Vector3& rvalue);
         Vector3& operator-=(const Vector3& rvalue);
-        Vector3& operator-();
+        Vector3 operator-();
         Vector3& operator*=(T rvalue);
         Vector3& operator*(T rvalue);
         Vector3& operator/=(T rvalue);
@@ -125,7 +125,7 @@ namespace MathLab {
     }
 
     template<typename T>
-    Vector3<T>& MathLab::Vector3<T>::operator-()
+    Vector3<T> MathLab::Vector3<T>::operator-()
     {
         Vector3<T> result(*this);
         result.x = -result.x;

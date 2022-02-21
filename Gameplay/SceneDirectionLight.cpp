@@ -45,6 +45,6 @@ namespace Gameplay
 
     void SceneDirectionLight::OnTrigger(GameObject* gameobject)
     {
-
+		gameobject;
     }
 }

@@ -89,8 +89,8 @@ namespace Gameplay
 			printf("( %f , %f ) \n", playerTransform->GetPosition().x, playerTransform->GetPosition().y);
 		}
 
-		unsigned int width = Database::Get().engineConfig.m_width;
-		unsigned int height = Database::Get().engineConfig.m_height;
+		//unsigned int width = Database::Get().engineConfig.m_width;
+		//unsigned int height = Database::Get().engineConfig.m_height;
 
 		float xAxisDelta = 0;
 		Vector2f axis = InputSystem::Get().GetAxis();
@@ -136,7 +136,7 @@ namespace Gameplay
 			world->AddGameObject(newbullet);
 
 			Transform2D* bulletTransform = newbullet->GetComponentPointer<Transform2D>();
-			Vector2f bulletPos = playerTransform->GetPosition() + Vector2f((isFaceRight ? 1 : -1) * 30, 0);
+			Vector2f bulletPos = playerTransform->GetPosition() + Vector2f((isFaceRight ? 1 : -1) * 30.0f, 0.0f);
 			bulletTransform->SetPosition(bulletPos);
 			Rigidbody2D* bulletRigid = newbullet->GetComponentPointer<Rigidbody2D>();
 			Force2D jumpForce;
@@ -156,7 +156,7 @@ namespace Gameplay
 
 	void Player::OnTrigger(GameObject* gameobject)
 	{
-
+		gameobject;
 	}
 
 }

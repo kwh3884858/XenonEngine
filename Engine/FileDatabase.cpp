@@ -1,19 +1,24 @@
 #pragma once
 #include "FileDatabase.h"
+
 #include "Algorithms/Vector.h"
 #include "Algorithms/String.h"
+
 #include "CrossPlatform/Database.h"
 #include "CrossPlatform/File/ModelMeta.h"
 #include "CrossPlatform/DataPair.h"
+
 #include <filesystem>
 #include "yaml-cpp/yaml.h"
+
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include "CrossPlatform/File/WorldMeta.h"
 #include "CrossPlatform/File/FolderMeta.h"
 #include "CrossPlatform/File/MaterialMeta.h"
-#include "Engine/EngineManager.h"
-#include "GameObjectWorld.h"
 #include "CrossPlatform/File/ImageMeta.h"
+
+#include "Engine/EngineManager.h"
+#include "Engine/GameObjectWorld.h"
 
 namespace XenonEngine
 {
@@ -84,6 +89,7 @@ namespace XenonEngine
             }
         }
         assert(true == false);
+		return Algorithm::String::INVALID_VALUE;
     }
 
     CrossPlatform::FolderMeta* FileDatabase::GetFolder(const Algorithm::String& inPath) const
@@ -378,6 +384,8 @@ namespace XenonEngine
             assert(true == false);
             break;
         }
+
+		return nullptr;
     }
 
     void FileDatabase::SaveFile(const Algorithm::String& realPath)
@@ -452,6 +460,8 @@ namespace XenonEngine
 		{
 			return currentFolder + fileName;
 		}
+		assert(true == false);
+		return String("Filename is not valid");
 	}
 
 	bool FileDatabase::IsVirtualPath(const Algorithm::String& filePath) const
