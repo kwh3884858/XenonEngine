@@ -200,7 +200,7 @@ void MainWindow::Run()
     //Color
     COLORREF colorRed = RGB(255, 0, 0);
     COLORREF colorGreen = RGB(0, 255, 0);
-    COLORREF colorBlue = RGB(0, 0, 255);
+    //COLORREF colorBlue = RGB(0, 0, 255);
 
     //Text
     SetTextColor(hdc, colorRed);
@@ -230,7 +230,7 @@ void MainWindow::Run()
             done = true;
         }
 
-        double timeInterval = m_timer->GetTimeMilliSecond();
+        long timeInterval = m_timer->GetTimeMilliSecond();
         if (timeInterval > m_timeInterval)
         {
             m_timer->Update();
@@ -257,9 +257,9 @@ void MainWindow::Run()
                 TextOut(workingDC, 0, 10, debugTextBuffer2, (int) _tcslen(debugTextBuffer2));
                 SetTextColor(workingDC, colorRed);
 
-                double secondPerFrame = timeInterval / 1000.0;
+                long secondPerFrame = timeInterval / 1000;
                 TCHAR debugTimeInterval[80];
-                _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %d s"), secondPerFrame);
+                _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %ld s"), secondPerFrame);
                 TextOut(workingDC, 0, 30, debugTimeInterval, (int)_tcslen(debugTimeInterval));
 
                 double fps = 1000.0f / timeInterval;

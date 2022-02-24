@@ -51,7 +51,7 @@ namespace WindowSurface {
         UINT* backBuffer = (UINT*)m_directDrawSurfaceDescription.lpSurface;
 
         //Clean the back buffer buffer 
-        if (m_directDrawSurfaceDescription.lPitch == m_width * sizeof(UINT))
+        if (m_directDrawSurfaceDescription.lPitch == (long) (m_width * sizeof(UINT)))
         {
             //linear memory
             memset(backBuffer, 0, m_width * m_height * sizeof(UINT));

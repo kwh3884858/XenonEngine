@@ -5,6 +5,6 @@ namespace CrossPlatform {
     {
     public:
 		virtual ~ITimer() {};
-        virtual double GetTimeMilliSecond() const = 0;
+        virtual long GetTimeMilliSecond() const = 0;
     };
 }

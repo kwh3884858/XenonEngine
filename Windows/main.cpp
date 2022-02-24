@@ -34,6 +34,10 @@ void ThreadEngine(HINSTANCE hInstance,  XenonEngine::EngineSyncData& syncData)
 
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR lpCmdLine, INT nCmdShow)
 {
+	nCmdShow;
+	lpCmdLine;
+	hPrevInstance;
+
     CrossPlatform::Database::Get().Initialize();
     XenonEngine::EngineSyncData globalSyncData;
 

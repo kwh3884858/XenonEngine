@@ -29,7 +29,7 @@ namespace XenonEngine
 
         int instructionLineForDebug = 1;
 
-        InstructionLookup* instrction;
+        InstructionLookup* instrction = nullptr;
 
         while (index < xenonFile->m_content.Count())
         {
@@ -143,18 +143,24 @@ namespace XenonEngine
                 {
                     instrction = new InstructionLookup;
                     instrction->m_mnemonic = tmpString;
+					instrction->m_opType = KeyWord_Unknown;
                     currentState = InstructionState::InstructionState_OpType;
                     m_instructionLookupList.Add(instrction);
                 }
                 break;
                 case XenonEngine::XenonScriptAssemblerMachine::InstructionState_OpType:
                 {
-                    instrction->m_opType = static_cast<KeyWord>(tmpString.ToInt());
+					//assert(instrction != nullptr);
+					if (instrction != nullptr)
+					{
+						instrction->m_opType = static_cast<KeyWord>(tmpString.ToInt());
+					}
                     currentState = InstructionState::InstructionState_OpCount;
                 }
                 break;
                 case XenonEngine::XenonScriptAssemblerMachine::InstructionState_OpCount:
                 {
+					assert(instrction != nullptr);
                     instrction->m_opCount = tmpString.ToInt();
                     tokenOpAmount = instrction->m_opCount;
                     if (tokenOpAmount > 0)
@@ -694,6 +700,7 @@ namespace XenonEngine
             }
         }
         assert(true == false);
+		return nullptr;
     }
 
     bool XenonScriptAssemblerMachine::Parsing(TokenVector* const tokenVector)
@@ -703,7 +710,7 @@ namespace XenonEngine
         assert(result == true);
 
         Vector<Instruction*> instructionStream;
-        result =  CreateInstructionList(tokenVector, instructionStream);
+        result =  CreateInstructionList(tokenVector/*, instructionStream*/);
         assert(result == true);
 
         return true;
@@ -763,7 +770,7 @@ namespace XenonEngine
                 {
                 case KeyWord_INT:
                 {
-                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpType_IntegerLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
+                    bool result = CreateSymbol(tokenVector, /*currentToken,*/ InstructionOpType::InstructionOpType_IntegerLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
                     if (!result)
                     {
                         BuildTableError(currentToken, index);
@@ -773,7 +780,7 @@ namespace XenonEngine
                 break;
                 case KeyWord_FLOAT:
                 {
-                    bool result = CreateSymbol(tokenVector, currentToken, InstructionOpType::InstructionOpType_FloatLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
+                    bool result = CreateSymbol(tokenVector,/* currentToken,*/ InstructionOpType::InstructionOpType_FloatLiteral, currentFunction, index, m_scriptHeader.m_globalDataSize);
                     if (!result)
                     {
                         BuildTableError(currentToken, index);

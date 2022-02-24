@@ -68,7 +68,9 @@ namespace XenonEngine
 
         KeyWord_RETURN,
         KeyWord_PAUSE,
-        KeyWord_EXIT
+        KeyWord_EXIT,
+
+		KeyWord_Unknown
     };
 
     enum DelimiterWord
