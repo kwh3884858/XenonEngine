@@ -430,10 +430,12 @@ namespace XenonEngine
 
 		for (int i = 0; i < 3; i++)
 		{
+			int countLessThanZMin = 0;
 			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
 			if (center.z < camera.GetNearClipZ())
 			{
 				state[i] = PlaneTestState::LessThanZMin;
+				countLessThanZMin++;
 			}
 			else if (center.z > camera.GetFarClipZ())
 			{

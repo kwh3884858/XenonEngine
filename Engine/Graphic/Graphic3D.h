@@ -43,8 +43,9 @@ namespace XenonEngine
 	public:
         enum CullingState
         {
-            Inside,
-            Culled
+            Inside, // Culling Box Inside
+            Culled, // Outside
+			NeedToCull
         };
 
 		enum PlaneTestState
