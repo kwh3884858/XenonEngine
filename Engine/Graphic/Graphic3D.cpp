@@ -198,8 +198,9 @@ namespace XenonEngine
 
 			for (int polygonIndex = 0; polygonIndex < polygons.Count(); polygonIndex++)
 			{
-				const Polygon3D* polygon = polygons[polygonIndex];
+				Polygon3D renderingPolygon(*(polygons[polygonIndex]));
 
+				/*
 				int triangleCount = polygon->Count() / 3;
 				Triangle* triangleList = new Triangle[triangleCount];
 				Triangle* normalList = new Triangle[triangleCount];
@@ -246,7 +247,9 @@ namespace XenonEngine
 					normalList[polyIndex][1] = homogeneousNormal1.Normalize();
 					normalList[polyIndex][2] = homogeneousNormal2.Normalize();
 				}
-
+				*/
+				int triangleCount = renderingPolygon.Count() / 3;
+				TriangleIndex* sortingTriangleIndexList = new TriangleIndex[triangleCount];
 				Algorithm::Sort<TriangleIndex> sort;
 				sort.Quick(sortingTriangleIndexList, triangleCount, IsIndexZAxisBigger);
 
