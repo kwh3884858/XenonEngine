@@ -171,6 +171,11 @@ namespace XenonEngine
             {
                 continue;
             }
+
+            // World coordinate, Culling
+
+
+
             TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
             TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
             TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
@@ -380,7 +385,7 @@ namespace XenonEngine
         return CullingState::Inside;
     }
 
-	XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Triangle& triagnle, const Camera3D& camera) const
+	XenonEngine::Graphic3D::ClippingState Graphic3D::Clipping(const Triangle& triagnle, const Camera3D& camera) const
 	{
 		float distance = camera.GetViewDistance();
 		PlaneTestState state[3];
@@ -405,7 +410,7 @@ namespace XenonEngine
 		if ((state[0] == PlaneTestState::GreaterThanXMax && state[1] == PlaneTestState::GreaterThanXMax && state[2] == PlaneTestState::GreaterThanXMax) ||
 			(state[0] == PlaneTestState::LessThanXMin && state[1] == PlaneTestState::LessThanXMin && state[2] == PlaneTestState::LessThanXMin))
 		{
-			return CullingState::Culled;
+			return ClippingState::Clipped;
 		}
 
 		for (int i = 0; i < 3; i++)
@@ -428,7 +433,7 @@ namespace XenonEngine
 		if ((state[0] == PlaneTestState::GreaterThanYMax && state[1] == PlaneTestState::GreaterThanYMax && state[2] == PlaneTestState::GreaterThanYMax) ||
 			(state[0] == PlaneTestState::LessThanYMin && state[1] == PlaneTestState::LessThanYMin && state[2] == PlaneTestState::LessThanYMin))
 		{
-			return CullingState::Culled;
+			return ClippingState::Clipped;
 		}
 
 		for (int i = 0; i < 3; i++)
@@ -452,9 +457,9 @@ namespace XenonEngine
 		if ((state[0] == PlaneTestState::LessThanZMin && state[1] == PlaneTestState::LessThanZMin && state[2] == PlaneTestState::LessThanZMin) ||
 			(state[0] == PlaneTestState::GreaterThanZMax && state[1] == PlaneTestState::GreaterThanZMax && state[2] == PlaneTestState::GreaterThanZMax))
 		{
-			return CullingState::Culled;
+			return ClippingState::Clipped;
 		}
-		return CullingState::Inside;
+		return ClippingState::Inside;
 	}
 
 	Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const

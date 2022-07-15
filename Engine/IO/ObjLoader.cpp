@@ -45,7 +45,7 @@ namespace XenonEngine
 		auto& shapes = reader.GetShapes();
 		auto& objMaterials = reader.GetMaterials();
 
-		size_t numOfVertex = attrib.vertices.size() / 3;
+		int numOfVertex = (int)attrib.vertices.size() / 3;
 		Vector3f* vertices = new Vector3f[numOfVertex];
 		for (size_t i = 0; i < attrib.vertices.size(); i += 3)
 		{
@@ -54,7 +54,7 @@ namespace XenonEngine
 			vertices[i / 3].z = attrib.vertices[i + 2];
 		}
 
-		size_t numOfNormal = attrib.normals.size() / 3;
+		int numOfNormal = (int)attrib.normals.size() / 3;
 		Vector3f* normals = nullptr;
 		if (numOfNormal > 0)
 		{
@@ -66,7 +66,7 @@ namespace XenonEngine
 				normals[i / 3].z = attrib.normals[i + 2];
 			}
 		}
-		size_t numOfTextureCoordinate = attrib.texcoords.size() / 2;
+		int numOfTextureCoordinate = (int)attrib.texcoords.size() / 2;
 		Vector2f* uv = nullptr;
 		if (numOfTextureCoordinate > 0)
 		{

@@ -129,7 +129,7 @@ target_sources(${PROJECT_NAME} PUBLIC ${DIR_IMGUI})
 source_group("ImGui"            FILES ${DIR_IMGUI})
 
 file(
-    GLOB_RECURSE
+    GLOB
     DIR_IMGUI_FILE_DIALOG
     ${PROJECT_SOURCE_DIR}/Library/ImGuiFileDialog/*.h
     ${PROJECT_SOURCE_DIR}/Library/ImGuiFileDialog/*.cpp
