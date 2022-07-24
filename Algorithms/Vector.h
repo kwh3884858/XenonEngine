@@ -37,11 +37,15 @@ namespace Algorithm
 		Vector<T>& operator=(const Vector& rhs);
 
 		//For Algorithm
-		//bool Swap(const int lhs, const int rhs);
 		T* Begin();
         const T* Begin()const;
         T* End();
         const T* End()const;
+		// For std iteration
+		T* begin() { return Begin(); }
+		const T* begin()const { return Begin(); }
+		T* end() { return End(); }
+		const T* end()const { return End(); }
 
         bool IsCapacityEnoughToPutCStringEnd()const;
         void DoubleCurrentCapacity();
