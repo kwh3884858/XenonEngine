@@ -4,6 +4,7 @@
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include <fstream>
 #include <filesystem>
+#include "Engine/EngineManager.h"
 
 namespace CrossPlatform
 {    
@@ -19,6 +20,37 @@ namespace CrossPlatform
 	void WorldMeta::Load()
 	{
 		EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
+	}
+
+	void WorldMeta::Save()
+	{
+		GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+		world->SetWorldName(originalFile.stem().string().c_str());
+		SetGameObjectWorld(world);
+
+		const String& path = GetFileHeader().GetFilePath();
+		if (path.Empty())
+		{
+			return;
+		}
+		if (!m_gameobjectWorld)
+		{
+			return;
+		}
+
+		String metaFilePath = path + ".metadata";
+		{
+			ofstream outputStream(metaFilePath.CString());
+			YAML::Emitter out(outputStream);
+			out << YAML::Node(GetFileHeader());
+			outputStream.close();
+		}
+		{
+			ofstream outputStream(path.CString());
+			YAML::Emitter out(outputStream);
+			out << YAML::Node(*m_gameobjectWorld);
+			outputStream.close();
+		}
 	}
 
 	void WorldMeta::Delete()
@@ -52,32 +84,5 @@ namespace CrossPlatform
             m_gameobjectWorld = config.as<GameObjectWorld>().Copy();
         }
         return m_gameobjectWorld->Copy();
-    }
-
-    void WorldMeta::SaveGameObjectWorld()const
-    {
-        const String& path = GetFileHeader().GetFilePath();
-        if (path.Empty())
-        {
-            return;
-        }
-        if (!m_gameobjectWorld)
-        {
-            return;
-        }
-
-        String metaFilePath = path + ".metadata";
-        {
-            ofstream outputStream(metaFilePath.CString());
-            YAML::Emitter out(outputStream);
-            out << YAML::Node(GetFileHeader());
-            outputStream.close();
-        }
-        {
-            ofstream outputStream(path.CString());
-            YAML::Emitter out(outputStream);
-            out << YAML::Node(*m_gameobjectWorld);
-            outputStream.close();
-        }
     }
 }

@@ -20,13 +20,15 @@ namespace CrossPlatform
         WorldMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeWorld); }
         virtual ~WorldMeta()override;
 		void Load() override;
+		void Save() override;
 		void Delete() override;
         XenonEngine::GameObjectWorld* GetGameObjectWorld();
-        void SaveGameObjectWorld()const;
+		void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }
+
 		//void DeleteGameObjectWorld();
     protected:
     private:
-        void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }
+		//void SaveGameObjectWorld()const;
         XenonEngine::GameObjectWorld* m_gameobjectWorld = nullptr;
     };
 

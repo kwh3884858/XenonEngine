@@ -13,6 +13,7 @@ namespace CrossPlatform
     public:
         FolderMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeFolder);  }
 		virtual void Load()override {}
+		virtual void Save()override;
 		virtual void Delete() override;
 
         void AddIFile(IFileMeta* file) { m_content.Add(file); }
@@ -21,11 +22,12 @@ namespace CrossPlatform
         IFileMeta* GetFile(const Algorithm::String& fileName)const;
         int GetFileCount()const { return m_content.Count(); }
         bool CreateFolder() const;
-	protected:
-		virtual IFileMeta* Initialization() override;
+
+		static void Initialization();
 
     private:
 		static IFileMeta* Create(const Algorithm::String& filePath);
+		static IFileMeta* Read(const FileHeader& fileHeader);
         Algorithm::Vector<IFileMeta*> m_content;
 	};
 }

@@ -41,6 +41,9 @@ namespace XenonEngine
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".png"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".dds"));
 
+		FolderMeta::Initialization();
+
+
         path Project(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
         Project.make_preferred();
         if (!exists(Project))
@@ -271,8 +274,25 @@ namespace XenonEngine
             filePath = ConvertToRealPath(filePath);
         }
         path originalFile(filePath.CString());
-        FileType fileType = GetFileType(originalFile.extension().string());
-        switch (fileType)
+		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+		String fileName(originalFile.filename().string().c_str());
+		IFileMeta* file = folder->GetFile(fileName);
+		if (file)
+		{
+			WorldMeta* metaFile = (WorldMeta*)file;
+			metaFile->Save();
+		}
+		else
+		{
+			WorldMeta* metaFile = (WorldMeta*)AddFile(filePath);
+			assert(metaFile != nullptr);
+			GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+			world->SetWorldName(originalFile.stem().string().c_str());
+			metaFile->SetGameObjectWorld(world);
+			metaFile->Save();
+		}
+		FileType fileType = GetFileType(originalFile.extension().string());
+		switch (fileType)
         {
         case CrossPlatform::None:            
             assert(true == false);

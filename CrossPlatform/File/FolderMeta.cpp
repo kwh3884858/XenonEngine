@@ -9,13 +9,26 @@ namespace CrossPlatform
     using namespace std::filesystem;
     using namespace Algorithm;
 
-
-
-	IFileMeta* FolderMeta::Create(const Algorithm::String& filePath)
+	void FolderMeta::Save()
 	{
-		xg::Guid guid = xg::newGuid();
-		FolderMeta* folderMeta = new FolderMeta(FileHeader(FileType::FileTypeFolder, filePath, guid));
-		return folderMeta;
+		GetFileHeader().GetFilePath();
+		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+		String fileName(originalFile.filename().string().c_str());
+		IFileMeta* file = folder->GetFile(fileName);
+		if (file)
+		{
+			WorldMeta* metaFile = (WorldMeta*)file;
+			metaFile->SaveGameObjectWorld();
+		}
+		else
+		{
+			WorldMeta* metaFile = (WorldMeta*)AddFile(filePath);
+			assert(metaFile != nullptr);
+			GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+			world->SetWorldName(originalFile.stem().string().c_str());
+			metaFile->SetGameObjectWorld(world);
+			metaFile->SaveGameObjectWorld();
+		}
 	}
 
 	void FolderMeta::Delete()
@@ -50,9 +63,23 @@ namespace CrossPlatform
         return true;
     }
 
-	CrossPlatform::IFileMeta* FolderMeta::Initialization()
+	void FolderMeta::Initialization()
 	{
 		RegisterFileFacotry(FileType::FileTypeFolder, Create);
+		RegisterFileLoader(FileType::FileTypeFolder, Read);
+	}
+
+	IFileMeta* FolderMeta::Create(const Algorithm::String& filePath)
+	{
+		xg::Guid guid = xg::newGuid();
+		FolderMeta* folderMeta = new FolderMeta(FileHeader(FileType::FileTypeFolder, filePath, guid));
+		return folderMeta;
+	}
+
+	CrossPlatform::IFileMeta* FolderMeta::Read(const FileHeader& fileHeader)
+	{
+		FolderMeta* folderMeta = new FolderMeta(fileHeader);
+		return folderMeta;
 	}
 
 }

@@ -40,33 +40,38 @@ namespace CrossPlatform
     class IFileMeta
     {
     public:
-		typedef IFileMeta* (*Factory)(const Algorithm::String& );
-		IFileMeta(const FileHeader& header) : m_header(header) { Initialization(); }
+		using FactoryByPath = IFileMeta* (*)(const Algorithm::String& );
+		using ReaderByHeader = IFileMeta * (*)(const FileHeader&);
+		IFileMeta(const FileHeader& header) : m_header(header) { }
         virtual ~IFileMeta() {};
         const FileHeader& GetFileHeader()const { return m_header; }
 
 	public:
 		virtual void Load() = 0;
+		virtual void Save() = 0;
 		virtual void Delete() = 0;
 
 	protected:
-		virtual IFileMeta* Initialization() = 0;
 		FileHeader m_header;
 
 	public:
-		static IFileMeta* CreateNewFileMeta(FileType fileType, const Algorithm::String& filePath) { return Lookup()[fileType](filePath); }
-
+		static IFileMeta* CreateNewFileMeta(FileType fileType, const Algorithm::String& filePath) { return s_factory[fileType](filePath); }
+		static IFileMeta* CreateNewFileMeta(FileType fileTyoe, const FileHeader& fileHeader) { return s_loader[fileTyoe](fileHeader); }
     protected:
-		static void RegisterFileFacotry(FileType fileType, Factory factory)
+		static void RegisterFileFacotry(FileType fileType, FactoryByPath factory)
 		{
-			Lookup().insert(std::pair<FileType, Factory>(fileType, factory));
+			s_factory.insert(std::pair<FileType, FactoryByPath>(fileType, factory));
 		}
-
+		static void RegisterFileLoader(FileType fileType, ReaderByHeader loader)
+		{
+			s_loader.insert(std::pair<FileType, ReaderByHeader>(fileType, loader));
+		}
     private:
-		static std::map<FileType, Factory>& Lookup() {
-			static std::map<FileType, Factory> factory;
-			return factory;
-		}
-
-    };
+		static std::map<FileType, FactoryByPath> s_factory;
+		static std::map<FileType, ReaderByHeader> s_loader;
+		//static std::map<FileType, FactoryByPath>& Lookup() {
+	//	static std::map<FileType, FactoryByPath> factory;
+	//	return factory;
+	//}
+	};
 }
