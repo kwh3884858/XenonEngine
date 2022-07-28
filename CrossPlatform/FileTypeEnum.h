@@ -2,12 +2,14 @@
 
 namespace CrossPlatform
 {
-    enum FileType
+    enum FileType : int
     {
         None,
         FileTypeFolder,
-        FileTypeMaterial,
-        FileTypeModel,
+		FileTypeMesh3D,
+		FileTypePolygon,
+		FileTypeMaterial,
+		FileTypeObjMaterial,
         FileTypeWorld,
 		FileTypeImage
     };

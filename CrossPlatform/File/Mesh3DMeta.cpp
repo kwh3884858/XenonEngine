@@ -1,4 +1,4 @@
-#include "ModelMeta.h"
+#include "Mesh3DMeta.h"
 #include "CrossPlatform/Polygon/Polygon3D.h"
 #include "Engine/IO/ObjLoader.h"
 #include <filesystem>
@@ -8,12 +8,12 @@ namespace CrossPlatform {
 	using namespace Algorithm;
 	using namespace std;
 	using namespace std::filesystem;
-    ModelMeta::~ModelMeta()
+    Mesh3DMeta::~Mesh3DMeta()
     {
 		Clear();
     }
 
-	void ModelMeta::Delete()
+	void Mesh3DMeta::Delete()
 	{
 		for (int i = 0; i < m_polygons.Count(); i++)
 		{
@@ -52,25 +52,17 @@ namespace CrossPlatform {
 		}
 	}
 
-	const Vector<Polygon3D*>& ModelMeta::GetPolygons()
+	const Vector<Polygon3D*>& Mesh3DMeta::GetPolygons()
     {
-        if (m_polygons.Count() == 0)
-        {
-			LoadModel();
-        }
-        return m_polygons;
+        return m_cachePolygons;
     }
 
-	const Vector<Material*>& ModelMeta::GetMaterials()
+	const Vector<Material*>& Mesh3DMeta::GetMaterials()
 	{
-		if (m_polygons.Count() == 0)
-		{
-			LoadModel();
-		}
-		return m_materials;
+		return m_cacheMaterials;
 	}
 
-	void ModelMeta::Clear()
+	void Mesh3DMeta::Clear()
 	{
 		for (int i = 0; i < m_polygons.Count(); i++)
 		{
@@ -85,7 +77,7 @@ namespace CrossPlatform {
 		}
 	}
 
-	void ModelMeta::LoadModel()
+	void Mesh3DMeta::LoadModel()
 	{
 		Clear();
 		bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);

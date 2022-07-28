@@ -7,20 +7,25 @@
 #include "CrossPlatform/File/IFileMeta.h"
 namespace CrossPlatform {
 	using Algorithm::Vector;
-    class Polygon3D;
+    class Polygon3DMeta;
+	class MaterialMeta;
+	class Polygon3D;
 	class Material;
-    class ModelMeta :public IFileMeta
+    class Mesh3DMeta :public IFileMeta
     {
     public:
-        ModelMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeModel); }
-        virtual ~ModelMeta() override;
+        Mesh3DMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMesh); }
+        virtual ~Mesh3DMeta() override;
 		virtual void Delete() override;
         const Vector<Polygon3D*>& GetPolygons();
 		const Vector<Material*>& GetMaterials();
 	private:
 		void Clear();
 		void LoadModel();
-		Vector<Polygon3D*> m_polygons;
-		Vector<Material*> m_materials;
+		Vector<Polygon3DMeta*> m_polygons;
+		Vector<MaterialMeta*> m_materials;
+
+		Vector<Polygon3D*> m_cachePolygons;
+		Vector<Material*> m_cacheMaterials;
     };
 }

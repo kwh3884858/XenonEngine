@@ -1,0 +1,111 @@
+@startuml
+
+class IFileMeta{
+    FileHeader m_header;
+}
+
+class FileHeader{
+    FileType m_fileType = FileType::None;
+    Algorithm::String m_filePath;
+    xg::Guid m_guid;
+}
+
+FileHeader o-- IFileMeta
+
+IFileMeta o-- ImageMeta
+IFileMeta o-- MaterialMeta
+IFileMeta o-- Mesh3DMeta
+IFileMeta o-- Polygon3DMeta
+
+class Image{
+    unsigned char* m_data = nullptr;
+    int m_height = -1;
+    int m_width = -1;
+    int m_channel = -1;
+}
+class ImageMeta{
+    void Delete() override;
+    Image* GetImage();
+    Image* m_image;
+}
+Image o-- ImageMeta 
+
+class Material{
+    ImageMeta* m_diffuseTexture;
+    ImageMeta* m_bumpTexture;
+    Image* GetDiffuseTexture();
+    Image* GetBumpTexture();
+}
+ImageMeta o-- Material
+
+class MaterialMeta{		
+    Material* m_material;
+}
+Material o-- MaterialMeta
+
+object Self_Defined_Material_File{
+
+}
+Self_Defined_Material_File -- Material
+
+class Polygon3DMeta{
+    Polygon3D* m_polygon;
+}
+
+class Polygon3D{
+    xg::Guid m_modelId;
+    int m_numOfIndex = 0;
+    VertexIndexs* m_vertexIndexList = nullptr;
+    int m_numOfVertex = 0;
+    Vector3f* m_vertexList = nullptr;
+    int m_numOfNormal = 0;
+    Vector3f* m_normalList = nullptr;
+    int m_numOfTextureCoordinate = 0;
+    Vector2f* m_textureCoordinate = nullptr;
+    int m_numOfMaterialIndex = 0;
+    int* m_materialIndex = nullptr;
+}
+Polygon3D o-- Polygon3DMeta
+
+object OBJ{
+}
+object FBX{
+}
+
+Polygon3DMeta -- FBX
+Polygon3DMeta -- OBJ
+
+class Mesh3D {
+    Vector<Polygon3DMeta*> m_polygons
+    Vector<MaterialMeta*> m_materials
+}
+
+MaterialMeta o-- Mesh3D
+Polygon3DMeta o-- Mesh3D
+
+class Mesh3DMeta {
+    Mesh3D m_mesh3D
+    Delete()
+    Load()
+}
+
+Mesh3D o-- Mesh3DMeta
+
+note as N1 
+    需要设计一个通用的Mesh3D格式
+    用于存储PolygonMeta（Mesh）和MaterialMeta
+    并且能够识别不同的数据格式，例如OBJ和FBX
+    并对应不同的数据格式生成对应的meta和实例
+end note
+
+note bottom of N1
+    Meta：用于数据库管理，能够引用到对应的数据实例
+    Converter：把数据读取到实例中
+    实例类：具体的数据保存位置
+
+    透过修改实例中的Meta引用，可以更换模型。材质，贴图
+
+    载入
+end note
+
+@enduml

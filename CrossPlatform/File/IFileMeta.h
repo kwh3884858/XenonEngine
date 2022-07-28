@@ -40,13 +40,33 @@ namespace CrossPlatform
     class IFileMeta
     {
     public:
-        IFileMeta(const FileHeader& header) : m_header(header) {}
+		typedef IFileMeta* (*Factory)(const Algorithm::String& );
+		IFileMeta(const FileHeader& header) : m_header(header) { Initialization(); }
         virtual ~IFileMeta() {};
-		virtual void Delete() = 0;
         const FileHeader& GetFileHeader()const { return m_header; }
-    protected:
-        FileHeader m_header;
-    private:
-    };
 
+	public:
+		virtual void Load() = 0;
+		virtual void Delete() = 0;
+
+	protected:
+		virtual IFileMeta* Initialization() = 0;
+		FileHeader m_header;
+
+	public:
+		static IFileMeta* CreateNewFileMeta(FileType fileType, const Algorithm::String& filePath) { return Lookup()[fileType](filePath); }
+
+    protected:
+		static void RegisterFileFacotry(FileType fileType, Factory factory)
+		{
+			Lookup().insert(std::pair<FileType, Factory>(fileType, factory));
+		}
+
+    private:
+		static std::map<FileType, Factory>& Lookup() {
+			static std::map<FileType, Factory> factory;
+			return factory;
+		}
+
+    };
 }

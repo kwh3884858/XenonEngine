@@ -3,21 +3,13 @@
 #include "MathLab/Vector2.h"
 #include "CrossPlatform/SColorRGBA.h"
 #include "crossguid/guid.hpp"
+#include "Algorithms/Vector.h"
+#include "CrossPlatform/Polygon/Vertex3D.h"
 
 namespace CrossPlatform {
 	using MathLab::Vector3f;
 	using MathLab::Vector2f;
 	using CrossPlatform::SColorRGBA;
-
-    class Vertex3D
-    {
-    public:
-		Vertex3D(const Vector3f& vertex, const Vector3f& normal, const Vector2f& uv, int material) { m_vertex = vertex; m_normal = normal; m_uv = uv; m_material = material; }
-        Vector3f m_vertex;
-        Vector3f m_normal;
-		Vector2f m_uv;
-		int m_material;
-    };
 
 	class Polygon3D
 	{

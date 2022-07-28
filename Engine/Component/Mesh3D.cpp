@@ -7,7 +7,7 @@
 #include <cassert>
 
 #include "Engine/EngineManager.h"
-#include "CrossPlatform/File/ModelMeta.h"
+#include "CrossPlatform/File/Mesh3DMeta.h"
 
 namespace XenonEngine
 {
@@ -63,7 +63,7 @@ namespace XenonEngine
             return;
         }
 
-        ModelMeta* model = (ModelMeta*)(dataRoot);
+        Mesh3DMeta* model = (Mesh3DMeta*)(dataRoot);
 		if (m_polygons.Count() > 0)
 		{
 			xg::Guid modelGuid = m_polygons[0]->GetModelGUID();

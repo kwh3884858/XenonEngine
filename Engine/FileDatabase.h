@@ -5,6 +5,7 @@
 #include "CrossPlatform/DataPair.h"
 #include "CrossPlatform/FileTypeEnum.h"
 #include <map>
+#include <filesystem>
 
 namespace CrossPlatform
 {
@@ -13,6 +14,8 @@ namespace CrossPlatform
 
 namespace XenonEngine
 {
+	using namespace CrossPlatform;
+
     class FileDatabase
     {
     public:
@@ -49,9 +52,30 @@ namespace XenonEngine
         void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
 
 		void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file){ m_database[guid] = file; }
+
+		//template<typename T>
+		//T* CreateFileMeta(CrossPlatform::FileType fileType, const std::filesystem::path& filePath);
+		void DeleteFileMeta(CrossPlatform::IFileMeta* fileMeta);
+
         CrossPlatform::FolderMeta* m_root = nullptr;
         Algorithm::Vector<CrossPlatform::DataPair> m_typePair;
         std::map<xg::Guid, CrossPlatform::IFileMeta*> m_database;
+		std::map<CrossPlatform::FileType, type_info> m_fileTypePair;
 	public:
 	};
+
+
+	//T* FileDatabase::CreateFileMeta(CrossPlatform::FileType fileType, const std::filesystem::path& filePath)
+	//{
+	//	T* modeMeta = nullptr;
+	//	FolderMeta* folder = CreateFolder(filePath.parent_path().string().c_str());
+	//	if (folder->GetFile(filePath.filename().string().c_str()) == nullptr)
+	//	{
+	//		modeMeta = IFileMeta::CreateNewFileMeta(fileType, filePath.string().c_str());
+	//		modeMeta->GetFileHeader().GenerateMetadata();
+	//		folder->AddIFile(modeMeta);
+	//		AddFileToDatabase(guid, modeMeta);
+	//	}
+	//	return modeMeta;
+	//}
 }

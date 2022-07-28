@@ -16,6 +16,11 @@ namespace CrossPlatform
         m_gameobjectWorld = nullptr;
     }
 
+	void WorldMeta::Load()
+	{
+		EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
+	}
+
 	void WorldMeta::Delete()
 	{
 		delete m_gameobjectWorld;

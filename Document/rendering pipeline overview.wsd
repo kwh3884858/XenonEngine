@@ -1,0 +1,17 @@
+@startmindmap
+
+'Compatible with OrgMode 
+
+* Rednering Pipeline Overview\n Render List Data Constuct
+
+** Vertex
+*** Vector3f Vertex
+*** Vector3f Normal
+*** Vector2f UV
+*** int Material
+**** Material
+***** Texture(UV)
+***** Metallic
+***** Roughness
+
+@endmindmap

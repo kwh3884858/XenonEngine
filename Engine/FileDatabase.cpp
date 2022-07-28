@@ -5,7 +5,7 @@
 #include "Algorithms/String.h"
 
 #include "CrossPlatform/Database.h"
-#include "CrossPlatform/File/ModelMeta.h"
+#include "CrossPlatform/File/Mesh3DMeta.h"
 #include "CrossPlatform/DataPair.h"
 
 #include <filesystem>
@@ -16,6 +16,7 @@
 #include "CrossPlatform/File/FolderMeta.h"
 #include "CrossPlatform/File/MaterialMeta.h"
 #include "CrossPlatform/File/ImageMeta.h"
+#include "CrossPlatform/File/Polygon3DMeta.h"
 
 #include "Engine/EngineManager.h"
 #include "Engine/GameObjectWorld.h"
@@ -30,8 +31,11 @@ namespace XenonEngine
     void FileDatabase::Initialize()
     {
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeFolder, ""));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeModel, ".obj"));
-        m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, ".mtl"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeMesh3D, ".xmesh3d"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypePolygon, ".obj"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypePolygon, ".fbx"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, ".xmaterial"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeObjMaterial, ".mtl"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeWorld, ".world"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".jpg"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".png"));
@@ -166,28 +170,22 @@ namespace XenonEngine
             {
                 String realPath = m_root->GetFileHeader().GetFilePath() + tmpVirtualPath.Substring(FileHeader::Root_Drive.Count(), tmpVirtualPath.Count());
 
-                xg::Guid guid = xg::newGuid();
-                tmpFolder = new FolderMeta(FileHeader(FileType::FileTypeFolder, realPath, guid));
+				tmpFolder = (FolderMeta*)IFileMeta::CreateNewFileMeta(FileType::FileTypeFolder, realPath);
                 tmpFolder->GetFileHeader().GenerateMetadata();
                 tmpFolder->CreateFolder();
                 currentFolder->AddIFile(tmpFolder);
-				AddFileToDatabase(guid, tmpFolder);
+				AddFileToDatabase(tmpFolder->GetFileHeader().GetGUID(), tmpFolder);
             }
             if (tmpFolder->GetFileHeader().GetFileType() != FileType::FileTypeFolder)
             {
                 assert(true == false);
 
-                return false;
+                return nullptr;
             }
             currentFolder = tmpFolder;
         }
         return currentFolder;
     }
-
-    //CrossPlatform::FolderMeta* FileDatabase::CreateFolderByRealPath(const Algorithm::String& realPath) const
-    //{
-    //    return CreateFolderByVirtualPath(ConvertToVirtualPath(realPath));
-    //}
 
     Algorithm::String FileDatabase::ConvertToRealPath(const Algorithm::String& virtualPath)const
     {
@@ -203,67 +201,20 @@ namespace XenonEngine
     {
         path originalFile(realPath.CString());
         FileType fileType = GetFileType(originalFile.extension().string());
-        switch (fileType)
-        {
-        case CrossPlatform::None:
-            assert(true == false);
-
-            break;
-        case CrossPlatform::FileTypeFolder:
-			// Folder will be created by function CreateFolder
-            assert(true == false);
-
-            break;
-        case CrossPlatform::FileTypeMaterial:
-            break;
-        case CrossPlatform::FileTypeModel:
-        {
-            FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
-            if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
-            {
-                xg::Guid guid = xg::newGuid();
-                ModelMeta* modeMeta = new ModelMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
-                modeMeta->GetFileHeader().GenerateMetadata();
-                folder->AddIFile(modeMeta);
-				AddFileToDatabase(guid, modeMeta);
-                return modeMeta;
-            }
-        }
-            break;
-        case CrossPlatform::FileTypeWorld:
-        {
-            FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
-            if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
-            {
-                xg::Guid guid = xg::newGuid();
-                WorldMeta* worldMeta = new WorldMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
-                worldMeta->GetFileHeader().GenerateMetadata();
-                folder->AddIFile(worldMeta);
-				AddFileToDatabase(guid, worldMeta);
-                return worldMeta;
-            }
-        }
-            break;
-		case CrossPlatform::FileTypeImage:
+		if (fileType == FileType::None || FileType::FileTypeFolder)
 		{
-			FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
-			if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
-			{
-				xg::Guid guid = xg::newGuid();
-				ImageMeta* imageMeta = new ImageMeta(FileHeader(fileType, originalFile.string().c_str(), guid));
-				imageMeta->GetFileHeader().GenerateMetadata();
-				folder->AddIFile(imageMeta);
-				AddFileToDatabase(guid, imageMeta);
-				return imageMeta;
-			}
+			assert(true == false);
 		}
-		break;
-        default:
-            assert(true == false);
-
-			break;
-        }
-        return nullptr;
+		IFileMeta* meta = nullptr;
+		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
+		{
+			meta = IFileMeta::CreateNewFileMeta(fileType, originalFile.string().c_str());
+			meta->GetFileHeader().GenerateMetadata();
+			folder->AddIFile(meta);
+			AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
+		}
+		return meta;
     }
 
 	void FileDatabase::DeleteFile(const Algorithm::String& inPath)
@@ -274,50 +225,16 @@ namespace XenonEngine
 			filePath = ConvertToRealPath(filePath);
 		}
 		path originalFile(filePath.CString());
-		FileType fileType = GetFileType(originalFile.extension().string());
-		switch (fileType)
+		FolderMeta* folderMeta = GetFolder(originalFile.parent_path().string().c_str());
+		IFileMeta* fileMeta = folderMeta->GetFile(originalFile.filename().string().c_str());
+		if (fileMeta)
 		{
-		case CrossPlatform::None:
-			assert(true == false);
-			break;
-		case CrossPlatform::FileTypeFolder:
-		{
-			FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
-			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
-			if (file)
-			{
-				folder->RemoveFile(file);
-				FolderMeta* worldFile = static_cast<FolderMeta*>(file);
-				worldFile->Delete();
-				delete worldFile;
-				worldFile = nullptr;
-			}
-		}
-			break;
-		case CrossPlatform::FileTypeMaterial:
-			break;
-		case CrossPlatform::FileTypeModel:
-		{
-		}
-		break;
-		case CrossPlatform::FileTypeWorld:
-		{
-			FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
-			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
-			if (file)
-			{
-				folder->RemoveFile(file);
-				WorldMeta* worldFile = static_cast<WorldMeta*>(file);
-				worldFile->Delete();
-				delete worldFile;
-				worldFile = nullptr;
-			}
-
-		}
-		break;
-		default:
-			assert(true == false);
-			break;
+			folderMeta->RemoveFile(fileMeta);
+			FileType fileType = GetFileType(originalFile.extension().string());
+			fileMeta->Delete();
+			delete fileMeta;
+			fileMeta = nullptr;
+			
 		}
 	}
 
@@ -329,63 +246,21 @@ namespace XenonEngine
             filePath = ConvertToRealPath(filePath);
         }
         path originalFile(filePath.CString());
-        FileType fileType = GetFileType(originalFile.extension().string());
-        switch (fileType)
-        {
-        case CrossPlatform::None:
-            assert(true == false);
-            break;
-        case CrossPlatform::FileTypeFolder:
-            assert(true == false);
-            break;
-        case CrossPlatform::FileTypeMaterial:
-            break;
-        case CrossPlatform::FileTypeModel:
-        {
-        }
-        break;
-		case CrossPlatform::FileTypeImage:
+		FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
+		if (!folder)
 		{
-			FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
-			if (!folder)
-			{
-				assert(true == false);
-				return nullptr;
-			}
-			IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
-			if (!file)
-			{
-				return nullptr;
-			}
-			ImageMeta* image = static_cast<ImageMeta*>(file);
-			return image;
+			assert(true == false);
+			return nullptr;
 		}
-		break;
-		case CrossPlatform::FileTypeWorld:
-        {
-            FolderMeta* folder = GetFolder(originalFile.parent_path().string().c_str());
-			if (!folder)
-			{
-				assert(true == false);
-				return nullptr;
-			}
-            IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
-            if (!file)
-			{
-				assert(true == false);
-				return nullptr;
-			}
-			WorldMeta* worldFile = static_cast<WorldMeta*>(file);
-			EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
-			return worldFile;
-        }
-        break;
-        default:
-            assert(true == false);
-            break;
-        }
+		IFileMeta* file = folder->GetFile(originalFile.filename().string().c_str());
+		if (!file)
+		{
+			assert(true == false);
+			return nullptr;
+		}
 
-		return nullptr;
+		file->Load();
+		return file;
     }
 
     void FileDatabase::SaveFile(const Algorithm::String& realPath)
@@ -411,7 +286,7 @@ namespace XenonEngine
             assert(true == false);
 
             break;
-        case CrossPlatform::FileTypeModel:
+        case CrossPlatform::FileTypeMesh:
             assert(true == false);
 
             break;
@@ -520,9 +395,14 @@ namespace XenonEngine
 					file = new MaterialMeta(header);
 				}
 					break;
-				case CrossPlatform::FileTypeModel:
+				case CrossPlatform::FileTypePolygon:
 				{
-					file = new ModelMeta(header);
+					file - new Polygon3DMeta(header);
+				}
+					break;
+				case CrossPlatform::FileTypeMesh:
+				{
+					file = new Mesh3DMeta(header);
 				}
 					break;
 				case CrossPlatform::FileTypeWorld:
@@ -564,14 +444,30 @@ namespace XenonEngine
                 delete fileFolder;
             }
                 break;
+			case CrossPlatform::FileTypeMaterial:
+				break;
+			case CrossPlatform::FileTypeMesh:
+				break;
+			case CrossPlatform::FileTypeWorld:
+				break;
+			case CrossPlatform::FileTypeImage:
+				break;
             default:
             {
                 delete file;
                 assert(true == false);
 
             }
-                break;
+			break;
+
             } 
         }
     }
+
+	void FileDatabase::DeleteFileMeta(CrossPlatform::IFileMeta* fileMeta)
+	{
+		fileMeta->Delete();
+		delete fileMeta;
+		fileMeta = nullptr;
+	}
 }

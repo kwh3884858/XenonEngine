@@ -17,6 +17,20 @@ namespace CrossPlatform
  //   {
  //   }
 
+	//Material::Material(const Material& material) :
+	//	m_name(material.m_name),
+	//	m_exponent(material.m_exponent),
+	//	m_ambient(material.m_ambient),
+	//	m_diffuse(material.m_diffuse),
+	//	m_specular(material.m_specular),
+	//	m_emission(material.m_emission),
+	//	m_diffuseTextureFileName(material.m_diffuseTextureFileName),
+	//	m_diffuseTexture(material.m_diffuseTexture),
+	//	m_bumpTextureFileName(material.m_bumpTextureFileName),
+	//	m_bumpTexture(material.m_bumpTexture)
+	//{
+	//}
+
 	//Material::~Material()
 	//{
 	//}
@@ -42,7 +56,7 @@ namespace CrossPlatform
 			if (!m_bumpTexture)
 			{
 				m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().AddFile(bumpTextureFileName);
-				assert(m_diffuseTexture != nullptr);
+				assert(m_bumpTexture != nullptr);
 			}
 		}
 	}

@@ -13,6 +13,7 @@
 #include "CrossPlatform/SColorRGBA.h"
 #include "Engine/Component/Mesh3D.h"
 #include "CrossPlatform/Image/Image.h"
+#include "Engine/Graphic/RenderList3D.h"
 
 namespace CrossPlatform 
 {
@@ -41,20 +42,20 @@ namespace XenonEngine
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
 	public:
-        enum CullingState
+        enum CullingState : unsigned char
         {
-            Inside, // Culling Box Inside
-            Culled  // Outside
+            NotCulled,	// Inside the Culling Box 
+            Culled		// Outside
         };
 
-        enum ClippingState
+        enum ClippingState : unsigned char
         {
             Inside,     // Inside the view frustum
             Clipped,    // Outside
             NeedToClip  // Half inside
         };
 
-		enum PlaneTestState
+		enum PlaneTestState : unsigned char
 		{
 			LessThanXMin,
 			LessThanYMin,
@@ -67,7 +68,7 @@ namespace XenonEngine
 			InsideZ
 		};
 
-        enum RenderType
+        enum RenderType : unsigned char
         {
             Wireframe,
             FlatShdering,
@@ -142,6 +143,8 @@ namespace XenonEngine
         RenderType m_renderType = RenderType::GouraudShdering;
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;
+
+		RenderList3D m_renderList;
 	};
 
 }

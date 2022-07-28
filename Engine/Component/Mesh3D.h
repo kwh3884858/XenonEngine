@@ -10,8 +10,8 @@
 #include "crossguid/guid.hpp"
 
 namespace CrossPlatform {
-	class Polygon3D;
-	class Material;
+	class Polygon3DMeta;
+	class MaterialMeta;
 }
 
 namespace XenonEngine
@@ -44,8 +44,8 @@ namespace XenonEngine
         void CalculateModelMaxRadius();
 
         xg::Guid m_modelId;
-		Algorithm::Vector<CrossPlatform::Polygon3D*> m_polygons;
-		Algorithm::Vector<CrossPlatform::Material*> m_materials;
+		Algorithm::Vector<CrossPlatform::Polygon3DMeta*> m_polygons;
+		Algorithm::Vector<CrossPlatform::MaterialMeta*> m_materials;
         float m_maxRadius = 0.0f;
 
 		bool m_requestToReload = false;

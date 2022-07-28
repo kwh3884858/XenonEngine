@@ -166,40 +166,42 @@ namespace XenonEngine
 		{
 			GameObject* iter = renderList[i];
 			Transform3D* transform = iter->GetComponentPointer<Transform3D>();
-            Mesh3D* mesh = iter->GetComponentPointer<Mesh3D>();
-            if (!mesh || !transform)
-            {
-                continue;
-            }
+			Mesh3D* mesh = iter->GetComponentPointer<Mesh3D>();
+			if (!mesh || !transform)
+			{
+				continue;
+			}
 
-            // World coordinate, Culling
+			// World coordinate, Culling
+			TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
+			TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
+			TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
+			TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
+			TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
+			TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
+			TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
+			TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
+			TMatrix4X4f localToCameraTranform = localToWorldTransform * worldToCameraTransform;
 
+			DrawCoordinateLines(worldToScreenTranform);
 
-
-            TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
-            TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
-            TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
-            //Remove back faces
-            TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
-            TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
-            TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
-            TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
-            TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
-            TMatrix4X4f localToCameraTranform = localToWorldTransform * worldToCameraTransform;
-
-            DrawCoordinateLines(worldToScreenTranform);
-
-			const Vector<Material*>& materials = mesh->GetMaterials();
 			const Vector<Polygon3D*>& polygons = mesh->GetPolygon3D();
-            if (polygons.Count() == 0)
-            {
-                continue;
-            }
-            CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
-            if (state == CullingState::Culled)
-            {
-                continue;
-            }
+			if (polygons.Count() == 0)
+			{
+				continue;
+			}
+			CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
+			if (state == CullingState::Culled)
+			{
+				continue;
+			}
+
+			// Inserting rendering list
+			const Vector<Material*>& materials = mesh->GetMaterials();
+			m_renderList.AddPolygon3D()
+		}
+
+			//Remove back faces
 
 			for (int polygonIndex = 0; polygonIndex < polygons.Count(); polygonIndex++)
 			{
