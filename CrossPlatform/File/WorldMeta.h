@@ -22,13 +22,11 @@ namespace CrossPlatform
 		void Load() override;
 		void Save() override;
 		void Delete() override;
-        XenonEngine::GameObjectWorld* GetGameObjectWorld();
-		void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }
+		//void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }
 
-		//void DeleteGameObjectWorld();
     protected:
     private:
-		//void SaveGameObjectWorld()const;
+		//XenonEngine::GameObjectWorld* GetGameObjectWorld();
         XenonEngine::GameObjectWorld* m_gameobjectWorld = nullptr;
     };
 

@@ -14,8 +14,10 @@ namespace CrossPlatform {
     class Mesh3DMeta :public IFileMeta
     {
     public:
-        Mesh3DMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMesh); }
+        Mesh3DMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMesh3D); }
         virtual ~Mesh3DMeta() override;
+		virtual void Load() override;
+		virtual void Save() override;
 		virtual void Delete() override;
         const Vector<Polygon3D*>& GetPolygons();
 		const Vector<Material*>& GetMaterials();

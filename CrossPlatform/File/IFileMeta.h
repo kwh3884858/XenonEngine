@@ -2,6 +2,8 @@
 #include "Algorithms/String.h"
 #include "crossguid/guid.hpp"
 #include "CrossPlatform/FileTypeEnum.h"
+#include <map>
+
 namespace CrossPlatform
 {
     class Material;

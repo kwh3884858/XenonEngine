@@ -35,37 +35,48 @@ namespace CrossPlatform
 	//{
 	//}
 
-	void Material::loadTextureData(const Algorithm::String& modelPath)
+	//void Material::loadTextureData(const Algorithm::String& modelPath)
+	//{
+	//	int pos = modelPath.LastIndexOf(std::filesystem::path::preferred_separator);
+	//	String modelFolder(modelPath.Substring(0, pos + 1));
+	//	if (!m_diffuseTextureFileName.Empty())
+	//	{
+	//		String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);
+	//		m_diffuseTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().LoadFile(diffuseTextureFileName);
+	//		if (!m_diffuseTexture)
+	//		{
+	//			m_diffuseTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().AddFile(diffuseTextureFileName);
+	//			assert(m_diffuseTexture != nullptr);
+	//		}
+	//	}
+	//	if (!m_bumpTextureFileName.Empty())
+	//	{
+	//		String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_bumpTextureFileName, modelFolder);
+	//		m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().LoadFile(bumpTextureFileName);
+	//		if (!m_bumpTexture)
+	//		{
+	//			m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().AddFile(bumpTextureFileName);
+	//			assert(m_bumpTexture != nullptr);
+	//		}
+	//	}
+	//}
+
+	const Algorithm::String& Material::GetDiffuseTextureFileName() const
 	{
-		int pos = modelPath.LastIndexOf(std::filesystem::path::preferred_separator);
-		String modelFolder(modelPath.Substring(0, pos + 1));
-		if (!m_diffuseTextureFileName.Empty())
-		{
-			String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);
-			m_diffuseTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().LoadFile(diffuseTextureFileName);
-			if (!m_diffuseTexture)
-			{
-				m_diffuseTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().AddFile(diffuseTextureFileName);
-				assert(m_diffuseTexture != nullptr);
-			}
-		}
-		if (!m_bumpTextureFileName.Empty())
-		{
-			String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_bumpTextureFileName, modelFolder);
-			m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().LoadFile(bumpTextureFileName);
-			if (!m_bumpTexture)
-			{
-				m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().AddFile(bumpTextureFileName);
-				assert(m_bumpTexture != nullptr);
-			}
-		}
+		return EngineManager::Get().GetFileDatabase().GetFile(m_diffuseTexture)->GetFileHeader().GetFileName();
+	}
+
+	const Algorithm::String& Material::GetBumpTextureName() const
+	{
+		return EngineManager::Get().GetFileDatabase().GetFile(m_bumpTexture)->GetFileHeader().GetFileName();
 	}
 
 	CrossPlatform::Image* Material::GetDiffuseTexture()
 	{
-		if (m_diffuseTexture)
+		if (m_diffuseTexture.isValid())
 		{
-			return m_diffuseTexture->GetImage();
+			ImageMeta* imageMeta = (ImageMeta*)EngineManager::Get().GetFileDatabase().GetFile(m_diffuseTexture);
+			return imageMeta->GetImage();
 		}
 		else
 		{
@@ -75,9 +86,10 @@ namespace CrossPlatform
 
 	CrossPlatform::Image* Material::GetBumpTexture()
 	{
-		if (m_bumpTexture)
+		if (m_bumpTexture.isValid())
 		{
-			return m_bumpTexture->GetImage();
+			ImageMeta* imageMeta = (ImageMeta*)EngineManager::Get().GetFileDatabase().GetFile(m_bumpTexture);
+			return imageMeta->GetImage();
 		}
 		else
 		{

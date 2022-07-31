@@ -19,14 +19,20 @@ namespace CrossPlatform
 
 	void WorldMeta::Load()
 	{
-		EngineManager::Get().GetWorldManager().SetCurrentWorld(worldFile->GetGameObjectWorld());
+		if (!m_gameobjectWorld)
+		{
+			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+			m_gameobjectWorld = config.as<GameObjectWorld>().Copy();
+		}
+
+		EngineManager::Get().GetWorldManager().SetCurrentWorld(m_gameobjectWorld);
 	}
 
 	void WorldMeta::Save()
 	{
 		GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
-		world->SetWorldName(originalFile.stem().string().c_str());
-		SetGameObjectWorld(world);
+		world->SetWorldName(GetFileHeader().GetFileName());
+		m_gameobjectWorld = world;
 
 		const String& path = GetFileHeader().GetFilePath();
 		if (path.Empty())
@@ -76,13 +82,8 @@ namespace CrossPlatform
 		}
 	}
 
-	XenonEngine::GameObjectWorld* WorldMeta::GetGameObjectWorld()
-    {
-        if (!m_gameobjectWorld)
-        {
-            YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-            m_gameobjectWorld = config.as<GameObjectWorld>().Copy();
-        }
-        return m_gameobjectWorld->Copy();
-    }
+	//XenonEngine::GameObjectWorld* WorldMeta::GetGameObjectWorld()
+ //   {
+
+ //   }
 }

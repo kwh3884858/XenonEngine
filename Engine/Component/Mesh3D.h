@@ -11,14 +11,20 @@
 
 namespace CrossPlatform {
 	class Polygon3DMeta;
+	class Polygon3D;
 	class MaterialMeta;
 }
-
+namespace YAML {
+	template<>
+	struct convert<Mesh3D>;
+}
 namespace XenonEngine
 {
 	class Mesh3D final :public IComponent
 	{
 	public:
+		friend class YAML::convert<Mesh3D>;
+
 		static const float PI;
 
 		Mesh3D(GameObject* gameobject = nullptr) :
@@ -43,9 +49,8 @@ namespace XenonEngine
 	private:
         void CalculateModelMaxRadius();
 
-        xg::Guid m_modelId;
-		Algorithm::Vector<CrossPlatform::Polygon3DMeta*> m_polygons;
-		Algorithm::Vector<CrossPlatform::MaterialMeta*> m_materials;
+		Algorithm::Vector<xg::Guid> m_polygons;
+		Algorithm::Vector<xg::Guid> m_materials;
         float m_maxRadius = 0.0f;
 
 		bool m_requestToReload = false;

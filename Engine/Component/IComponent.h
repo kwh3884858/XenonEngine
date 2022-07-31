@@ -35,7 +35,7 @@ namespace XenonEngine
             m_gameobject(gameobject)
         {
         }
-        virtual ~IComponent() {};
+        virtual ~IComponent() = default;;
 
         virtual IComponentType GetComponentType() const = 0;
 
@@ -66,5 +66,5 @@ namespace XenonEngine
 
     __declspec(selectany) IComponent::IComponentType IComponent::m_type = IComponent::IComponentType::None;
 
-    typedef IComponent::IComponentType ComponentType;
+    using ComponentType = IComponent::IComponentType;
 }

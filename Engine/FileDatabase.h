@@ -38,7 +38,7 @@ namespace XenonEngine
         Algorithm::String ConvertToRealPath(const Algorithm::String& realPath)const;
 
         // For Database
-        const CrossPlatform::IFileMeta* AddFile(const Algorithm::String& realPath);
+        CrossPlatform::IFileMeta* AddFile(const Algorithm::String& realPath);
 		void DeleteFile(const Algorithm::String& path);
         // For Engine
 		CrossPlatform::IFileMeta* LoadFile(const Algorithm::String& realPath);
@@ -55,7 +55,7 @@ namespace XenonEngine
 
 		//template<typename T>
 		//T* CreateFileMeta(CrossPlatform::FileType fileType, const std::filesystem::path& filePath);
-		void DeleteFileMeta(CrossPlatform::IFileMeta* fileMeta);
+		//void DeleteFileMeta(CrossPlatform::IFileMeta* fileMeta);
 
         CrossPlatform::FolderMeta* m_root = nullptr;
         Algorithm::Vector<CrossPlatform::DataPair> m_typePair;

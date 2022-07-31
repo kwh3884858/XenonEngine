@@ -13,6 +13,16 @@ namespace CrossPlatform {
 		Clear();
     }
 
+	void Mesh3DMeta::Load()
+	{
+
+	}
+
+	void Mesh3DMeta::Save()
+	{
+
+	}
+
 	void Mesh3DMeta::Delete()
 	{
 		for (int i = 0; i < m_polygons.Count(); i++)

@@ -4,9 +4,13 @@
 #include "MathLab/Vector2.h"
 
 #include <iostream>
+#include <filesystem>
+
+#include "Engine/EngineManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include "Library/tinyobjloader/tiny_obj_loader.h"
+
 namespace XenonEngine
 {
 	using Algorithm::String;
@@ -21,9 +25,9 @@ namespace XenonEngine
 
 	//}
 
-	bool ObjectLoader::LoadObj(const Algorithm::String& fileName, Algorithm::Vector<CrossPlatform::Polygon3D*>& polygons, Algorithm::Vector<CrossPlatform::Material*>& materials) const
+	bool ObjectLoader::LoadObj(const Algorithm::String& filePath, Algorithm::Vector<CrossPlatform::Polygon3D*>& polygons, Algorithm::Vector<CrossPlatform::Material*>& materials) const
 	{
-		std::string inputfile(fileName.Beign(), fileName.Count());
+		std::string inputfile(filePath.Beign(), filePath.Count());
 		tinyobj::ObjReaderConfig reader_config;
 		//reader_config.mtl_search_path = "./"; // Path to material files
 
@@ -78,17 +82,35 @@ namespace XenonEngine
 			}
 		}
 
-		for (size_t i = 0; i < objMaterials.size(); i++)
+		for (const auto & objMaterial : objMaterials)
 		{
 			Material* material = new Material;
-			material->m_name = objMaterials[i].name.c_str();
-			material->m_ambient = Vector3f(objMaterials[i].ambient[0], objMaterials[i].ambient[1], objMaterials[i].ambient[2]);
-			material->m_diffuse = Vector3f(objMaterials[i].diffuse[0], objMaterials[i].diffuse[1], objMaterials[i].diffuse[2]);
-			material->m_specular = Vector3f(objMaterials[i].specular[0], objMaterials[i].specular[1], objMaterials[i].specular[2]);
-			material->m_emission = Vector3f(objMaterials[i].emission[0], objMaterials[i].emission[1], objMaterials[i].emission[2]);
-			material->m_diffuseTextureFileName = objMaterials[i].diffuse_texname.c_str();
-			material->m_bumpTextureFileName = objMaterials[i].bump_texname.c_str();
-			material->loadTextureData(fileName);
+			material->m_name = objMaterial.name.c_str();
+			material->m_ambient = Vector3f(objMaterial.ambient[0], objMaterial.ambient[1], objMaterial.ambient[2]);
+			material->m_diffuse = Vector3f(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
+			material->m_specular = Vector3f(objMaterial.specular[0], objMaterial.specular[1], objMaterial.specular[2]);
+			material->m_emission = Vector3f(objMaterial.emission[0], objMaterial.emission[1], objMaterial.emission[2]);
+			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
+			String m_bumpTextureFileName = objMaterial.bump_texname.c_str();
+
+			int pos = filePath.LastIndexOf(std::filesystem::path::preferred_separator);
+			String modelFolder(filePath.Substring(0, pos + 1));
+			if (!m_diffuseTextureFileName.Empty())
+			{
+				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);
+				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().LoadFile(diffuseTextureFileName);
+				assert(m_diffuseTexture != nullptr);
+				material->m_diffuseTexture = m_diffuseTexture->GetFileHeader().GetGUID();
+			}
+			if (!m_bumpTextureFileName.Empty())
+			{
+				String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_bumpTextureFileName, modelFolder);
+				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().LoadFile(bumpTextureFileName);
+				assert(m_bumpTexture != nullptr);
+				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
+			}
+
+			//material->loadTextureData(filePath);
 			materials.Add(material);
 		}
 
