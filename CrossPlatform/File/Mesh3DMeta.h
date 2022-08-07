@@ -11,6 +11,7 @@ namespace CrossPlatform {
 	class MaterialMeta;
 	class Polygon3D;
 	class Material;
+	class Mesh3D;
     class Mesh3DMeta :public IFileMeta
     {
     public:
@@ -19,15 +20,16 @@ namespace CrossPlatform {
 		virtual void Load() override;
 		virtual void Save() override;
 		virtual void Delete() override;
-        const Vector<Polygon3D*>& GetPolygons();
-		const Vector<Material*>& GetMaterials();
+  //      const Vector<Polygon3D*>& GetPolygons();
+		//const Vector<Material*>& GetMaterials();
 	private:
 		void Clear();
 		void LoadModel();
-		Vector<Polygon3DMeta*> m_polygons;
-		Vector<MaterialMeta*> m_materials;
+		Mesh3D* m_mesh;
+		//Vector<Polygon3DMeta*> m_polygons;
+		//Vector<MaterialMeta*> m_materials;
 
-		Vector<Polygon3D*> m_cachePolygons;
-		Vector<Material*> m_cacheMaterials;
+		//Vector<Polygon3D*> m_cachePolygons;
+		//Vector<Material*> m_cacheMaterials;
     };
 }
