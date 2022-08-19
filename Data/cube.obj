@@ -1,6 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
-mtllib ../SaintEngine/data/cube.mtl
+mtllib cube.mtl
 g default
 v -0.500000 -0.500000 0.500000
 v 0.500000 -0.500000 0.500000
