@@ -198,7 +198,7 @@ namespace XenonEngine
 
 			// Inserting rendering list
 			const Vector<Material*>& materials = mesh->GetMaterials();
-			m_renderList.AddPolygon3D()
+			m_renderList.AddPolygon3D();
 		}
 
 			//Remove back faces

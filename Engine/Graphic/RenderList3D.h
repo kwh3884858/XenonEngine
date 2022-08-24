@@ -13,10 +13,17 @@ namespace XenonEngine {
 	using CrossPlatform::Material;
 	
 	class Mesh3D;
+
+	class RenderElement
+	{
+		Polygon3D* m_polygon;
+		Material*
+	};
+
 	class RenderList3D
 	{
 		void AddMesh3D(const Mesh3D* const mesh);
-		Algorithm::Vector<Vertex3D> m_vertexIndexList;
+		Algorithm::Vector<Polygon3D> m_vertexIndexList;
 		Algorithm::Vector<Material> m_materials;
 	};
 }
