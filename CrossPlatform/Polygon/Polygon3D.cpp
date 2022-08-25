@@ -3,7 +3,7 @@
 
 namespace CrossPlatform 
 {
-	Polygon3D::Polygon3D(int numOfIndex, VertexIndexs* vertexIndexList, int numOfVertex, Vector3f * vertexList, int numOfNormal, Vector3f* normalList, int numofCoordinate /*= 0*/, Vector2f* textureCoordinate /*= nullptr*/, int numOfMaterialIndex /*= 0*/, int* materialIndex /*= nullptr*/):
+	Polygon3D::Polygon3D(int numOfIndex, VertexIndexs* vertexIndexList, int numOfVertex, Vector3f * vertexList, int numOfNormal, Vector3f* normalList, int numofCoordinate , Vector2f* textureCoordinate, const xg::Guid& material):
 		m_numOfIndex(numOfIndex),
 		m_vertexIndexList(vertexIndexList),
 		m_numOfVertex(numOfVertex),
@@ -12,14 +12,12 @@ namespace CrossPlatform
         m_normalList(normalList),
 		m_numOfTextureCoordinate(numofCoordinate),
 		m_textureCoordinate(textureCoordinate),
-		m_numOfMaterialIndex(numOfMaterialIndex),
-		m_materialIndex(materialIndex)
+		m_material(material)
 	{
 	}
 
 	Polygon3D::Polygon3D(const Polygon3D& that)
 	{
-		m_modelId = that.m_modelId;
 		m_numOfIndex = that.m_numOfIndex;
 		m_vertexIndexList = new VertexIndexs[m_numOfIndex];
 		for (int i = 0 ; i < m_numOfIndex; i++)
@@ -44,12 +42,7 @@ namespace CrossPlatform
 		{
 			m_textureCoordinate[i] = that.m_textureCoordinate[i];
 		}
-		m_numOfMaterialIndex = that.m_numOfMaterialIndex;
-		m_materialIndex = new int[m_numOfMaterialIndex];
-		for (int i = 0; i < m_numOfMaterialIndex; i++)
-		{
-			m_materialIndex[i] = that.m_materialIndex[i];
-		}
+		m_material = that.m_material;
 	}
 
 	const Vertex3D Polygon3D::operator[](int index) const
@@ -71,12 +64,7 @@ namespace CrossPlatform
 		{
 			uv = m_textureCoordinate[vertexIndex.m_textureCoordinateIndex];
 		}
-		int material = -1;
-		if (m_numOfMaterialIndex > 0)
-		{
-			material = m_materialIndex[index / 3];
-		}
-		Vertex3D result(m_vertexList[vertexIndex.m_vertexIndex], normal, uv, material);
+		Vertex3D result(m_vertexList[vertexIndex.m_vertexIndex], normal, uv);
 		return result;
 	}
 
@@ -102,14 +90,11 @@ namespace CrossPlatform
         m_normalList = nullptr;
 		delete[] m_textureCoordinate;
 		m_textureCoordinate = nullptr;
-		delete[] m_materialIndex;
-		m_materialIndex = nullptr;
 
 		m_numOfIndex = 0; 
 		m_numOfVertex = 0; 
 		m_numOfNormal = 0; 
 		m_numOfTextureCoordinate = 0; 
-		m_numOfMaterialIndex = 0;
 	}
 
 }
