@@ -16,6 +16,7 @@ namespace Algorithm
 	public:
 		Vector();
 		Vector(const Vector& that);
+		Vector(Vector&& that);
 		~Vector();
 
 		bool Add(const T& element);
@@ -35,6 +36,7 @@ namespace Algorithm
 		T& operator[](int index);
 		const T& operator[](int index)const;
 		Vector<T>& operator=(const Vector& rhs);
+		Vector<T>& operator=(Vector&& rhs);
 
 		//For Algorithm
 		T* Begin();
@@ -79,6 +81,17 @@ namespace Algorithm
         Initialize(that.Capacity());
         InternalReplace(that.m_content, that.m_count);
     }
+
+	template<typename T>
+	Algorithm::Vector<T>::Vector(Vector&& that)
+	{
+		Initialize(that.Capacity());
+		InternalReplace(that.m_content, that.m_count);
+
+		that.m_content = nullptr;
+		that.m_count = 0;
+		that.m_capacity = 0;
+	}
 
 	template<typename T>
 	Vector<T>::~Vector()
@@ -237,7 +250,24 @@ namespace Algorithm
 		InternalReplace(rhs.m_content, rhs.m_count);
 		return *this;
 	}
-    
+
+	template<typename T>
+	Algorithm::Vector<T>& Algorithm::Vector<T>::operator=(Vector&& rhs)
+	{
+		if (this == &rhs)
+			return *this;
+
+		Destory();
+		Initialize(rhs.Capacity());
+		InternalReplace(rhs.m_content, rhs.m_count);
+
+		rhs.m_content = nullptr;
+		rhs.m_count = 0;
+		rhs.m_capacity = 0;
+
+		return *this;
+	}
+
     template<typename T>
     const T* Vector<T>::Begin()const
     {
