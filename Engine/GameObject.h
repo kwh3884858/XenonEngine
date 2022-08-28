@@ -25,8 +25,12 @@ namespace XenonEngine
         };
 		GameObject(const String& name = "Untitled");
 		GameObject(const GameObject& that);
+        GameObject(GameObject&& that);
         virtual GameObject* Copy()const;
         virtual ~GameObject();
+
+        const GameObject& operator=(const GameObject& rhs);
+        const GameObject& operator=(GameObject&& rhs);
 
         template<typename T>
         void AddComponent(T* component);

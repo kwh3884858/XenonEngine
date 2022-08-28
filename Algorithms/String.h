@@ -37,6 +37,7 @@ namespace Algorithm
         StringBase(const T* value, int size);
         StringBase(const T* value);
         StringBase(T value);
+        StringBase(StringBase&& that);
         ~StringBase();
 
         T& operator[](int index);
@@ -119,6 +120,12 @@ namespace Algorithm
         m_string.Add(value);
         CStringlize();
     }
+
+	template<typename T>
+	Algorithm::StringBase<T>::StringBase(StringBase&& that)
+	{
+        m_string(std::move(that.m_string));
+	}
 
     template<typename T>
     Algorithm::StringBase<T>::~StringBase()
