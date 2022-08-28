@@ -49,8 +49,16 @@ namespace CrossPlatform
         const FileHeader& GetFileHeader()const { return m_header; }
 
 	public:
+        // Load into memory
 		virtual void Load() = 0;
+
+        // Clear from memory
+        virtual void Clear() = 0;
+
+		// Save to hard drive as a data file
 		virtual void Save() = 0;
+
+        // Delete data file from hard drive
 		virtual void Delete() = 0;
 
 	protected:

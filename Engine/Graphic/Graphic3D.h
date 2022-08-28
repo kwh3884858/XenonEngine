@@ -14,6 +14,7 @@
 #include "Engine/Component/Mesh3D.h"
 #include "CrossPlatform/Image/Image.h"
 #include "Engine/Graphic/RenderList3D.h"
+#include "CrossPlatform/XenonShaderType.h"
 
 namespace CrossPlatform 
 {
@@ -68,13 +69,6 @@ namespace XenonEngine
 			InsideZ
 		};
 
-        enum RenderType : unsigned char
-        {
-            Wireframe,
-            FlatShdering,
-            GouraudShdering,
-        };
-
         struct VertexShaderDataInputFlat
         {
             Triangle m_triangle;
@@ -123,8 +117,8 @@ namespace XenonEngine
         void AddLight(LightComponent* light) { m_lightList.Add(light); }
         void RemoveLight(LightComponent* light) { m_lightList.Remove(light); }
 
-        void SetRenderType(RenderType renderType) { m_renderType = renderType; }
-        const RenderType& GetRenderType()const { return m_renderType; }
+        //void SetRenderType(RenderType renderType) { m_renderType = renderType; }
+        //const RenderType& GetRenderType()const { return m_renderType; }
 
         void Update()const;
 	private:
@@ -140,7 +134,7 @@ namespace XenonEngine
 		MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2i& viewPort) const;
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2i& viewPort) const;
 
-        RenderType m_renderType = RenderType::GouraudShdering;
+        ShaderType m_renderType = ShaderType::ShaderType_Gouraud;
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;
 

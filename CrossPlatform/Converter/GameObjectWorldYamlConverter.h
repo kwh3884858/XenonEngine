@@ -29,7 +29,7 @@ namespace YAML {
                 if (node["WorldObjects"].IsSequence())
                 {
                     for (YAML::const_iterator it = node["WorldObjects"].begin(); it != node["WorldObjects"].end(); ++it) {
-                        rhs.AddGameObject(it->as<GameObject>().Copy());
+                        rhs.AddGameObject(std::move(it->as<GameObject>()));
                     }
                 }
             }

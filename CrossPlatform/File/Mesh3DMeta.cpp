@@ -15,7 +15,20 @@ namespace CrossPlatform {
 
 	void Mesh3DMeta::Load()
 	{
+		if (!m_mesh)
+		{
+			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+			m_gameobjectWorld = config.as<Mesh3DMeta>().Copy();
+		}
+	}
 
+	void Mesh3DMeta::Clear()
+	{
+		for (int i = 0; i < m_polygons.Count(); i++)
+		{
+			delete m_polygons[i];
+			m_polygons[i] = nullptr;
+		}
 	}
 
 	void Mesh3DMeta::Save()
@@ -72,20 +85,7 @@ namespace CrossPlatform {
 		return m_cacheMaterials;
 	}
 
-	void Mesh3DMeta::Clear()
-	{
-		for (int i = 0; i < m_polygons.Count(); i++)
-		{
-			delete m_polygons[i];
-			m_polygons[i] = nullptr;
-		}
 
-		for (int i = 0; i < m_materials.Count(); i++)
-		{
-			delete m_materials[i];
-			m_materials[i] = nullptr;
-		}
-	}
 
 	void Mesh3DMeta::LoadModel()
 	{

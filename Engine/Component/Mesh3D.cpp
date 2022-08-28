@@ -8,6 +8,7 @@
 
 #include "Engine/EngineManager.h"
 #include "CrossPlatform/File/Mesh3DMeta.h"
+#include "CrossPlatform/File/Polygon3DMeta.h"
 
 namespace XenonEngine
 {
@@ -17,8 +18,8 @@ namespace XenonEngine
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
 		that->m_polygons = m_polygons;
-		that->m_materials = m_materials;
-		that->m_modelId = m_modelId;
+		//that->m_materials = m_materials;
+		//that->m_modelId = m_modelId;
         that->m_maxRadius = m_maxRadius;
 		return that;
 	}
@@ -41,7 +42,7 @@ namespace XenonEngine
 	bool Mesh3D::Destroy()
 	{
 		m_polygons.Clear();
-		m_materials.Clear();
+		//m_materials.Clear();
 		return true;
 	}
 
@@ -100,6 +101,17 @@ namespace XenonEngine
 	void Mesh3D::RequestReloadModel()
 	{
 		m_requestToReload = true;
+	}
+
+	const Algorithm::Vector<const CrossPlatform::Polygon3D*> Mesh3D::GetPolygon3Ds() const
+	{
+		Vector<const Polygon3D*> output;
+		for (const xg::Guid& id : m_polygons)
+		{
+			const Polygon3DMeta* const polygonMeta = dynamic_cast<const Polygon3DMeta*>( EngineManager::Get().GetFileDatabase().GetFile(id) );
+			const Polygon3D* polygon = polygonMeta->GetPolygon3D();
+			output.Add(polygon);
+		}
 	}
 
 	ComponentType Mesh3D::m_type = ComponentType::ComponentType_Mesh3D;

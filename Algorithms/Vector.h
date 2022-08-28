@@ -20,6 +20,7 @@ namespace Algorithm
 		~Vector();
 
 		bool Add(const T& element);
+		bool Add(T&& element);
 		bool Remove(const T& element);
 		void Remove(int index);
 		bool Initialize(int size);
@@ -139,6 +140,17 @@ namespace Algorithm
 
 	template<typename T>
 	bool Vector<T>::Add(const T & element)
+	{
+		if (IsCapacityEnough() == false) {
+			Reallocation();
+		}
+		m_content[m_count] = element;
+		m_count++;
+		return true;
+	}
+
+	template<typename T>
+	bool Algorithm::Vector<T>::Add(T&& element)
 	{
 		if (IsCapacityEnough() == false) {
 			Reallocation();

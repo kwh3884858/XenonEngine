@@ -2,6 +2,7 @@
 
 #include "Algorithms/String.h"
 #include "MathLab/Vector3.h"
+#include "CrossPlatform/XenonShaderType.h"
 
 namespace CrossPlatform
 {
@@ -27,6 +28,8 @@ namespace CrossPlatform
 		Image* GetDiffuseTexture();
 		Image* GetBumpTexture();
 	public:
+		ShaderType m_shaderType = ShaderType::ShaderType_Gouraud;
+
 		Algorithm::String m_name;
         float m_exponent = 0.0f;                        //Ns
         MathLab::Vector3f m_ambient;                    //Ka

@@ -52,6 +52,9 @@ And you need to open the configuration file to modify the ProjectPath as the roo
 
 Congratulation! Now Xenon Engine is running on your computer.
 
+## Engine Principles
+- Manually control create and destruction of components in an object, don't rely on constructors and destructors, which only take responsibility for object itself.
+
 ## New Features
 - A game editor and content browser based on ImGUI.
 - Three type rendering shader.
@@ -118,6 +121,9 @@ Build it！你会得到一个错误，别担心，这意味着一切正常。
 7. 重新运行项目。
 
 恭喜！现在 Xenon Engine 正在您的计算机上运行。
+
+## 引擎原则
+- 手动控制`对象`中`组件`的创建和销毁，不依赖只对`对象`负责的构造函数和析构函数
 
 ## 新功能
 - 基于 ImGUI 的游戏编辑器和内容浏览器。

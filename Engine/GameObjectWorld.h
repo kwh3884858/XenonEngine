@@ -12,9 +12,10 @@ namespace XenonEngine
     {
     public:
         GameObjectWorld(const Algorithm::String& worldName = "Untitled");
-        GameObjectWorld(const GameObjectWorld& otherWorld);
+        GameObjectWorld(GameObjectWorld&& that);
         ~GameObjectWorld();
         const GameObjectWorld& operator=(const GameObjectWorld& world) = delete;
+        const GameObjectWorld& operator=(GameObjectWorld&& world);
         GameObjectWorld* Copy()const;
 
         const Algorithm::String& GetWorldName()const { return m_worldName; }
@@ -23,6 +24,7 @@ namespace XenonEngine
 		const Algorithm::Vector<GameObject*>& GetRenderList() const { return m_renderList; }
 
         void AddGameObject(GameObject* const gameobject);
+        void AddGameObject(GameObject&& gameobject);
 		void RemoveGameObject(GameObject* const gameobject);
         GameObject* GetGameObject(const Algorithm::String& gameObjectName) const;
 		Algorithm::Vector<GameObject*> GetGameObjectList(const Algorithm::String& gameObjectName)const;
@@ -33,6 +35,9 @@ namespace XenonEngine
         void Update();
         void Destroy();
     private:
+		GameObjectWorld(const GameObjectWorld& that);
+
+        void CreatePhysicsWorld();
         void ClearMarkForDelete();
 		void DeleteGameObject(GameObject* gameobject);
         void RenderUpdate();

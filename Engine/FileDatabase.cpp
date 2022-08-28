@@ -80,10 +80,10 @@ namespace XenonEngine
         return FileType::None;
     }
 
-    const CrossPlatform::IFileMeta* FileDatabase::GetFile(xg::Guid fileGuid)
+    const CrossPlatform::IFileMeta* FileDatabase::GetFile(const xg::Guid& fileGuid) const
     {
         assert(m_database.find(fileGuid) != m_database.end());
-        return m_database[fileGuid];
+        return m_database.at(fileGuid);
     }
 
     const Algorithm::String& FileDatabase::GetExtension(CrossPlatform::FileType fileType)

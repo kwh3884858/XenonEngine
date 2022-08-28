@@ -17,13 +17,14 @@ namespace XenonEngine
 
     GameObjectWorld::GameObjectWorld(const Algorithm::String& worldName)
     {
-        m_physics2D = new Physics2D;
+		CreatePhysicsWorld();
         SetWorldName(worldName);
     }
 
-    GameObjectWorld::GameObjectWorld(const GameObjectWorld& otherWorld): GameObjectWorld(otherWorld.GetWorldName())
+    GameObjectWorld::GameObjectWorld(const GameObjectWorld& that)
+		: GameObjectWorld(that.GetWorldName())
     {
-        const Algorithm::Vector<GameObject*>& objects = otherWorld.GetWorldObjects();
+        const Algorithm::Vector<GameObject*>& objects = that.GetWorldObjects();
         for (int i = 0; i < objects.Count(); i++)
         {
             GameObject* newGo = objects[i]->Copy();
@@ -31,13 +32,35 @@ namespace XenonEngine
         }
     }
 
-    GameObjectWorld::~GameObjectWorld()
+	GameObjectWorld::GameObjectWorld(GameObjectWorld&& that)
+		: GameObjectWorld(that.GetWorldName())
+	{
+		const Algorithm::Vector<GameObject*>& objects = that.GetWorldObjects();
+		for (int i = 0; i < objects.Count(); i++)
+		{
+			GameObject* newGo = objects[i]->Copy();
+			AddGameObject(newGo);
+		}
+	}
+
+	GameObjectWorld::~GameObjectWorld()
     {
         delete m_physics2D;
         m_physics2D = nullptr;
     }
 
-    XenonEngine::GameObjectWorld* GameObjectWorld::Copy() const
+	const XenonEngine::GameObjectWorld& GameObjectWorld::operator=(GameObjectWorld&& world)
+	{
+		if (this == &world) return *this;
+		m_physics2D = world.m_physics2D;
+		m_renderList = std::move(world.m_renderList);
+		m_worldObjects = std::move(world.m_worldObjects);
+
+		world.m_physics2D = nullptr;
+		return *this;
+	}
+
+	XenonEngine::GameObjectWorld* GameObjectWorld::Copy() const
     {
         GameObjectWorld* newObjectWorld = new GameObjectWorld(*this);
         return newObjectWorld;
@@ -75,6 +98,11 @@ namespace XenonEngine
         }
         m_worldObjects.Add(gameobject);
     }
+
+	void GameObjectWorld::AddGameObject(GameObject&& gameobject)
+	{
+		m_worldObjects.Add(gameobject);
+	}
 
 	void GameObjectWorld::RemoveGameObject(GameObject* const gameobject)
 	{
@@ -151,6 +179,12 @@ namespace XenonEngine
 		{
 			DeleteGameObject(m_worldObjects[i]);
 		}
+	}
+
+	void GameObjectWorld::CreatePhysicsWorld()
+	{
+		assert(m_physics2D == nullptr);
+		m_physics2D = new Physics2D;
 	}
 
 	void GameObjectWorld::ClearMarkForDelete()

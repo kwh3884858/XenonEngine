@@ -37,12 +37,13 @@ namespace XenonEngine
 		virtual bool Update() override;
 		virtual bool Destroy() override;
 
-        const xg::Guid& GetModelGuid()const { return m_modelId; }
+        const Algorithm::Vector<xg::Guid>& GetPolygonGuids()const { return m_polygons; }
+		const Algorithm::Vector<const CrossPlatform::Polygon3D*> GetPolygon3Ds()const;
+
         void SetModelGuid(const xg::Guid& modelGuid);
 		void LoadModel();
 		void RequestReloadModel();
-        const Algorithm::Vector< CrossPlatform::Polygon3D*>& GetPolygon3D()const { return m_polygons; }
-		const Algorithm::Vector< CrossPlatform::Material*>& GetMaterials()const { return m_materials; }
+		//const Algorithm::Vector< CrossPlatform::Material*>& GetMaterials()const { return m_materials; }
         float GetMaxRadius()const { return m_maxRadius; }
 
         static ComponentType m_type;
@@ -50,7 +51,7 @@ namespace XenonEngine
         void CalculateModelMaxRadius();
 
 		Algorithm::Vector<xg::Guid> m_polygons;
-		Algorithm::Vector<xg::Guid> m_materials;
+		//Algorithm::Vector<xg::Guid> m_materials;
         float m_maxRadius = 0.0f;
 
 		bool m_requestToReload = false;
