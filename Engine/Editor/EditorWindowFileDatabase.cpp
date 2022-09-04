@@ -73,7 +73,7 @@ namespace XenonEngine
                 if (m_fileImporter.GetUserDatas())
                     userDatas = std::string((const char*)m_fileImporter.GetUserDatas());
                 auto selection = m_fileImporter.GetSelection(); // multiselection
-                database->AddFile(filePathName.c_str());
+                database->GenerateMetaFileForFile(filePathName.c_str());
                 // action
             }
             // close

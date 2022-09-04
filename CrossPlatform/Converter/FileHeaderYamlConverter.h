@@ -17,8 +17,8 @@ namespace YAML {
     struct convert<FileHeader> {
         static Node encode(const FileHeader& rhs) {
             Node node;
-            node.push_back(rhs.GetFileType());
-            node.push_back(rhs.GetGUID());
+            node["FileType"] = rhs.GetFileType();
+            node["GUID"] = rhs.GetGUID();
             return node;
         }
 

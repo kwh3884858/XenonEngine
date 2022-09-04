@@ -31,15 +31,14 @@ namespace XenonEngine
 
         // Virtual Path
         CrossPlatform::FolderMeta* GetFolder(const Algorithm::String& virtualPath) const;
-        //CrossPlatform::FolderMeta* GetFolderByRealPath(const Algorithm::String& realPath) const;
         CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath);
-        //CrossPlatform::FolderMeta* CreateFolderByRealPath(const Algorithm::String& realPath) const;
         Algorithm::String ConvertToVirtualPath(const Algorithm::String& virtualPath)const;
         Algorithm::String ConvertToRealPath(const Algorithm::String& realPath)const;
 
         // For Database
-        CrossPlatform::IFileMeta* AddFile(const Algorithm::String& realPath);
+        CrossPlatform::IFileMeta* GenerateMetaFileForFile(const Algorithm::String& realPath);
 		void DeleteFile(const Algorithm::String& path);
+
         // For Engine
 		CrossPlatform::IFileMeta* LoadFile(const Algorithm::String& realPath);
         void SaveFile(const Algorithm::String& realPath);
@@ -48,34 +47,15 @@ namespace XenonEngine
     private:
 		bool IsVirtualPath(const Algorithm::String& filePath)const;
 		bool IsRealPath(const Algorithm::String& filePath)const;
-        void RecursionFindFolder(CrossPlatform::FolderMeta& folder);
+        void RecursiveLoadFolder(CrossPlatform::FolderMeta& folder);
         void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
 
+        IFileMeta* GenerateMetaFile(const Algorithm::String& filePaht);
 		void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file){ m_database[guid] = file; }
-
-		//template<typename T>
-		//T* CreateFileMeta(CrossPlatform::FileType fileType, const std::filesystem::path& filePath);
-		//void DeleteFileMeta(CrossPlatform::IFileMeta* fileMeta);
 
         CrossPlatform::FolderMeta* m_root = nullptr;
         Algorithm::Vector<CrossPlatform::DataPair> m_typePair;
         std::map<xg::Guid, CrossPlatform::IFileMeta*> m_database;
 		std::map<CrossPlatform::FileType, type_info> m_fileTypePair;
-	public:
 	};
-
-
-	//T* FileDatabase::CreateFileMeta(CrossPlatform::FileType fileType, const std::filesystem::path& filePath)
-	//{
-	//	T* modeMeta = nullptr;
-	//	FolderMeta* folder = CreateFolder(filePath.parent_path().string().c_str());
-	//	if (folder->GetFile(filePath.filename().string().c_str()) == nullptr)
-	//	{
-	//		modeMeta = IFileMeta::CreateNewFileMeta(fileType, filePath.string().c_str());
-	//		modeMeta->GetFileHeader().GenerateMetadata();
-	//		folder->AddIFile(modeMeta);
-	//		AddFileToDatabase(guid, modeMeta);
-	//	}
-	//	return modeMeta;
-	//}
 }

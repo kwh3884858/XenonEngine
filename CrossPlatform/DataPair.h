@@ -11,7 +11,7 @@ namespace CrossPlatform
         DataPair(FileType type, const Algorithm::String& fileSuffix);
         DataPair(const DataPair& data);
 
-        FileType m_fileType = FileType::None;
+        FileType m_fileType = FileType::FileTypeNone;
         Algorithm::String m_fileSuffix;
     };
 }

@@ -145,7 +145,7 @@ namespace Algorithm
     }
 
     template <typename Type, size_t ArraySize>
-    char const * EnumToString(TypeString<Type> const (&enumStrArray)[ArraySize], Type enumVal)
+    char const * EnumToString(TypeString<Type> const (&enumStrArray)[ArraySize], const Type& enumVal)
     {
         size_t u = 0;
         while (u < ArraySize && enumStrArray[u].m_typeVal != enumVal)
@@ -158,7 +158,7 @@ namespace Algorithm
             return enumStrArray[u].m_string;
         }
 
-        return NULL;
+        return nullptr;
     }
 
     template <typename Type, size_t ArraySize>

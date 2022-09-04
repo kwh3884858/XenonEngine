@@ -1,5 +1,5 @@
 #pragma once
-#include "WorldMeta.h"
+#include "GameObjectWorldMeta.h"
 #include "CrossPlatform/Converter/GameObjectWorldYamlConverter.h"
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include <fstream>
@@ -11,28 +11,34 @@ namespace CrossPlatform
     using namespace XenonEngine;
     using namespace std;
 	using namespace std::filesystem;
-    WorldMeta::~WorldMeta()
-    {
-        delete m_gameobjectWorld;
-        m_gameobjectWorld = nullptr;
-    }
 
-	void WorldMeta::Load()
+	void GameObjectWorldMeta::Load()
 	{
 		if (!m_gameobjectWorld)
 		{
 			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-			m_gameobjectWorld = config.as<GameObjectWorld>().Copy();
+			m_gameobjectWorld = new GameObjectWorld(std::move(config.as<GameObjectWorld>()));
 		}
 
 		EngineManager::Get().GetWorldManager().SetCurrentWorld(m_gameobjectWorld);
 	}
 
-	void WorldMeta::Save()
+	void GameObjectWorldMeta::Clear()
 	{
-		GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
-		world->SetWorldName(GetFileHeader().GetFileName());
-		m_gameobjectWorld = world;
+		delete m_gameobjectWorld;
+		m_gameobjectWorld = nullptr;
+	}
+
+	void GameObjectWorldMeta::Save()
+	{
+		GameObjectWorld* currentWorld = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+		// Save As
+		if (m_gameobjectWorld != currentWorld)
+		{
+			Clear();
+			currentWorld->SetWorldName(GetFileHeader().GetFileName());
+			m_gameobjectWorld = currentWorld;
+		}
 
 		const String& path = GetFileHeader().GetFilePath();
 		if (path.Empty())
@@ -59,7 +65,7 @@ namespace CrossPlatform
 		}
 	}
 
-	void WorldMeta::Delete()
+	void GameObjectWorldMeta::Delete()
 	{
 		delete m_gameobjectWorld;
 		m_gameobjectWorld = nullptr;
@@ -81,9 +87,4 @@ namespace CrossPlatform
 			assert(result == true);
 		}
 	}
-
-	//XenonEngine::GameObjectWorld* WorldMeta::GetGameObjectWorld()
- //   {
-
- //   }
 }

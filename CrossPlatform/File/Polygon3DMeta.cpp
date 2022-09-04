@@ -1,22 +1,34 @@
 #include <filesystem>
 #include "Polygon3DMeta.h"
 #include "CrossPlatform/Polygon/Polygon3D.h"
+#include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 
 namespace CrossPlatform
 {
 	using namespace Algorithm;
 
-	Polygon3DMeta::~Polygon3DMeta()
+	void Polygon3DMeta::Load()
+	{
+		if (!m_polygon)
+		{
+			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+			m_polygon = new Polygon3D(std::move(config.as<Polygon3D>()));
+		}
+	}
+
+	void Polygon3DMeta::Clear()
 	{
 		delete m_polygon;
 		m_polygon = nullptr;
 	}
 
+	void Polygon3DMeta::Save()
+	{
+
+	}
+
 	void Polygon3DMeta::Delete()
 	{
-		delete m_polygon;
-		m_polygon = nullptr;
-
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())
 		{

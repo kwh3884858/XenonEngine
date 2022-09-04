@@ -12,12 +12,16 @@ namespace YAML {
     template<>
     struct convert<FileType> {
         static Node encode(const FileType& rhs) {
-            return Node((int)rhs);
+            return Node(Algorithm::EnumToString(CrossPlatform::FileTypeString, rhs));
         }
 
         static bool decode(const Node& node, FileType& rhs) {
-            rhs =(FileType) node.as<int>();
-            return true;
+			if (!node.IsScalar())
+				return false;
+            if (Algorithm::StringToType(CrossPlatform::FileTypeString, node.Scalar().c_str(), rhs))
+                return false;
+			return true;
+
         }
     };
 }

@@ -16,7 +16,7 @@ namespace CrossPlatform {
     {
     public:
         Mesh3DMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMesh3D); }
-        virtual ~Mesh3DMeta() override;
+		virtual ~Mesh3DMeta() override = default;
 		virtual void Load() override;
 		virtual void Clear() override;
 		virtual void Save() override;

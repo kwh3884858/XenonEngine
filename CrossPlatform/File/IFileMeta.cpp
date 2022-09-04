@@ -37,4 +37,11 @@ namespace CrossPlatform
         outputStream.close();
     }
 
+	void IFileMeta::Save()
+	{
+        m_header.GenerateMetadata();
+	}
+
+	CrossPlatform::FileType IFileMeta::m_fileType = FileType::FileTypeNone;
+
 }

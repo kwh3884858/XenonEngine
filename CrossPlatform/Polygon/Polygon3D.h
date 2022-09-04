@@ -6,6 +6,17 @@
 #include "Algorithms/Vector.h"
 #include "CrossPlatform/Polygon/Vertex3D.h"
 
+namespace CrossPlatform 
+{
+	class Polygon3D;
+}
+
+namespace YAML
+{
+	template<typename T> struct convert;
+	template<> struct convert<CrossPlatform::Polygon3D>;
+}
+
 namespace CrossPlatform {
 	using MathLab::Vector3f;
 	using MathLab::Vector2f;
@@ -14,6 +25,8 @@ namespace CrossPlatform {
 	class Polygon3D
 	{
 	public:
+		template<> friend struct YAML::convert<Polygon3D>;
+
         struct VertexIndexs
         {
             int m_vertexIndex = -1;

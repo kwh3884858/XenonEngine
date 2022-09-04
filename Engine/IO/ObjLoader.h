@@ -8,15 +8,20 @@
 //{
 //	class Polygon3D;
 //}
+namespace CrossPlatform
+{
+	class Mesh3DMeta;
+}
 namespace XenonEngine
 {
+	class Mesh3D;
 	class ObjectLoader : public CrossPlatform::XenonManager<ObjectLoader>
 	{
 	public:
 		virtual bool Initialize() override { return true; }
         virtual bool Shutdown() override { return true; }
 
-		bool LoadObj(const Algorithm::String& fileName, Algorithm::Vector<CrossPlatform::Polygon3D*>& polygons, Algorithm::Vector<CrossPlatform::Material*>& materials ) const;
+		bool LoadObj(const CrossPlatform::Mesh3DMeta& meshMeta, Mesh3D& mesh) const;
 	private:
 
 	};

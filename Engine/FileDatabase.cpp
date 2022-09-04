@@ -12,7 +12,7 @@
 #include "yaml-cpp/yaml.h"
 
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
-#include "CrossPlatform/File/WorldMeta.h"
+#include "CrossPlatform/File/GameObjectWorldMeta.h"
 #include "CrossPlatform/File/FolderMeta.h"
 #include "CrossPlatform/File/MaterialMeta.h"
 #include "CrossPlatform/File/ImageMeta.h"
@@ -28,6 +28,13 @@ namespace XenonEngine
     using namespace CrossPlatform;
     using namespace Algorithm;
 
+    DEFINE_FILE_TYPE(FileType::FileTypeFolder, FolderMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, Mesh3DMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypePolygon, Polygon3DMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeMaterial, MaterialMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeWorld, GameObjectWorldMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeImage, ImageMeta);
+
     void FileDatabase::Initialize()
     {
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeFolder, ""));
@@ -41,24 +48,32 @@ namespace XenonEngine
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".png"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".dds"));
 
-		FolderMeta::Initialization();
+		FolderMeta::Registration();
 
 
-        path Project(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
-        Project.make_preferred();
-        if (!exists(Project))
+        path projectRoot(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
+        projectRoot.make_preferred();
+        if (!exists(projectRoot))
         {
-            create_directory(Project);
+            create_directory(projectRoot);
+
+			path projectDataRoot = projectRoot.append("Data");
+			xg::Guid guid = xg::newGuid();
+			m_root = new FolderMeta(FileHeader(FileTypeFolder, projectDataRoot.string().c_str(), guid));
+
+			create_directory(projectDataRoot);
         }
-        path m_projectData = Project.append("Data");
-        m_projectData.make_preferred();
-        if (!exists(m_projectData))
+        else
         {
-            create_directory(m_projectData);
+			if (!exists(projectDataRoot))
+			{
+				create_directory(projectDataRoot);
+			}
         }
-        xg::Guid guid = xg::newGuid();
-        m_root = new FolderMeta(FileHeader(FileTypeFolder, m_projectData.string().c_str(), guid));
-        RecursionFindFolder(*m_root);
+
+
+
+        RecursiveLoadFolder(*m_root);
     }
 
     void FileDatabase::Shutdown()
@@ -77,7 +92,7 @@ namespace XenonEngine
                 return m_typePair[i].m_fileType;
             }
         }
-        return FileType::None;
+        return FileType::FileTypeNone;
     }
 
     const CrossPlatform::IFileMeta* FileDatabase::GetFile(const xg::Guid& fileGuid) const
@@ -171,7 +186,7 @@ namespace XenonEngine
             tmpVirtualPath.Append(decompositionPath[i]);
             if (tmpFolder == nullptr)
             {
-                String realPath = m_root->GetFileHeader().GetFilePath() + tmpVirtualPath.Substring(FileHeader::Root_Drive.Count(), tmpVirtualPath.Count());
+                String realPath = ConvertToRealPath(tmpVirtualPath);
 
 				tmpFolder = (FolderMeta*)IFileMeta::CreateNewFileMeta(FileType::FileTypeFolder, realPath);
                 tmpFolder->GetFileHeader().GenerateMetadata();
@@ -200,11 +215,11 @@ namespace XenonEngine
         return FileHeader::Root_Drive + realPath.Substring(m_root->GetFileHeader().GetFilePath().Count(), realPath.Count());
     }
 
-    IFileMeta* FileDatabase::AddFile(const Algorithm::String& realPath)
+    IFileMeta* FileDatabase::GenerateMetaFileForFile(const Algorithm::String& realPath)
     {
         path originalFile(realPath.CString());
         FileType fileType = GetFileType(originalFile.extension().string());
-		if (fileType == FileType::None || FileType::FileTypeFolder)
+		if (fileType == FileType::FileTypeNone)
 		{
 			assert(true == false);
 		}
@@ -212,10 +227,8 @@ namespace XenonEngine
 		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
 		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
 		{
-			meta = IFileMeta::CreateNewFileMeta(fileType, originalFile.string().c_str());
-			meta->GetFileHeader().GenerateMetadata();
+            IFileMeta* meta = GenerateMetaFile(realPath);
 			folder->AddIFile(meta);
-			AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
 		}
 		return meta;
     }
@@ -279,7 +292,7 @@ namespace XenonEngine
 		IFileMeta* file = folder->GetFile(fileName);
 		if (!file)
 		{
-			file = AddFile(filePath);
+			file = GenerateMetaFileForFile(filePath);
 		}
 		file->Save();
     }
@@ -315,7 +328,7 @@ namespace XenonEngine
 		return filePath.Find(m_root->GetFileHeader().GetFilePath());
 	}
 
-	void FileDatabase::RecursionFindFolder(FolderMeta& parentFolder)
+	void FileDatabase::RecursiveLoadFolder(FolderMeta& parentFolder)
     {
         directory_iterator dataRoot(parentFolder.GetFileHeader().GetFilePath().CString());
         for (auto& it : dataRoot)
@@ -331,7 +344,7 @@ namespace XenonEngine
 
                 YAML::Node config = YAML::LoadFile(it.path().generic_string());
                 FileHeader header = config.as<FileHeader>();
-                if (header.GetFileType() == FileType::None)
+                if (header.GetFileType() == FileType::FileTypeNone)
                 {
                     remove(it.path());
                     continue;
@@ -344,14 +357,14 @@ namespace XenonEngine
                 header.SetFilePath(relatedFile.string().c_str());
 
                 IFileMeta* file = nullptr;
-				FileType fileType = header.GetFileType();
-				assert(fileType != FileType::None);
+				const FileType fileType = header.GetFileType();
+				assert(fileType != FileType::FileTypeNone);
 
-				file = IFileMeta::CreateNewFileMeta(fileType, header);
+				file = CreateFileMetaFromHeader<fileType>(header);
 				if (fileType == FileType::FileTypeFolder)
 				{
 					FolderMeta* folder = (FolderMeta*)file;
-					RecursionFindFolder(*folder);
+					RecursiveLoadFolder(*folder);
 				}
 				assert(file != nullptr);
 
@@ -378,10 +391,14 @@ namespace XenonEngine
         }
     }
 
-	//void FileDatabase::DeleteFileMeta(CrossPlatform::IFileMeta* fileMeta)
-	//{
-	//	fileMeta->Delete();
-	//	delete fileMeta;
-	//	fileMeta = nullptr;
-	//}
+    IFileMeta* FileDatabase::GenerateMetaFile(const Algorithm::String& filePath)
+	{
+        path stdFilePath(filePath.CString());
+		FileType fileType = GetFileType(stdFilePath.extension().string());
+		IFileMeta* meta = IFileMeta::CreateNewFileMeta(fileType, filePath);
+		meta->GetFileHeader().GenerateMetadata();
+		AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
+        return meta;
+	}
+
 }

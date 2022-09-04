@@ -8,10 +8,6 @@ namespace CrossPlatform {
 	using namespace Algorithm;
 	using namespace std;
 	using namespace std::filesystem;
-    Mesh3DMeta::~Mesh3DMeta()
-    {
-		Clear();
-    }
 
 	void Mesh3DMeta::Load()
 	{

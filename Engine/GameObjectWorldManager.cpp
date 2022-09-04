@@ -6,7 +6,7 @@
 
 #include "yaml-cpp/yaml.h"
 #include "EngineManager.h"
-#include "CrossPlatform/File/WorldMeta.h"
+#include "CrossPlatform/File/GameObjectWorldMeta.h"
 #include "CrossPlatform/Converter/GameObjectWorldYamlConverter.h"
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include <fstream>

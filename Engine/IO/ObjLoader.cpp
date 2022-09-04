@@ -6,6 +6,8 @@
 #include <iostream>
 #include <filesystem>
 
+#include "CrossPlatform/File/Mesh3DMeta.h"
+
 #include "Engine/EngineManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION 
@@ -13,21 +15,14 @@
 
 namespace XenonEngine
 {
-	using Algorithm::String;
-    using Algorithm::Vector;
-	using CrossPlatform::Polygon3D;
-	using CrossPlatform::Material;
-	using MathLab::Vector3f;
-	using MathLab::Vector2f;
+	using namespace Algorithm;
+	using namespace CrossPlatform;
+	using namespace MathLab;
 
-	//bool ObjectLoader::LoadObj(const Algorithm::String& fileName, Vector<Polygon3D*>& polygons, Vector<Polygon3D*>& materials)const
-	//{
-
-	//}
-
-	bool ObjectLoader::LoadObj(const Algorithm::String& filePath, Algorithm::Vector<CrossPlatform::Polygon3D*>& polygons, Algorithm::Vector<CrossPlatform::Material*>& materials) const
+	bool ObjectLoader::LoadObj(const Mesh3DMeta& meshMeta, Mesh3D& mesh) const
 	{
-		std::string inputfile(filePath.Beign(), filePath.Count());
+		const String& meshFile = meshMeta.GetFileHeader().GetFilePath();
+		std::string inputfile(meshFile.CString());
 		tinyobj::ObjReaderConfig reader_config;
 		//reader_config.mtl_search_path = "./"; // Path to material files
 
@@ -50,16 +45,18 @@ namespace XenonEngine
 		auto& objMaterials = reader.GetMaterials();
 
 		int numOfVertex = (int)attrib.vertices.size() / 3;
-		Vector3f* vertices = new Vector3f[numOfVertex];
+		Vector<Vector3f> vertexs;
+		vertexs.Initialize(numOfVertex);
 		for (size_t i = 0; i < attrib.vertices.size(); i += 3)
 		{
-			vertices[i / 3].x = attrib.vertices[i + 0];
-			vertices[i / 3].y = attrib.vertices[i + 1];
-			vertices[i / 3].z = attrib.vertices[i + 2];
+			vertexs[i / 3].x = attrib.vertices[i + 0];
+			vertexs[i / 3].y = attrib.vertices[i + 1];
+			vertexs[i / 3].z = attrib.vertices[i + 2];
 		}
 
 		int numOfNormal = (int)attrib.normals.size() / 3;
-		Vector3f* normals = nullptr;
+		Vector<Vector3f> normals;
+		normals.Initialize(numOfNormal);
 		if (numOfNormal > 0)
 		{
 			normals = new Vector3f[numOfNormal];
@@ -71,10 +68,11 @@ namespace XenonEngine
 			}
 		}
 		int numOfTextureCoordinate = (int)attrib.texcoords.size() / 2;
-		Vector2f* uv = nullptr;
+
+		Vector<Vector2f> uv;
 		if (numOfTextureCoordinate > 0)
 		{
-			uv = new Vector2f[numOfTextureCoordinate];
+			uv.Initialize(numOfTextureCoordinate);
 			for (size_t i = 0; i < attrib.texcoords.size(); i+= 2)
 			{
 				uv[i / 2].x = attrib.texcoords[i + 0];
@@ -93,8 +91,8 @@ namespace XenonEngine
 			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
 			String m_bumpTextureFileName = objMaterial.bump_texname.c_str();
 
-			int pos = filePath.LastIndexOf(std::filesystem::path::preferred_separator);
-			String modelFolder(filePath.Substring(0, pos + 1));
+			int pos = meshFile.LastIndexOf(std::filesystem::path::preferred_separator);
+			String modelFolder(meshFile.Substring(0, pos + 1));
 			if (!m_diffuseTextureFileName.Empty())
 			{
 				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);

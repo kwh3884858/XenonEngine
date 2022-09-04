@@ -1,4 +1,4 @@
-@startuml
+@startuml Mesh3D
 
 class IFileMeta{
     FileHeader m_header;
@@ -96,16 +96,6 @@ note as N1
     用于存储PolygonMeta（Mesh）和MaterialMeta
     并且能够识别不同的数据格式，例如OBJ和FBX
     并对应不同的数据格式生成对应的meta和实例
-end note
-
-note bottom of N1
-    Meta：用于数据库管理，能够引用到对应的数据实例
-    Converter：把数据读取到实例中
-    实例类：具体的数据保存位置
-
-    透过修改实例中的Meta引用，可以更换模型。材质，贴图
-
-    载入
 end note
 
 @enduml

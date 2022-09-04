@@ -11,10 +11,21 @@ namespace CrossPlatform
     class FolderMeta :public IFileMeta
     {
     public:
-        FolderMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeFolder);  }
-		virtual void Load()override {}
-		virtual void Save()override;
+        FolderMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeFolder); }
+		virtual ~FolderMeta() override = default;
+
+		// Load into memory
+		virtual void Load() override;
+
+		// Clear from memory
+		virtual void Clear() override;
+
+		// Save to hard drive as a data file
+		virtual void Save() override;
+
+		// Delete data file from hard drive
 		virtual void Delete() override;
+
 
         void AddIFile(IFileMeta* file) { m_content.Add(file); }
 		void RemoveFile(IFileMeta* file) { m_content.Remove(file); }
@@ -23,7 +34,7 @@ namespace CrossPlatform
         int GetFileCount()const { return m_content.Count(); }
         bool CreateFolder() const;
 
-		static void Initialization();
+		static void Registration();
 
     private:
 		static IFileMeta* Create(const Algorithm::String& filePath);

@@ -13,15 +13,24 @@ namespace XenonEngine
 
 namespace CrossPlatform
 {    
-    class WorldMeta :public IFileMeta
+    class GameObjectWorldMeta :public IFileMeta
     {
     public:
         friend class XenonEngine::FileDatabase;
-        WorldMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeWorld); }
-        virtual ~WorldMeta()override;
-		void Load() override;
-		void Save() override;
-		void Delete() override;
+        GameObjectWorldMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeWorld); }
+        virtual ~GameObjectWorldMeta()override = default;
+
+		// Load into memory
+		virtual void Load() override;
+
+		// Clear from memory
+		virtual void Clear() override;
+
+		// Save to hard drive as a data file
+		virtual void Save() override;
+
+		// Delete data file from hard drive
+		virtual void Delete() override;
 		//void SetGameObjectWorld(XenonEngine::GameObjectWorld* world) { m_gameobjectWorld = world; }
 
     protected:

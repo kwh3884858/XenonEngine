@@ -1,5 +1,6 @@
 #include "FolderMeta.h"
 #include <filesystem>
+#include <fstream>
 
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 
@@ -9,23 +10,46 @@ namespace CrossPlatform
     using namespace std::filesystem;
     using namespace Algorithm;
 
+	void FolderMeta::Load()
+	{
+
+	}
+
+	void FolderMeta::Clear()
+	{
+
+	}
+
 	void FolderMeta::Save()
 	{
-		GetFileHeader().GetFilePath();
-		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
-		String fileName(originalFile.filename().string().c_str());
+		IFileMeta::Save();
+
+		const String& filePath = GetFileHeader().GetFilePath();
+		path folder(filePath.CString());
+		if (!exists(folder))
+		{
+			create_directory(folder);
+		}
+
+		FolderMeta* folder = CreateFolder(folder.parent_path().string().c_str());
+		String fileName(folder.filename().string().c_str());
 		IFileMeta* file = folder->GetFile(fileName);
+
+		xg::Guid guid = xg::newGuid();
+		FolderMeta* folderMeta = new FolderMeta(FileHeader(FileType::FileTypeFolder, filePath, guid));
+		return folderMeta;
+
 		if (file)
 		{
-			WorldMeta* metaFile = (WorldMeta*)file;
+			GameObjectWorldMeta* metaFile = (GameObjectWorldMeta*)file;
 			metaFile->SaveGameObjectWorld();
 		}
 		else
 		{
-			WorldMeta* metaFile = (WorldMeta*)AddFile(filePath);
+			GameObjectWorldMeta* metaFile = (GameObjectWorldMeta*)AddFile(filePath);
 			assert(metaFile != nullptr);
 			GameObjectWorld* world = EngineManager::Get().GetWorldManager().GetCurrentWorld();
-			world->SetWorldName(originalFile.stem().string().c_str());
+			world->SetWorldName(folder.stem().string().c_str());
 			metaFile->SetGameObjectWorld(world);
 			metaFile->SaveGameObjectWorld();
 		}
@@ -38,6 +62,8 @@ namespace CrossPlatform
 			m_content[i]->Delete();
 			RemoveFile(m_content[i]);
 		}
+		path folderPath(GetFileHeader().GetFilePath().CString());
+		remove(folderPath);
 		assert(m_content.Count() == 0); 
 	}
 
@@ -63,11 +89,12 @@ namespace CrossPlatform
         return true;
     }
 
-	void FolderMeta::Initialization()
+	void FolderMeta::Registration()
 	{
 		RegisterFileFacotry(FileType::FileTypeFolder, Create);
 		RegisterFileLoader(FileType::FileTypeFolder, Read);
 	}
+
 
 	IFileMeta* FolderMeta::Create(const Algorithm::String& filePath)
 	{

@@ -36,10 +36,9 @@ namespace XenonEngine
 		: GameObjectWorld(that.GetWorldName())
 	{
 		const Algorithm::Vector<GameObject*>& objects = that.GetWorldObjects();
-		for (int i = 0; i < objects.Count(); i++)
+		for (auto & object: objects)
 		{
-			GameObject* newGo = objects[i]->Copy();
-			AddGameObject(newGo);
+			AddGameObject(std::move(*object));
 		}
 	}
 
@@ -101,7 +100,8 @@ namespace XenonEngine
 
 	void GameObjectWorld::AddGameObject(GameObject&& gameobject)
 	{
-		m_worldObjects.Add(gameobject);
+		GameObject* go = new GameObject(gameobject);
+		m_worldObjects.Add(go);
 	}
 
 	void GameObjectWorld::RemoveGameObject(GameObject* const gameobject)
