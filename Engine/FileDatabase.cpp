@@ -21,6 +21,15 @@
 #include "Engine/EngineManager.h"
 #include "Engine/GameObjectWorld.h"
 
+namespace CrossPlatform
+{
+	DEFINE_FILE_TYPE(FileType::FileTypeFolder, CrossPlatform::FolderMeta)
+		DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, CrossPlatform::Mesh3DMeta)
+		DEFINE_FILE_TYPE(FileType::FileTypePolygon, CrossPlatform::Polygon3DMeta)
+		DEFINE_FILE_TYPE(FileType::FileTypeMaterial, CrossPlatform::MaterialMeta)
+		DEFINE_FILE_TYPE(FileType::FileTypeWorld, CrossPlatform::GameObjectWorldMeta)
+		DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::ImageMeta)
+}
 
 namespace XenonEngine
 {
@@ -29,12 +38,7 @@ namespace XenonEngine
     using namespace CrossPlatform;
     using namespace Algorithm;
 
-    DEFINE_FILE_TYPE(FileType::FileTypeFolder, CrossPlatform::FolderMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, CrossPlatform::Mesh3DMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypePolygon, CrossPlatform::Polygon3DMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeMaterial, CrossPlatform::MaterialMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeWorld, CrossPlatform::GameObjectWorldMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::ImageMeta);
+
 
     void FileDatabase::Initialize()
     {
@@ -57,22 +61,14 @@ namespace XenonEngine
         if (!exists(projectRoot))
         {
             create_directory(projectRoot);
+        }
 
-			path projectDataRoot = projectRoot.append("Data");
-			xg::Guid guid = xg::newGuid();
-			m_root = new FolderMeta(FileHeader(FileTypeFolder, projectDataRoot.string().c_str(), guid));
-
+		path projectDataRoot = projectRoot.append("Data");
+		if (!exists(projectDataRoot))
+		{
 			create_directory(projectDataRoot);
-        }
-        else
-        {
-			if (!exists(projectDataRoot))
-			{
-				create_directory(projectDataRoot);
-			}
-        }
-
-
+			IFileMeta* folderMeta = CreateMetaFromPath(projectDataRoot.string().c_str());
+		}
 
         RecursiveLoadFolder(*m_root);
     }
