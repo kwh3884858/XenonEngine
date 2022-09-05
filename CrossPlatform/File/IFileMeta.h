@@ -95,12 +95,19 @@ namespace CrossPlatform
 	//}
 	};
 
-    template<FileType fileType>
-    IFileMeta* CreateFileMetaFromHeader(const FileHeader& fileHeader) { return nullptr; }
+	template<FileType fileType>
+	IFileMeta* CreateFileMetaFromHeader(const FileHeader& fileHeader) { return nullptr; }
+
+	//template<> 
+ //   IFileMeta* CreateFileMetaFromHeader<FileType::FileTypeFolder>(const FileHeader& fileHeader)
+	//{
+ //       CrossPlatform::FolderMeta* meta = new CrossPlatform::FolderMeta(fileHeader);
+	//	return meta; 
+	//} 
 
 #define DEFINE_FILE_TYPE(Type, FileTypeClass) \
     template<> \
-    FileTypeClass* CreateFileMetaFromHeader<Type>(const FileHeader& fileHeader) \
+    IFileMeta* CreateFileMetaFromHeader<Type>(const FileHeader& fileHeader) \
     { \
 	    FileTypeClass* meta = new FileTypeClass(fileHeader); \
 	    return meta; \

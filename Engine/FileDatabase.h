@@ -50,6 +50,7 @@ namespace XenonEngine
         void RecursiveLoadFolder(CrossPlatform::FolderMeta& folder);
         void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
 
+        IFileMeta* CreateMetaFromPath(const Algorithm::String& realFilePath);
         IFileMeta* GenerateMetaFile(const Algorithm::String& filePaht);
 		void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file){ m_database[guid] = file; }
 

@@ -29,12 +29,12 @@ namespace XenonEngine
     using namespace CrossPlatform;
     using namespace Algorithm;
 
-    DEFINE_FILE_TYPE(FileType::FileTypeFolder, FolderMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, Mesh3DMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypePolygon, Polygon3DMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeMaterial, MaterialMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeWorld, GameObjectWorldMeta);
-    DEFINE_FILE_TYPE(FileType::FileTypeImage, ImageMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeFolder, CrossPlatform::FolderMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, CrossPlatform::Mesh3DMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypePolygon, CrossPlatform::Polygon3DMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeMaterial, CrossPlatform::MaterialMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeWorld, CrossPlatform::GameObjectWorldMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::ImageMeta);
 
     void FileDatabase::Initialize()
     {
@@ -178,7 +178,8 @@ namespace XenonEngine
         {
             assert(decompositionPath[0] == FileHeader::Root_Drive);
         }
-        FolderMeta* currentFolder = (FolderMeta*)m_root;
+
+        FolderMeta* currentFolder = m_root;
         String tmpVirtualPath = decompositionPath[0];
         for (int i = 1; i < decompositionPath.Count(); i++)
         {
@@ -188,12 +189,7 @@ namespace XenonEngine
             if (tmpFolder == nullptr)
             {
                 String realPath = ConvertToRealPath(tmpVirtualPath);
-
-				tmpFolder = (FolderMeta*)IFileMeta::CreateNewFileMeta(FileType::FileTypeFolder, realPath);
-                tmpFolder->GetFileHeader().GenerateMetadata();
-                tmpFolder->CreateFolder();
-                currentFolder->AddIFile(tmpFolder);
-				AddFileToDatabase(tmpFolder->GetFileHeader().GetGUID(), tmpFolder);
+				tmpFolder = CreateMetaFromPath(realPath);
             }
             if (tmpFolder->GetFileHeader().GetFileType() != FileType::FileTypeFolder)
             {
@@ -228,7 +224,7 @@ namespace XenonEngine
 		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
 		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
 		{
-            IFileMeta* meta = GenerateMetaFile(realPath);
+            IFileMeta* meta = CreateMetaFromPath(realPath);
 			folder->AddIFile(meta);
 		}
 		return meta;
@@ -392,7 +388,20 @@ namespace XenonEngine
         }
     }
 
-    IFileMeta* FileDatabase::GenerateMetaFile(const Algorithm::String& filePath)
+	CrossPlatform::IFileMeta* FileDatabase::CreateMetaFromPath(const Algorithm::String& realFilePath)
+	{
+        path stdFilePath(realFilePath.CString());
+        assert(exists(stdFilePath) == true);
+        const FileType fileType = GetFileType(stdFilePath.extension().string());
+		xg::Guid guid = xg::newGuid();
+        FileHeader header(fileType, realFilePath, guid);
+        IFileMeta* meta = CrossPlatform::CreateFileMetaFromHeader<fileType>(header);
+		meta->IFileMeta::Save();
+		AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
+		return meta;
+	}
+
+	IFileMeta* FileDatabase::GenerateMetaFile(const Algorithm::String& filePath)
 	{
         path stdFilePath(filePath.CString());
 		FileType fileType = GetFileType(stdFilePath.extension().string());
