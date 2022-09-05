@@ -38,6 +38,12 @@ namespace XenonEngine
     using namespace CrossPlatform;
     using namespace Algorithm;
 
+    DEFINE_FILE_TYPE(FileType::FileTypeFolder, CrossPlatform::FolderMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, CrossPlatform::Mesh3DMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypePolygon, CrossPlatform::Polygon3DMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeMaterial, CrossPlatform::MaterialMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeWorld, CrossPlatform::GameObjectWorldMeta);
+    DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::ImageMeta);
 
 
     void FileDatabase::Initialize()
