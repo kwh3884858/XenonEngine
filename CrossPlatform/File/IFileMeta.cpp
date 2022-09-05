@@ -41,7 +41,4 @@ namespace CrossPlatform
 	{
         m_header.GenerateMetadata();
 	}
-
-	CrossPlatform::FileType IFileMeta::m_fileType = FileType::FileTypeNone;
-
 }
