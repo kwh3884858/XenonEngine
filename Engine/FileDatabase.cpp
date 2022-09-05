@@ -21,6 +21,7 @@
 #include "Engine/EngineManager.h"
 #include "Engine/GameObjectWorld.h"
 
+
 namespace XenonEngine
 {
     using namespace std;
@@ -385,7 +386,7 @@ namespace XenonEngine
 				FolderMeta* fileFolder = (FolderMeta*)file;
 				RecursionClearFolder(*fileFolder);
 			}
-			file->Delete();
+			file->Clear();
 			delete file;
 			file = nullptr;
         }
@@ -396,7 +397,7 @@ namespace XenonEngine
         path stdFilePath(filePath.CString());
 		FileType fileType = GetFileType(stdFilePath.extension().string());
 		IFileMeta* meta = IFileMeta::CreateNewFileMeta(fileType, filePath);
-		meta->GetFileHeader().GenerateMetadata();
+		meta->IFileMeta::Save();
 		AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
         return meta;
 	}
