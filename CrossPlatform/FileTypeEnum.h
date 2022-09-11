@@ -25,12 +25,4 @@ namespace CrossPlatform
 		{"Image", FileType::FileTypeImage},
     };
 
-	const Algorithm::TypeString<iFI> FileTypeString[] = {
-	{"Folder", FolderMeta},
-	{"Mesh3D", Mesh3DMeta},
-	{"Polygon", Polygon3DMeta},
-	{"Material", MaterialMeta},
-	{"World", GameObjectWorldMeta},
-	{"Image", ImageMeta},
-	};
 }

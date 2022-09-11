@@ -1,6 +1,9 @@
 #include "Mesh3DMeta.h"
 #include "CrossPlatform/Polygon/Polygon3D.h"
 #include "Engine/IO/ObjLoader.h"
+#include "CrossPlatform/Converter/Mesh3DYamlConverter.h"
+
+#include <fstream>
 #include <filesystem>
 namespace CrossPlatform {
 
@@ -14,22 +17,27 @@ namespace CrossPlatform {
 		if (!m_mesh)
 		{
 			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-			m_gameobjectWorld = config.as<Mesh3DMeta>().Copy();
+			m_mesh = config.as<Mesh3D>().Copy();
 		}
 	}
 
 	void Mesh3DMeta::Clear()
 	{
-		for (int i = 0; i < m_polygons.Count(); i++)
+		if (m_mesh)
 		{
-			delete m_polygons[i];
-			m_polygons[i] = nullptr;
+			delete m_mesh;
+			m_mesh = nullptr;
 		}
 	}
 
 	void Mesh3DMeta::Save()
 	{
+		IFileMeta::Save();
 
+		ofstream outputStream(GetFileHeader().GetFilePath().CString());
+		YAML::Emitter out(outputStream);
+		out << YAML::Node(*m_mesh);
+		outputStream.close();
 	}
 
 	void Mesh3DMeta::Delete()
@@ -71,27 +79,16 @@ namespace CrossPlatform {
 		}
 	}
 
-	const Vector<Polygon3D*>& Mesh3DMeta::GetPolygons()
-    {
-        return m_cachePolygons;
-    }
 
-	const Vector<Material*>& Mesh3DMeta::GetMaterials()
-	{
-		return m_cacheMaterials;
-	}
-
-
-
-	void Mesh3DMeta::LoadModel()
-	{
-		Clear();
-		bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);
-		assert(result == true);
-		for (int i = 0; i < m_polygons.Count(); i++)
-		{
-			m_polygons[i]->SetModelGUID(GetFileHeader().GetGUID());
-		}
-	}
+	//void Mesh3DMeta::LoadModel()
+	//{
+	//	Clear();
+	//	bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath(), m_polygons, m_materials);
+	//	assert(result == true);
+	//	for (int i = 0; i < m_polygons.Count(); i++)
+	//	{
+	//		m_polygons[i]->SetModelGUID(GetFileHeader().GetGUID());
+	//	}
+	//}
 
 }

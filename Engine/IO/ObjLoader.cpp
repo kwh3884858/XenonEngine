@@ -18,11 +18,12 @@ namespace XenonEngine
 	using namespace Algorithm;
 	using namespace CrossPlatform;
 	using namespace MathLab;
+	//using namespace std;
 
-	bool ObjectLoader::LoadObj(const Mesh3DMeta& meshMeta, Mesh3D& mesh) const
+	bool ObjectLoader::LoadObj(const Algorithm::String& path) const
 	{
-		const String& meshFile = meshMeta.GetFileHeader().GetFilePath();
-		std::string inputfile(meshFile.CString());
+		//const String& meshFile = meshMeta.GetFileHeader().GetFilePath();
+		std::string inputfile(path.CString());
 		tinyobj::ObjReaderConfig reader_config;
 		//reader_config.mtl_search_path = "./"; // Path to material files
 
@@ -59,7 +60,7 @@ namespace XenonEngine
 		normals.Initialize(numOfNormal);
 		if (numOfNormal > 0)
 		{
-			normals = new Vector3f[numOfNormal];
+			//normals = new Vector3f[numOfNormal];
 			for (size_t i = 0; i < attrib.normals.size(); i += 3)
 			{
 				normals[i / 3].x = attrib.normals[i + 0];
@@ -88,28 +89,34 @@ namespace XenonEngine
 			material->m_diffuse = Vector3f(objMaterial.diffuse[0], objMaterial.diffuse[1], objMaterial.diffuse[2]);
 			material->m_specular = Vector3f(objMaterial.specular[0], objMaterial.specular[1], objMaterial.specular[2]);
 			material->m_emission = Vector3f(objMaterial.emission[0], objMaterial.emission[1], objMaterial.emission[2]);
-			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
-			String m_bumpTextureFileName = objMaterial.bump_texname.c_str();
+			material->m_diffuseTexture = xg::Guid();
+			material->m_bumpTexture = xg::Guid();
 
-			int pos = meshFile.LastIndexOf(std::filesystem::path::preferred_separator);
-			String modelFolder(meshFile.Substring(0, pos + 1));
+			int pos = path.LastIndexOf(std::filesystem::path::preferred_separator);
+			String modelFolder(path.Substring(0, pos + 1));
+
+			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
 			if (!m_diffuseTextureFileName.Empty())
 			{
 				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);
-				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().LoadFile(diffuseTextureFileName);
+				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromPath(diffuseTextureFileName);
 				assert(m_diffuseTexture != nullptr);
 				material->m_diffuseTexture = m_diffuseTexture->GetFileHeader().GetGUID();
 			}
+
+			String m_bumpTextureFileName = objMaterial.bump_texname.c_str();
 			if (!m_bumpTextureFileName.Empty())
 			{
 				String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_bumpTextureFileName, modelFolder);
-				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().LoadFile(bumpTextureFileName);
+				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromPath(bumpTextureFileName);
 				assert(m_bumpTexture != nullptr);
 				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
 			}
-
-			//material->loadTextureData(filePath);
-			materials.Add(material);
+			std::string materialFileName = std::filesystem::path::preferred_separator + objMaterial.name.c_str() + ".xmaterial";
+			String materialPath = modelFolder + materialFileName.c_str();
+			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().CreateMetaFromPath(materialPath);
+			materialMeta->m_material = material;
+			materialMeta->Save();
 		}
 
 		size_t vindex = 0;

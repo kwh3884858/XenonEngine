@@ -31,6 +31,7 @@ namespace CrossPlatform
 
 	void GameObjectWorldMeta::Save()
 	{
+		IFileMeta::Save();
 		GameObjectWorld* currentWorld = EngineManager::Get().GetWorldManager().GetCurrentWorld();
 		// Save As
 		if (m_gameobjectWorld != currentWorld)
@@ -50,13 +51,13 @@ namespace CrossPlatform
 			return;
 		}
 
-		String metaFilePath = path + ".metadata";
-		{
-			ofstream outputStream(metaFilePath.CString());
-			YAML::Emitter out(outputStream);
-			out << YAML::Node(GetFileHeader());
-			outputStream.close();
-		}
+		//String metaFilePath = path + ".metadata";
+		//{
+		//	ofstream outputStream(metaFilePath.CString());
+		//	YAML::Emitter out(outputStream);
+		//	out << YAML::Node(GetFileHeader());
+		//	outputStream.close();
+		//}
 		{
 			ofstream outputStream(path.CString());
 			YAML::Emitter out(outputStream);

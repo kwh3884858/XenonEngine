@@ -21,7 +21,7 @@ namespace XenonEngine
 		virtual bool Initialize() override { return true; }
         virtual bool Shutdown() override { return true; }
 
-		bool LoadObj(const CrossPlatform::Mesh3DMeta& meshMeta, Mesh3D& mesh) const;
+		bool LoadObj(const Algorithm::String& path) const;
 	private:
 
 	};

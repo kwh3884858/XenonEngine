@@ -14,6 +14,7 @@ namespace CrossPlatform
 		Material() = default;
 		~Material() = default;
 		Material(const Material& material) = delete;
+		Material(Material&& material);
 
 		const Algorithm::String& GetName()const { return m_name; }
 		const float& GetExponent()const { return m_exponent; }

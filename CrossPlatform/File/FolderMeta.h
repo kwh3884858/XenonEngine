@@ -34,11 +34,11 @@ namespace CrossPlatform
         int GetFileCount()const { return m_content.Count(); }
         bool CreateFolder() const;
 
-		static void Registration();
+		//static void Registration();
 
     private:
-		static IFileMeta* Create(const Algorithm::String& filePath);
-		static IFileMeta* Read(const FileHeader& fileHeader);
+		//static IFileMeta* Create(const Algorithm::String& filePath);
+		//static IFileMeta* Read(const FileHeader& fileHeader);
         Algorithm::Vector<IFileMeta*> m_content;
 	};
 }
