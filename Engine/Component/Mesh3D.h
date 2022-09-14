@@ -6,7 +6,7 @@
 #pragma once
 
 #include "IComponent.h"
-#include "Algorithms/String.h"
+//#include "Algorithms/String.h"
 #include "MathLab/Vector3.h"
 
 #include "crossguid/guid.hpp"
@@ -22,10 +22,12 @@ namespace YAML {
 }
 namespace XenonEngine
 {
+	class ObjectLoader;
 	class Mesh3D final :public IComponent
 	{
 	public:
 		friend class YAML::convert<Mesh3D>;
+		friend class ObjectLoader;
 
 		static const float PI;
 
@@ -54,9 +56,10 @@ namespace XenonEngine
 	private:
         void CalculateModelMaxRadius();
 
-		Algorithm::Vector<MathLab::Vector3f> vertexs;
-		Algorithm::Vector<MathLab::Vector3f> normals;
 		Algorithm::Vector<xg::Guid> m_polygons;
+
+		Algorithm::Vector<MathLab::Vector3f> m_vertexs;
+		Algorithm::Vector<MathLab::Vector3f> m_normals;
 		Algorithm::Vector<xg::Guid> m_materials;
         float m_maxRadius = 0.0f;
 

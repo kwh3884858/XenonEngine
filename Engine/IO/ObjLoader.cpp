@@ -12,6 +12,9 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include "Library/tinyobjloader/tiny_obj_loader.h"
+#include "Engine/Component/Mesh3D.h"
+#include "CrossPlatform/File/MaterialMeta.h"
+#include "CrossPlatform/File/Polygon3DMeta.h"
 
 namespace XenonEngine
 {
@@ -22,7 +25,14 @@ namespace XenonEngine
 
 	bool ObjectLoader::LoadObj(const Algorithm::String& path) const
 	{
-		//const String& meshFile = meshMeta.GetFileHeader().GetFilePath();
+		// Path constant
+		int delimiterIndex = path.LastIndexOf(std::filesystem::path::preferred_separator);
+		assert(delimiterIndex >= 0);
+		const String fileName = path.Substring(delimiterIndex + 1, path.Count());
+
+		int pos = path.LastIndexOf(std::filesystem::path::preferred_separator);
+		const String modelFolder(path.Substring(0, pos + 1));
+
 		std::string inputfile(path.CString());
 		tinyobj::ObjReaderConfig reader_config;
 		//reader_config.mtl_search_path = "./"; // Path to material files
@@ -81,6 +91,17 @@ namespace XenonEngine
 			}
 		}
 
+		//Save to mesh3D
+		std::string meshName = std::filesystem::path::preferred_separator +
+			fileName.CString() +
+			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial).CString();
+		String meshPath = modelFolder + meshName.c_str();
+		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromPath(meshPath);
+		
+		Mesh3D* mesh = new Mesh3D();
+		mesh->m_vertexs = std::move(vertexs);
+		mesh->m_normals = std::move(normals);
+
 		for (const auto & objMaterial : objMaterials)
 		{
 			Material* material = new Material;
@@ -92,8 +113,6 @@ namespace XenonEngine
 			material->m_diffuseTexture = xg::Guid();
 			material->m_bumpTexture = xg::Guid();
 
-			int pos = path.LastIndexOf(std::filesystem::path::preferred_separator);
-			String modelFolder(path.Substring(0, pos + 1));
 
 			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
 			if (!m_diffuseTextureFileName.Empty())
@@ -112,26 +131,32 @@ namespace XenonEngine
 				assert(m_bumpTexture != nullptr);
 				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
 			}
-			std::string materialFileName = std::filesystem::path::preferred_separator + objMaterial.name.c_str() + ".xmaterial";
+			std::string materialFileName = std::filesystem::path::preferred_separator + 
+				objMaterial.name.c_str() + 
+				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial).CString();
 			String materialPath = modelFolder + materialFileName.c_str();
 			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().CreateMetaFromPath(materialPath);
 			materialMeta->m_material = material;
 			materialMeta->Save();
+
+			mesh->m_materials.Add(materialMeta->GetFileHeader().GetGUID());
 		}
 
 		size_t vindex = 0;
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++)
 		{
-			int numOfIndex = (int) shapes[s].mesh.indices.size();
-			Polygon3D::VertexIndexs* vertexIndexList = new Polygon3D::VertexIndexs[numOfIndex];
-			int numOfMaterial = (int) shapes[s].mesh.material_ids.size();
-			int* materialIndex = nullptr;
-			if (numOfMaterial > 0)
-			{
-				materialIndex = new int[numOfMaterial];
-			}
+
+			//int numOfMaterial = (int) shapes[s].mesh.material_ids.size();
+			//int* materialIndex = nullptr;
+			//if (numOfMaterial > 0)
+			//{
+			//	materialIndex = new int[numOfMaterial];
+			//}
 			// Loop over faces(polygon)
+			Vector<Polygon3D::VertexIndexs> vertexIndex;
+			int numOfIndex = (int)shapes[s].mesh.indices.size();
+			vertexIndex.Initialize(numOfIndex);
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 			{
@@ -139,22 +164,34 @@ namespace XenonEngine
 				for (size_t v = 0; v < fv; v++)
 				{
 					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-					vertexIndexList[vindex].m_vertexIndex = idx.vertex_index;
+					vertexIndex[vindex].m_vertexIndex = idx.vertex_index;
 					if (idx.normal_index >= 0)
 					{
-						vertexIndexList[vindex].m_normalIndex = idx.normal_index;
+						vertexIndex[vindex].m_normalIndex = idx.normal_index;
 					}
 					if (idx.texcoord_index >= 0)
 					{
-						vertexIndexList[vindex].m_textureCoordinateIndex = idx.texcoord_index;
+						vertexIndex[vindex].m_textureCoordinateIndex = idx.texcoord_index;
 					}
 					vindex++;
 				}
 				index_offset += fv;
-				materialIndex[f] = shapes[s].mesh.material_ids[f];
+				vertexIndex[vindex].m_materialIndex = shapes[s].mesh.material_ids[f];
 			}
-			Polygon3D* polygon = new Polygon3D(numOfIndex, vertexIndexList, numOfVertex, vertices, numOfNormal, normals, numOfTextureCoordinate, uv, numOfMaterial, materialIndex);
-			polygons.Add(polygon);
+			//Create new polygon3D
+			std::string polygonName = std::filesystem::path::preferred_separator +
+				fileName.CString() + s +
+				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypePolygon).CString();
+			String polygonPath = modelFolder + polygonName.c_str();
+			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromPath(polygonPath);
+
+			Mesh3D* mesh = new Mesh3D();
+			Polygon3D* polygon = new Polygon3D(std::move(vertexIndex));
+
+			polygonMeta->m_polygon = polygon;
+			polygonMeta->Save();
+
+			mesh->m_polygons.Add(polygonMeta->GetFileHeader().GetGUID());
 		}
 
 		return true;

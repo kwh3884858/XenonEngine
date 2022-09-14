@@ -7,7 +7,7 @@
 #include "CrossPlatform/Polygon/Polygon3D.h"
 #include "yaml-cpp/yaml.h"
 
-#include "Vector3YamlConverter.h"
+//#include "Vector3YamlConverter.h"
 #include "CrossPlatform/Converter/GUIDYamlConverter.h"
 
 namespace YAML {
@@ -19,9 +19,10 @@ namespace YAML {
         static Node encode(const Polygon3D::VertexIndexs& rhs)
         {
             Node node;
-			node["VertexIndex"] = rhs.m_vertexIndex;
-			node["NormalIndex"] = rhs.m_normalIndex;
-			node["TextureCoordinateIndex"] = rhs.m_textureCoordinateIndex;
+            node["VertexIndex"] = rhs.m_vertexIndex;
+            node["NormalIndex"] = rhs.m_normalIndex;
+            node["TextureCoordinateIndex"] = rhs.m_textureCoordinateIndex;
+            node["MaterialIndex"] = rhs.m_materialIndex;
             return node;
         }
         static bool decode(const Node& node, Polygon3D::VertexIndexs& rhs)
@@ -29,40 +30,32 @@ namespace YAML {
             rhs.m_vertexIndex = node["VertexIndex"].as<int>();
             rhs.m_normalIndex = node["NormalIndex"].as<int>();
             rhs.m_textureCoordinateIndex = node["TextureCoordinateIndex"].as<int>();
+            rhs.m_materialIndex = node["MaterialIndex"].as<int>();
             return true;
         }
-    }
+    };
 
     template<>
     struct convert<Polygon3D> {
         static Node encode(const Polygon3D& rhs) {
             Node node;
-            node["NumOfIndex"] = rhs.m_numOfIndex;
-            for (int i = 0; i < rhs.m_numOfIndex; i++)
-            {
-                node["VertexIndexList"]->push_back( *(rhs.m_vertexIndexList[i]) );
-            }
-            node["NumOfVertex"] = rhs.m_numOfVertex;
-			for (int i = 0; i < rhs.m_numOfVertex; i++)
+			for (const auto& index : rhs.m_vertexIndex)
 			{
-				node["VertexList"]->push_back(*(rhs.m_vertexList[i]));
+				node["VertexIndex"].push_back(index);
 			}
-            node["NumOfNormal"] = rhs.m_numOfNormal;
-			for (int i = 0; i < rhs.m_numOfNormal; i++)
-			{
-				node["NormalList"]->push_back(*(rhs.m_normalList[i]));
-			}
-            node["NumOfTextureCoordinate"] = rhs.m_numOfTextureCoordinate;
-			for (int i = 0; i < rhs.m_numOfTextureCoordinate; i++)
-			{
-				node["NormalList"]->push_back(*(rhs.m_textureCoordinate[i]));
-			}
-            node["Material"] = rhs.m_material;
             return ;
         }
 
-        static bool decode(const Node& node, Polygon3D& rhs) {
-            rhs = node["NumOfIndex"].as<int>();
+		static bool decode(const Node& node, Polygon3D& rhs) {
+			if (node["VertexIndex"].IsDefined())
+			{
+				if (node["VertexIndex"].IsSequence())
+				{
+					for (YAML::const_iterator it = node["VertexIndex"].begin(); it != node["VertexIndex"].end(); ++it) {
+						rhs.m_vertexIndex.Add(it->as<Polygon3D::VertexIndexs>());
+					}
+				}
+			}
             return true;
         }
     };

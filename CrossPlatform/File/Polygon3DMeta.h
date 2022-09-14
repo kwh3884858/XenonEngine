@@ -1,11 +1,18 @@
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+namespace XenonEngine
+{
+	class ObjectLoader;
+}
+
 namespace CrossPlatform
 {
 	class Polygon3D;
 	class Polygon3DMeta :public IFileMeta
 	{
 	public:
+		friend class XenonEngine::ObjectLoader;
+
 		Polygon3DMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypePolygon); }
 		virtual ~Polygon3DMeta()override = default;
 

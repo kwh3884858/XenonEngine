@@ -9,9 +9,10 @@ namespace CrossPlatform
 		FileTypeMesh3D,
 		FileTypePolygon,
 		FileTypeMaterial,
-		FileTypeObjMaterial,
+		//FileTypeObjMaterial,
         FileTypeWorld,
-		FileTypeImage
+		FileTypeImage,
+		FileTypeObjFormatFile,
     };
 
     const Algorithm::TypeString<FileType> FileTypeString[] = {
@@ -20,9 +21,10 @@ namespace CrossPlatform
 		{"Mesh3D", FileType::FileTypeMesh3D},
 		{"Polygon", FileType::FileTypePolygon},
 		{"Material", FileType::FileTypeMaterial},
-		{"ObjMaterial", FileType::FileTypeObjMaterial},
+		//{"ObjMaterial", FileType::FileTypeObjMaterial},
 		{"World", FileType::FileTypeWorld},
 		{"Image", FileType::FileTypeImage},
+		{"ObjFormatFile", FileType::FileTypeObjFormatFile}
     };
 
 }

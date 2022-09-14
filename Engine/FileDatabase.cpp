@@ -43,14 +43,14 @@ namespace XenonEngine
     {
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeFolder, ""));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeMesh3D, ".xmesh3d"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypePolygon, ".obj"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypePolygon, ".fbx"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypePolygon, ".xpolygon"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, ".xmaterial"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeObjMaterial, ".mtl"));
+		//m_typePair.Add(DataPair(CrossPlatform::FileTypeObjMaterial, ".mtl"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeWorld, ".world"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".jpg"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".png"));
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".dds"));
+		m_typePair.Add(DataPair(CrossPlatform::FileTypeObjFormatFile, ".obj"));
 
 		//FolderMeta::Registration();
 
