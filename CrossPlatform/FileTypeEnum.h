@@ -2,7 +2,7 @@
 #include "Algorithms/TypeString.h"
 namespace CrossPlatform
 {
-    enum FileType : int
+    enum class FileType : int
     {
         FileTypeNone,
         FileTypeFolder,

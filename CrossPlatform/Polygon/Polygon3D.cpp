@@ -21,7 +21,7 @@ namespace CrossPlatform
 		m_vertexIndex = that.m_vertexIndex;
 	}
 
-	Polygon3D::Polygon3D(Algorithm::Vector<VertexIndexs>&& vertexIndex)
+	Polygon3D::Polygon3D(Algorithm::Vector<VertexIndex>&& vertexIndex)
 	{
 		m_vertexIndex = vertexIndex;
 	}

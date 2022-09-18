@@ -164,9 +164,9 @@ namespace XenonEngine
 		const Algorithm::Vector<GameObject*>& renderList = world->GetRenderList();
 		for (int i = 0; i < renderList.Count(); i++)
 		{
-			GameObject* iter = renderList[i];
-			Transform3D* transform = iter->GetComponentPointer<Transform3D>();
-			Mesh3D* mesh = iter->GetComponentPointer<Mesh3D>();
+			GameObject* gameobject = renderList[i];
+			Transform3D* transform = gameobject->GetComponentPointer<Transform3D>();
+			Mesh3D* mesh = gameobject->GetComponentPointer<Mesh3D>();
 			if (!mesh || !transform || !mesh->IsValid())
 			{
 				continue;
@@ -196,27 +196,119 @@ namespace XenonEngine
 			//m_renderList.AddMesh3D();
 
 			// Per Triangle Stage
-			for (const )
+			for (auto iter = mesh->begin(); iter + 2 != mesh->end(); iter += 3)
 			{
-			}
+				Triangle triangle;
+				triangle[0] = *iter;
+				triangle[1] = *(iter + 1);
+				triangle[2] = *(iter + 2);
+				CullingState removeBackFacesState = RemoveBackFaces(triangle);
+				if (removeBackFacesState == CullingState::Culled)
+				{
+					continue;
+				}
 
-			//Remove back faces
-			CullingState removeBackFacesState = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
-			if (removeBackFacesState == CullingState::Culled)
-			{
-				continue;
-			}
+				// [Vertex] Transform Local into Camera
+				// [Normal] Transform World into Camera
+				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
 
+				// Clipping near Z-axis triangle
+				ClippingState clipState = Clipping(triangle, camera);
+
+				// Get shader
+
+				if (m_renderType == RenderType::Wireframe || m_renderType == RenderType::FlatShdering)
+				{
+					VertexShaderDataInputFlat input;
+					input.m_triangle = triangle;
+					input.m_faceColor = CrossPlatform::WHITE;
+					VertexShaderDataOutputFlat output;
+					VertexShaderFlat(input, output, worldToCameraTransform, cameraToScreenTranform);
+					if (m_renderType == RenderType::FlatShdering)
+					{
+						Graphic2D::Get().DrawTriangle(output.m_screenPoint0, output.m_screenPoint1, output.m_screenPoint2, output.m_faceColor);
+					}
+					if (m_renderType == RenderType::Wireframe)
+					{
+						Vector2f tmp0;
+						Vector2f tmp1;
+						tmp0 = output.m_screenPoint0;
+						tmp1 = output.m_screenPoint1;
+						Graphic2D::ClipLineState lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
+						if (lineClipState == Graphic2D::ClipLineState::Accpet)
+						{
+							Graphic2D::Get().DrawLine(tmp0, tmp1);
+						}
+						tmp0 = output.m_screenPoint1;
+						tmp1 = output.m_screenPoint2;
+						lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
+						if (lineClipState == Graphic2D::ClipLineState::Accpet)
+						{
+							Graphic2D::Get().DrawLine(tmp0, tmp1);
+						}
+						tmp0 = output.m_screenPoint2;
+						tmp1 = output.m_screenPoint0;
+						lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
+						if (lineClipState == Graphic2D::ClipLineState::Accpet)
+						{
+							Graphic2D::Get().DrawLine(tmp0, tmp1);
+						}
+					}
+				}
+
+				if (m_renderType == RenderType::GouraudShdering)
+				{
+					const Triangle& normal = normalList[sortingTriangleIndexList[polyIndex].m_index];
+					if (normal[0] == TVector4f::Zero || normal[1] == TVector4f::Zero || normal[2] == TVector4f::Zero)
+					{
+						printf("Gouraud Shadering must contain normal");
+						break;
+					}
+					VertexShaderDataInputGouraud input;
+					input.m_vertex = triangle;
+					input.m_normal = normal;
+					input.m_baseColor[0] = CrossPlatform::WHITE;
+					input.m_baseColor[1] = CrossPlatform::WHITE;
+					input.m_baseColor[2] = CrossPlatform::WHITE;
+					VertexShaderDataOutputGouraud output;
+					VertexShaderGouraud(input, output, worldToCameraTransform, cameraToScreenTranform);
+					VertexData vertexData;
+					vertexData.p0 = output.m_screenPoint[0];
+					vertexData.p1 = output.m_screenPoint[1];
+					vertexData.p2 = output.m_screenPoint[2];
+					vertexData.vcolor0 = output.m_vertexColor[0];
+					vertexData.vcolor1 = output.m_vertexColor[1];
+					vertexData.vcolor2 = output.m_vertexColor[2];
+
+					if (polygon->GetNumOFUV() != 0 && materials.Count() != 0)
+					{
+						int realIndex = sortingTriangleIndexList[polyIndex].m_index * 3;
+						int matIndex = (*polygon)[realIndex].m_material;
+						Material* mat = materials[matIndex];
+						VertexWithMaterialData data;
+						data.m_data = vertexData;
+						data.m_diffuse = mat->GetDiffuseTexture();
+						data.uv0 = (*polygon)[realIndex].m_uv;
+						data.uv1 = (*polygon)[realIndex + 1].m_uv;
+						data.uv2 = (*polygon)[realIndex + 2].m_uv;
+						Graphic2D::Get().DrawTriangle(data);
+
+					}
+					else
+					{
+						Graphic2D::Get().DrawTriangle(vertexData);
+					}
+				}
+			}
 		}
+	}
 
-
-
-
+/*
 			for (int polygonIndex = 0; polygonIndex < polygons.Count(); polygonIndex++)
 			{
 				Polygon3D renderingPolygon(*(polygons[polygonIndex]));
 
-				/*
+
 				int triangleCount = polygon->Count() / 3;
 				Triangle* triangleList = new Triangle[triangleCount];
 				Triangle* normalList = new Triangle[triangleCount];
@@ -263,7 +355,6 @@ namespace XenonEngine
 					normalList[polyIndex][1] = homogeneousNormal1.Normalize();
 					normalList[polyIndex][2] = homogeneousNormal2.Normalize();
 				}
-				*/
 				int triangleCount = renderingPolygon.Count() / 3;
 				TriangleIndex* sortingTriangleIndexList = new TriangleIndex[triangleCount];
 				Algorithm::Sort<TriangleIndex> sort;
@@ -282,96 +373,14 @@ namespace XenonEngine
 						continue;
 					}
 
-					if (m_renderType == RenderType::Wireframe || m_renderType == RenderType::FlatShdering)
-					{
-						VertexShaderDataInputFlat input;
-						input.m_triangle = triangle;
-						input.m_faceColor = CrossPlatform::WHITE;
-						VertexShaderDataOutputFlat output;
-						VertexShaderFlat(input, output, worldToCameraTransform, cameraToScreenTranform);
-						if (m_renderType == RenderType::FlatShdering)
-						{
-							Graphic2D::Get().DrawTriangle(output.m_screenPoint0, output.m_screenPoint1, output.m_screenPoint2, output.m_faceColor);
-						}
-						if (m_renderType == RenderType::Wireframe)
-						{
-							Vector2f tmp0;
-							Vector2f tmp1;
-							tmp0 = output.m_screenPoint0;
-							tmp1 = output.m_screenPoint1;
-							Graphic2D::ClipLineState lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
-							if (lineClipState == Graphic2D::ClipLineState::Accpet)
-							{
-								Graphic2D::Get().DrawLine(tmp0, tmp1);
-							}
-							tmp0 = output.m_screenPoint1;
-							tmp1 = output.m_screenPoint2;
-							lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
-							if (lineClipState == Graphic2D::ClipLineState::Accpet)
-							{
-								Graphic2D::Get().DrawLine(tmp0, tmp1);
-							}
-							tmp0 = output.m_screenPoint2;
-							tmp1 = output.m_screenPoint0;
-							lineClipState = Graphic2D::Get().ClipLine(tmp0, tmp1);
-							if (lineClipState == Graphic2D::ClipLineState::Accpet)
-							{
-								Graphic2D::Get().DrawLine(tmp0, tmp1);
-							}
-						}
-					}
 
-					if (m_renderType == RenderType::GouraudShdering)
-					{
-						const Triangle& normal = normalList[sortingTriangleIndexList[polyIndex].m_index];
-						if(normal[0] == TVector4f::Zero || normal[1] == TVector4f::Zero || normal[2] == TVector4f::Zero)
-						{
-							printf("Gouraud Shadering must contain normal");
-							break;
-						}
-						VertexShaderDataInputGouraud input;
-						input.m_vertex = triangle;
-						input.m_normal = normal;
-						input.m_baseColor[0] = CrossPlatform::WHITE;
-						input.m_baseColor[1] = CrossPlatform::WHITE;
-						input.m_baseColor[2] = CrossPlatform::WHITE;
-						VertexShaderDataOutputGouraud output;
-						VertexShaderGouraud(input, output, worldToCameraTransform, cameraToScreenTranform);
-						VertexData vertexData;
-						vertexData.p0 = output.m_screenPoint[0];
-						vertexData.p1 = output.m_screenPoint[1];
-						vertexData.p2 = output.m_screenPoint[2];
-						vertexData.vcolor0 = output.m_vertexColor[0];
-						vertexData.vcolor1 = output.m_vertexColor[1];
-						vertexData.vcolor2 = output.m_vertexColor[2];
-
-						if (polygon->GetNumOFUV() != 0 && materials.Count() != 0)
-						{
-							int realIndex = sortingTriangleIndexList[polyIndex].m_index * 3;
-							int matIndex = (*polygon)[realIndex].m_material;
-							Material* mat = materials[matIndex];
-							VertexWithMaterialData data;
-							data.m_data = vertexData;
-							data.m_diffuse = mat->GetDiffuseTexture();
-							data.uv0 = (*polygon)[realIndex].m_uv;
-							data.uv1 = (*polygon)[realIndex + 1].m_uv;
-							data.uv2 = (*polygon)[realIndex + 2].m_uv;
-							Graphic2D::Get().DrawTriangle(data);
-
-						}
-						else
-						{
-							Graphic2D::Get().DrawTriangle(vertexData);
-						}
-					}
-				}
 
 				delete[] triangleList;
 				delete[] normalList;
 				delete[] sortingTriangleIndexList;
 			}
 		}
-	}
+*/
 
     XenonEngine::Graphic3D::CullingState Graphic3D::Culling(const Mesh3D& mesh, const TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const
     {
@@ -405,7 +414,7 @@ namespace XenonEngine
 		
 		for (int i = 0; i < 3; i++)
 		{
-			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
+			Vector3f center = ConvertFormHomogeneous(triagnle[i].m_vertex);
 			float xLimit = 0.5f * camera.GetViewPlane().x * center.z / distance;
 			if (center.x > xLimit)
 			{
@@ -428,7 +437,7 @@ namespace XenonEngine
 
 		for (int i = 0; i < 3; i++)
 		{
-			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
+			Vector3f center = ConvertFormHomogeneous(triagnle[i].m_vertex);
 			float yLimit = 0.5f * camera.GetViewPlane().y * center.z / distance;
 			if (center.y > yLimit)
 			{
@@ -452,7 +461,7 @@ namespace XenonEngine
 		for (int i = 0; i < 3; i++)
 		{
 			int countLessThanZMin = 0;
-			Vector3f center = ConvertFormHomogeneous(triagnle[i]);
+			Vector3f center = ConvertFormHomogeneous(triagnle[i].m_vertex);
 			if (center.z < camera.GetNearClipZ())
 			{
 				state[i] = PlaneTestState::LessThanZMin;
@@ -483,7 +492,7 @@ namespace XenonEngine
 
         if( p0.Dot(n) <= 0)
         {
-            return CullingState::Inside;
+            return CullingState::NotCulled;
         }
         else
         {
@@ -491,7 +500,39 @@ namespace XenonEngine
         }
     }
 
-    void Graphic3D::DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
+	XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2) const
+	{
+		TVector4f u = p1.m_vertex - p0.m_vertex;
+		TVector4f v = p2.m_vertex - p1.m_vertex;
+		TVector4f n = u.Cross(v);
+
+		if (p0.Dot(n) <= 0)
+		{
+			return CullingState::NotCulled;
+		}
+		else
+		{
+			return CullingState::Culled;
+		}
+	}
+
+	XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Triangle& triangle) const
+	{
+		TVector4f u = triangle[1].m_vertex - triangle[0].m_vertex;
+		TVector4f v = triangle[2].m_vertex - triangle[1].m_vertex;
+		TVector4f n = u.Cross(v);
+
+		if (triangle[0].m_vertex.Dot(n) <= 0)
+		{
+			return CullingState::NotCulled;
+		}
+		else
+		{
+			return CullingState::Culled;
+		}
+	}
+
+	void Graphic3D::DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
     {
         TVector4f homogeneousVertex1(start);
         homogeneousVertex1[3] = 1.0f;
@@ -588,4 +629,13 @@ namespace XenonEngine
         return lIndex.m_zAixs > rIndex.m_zAixs;
     }
 
+	void Graphic3D::TransformLocalToCamera(Triangle& triangle , const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix)
+	{
+		triangle[0].m_vertex = triangle[0].m_vertex * localToCameraTranform;
+		triangle[0].m_normal = triangle[0].m_normal * worldToCameraRotationMatrix;
+		triangle[1].m_vertex = triangle[1].m_vertex * localToCameraTranform;
+		triangle[1].m_normal = triangle[1].m_normal * worldToCameraRotationMatrix;
+		triangle[2].m_vertex = triangle[2].m_vertex * localToCameraTranform;
+		triangle[2].m_normal = triangle[2].m_normal * worldToCameraRotationMatrix;
+	}
 }

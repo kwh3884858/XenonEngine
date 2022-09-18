@@ -14,9 +14,9 @@ namespace YAML {
     using CrossPlatform::Polygon3D;
 
     template<>
-    struct convert<Polygon3D::VertexIndexs>
+    struct convert<Polygon3D::VertexIndex>
     {
-        static Node encode(const Polygon3D::VertexIndexs& rhs)
+        static Node encode(const Polygon3D::VertexIndex& rhs)
         {
             Node node;
             node["VertexIndex"] = rhs.m_vertexIndex;
@@ -25,7 +25,7 @@ namespace YAML {
             node["MaterialIndex"] = rhs.m_materialIndex;
             return node;
         }
-        static bool decode(const Node& node, Polygon3D::VertexIndexs& rhs)
+        static bool decode(const Node& node, Polygon3D::VertexIndex& rhs)
         {
             rhs.m_vertexIndex = node["VertexIndex"].as<int>();
             rhs.m_normalIndex = node["NormalIndex"].as<int>();
@@ -52,7 +52,7 @@ namespace YAML {
 				if (node["VertexIndex"].IsSequence())
 				{
 					for (YAML::const_iterator it = node["VertexIndex"].begin(); it != node["VertexIndex"].end(); ++it) {
-						rhs.m_vertexIndex.Add(it->as<Polygon3D::VertexIndexs>());
+						rhs.m_vertexIndex.Add(it->as<Polygon3D::VertexIndex>());
 					}
 				}
 			}

@@ -155,7 +155,7 @@ namespace XenonEngine
 			//	materialIndex = new int[numOfMaterial];
 			//}
 			// Loop over faces(polygon)
-			Vector<Polygon3D::VertexIndexs> vertexIndex;
+			Vector<Polygon3D::VertexIndex> vertexIndex;
 			int numOfIndex = (int)shapes[s].mesh.indices.size();
 			vertexIndex.Initialize(numOfIndex);
 			size_t index_offset = 0;

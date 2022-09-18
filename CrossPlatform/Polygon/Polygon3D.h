@@ -1,8 +1,8 @@
 #pragma once
-#include "MathLab/Vector3.h"
-#include "MathLab/Vector2.h"
-#include "CrossPlatform/SColorRGBA.h"
-#include "crossguid/guid.hpp"
+//#include "MathLab/Vector3.h"
+//#include "MathLab/Vector2.h"
+//#include "CrossPlatform/SColorRGBA.h"
+//#include "crossguid/guid.hpp"
 #include "Algorithms/Vector.h"
 #include "CrossPlatform/Polygon/Vertex3D.h"
 
@@ -18,28 +18,32 @@ namespace YAML
 }
 
 namespace CrossPlatform {
-	using MathLab::Vector3f;
-	using MathLab::Vector2f;
-	using CrossPlatform::SColorRGBA;
+	//using MathLab::Vector3f;
+	//using MathLab::Vector2f;
+	//using CrossPlatform::SColorRGBA;
 
 	class Polygon3D
 	{
 	public:
 		template<> friend struct YAML::convert<Polygon3D>;
 
-        struct VertexIndexs
+        struct VertexIndex
         {
             int m_vertexIndex = -1;
             int m_normalIndex = -1;
             int m_textureCoordinateIndex = -1;
 			int m_materialIndex = -1;
         };
-		Polygon3D(Algorithm::Vector<VertexIndexs>&& vertexIndex);
+		struct TriangleIndex
+		{
+			VertexIndex m_vertexIndex[3];
+		};
+		Polygon3D(Algorithm::Vector<VertexIndex>&& vertexIndex);
 		Polygon3D(const Polygon3D& that);
 		~Polygon3D();
 
 		int Count()const { return m_vertexIndex.Count(); }
-		const VertexIndexs& operator[](int index)const { return m_vertexIndex[index]; }
+		const VertexIndex& operator[](int index)const { return m_vertexIndex[index]; }
 
         //const Vector3f& GetNormal(int index) const;
   //      int GetNumOfVertex()const { return m_numOfVertex; }
@@ -49,7 +53,7 @@ namespace CrossPlatform {
 		//void SetModelGUID(const xg::Guid& guid) { m_modelId = guid; }
 	private:
 		//xg::Guid m_modelId;
-		Algorithm::Vector<VertexIndexs> m_vertexIndex;
+		Algorithm::Vector<VertexIndex> m_vertexIndex;
 		//int m_numOfIndex = 0;
   //      VertexIndexs* m_vertexIndexList = nullptr;
 		//int m_numOfVertex = 0;

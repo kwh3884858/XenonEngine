@@ -19,6 +19,7 @@
 namespace CrossPlatform 
 {
 	class Polygon3D;
+    class Vertex3D;
 }
 namespace XenonEngine
 {
@@ -28,9 +29,9 @@ namespace XenonEngine
 
     struct Triangle
     {
-        const MathLab::TVector4f& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
-        MathLab::TVector4f& operator[](int index) { return const_cast<MathLab::TVector4f&>(static_cast<const Triangle&>(*this)[index]); }
-		MathLab::TVector4f m_vertex[3];
+        const CrossPlatform::Vertex3D& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
+        CrossPlatform::Vertex3D& operator[](int index) { return const_cast<CrossPlatform::Vertex3D&>(static_cast<const Triangle&>(*this)[index]); }
+        CrossPlatform::Vertex3D m_vertex[3];
 	};
     struct TriangleIndex
     {
@@ -123,8 +124,12 @@ namespace XenonEngine
         void Update()const;
 	private:
         CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const;
-		CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2) const;
-		ClippingState Clipping(const Triangle& triagnle, const Camera3D& camera) const;
+		//Old
+        CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2) const;
+		//New
+        CullingState RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2)const;
+        CullingState RemoveBackFaces(const Triangle& triangle)const;
+        ClippingState Clipping(const Triangle& triagnle, const Camera3D& camera) const;
 
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE) const;
         void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform) const;
@@ -133,6 +138,8 @@ namespace XenonEngine
         MathLab::TMatrix4X4f GetProjectionMatrix(const float& viewDistance, float aspectRatio) const;
 		MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2i& viewPort) const;
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2i& viewPort) const;
+
+        void TransformLocalToCamera(Triangle& triangle, const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix);
 
         ShaderType m_renderType = ShaderType::ShaderType_Gouraud;
         Algorithm::Vector<Camera3D*> m_cameraList;
