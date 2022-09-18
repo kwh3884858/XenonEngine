@@ -24,6 +24,10 @@ namespace YAML {
 			{
 				node["Normal"].push_back(normal);
 			}
+			for (const auto& uv : rhs.m_uv)
+			{
+				node["UV"].push_back(uv);
+			}
 			for (const auto& material : rhs.m_materials)
 			{
 				node["Material"].push_back(material);
@@ -46,7 +50,7 @@ namespace YAML {
 				if (node["Vertex"].IsSequence())
 				{
 					for (YAML::const_iterator it = node["Vertex"].begin(); it != node["Vertex"].end(); ++it) {
-						rhs.m_materials.Add(it->as<MathLab::Vector3f>());
+						rhs.m_vertexs.Add(it->as<MathLab::Vector3f>());
 					}
 				}
 			}
@@ -59,12 +63,21 @@ namespace YAML {
 					}
 				}
 			}
-			if (node["polygons"].IsDefined())
+			if (node["UV"].IsDefined())
 			{
-				if (node["polygons"].IsSequence())
+				if (node["UV"].IsSequence())
 				{
-					for (YAML::const_iterator it = node["polygons"].begin(); it != node["polygons"].end(); ++it) {
-						rhs.m_polygons.Add(it->as<xg::Guid>());
+					for (YAML::const_iterator it = node["UV"].begin(); it != node["UV"].end(); ++it) {
+						rhs.m_uv.Add(it->as<MathLab::Vector2f>());
+					}
+				}
+			}
+			if (node["Material"].IsDefined())
+			{
+				if (node["Material"].IsSequence())
+				{
+					for (YAML::const_iterator it = node["Material"].begin(); it != node["Material"].end(); ++it) {
+						rhs.m_materials.Add(it->as<xg::Guid>());
 					}
 				}
 			}

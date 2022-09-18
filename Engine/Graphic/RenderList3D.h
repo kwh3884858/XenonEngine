@@ -12,6 +12,8 @@ namespace CrossPlatform
 }
 
 namespace XenonEngine {
+
+	// deprecated
 	class RenderList3D
 	{
 		void AddMesh3D(const Mesh3D* const mesh);

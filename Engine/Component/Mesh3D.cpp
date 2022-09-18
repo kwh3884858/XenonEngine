@@ -13,13 +13,14 @@
 namespace XenonEngine
 {
     using namespace CrossPlatform;
-
+	using namespace xg;
 	IComponent* Mesh3D::Copy(GameObject*const gameObject) const
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
 		that->m_polygons = m_polygons;
-		//that->m_materials = m_materials;
-		//that->m_modelId = m_modelId;
+		that->m_materials = m_materials;
+		that->m_uv = m_uv;
+		that->m_modelId = m_modelId;
         that->m_maxRadius = m_maxRadius;
 		return that;
 	}
@@ -111,6 +112,49 @@ namespace XenonEngine
 			const Polygon3DMeta* const polygonMeta = dynamic_cast<const Polygon3DMeta*>( EngineManager::Get().GetFileDatabase().GetFile(id) );
 			const Polygon3D* polygon = polygonMeta->GetPolygon3D();
 			output.Add(polygon);
+		}
+	}
+
+	bool Mesh3D::IsValid() const
+	{
+		return m_polygons.Count() != 0;
+	}
+
+	const CrossPlatform::Vertex3D Mesh3D::operator[](int index) const
+	{
+		int finder = index;
+		for (const Guid& guid : m_polygons)
+		{
+			assert(index >= 0); //index is out of array;
+			const Polygon3D& polygon = GetPolygon3D(guid);
+			if (finder < polygon.Count())
+			{
+				const Polygon3D::VertexIndexs& vertex = m_polygons[finder];
+				Vertex3D(
+					m_vertexs[vertex.m_vertexIndex],
+					m_normals[vertex.m_normalIndex],
+					
+				)
+			}
+			else
+			{
+				finder -= polygon.Count();
+			}
+		}
+	}
+
+	const CrossPlatform::Polygon3D& Mesh3D::GetPolygon3D(const Guid& guid) const
+	{
+		if (m_cachePolygons.find(guid) != m_cachePolygons.end())
+		{
+			return m_cachePolygons.at(guid);
+		}
+		else
+		{
+			const Polygon3DMeta* polygonMeta = (Polygon3DMeta*) EngineManager::Get().GetFileDatabase().GetFile(guid);
+			const Polygon3D* polygon = polygonMeta->GetPolygon3D();
+			m_cachePolygons[guid] = polygon;
+			return polygon;
 		}
 	}
 

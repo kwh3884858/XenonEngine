@@ -66,7 +66,7 @@ namespace XenonEngine
 		if (!exists(projectDataRoot))
 		{
 			create_directory(projectDataRoot);
-            FolderMeta* folderMeta = (FolderMeta*) CreateMetaFromPath(projectDataRoot.string().c_str());
+            FolderMeta* folderMeta = (FolderMeta*) CreateMetaFromFilePath(projectDataRoot.string().c_str());
             m_root = folderMeta;
 		}
         else
@@ -189,7 +189,7 @@ namespace XenonEngine
             if (tmpFolder == nullptr)
             {
                 String realPath = ConvertToRealPath(tmpVirtualPath);
-				tmpFolder = CreateMetaFromPath(realPath);
+				tmpFolder = CreateMetaFromFilePath(realPath);
             }
             if (tmpFolder->GetFileHeader().GetFileType() != FileType::FileTypeFolder)
             {
@@ -224,7 +224,7 @@ namespace XenonEngine
 		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
 		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
 		{
-            IFileMeta* meta = CreateMetaFromPath(realPath);
+            IFileMeta* meta = CreateMetaFromFilePath(realPath);
 			folder->AddIFile(meta);
 		}
 		return meta;
@@ -289,7 +289,7 @@ namespace XenonEngine
 		IFileMeta* file = folder->GetFile(fileName);
 		if (!file)
 		{
-			file = CreateMetaFromPath(filePath);
+			file = CreateMetaFromFilePath(filePath);
 		}
 		file->Save();
     }
@@ -388,7 +388,7 @@ namespace XenonEngine
    //     }
    // }
 
-	CrossPlatform::IFileMeta* FileDatabase::CreateMetaFromPath(const Algorithm::String& realFilePath)
+	CrossPlatform::IFileMeta* FileDatabase::CreateMetaFromFilePath(const Algorithm::String& realFilePath)
 	{
         path stdFilePath(realFilePath.CString());
         if (!exists(stdFilePath))

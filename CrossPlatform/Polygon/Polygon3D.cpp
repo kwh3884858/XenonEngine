@@ -26,28 +26,28 @@ namespace CrossPlatform
 		m_vertexIndex = vertexIndex;
 	}
 
-	const Vertex3D Polygon3D::operator[](int index) const
-	{
-		assert(m_vertexIndexList != nullptr);
-		assert(m_vertexList != nullptr);
-		assert(m_numOfNormal == 0 ? m_normalList == nullptr : m_normalList != nullptr);
-		assert(m_numOfTextureCoordinate == 0? m_textureCoordinate == nullptr: m_textureCoordinate != nullptr);
-		assert(index >= 0 && index < m_numOfIndex);
-        VertexIndexs vertexIndex = m_vertexIndexList[index];
-		assert(vertexIndex.m_vertexIndex >= 0 && vertexIndex.m_vertexIndex < m_numOfVertex);
-		Vector3f normal = Vector3f(0, 0, 0);
-		if (m_numOfNormal > 0)
-		{
-			normal = m_normalList[vertexIndex.m_normalIndex];
-		}
-		Vector2f uv = Vector2f(-1, -1);
-		if (m_numOfTextureCoordinate > 0)
-		{
-			uv = m_textureCoordinate[vertexIndex.m_textureCoordinateIndex];
-		}
-		Vertex3D result(m_vertexList[vertexIndex.m_vertexIndex], normal, uv);
-		return result;
-	}
+	//const Vertex3D Polygon3D::operator[](int index) const
+	//{
+	//	assert(m_vertexIndexList != nullptr);
+	//	assert(m_vertexList != nullptr);
+	//	assert(m_numOfNormal == 0 ? m_normalList == nullptr : m_normalList != nullptr);
+	//	assert(m_numOfTextureCoordinate == 0? m_textureCoordinate == nullptr: m_textureCoordinate != nullptr);
+	//	assert(index >= 0 && index < m_numOfIndex);
+ //       VertexIndexs vertexIndex = m_vertexIndexList[index];
+	//	assert(vertexIndex.m_vertexIndex >= 0 && vertexIndex.m_vertexIndex < m_numOfVertex);
+	//	Vector3f normal = Vector3f(0, 0, 0);
+	//	if (m_numOfNormal > 0)
+	//	{
+	//		normal = m_normalList[vertexIndex.m_normalIndex];
+	//	}
+	//	Vector2f uv = Vector2f(-1, -1);
+	//	if (m_numOfTextureCoordinate > 0)
+	//	{
+	//		uv = m_textureCoordinate[vertexIndex.m_textureCoordinateIndex];
+	//	}
+	//	Vertex3D result(m_vertexList[vertexIndex.m_vertexIndex], normal, uv);
+	//	return result;
+	//}
 
     //const Vector3f& Polygon3D::GetNormal(int index) const
     //{

@@ -46,7 +46,7 @@ namespace XenonEngine
 		Algorithm::String ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder);
 
         void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file) { m_database[guid] = file; }
-		IFileMeta* CreateMetaFromPath(const Algorithm::String& realFilePath);
+		IFileMeta* CreateMetaFromFilePath(const Algorithm::String& realFilePath);
 
     private:
 		bool IsVirtualPath(const Algorithm::String& filePath)const;

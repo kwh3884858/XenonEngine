@@ -96,11 +96,12 @@ namespace XenonEngine
 			fileName.CString() +
 			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial).CString();
 		String meshPath = modelFolder + meshName.c_str();
-		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromPath(meshPath);
+		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(meshPath);
 		
 		Mesh3D* mesh = new Mesh3D();
 		mesh->m_vertexs = std::move(vertexs);
 		mesh->m_normals = std::move(normals);
+		mesh->m_uv = std::move(uv);
 
 		for (const auto & objMaterial : objMaterials)
 		{
@@ -118,7 +119,7 @@ namespace XenonEngine
 			if (!m_diffuseTextureFileName.Empty())
 			{
 				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);
-				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromPath(diffuseTextureFileName);
+				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(diffuseTextureFileName);
 				assert(m_diffuseTexture != nullptr);
 				material->m_diffuseTexture = m_diffuseTexture->GetFileHeader().GetGUID();
 			}
@@ -127,7 +128,7 @@ namespace XenonEngine
 			if (!m_bumpTextureFileName.Empty())
 			{
 				String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_bumpTextureFileName, modelFolder);
-				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromPath(bumpTextureFileName);
+				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(bumpTextureFileName);
 				assert(m_bumpTexture != nullptr);
 				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
 			}
@@ -135,7 +136,7 @@ namespace XenonEngine
 				objMaterial.name.c_str() + 
 				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial).CString();
 			String materialPath = modelFolder + materialFileName.c_str();
-			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().CreateMetaFromPath(materialPath);
+			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(materialPath);
 			materialMeta->m_material = material;
 			materialMeta->Save();
 
@@ -183,7 +184,7 @@ namespace XenonEngine
 				fileName.CString() + s +
 				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypePolygon).CString();
 			String polygonPath = modelFolder + polygonName.c_str();
-			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromPath(polygonPath);
+			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(polygonPath);
 
 			Mesh3D* mesh = new Mesh3D();
 			Polygon3D* polygon = new Polygon3D(std::move(vertexIndex));

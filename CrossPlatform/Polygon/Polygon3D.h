@@ -39,7 +39,7 @@ namespace CrossPlatform {
 		~Polygon3D();
 
 		int Count()const { return m_vertexIndex.Count(); }
-		const Vertex3D operator[](int index)const;
+		const VertexIndexs& operator[](int index)const { return m_vertexIndex[index]; }
 
         //const Vector3f& GetNormal(int index) const;
   //      int GetNumOfVertex()const { return m_numOfVertex; }

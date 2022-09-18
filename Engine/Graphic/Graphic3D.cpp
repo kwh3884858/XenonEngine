@@ -167,7 +167,7 @@ namespace XenonEngine
 			GameObject* iter = renderList[i];
 			Transform3D* transform = iter->GetComponentPointer<Transform3D>();
 			Mesh3D* mesh = iter->GetComponentPointer<Mesh3D>();
-			if (!mesh || !transform)
+			if (!mesh || !transform || !mesh->IsValid())
 			{
 				continue;
 			}
@@ -185,23 +185,32 @@ namespace XenonEngine
 
 			DrawCoordinateLines(worldToScreenTranform);
 
-			const Vector<Polygon3D*>& polygons = mesh->GetPolygon3D();
-			if (polygons.Count() == 0)
-			{
-				continue;
-			}
 			CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
 			if (state == CullingState::Culled)
 			{
 				continue;
 			}
 
-			// Inserting rendering list
-			const Vector<Material*>& materials = mesh->GetMaterials();
-			m_renderList.AddMesh3D();
-		}
+			//// Inserting rendering list
+			//const Vector<Material*>& materials = mesh->GetMaterials();
+			//m_renderList.AddMesh3D();
+
+			// Per Triangle Stage
+			for (const )
+			{
+			}
 
 			//Remove back faces
+			CullingState removeBackFacesState = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
+			if (removeBackFacesState == CullingState::Culled)
+			{
+				continue;
+			}
+
+		}
+
+
+
 
 			for (int polygonIndex = 0; polygonIndex < polygons.Count(); polygonIndex++)
 			{
@@ -260,13 +269,15 @@ namespace XenonEngine
 				Algorithm::Sort<TriangleIndex> sort;
 				sort.Quick(sortingTriangleIndexList, triangleCount, IsIndexZAxisBigger);
 
+				//Shadering and Camera to Screen (Projection) Transform
+
 				for (int polyIndex = 0; polyIndex < triangleCount; polyIndex++)
 				{
 					//const Triangle& triangle = triangleList[polyIndex];
 					const Triangle& triangle = triangleList[sortingTriangleIndexList[polyIndex].m_index];
 
 					CullingState removeBackFacesState = RemoveBackFaces(triangle[0], triangle[1], triangle[2]);
-					if (removeBackFacesState == CullingState::Culled)
+					if (removeBackFacesState == Culling0State::Culled)
 					{
 						continue;
 					}
@@ -384,7 +395,7 @@ namespace XenonEngine
         {
             return CullingState::Culled;
         }
-        return CullingState::Inside;
+        return CullingState::NotCulled;
     }
 
 	XenonEngine::Graphic3D::ClippingState Graphic3D::Clipping(const Triangle& triagnle, const Camera3D& camera) const
