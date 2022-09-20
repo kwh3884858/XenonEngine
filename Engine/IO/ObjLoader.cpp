@@ -143,11 +143,10 @@ namespace XenonEngine
 			mesh->m_materials.Add(materialMeta->GetFileHeader().GetGUID());
 		}
 
-		size_t vindex = 0;
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++)
 		{
-
+			size_t vindex = 0;
 			//int numOfMaterial = (int) shapes[s].mesh.material_ids.size();
 			//int* materialIndex = nullptr;
 			//if (numOfMaterial > 0)
@@ -155,7 +154,7 @@ namespace XenonEngine
 			//	materialIndex = new int[numOfMaterial];
 			//}
 			// Loop over faces(polygon)
-			Vector<Polygon3D::VertexIndex> vertexIndex;
+			Vector<Polygon3D::TriangleIndex> vertexIndex;
 			int numOfIndex = (int)shapes[s].mesh.indices.size();
 			vertexIndex.Initialize(numOfIndex);
 			size_t index_offset = 0;
@@ -165,18 +164,18 @@ namespace XenonEngine
 				for (size_t v = 0; v < fv; v++)
 				{
 					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-					vertexIndex[vindex].m_vertexIndex = idx.vertex_index;
+					vertexIndex[vindex].m_vertex[v].m_vertexIndex = idx.vertex_index;
 					if (idx.normal_index >= 0)
 					{
-						vertexIndex[vindex].m_normalIndex = idx.normal_index;
+						vertexIndex[vindex].m_vertex[v].m_normalIndex = idx.normal_index;
 					}
 					if (idx.texcoord_index >= 0)
 					{
-						vertexIndex[vindex].m_textureCoordinateIndex = idx.texcoord_index;
+						vertexIndex[vindex].m_vertex[v].m_textureCoordinateIndex = idx.texcoord_index;
 					}
-					vindex++;
 				}
 				index_offset += fv;
+				vindex++;
 				vertexIndex[vindex].m_materialIndex = shapes[s].mesh.material_ids[f];
 			}
 			//Create new polygon3D

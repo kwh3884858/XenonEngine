@@ -26,6 +26,9 @@ namespace CrossPlatform
 
 		// Delete data file from hard drive
 		virtual void Delete() override;
+
+		const Material* const GetMaterial()const { return m_material; }
+
 	private:
 		Material* m_material;
 	};

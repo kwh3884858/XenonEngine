@@ -127,7 +127,7 @@ namespace XenonEngine
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
                 for (int faceIndex = 0; faceIndex < 3; faceIndex++)
                 {
-                    TVector4f direction = lightPoistionHomogeneous - input.m_vertex[faceIndex];
+                    TVector4f direction = lightPoistionHomogeneous - input.triangle[faceIndex];
                     float kc = pointLight->GetKc();
                     float kl = pointLight->GetKl();
                     float face = direction.Normalize().Dot(input.m_normal[faceIndex]);
@@ -143,7 +143,7 @@ namespace XenonEngine
         }
         for (int i = 0; i < 3; i++)
         {
-            Vector3f screenPosition1 = ConvertFormHomogeneous(input.m_vertex[i] * cameraToScreenTranform);
+            Vector3f screenPosition1 = ConvertFormHomogeneous(input.triangle[i] * cameraToScreenTranform);
             output.m_screenPoint[i] = Vector2f(screenPosition1.x, screenPosition1.y);
         }
         return true;
@@ -198,10 +198,10 @@ namespace XenonEngine
 			// Per Triangle Stage
 			for (auto iter = mesh->begin(); iter + 2 != mesh->end(); iter += 3)
 			{
-				Triangle triangle;
-				triangle[0] = *iter;
-				triangle[1] = *(iter + 1);
-				triangle[2] = *(iter + 2);
+				Triangle3D triangle(*iter);
+				//triangle[0] = *iter;
+				//triangle[1] = *(iter + 1);
+				//triangle[2] = *(iter + 2);
 				CullingState removeBackFacesState = RemoveBackFaces(triangle);
 				if (removeBackFacesState == CullingState::Culled)
 				{
@@ -213,22 +213,23 @@ namespace XenonEngine
 				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
 
 				// Clipping near Z-axis triangle
-				ClippingState clipState = Clipping(triangle, camera);
+				ClippingState clipState = ClippingTest(triangle, *majorCamera);
 
 				// Get shader
-
-				if (m_renderType == RenderType::Wireframe || m_renderType == RenderType::FlatShdering)
+				const Material& material = mesh->GetMaterial(triangle.m_materialIndex);
+				ShaderType shaderType = material.GetShaderType();
+				if (shaderType == ShaderType::ShaderType_Wireframe || shaderType == ShaderType::ShaderType_Flat)
 				{
 					VertexShaderDataInputFlat input;
 					input.m_triangle = triangle;
 					input.m_faceColor = CrossPlatform::WHITE;
 					VertexShaderDataOutputFlat output;
 					VertexShaderFlat(input, output, worldToCameraTransform, cameraToScreenTranform);
-					if (m_renderType == RenderType::FlatShdering)
+					if (shaderType == ShaderType::ShaderType_Flat)
 					{
 						Graphic2D::Get().DrawTriangle(output.m_screenPoint0, output.m_screenPoint1, output.m_screenPoint2, output.m_faceColor);
 					}
-					if (m_renderType == RenderType::Wireframe)
+					if (shaderType == ShaderType::ShaderType_Wireframe)
 					{
 						Vector2f tmp0;
 						Vector2f tmp1;
@@ -256,17 +257,19 @@ namespace XenonEngine
 					}
 				}
 
-				if (m_renderType == RenderType::GouraudShdering)
+				if (shaderType == ShaderType::ShaderType_Gouraud)
 				{
-					const Triangle& normal = normalList[sortingTriangleIndexList[polyIndex].m_index];
-					if (normal[0] == TVector4f::Zero || normal[1] == TVector4f::Zero || normal[2] == TVector4f::Zero)
+					//const Triangle& normal = normalList[sortingTriangleIndexList[polyIndex].m_index];
+					if (triangle[0].m_normal == TVector4f::Zero || 
+						triangle[1].m_normal == TVector4f::Zero || 
+						triangle[2].m_normal == TVector4f::Zero)
 					{
 						printf("Gouraud Shadering must contain normal");
 						break;
 					}
 					VertexShaderDataInputGouraud input;
-					input.m_vertex = triangle;
-					input.m_normal = normal;
+					input.triangle = triangle;
+					//input.m_normal = normal;
 					input.m_baseColor[0] = CrossPlatform::WHITE;
 					input.m_baseColor[1] = CrossPlatform::WHITE;
 					input.m_baseColor[2] = CrossPlatform::WHITE;
@@ -407,7 +410,7 @@ namespace XenonEngine
         return CullingState::NotCulled;
     }
 
-	XenonEngine::Graphic3D::ClippingState Graphic3D::Clipping(const Triangle& triagnle, const Camera3D& camera) const
+	XenonEngine::Graphic3D::ClippingState Graphic3D::ClippingTest(const Triangle3D& triagnle, const Camera3D& camera) const
 	{
 		float distance = camera.GetViewDistance();
 		PlaneTestState state[3];
@@ -516,7 +519,7 @@ namespace XenonEngine
 		}
 	}
 
-	XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Triangle& triangle) const
+	XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Triangle3D& triangle) const
 	{
 		TVector4f u = triangle[1].m_vertex - triangle[0].m_vertex;
 		TVector4f v = triangle[2].m_vertex - triangle[1].m_vertex;
@@ -629,7 +632,7 @@ namespace XenonEngine
         return lIndex.m_zAixs > rIndex.m_zAixs;
     }
 
-	void Graphic3D::TransformLocalToCamera(Triangle& triangle , const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix)
+	void Graphic3D::TransformLocalToCamera(Triangle3D& triangle , const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix)const
 	{
 		triangle[0].m_vertex = triangle[0].m_vertex * localToCameraTranform;
 		triangle[0].m_normal = triangle[0].m_normal * worldToCameraRotationMatrix;

@@ -20,6 +20,7 @@ namespace CrossPlatform
 {
 	class Polygon3D;
     class Vertex3D;
+	class Triangle3D;
 }
 namespace XenonEngine
 {
@@ -27,19 +28,19 @@ namespace XenonEngine
     class Camera3D;
     class LightComponent;
 
-    struct Triangle
-    {
-        const CrossPlatform::Vertex3D& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
-        CrossPlatform::Vertex3D& operator[](int index) { return const_cast<CrossPlatform::Vertex3D&>(static_cast<const Triangle&>(*this)[index]); }
-        CrossPlatform::Vertex3D m_vertex[3];
-	};
-    struct TriangleIndex
-    {
-        int m_index;
-        float m_zAixs;
-    };
-    bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
-    bool IsIndexZAxisBigger(const TriangleIndex& lIndex, const TriangleIndex& rIndex);
+ //   struct Triangle
+ //   {
+ //       const CrossPlatform::Vertex3D& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
+ //       CrossPlatform::Vertex3D& operator[](int index) { return const_cast<CrossPlatform::Vertex3D&>(static_cast<const Triangle&>(*this)[index]); }
+ //       CrossPlatform::Vertex3D m_vertex[3];
+	//};
+ //   struct TriangleIndex
+ //   {
+ //       int m_index;
+ //       float m_zAixs;
+ //   };
+ //   bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs);
+ //   bool IsIndexZAxisBigger(const TriangleIndex& lIndex, const TriangleIndex& rIndex);
 
 	class Graphic3D :public CrossPlatform::XenonManager<Graphic3D>
 	{
@@ -72,7 +73,7 @@ namespace XenonEngine
 
         struct VertexShaderDataInputFlat
         {
-            Triangle m_triangle;
+			CrossPlatform::Triangle3D m_triangle;
             CrossPlatform::SColorRGBA m_faceColor;
         };
         struct VertexShaderDataOutputFlat
@@ -86,8 +87,8 @@ namespace XenonEngine
 
         struct VertexShaderDataInputGouraud
         {
-            Triangle m_vertex;
-            Triangle m_normal;
+			CrossPlatform::Triangle3D triangle;
+			//CrossPlatform::Triangle3D m_normal;
             CrossPlatform::SColorRGBA m_baseColor[3];
         };
         struct VertexShaderDataOutputGouraud
@@ -128,8 +129,8 @@ namespace XenonEngine
         CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2) const;
 		//New
         CullingState RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2)const;
-        CullingState RemoveBackFaces(const Triangle& triangle)const;
-        ClippingState Clipping(const Triangle& triagnle, const Camera3D& camera) const;
+        CullingState RemoveBackFaces(const CrossPlatform::Triangle3D& triangle)const;
+        ClippingState ClippingTest(const CrossPlatform::Triangle3D& triagnle, const Camera3D& camera) const;
 
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE) const;
         void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform) const;
@@ -139,9 +140,9 @@ namespace XenonEngine
 		MathLab::TMatrix4X4f GetScreenMatrix(const MathLab::Vector2i& viewPort) const;
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2i& viewPort) const;
 
-        void TransformLocalToCamera(Triangle& triangle, const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix);
+        void TransformLocalToCamera(CrossPlatform::Triangle3D& triangle, const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix) const;
 
-        ShaderType m_renderType = ShaderType::ShaderType_Gouraud;
+        //ShaderType m_renderType = ShaderType::ShaderType_Gouraud;
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;
 

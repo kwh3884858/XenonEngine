@@ -9,6 +9,7 @@
 //#include "Algorithms/String.h"
 #include "MathLab/Vector3.h"
 #include "Algorithms/Vector.h"
+#include "CrossPlatform/Polygon/Triangle3D.h"
 #include "crossguid/guid.hpp"
 #include <map>
 namespace XenonEngine
@@ -20,6 +21,7 @@ namespace CrossPlatform {
 	class Polygon3D;
 	class MaterialMeta;
 	class Vertex3D;
+	class Material;
 }
 namespace YAML {
 	template<>
@@ -49,8 +51,8 @@ namespace XenonEngine
 
 		//New
 		bool IsValid()const;
-		int VertexCount();
-		const CrossPlatform::Vertex3D operator[](int index);
+		int TriangleCount();
+		const CrossPlatform::Triangle3D operator[](int index);
 
 		class Iterator {
 			Mesh3D* m_mesh;
@@ -66,7 +68,7 @@ namespace XenonEngine
 			Iterator operator+(int value) { Iterator retval = *this; (*this)+=value; return retval; }
 			bool operator==(Iterator other) const { return m_index == other.m_index; }
 			bool operator!=(Iterator other) const { return !(*this == other); }
-			CrossPlatform::Vertex3D operator*() { return (*m_mesh)[m_index]; }
+			CrossPlatform::Triangle3D operator*() { return (*m_mesh)[m_index]; }
 			// iterator traits
 			using difference_type = CrossPlatform::Vertex3D;
 			using value_type = CrossPlatform::Vertex3D;
@@ -75,12 +77,13 @@ namespace XenonEngine
 			using iterator_category = std::forward_iterator_tag;
 		};
 		Iterator begin() { return Iterator(this, 0); }
-		Iterator end() { return Iterator(this, VertexCount()); }
+		Iterator end() { return Iterator(this, TriangleCount()); }
 
+		const CrossPlatform::Material& GetMaterial(int index);
 		//Old
 
-        const Algorithm::Vector<xg::Guid>& GetPolygonGuids()const { return m_polygons; }
-		const Algorithm::Vector<xg::Guid>& GetMaterials()const { return m_materials; }
+  //      const Algorithm::Vector<xg::Guid>& GetPolygonGuids()const { return m_polygons; }
+		//const Algorithm::Vector<xg::Guid>& GetMaterials()const { return m_materials; }
 
 		//const Algorithm::Vector<const CrossPlatform::Polygon3D*> GetPolygon3Ds()const;
 
@@ -102,6 +105,7 @@ namespace XenonEngine
 
 		//Cache
 		std::map<xg::Guid, const CrossPlatform::Polygon3D*> m_cachePolygons;
+		std::map<xg::Guid, const CrossPlatform::Material*> m_cacheMaterials;
         float m_maxRadius = 0.0f;
 
 		bool m_requestToReload = false;

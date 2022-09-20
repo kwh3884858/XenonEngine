@@ -4,7 +4,7 @@
 //#include "CrossPlatform/SColorRGBA.h"
 //#include "crossguid/guid.hpp"
 #include "Algorithms/Vector.h"
-#include "CrossPlatform/Polygon/Vertex3D.h"
+//#include "CrossPlatform/Polygon/Triangle3D.h"
 
 namespace CrossPlatform 
 {
@@ -29,21 +29,28 @@ namespace CrossPlatform {
 
         struct VertexIndex
         {
+		public:
             int m_vertexIndex = -1;
             int m_normalIndex = -1;
             int m_textureCoordinateIndex = -1;
-			int m_materialIndex = -1;
         };
+		
 		struct TriangleIndex
 		{
-			VertexIndex m_vertexIndex[3];
+		public:
+			const VertexIndex& operator[](int index)const { assert(index >= 0 && index < 3); return m_vertex[index]; }
+			VertexIndex& operator[](int index) { return const_cast<VertexIndex&>(static_cast<const TriangleIndex&>(*this)[index]); }
+
+			VertexIndex m_vertex[3];
+			int m_materialIndex = -1;
 		};
-		Polygon3D(Algorithm::Vector<VertexIndex>&& vertexIndex);
+
+		Polygon3D(Algorithm::Vector<TriangleIndex>&& vertexIndex);
 		Polygon3D(const Polygon3D& that);
 		~Polygon3D();
 
-		int Count()const { return m_vertexIndex.Count(); }
-		const VertexIndex& operator[](int index)const { return m_vertexIndex[index]; }
+		int Count()const { return m_triangle.Count(); }
+		const TriangleIndex& operator[](int index)const { return m_triangle[index]; }
 
         //const Vector3f& GetNormal(int index) const;
   //      int GetNumOfVertex()const { return m_numOfVertex; }
@@ -53,7 +60,7 @@ namespace CrossPlatform {
 		//void SetModelGUID(const xg::Guid& guid) { m_modelId = guid; }
 	private:
 		//xg::Guid m_modelId;
-		Algorithm::Vector<VertexIndex> m_vertexIndex;
+		Algorithm::Vector<TriangleIndex> m_triangle;
 		//int m_numOfIndex = 0;
   //      VertexIndexs* m_vertexIndexList = nullptr;
 		//int m_numOfVertex = 0;

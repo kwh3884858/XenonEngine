@@ -18,12 +18,12 @@ namespace CrossPlatform
 
 	Polygon3D::Polygon3D(const Polygon3D& that)
 	{
-		m_vertexIndex = that.m_vertexIndex;
+		m_triangle = that.m_triangle;
 	}
 
-	Polygon3D::Polygon3D(Algorithm::Vector<VertexIndex>&& vertexIndex)
+	Polygon3D::Polygon3D(Algorithm::Vector<TriangleIndex>&& vertexIndex)
 	{
-		m_vertexIndex = vertexIndex;
+		m_triangle = vertexIndex;
 	}
 
 	//const Vertex3D Polygon3D::operator[](int index) const

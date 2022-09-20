@@ -16,6 +16,8 @@ namespace CrossPlatform
 		Material(const Material& material) = delete;
 		Material(Material&& material);
 
+		ShaderType GetShaderType()const { return m_shaderType; }
+
 		const Algorithm::String& GetName()const { return m_name; }
 		const float& GetExponent()const { return m_exponent; }
 		const MathLab::Vector3f& GetAmbient()const { return m_ambient; }

@@ -9,6 +9,7 @@
 #include "Engine/EngineManager.h"
 #include "CrossPlatform/File/Mesh3DMeta.h"
 #include "CrossPlatform/File/Polygon3DMeta.h"
+#include "CrossPlatform/File/MaterialMeta.h"
 
 namespace XenonEngine
 {
@@ -117,7 +118,7 @@ namespace XenonEngine
 		return m_polygons.Count() != 0;
 	}
 
-	const CrossPlatform::Vertex3D Mesh3D::operator[](int index) 
+	const CrossPlatform::Triangle3D Mesh3D::operator[](int index)
 	{
 		int finder = index;
 		for (const Guid& guid : m_polygons)
@@ -126,12 +127,18 @@ namespace XenonEngine
 			const Polygon3D& polygon = GetPolygon3D(guid);
 			if (finder < polygon.Count())
 			{
-				const Polygon3D::VertexIndex& vertex = polygon[finder];
-				Vertex3D result;
-				result.m_vertex = MathLab::ConvertFromNonHomogeneous(m_vertexs[vertex.m_vertexIndex]);
-				result.m_normal = MathLab::ConvertFromNonHomogeneous(m_normals[vertex.m_normalIndex]);
-				result.m_uv = m_uv[vertex.m_textureCoordinateIndex];
-				result.m_materialIndex = vertex.m_materialIndex;
+				const Polygon3D::TriangleIndex& triangle = polygon[finder];
+				Triangle3D result;
+				result[0].m_vertex = MathLab::ConvertFromNonHomogeneous(m_vertexs[triangle[0].m_vertexIndex]);
+				result[0].m_normal = MathLab::ConvertFromNonHomogeneous(m_normals[triangle[0].m_normalIndex]);
+				result[0].m_uv = m_uv[triangle[0].m_textureCoordinateIndex];
+				result[1].m_vertex = MathLab::ConvertFromNonHomogeneous(m_vertexs[triangle[1].m_vertexIndex]);
+				result[1].m_normal = MathLab::ConvertFromNonHomogeneous(m_normals[triangle[1].m_normalIndex]);
+				result[1].m_uv = m_uv[triangle[1].m_textureCoordinateIndex];
+				result[2].m_vertex = MathLab::ConvertFromNonHomogeneous(m_vertexs[triangle[2].m_vertexIndex]);
+				result[2].m_normal = MathLab::ConvertFromNonHomogeneous(m_normals[triangle[2].m_normalIndex]);
+				result[2].m_uv = m_uv[triangle[2].m_textureCoordinateIndex];
+				result.m_materialIndex = triangle.m_materialIndex;
 
 				return result;
 			}
@@ -158,7 +165,7 @@ namespace XenonEngine
 		}
 	}
 
-	int Mesh3D::VertexCount()
+	int Mesh3D::TriangleCount()
 	{
 		int result = 0;
 		for (const xg::Guid& guid : m_polygons)
@@ -167,6 +174,23 @@ namespace XenonEngine
 			result += polygon.Count();
 		}
 		return result;
+	}
+
+	const CrossPlatform::Material& Mesh3D::GetMaterial(int index)
+	{
+		Guid guid = m_materials[index];
+
+		if (m_cacheMaterials.find(guid) != m_cacheMaterials.end())
+		{
+			return *(m_cacheMaterials.at(guid));
+		}
+		else
+		{
+			const MaterialMeta* materialMeta = (MaterialMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
+			const Material* material = materialMeta->GetMaterial();
+			m_cacheMaterials[guid] = material;
+			return *material;
+		}
 	}
 
 	ComponentType Mesh3D::m_type = ComponentType::ComponentType_Mesh3D;

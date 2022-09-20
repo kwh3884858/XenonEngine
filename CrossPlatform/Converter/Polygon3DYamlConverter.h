@@ -22,7 +22,7 @@ namespace YAML {
             node["VertexIndex"] = rhs.m_vertexIndex;
             node["NormalIndex"] = rhs.m_normalIndex;
             node["TextureCoordinateIndex"] = rhs.m_textureCoordinateIndex;
-            node["MaterialIndex"] = rhs.m_materialIndex;
+            //node["MaterialIndex"] = rhs.m_materialIndex;
             return node;
         }
         static bool decode(const Node& node, Polygon3D::VertexIndex& rhs)
@@ -30,29 +30,62 @@ namespace YAML {
             rhs.m_vertexIndex = node["VertexIndex"].as<int>();
             rhs.m_normalIndex = node["NormalIndex"].as<int>();
             rhs.m_textureCoordinateIndex = node["TextureCoordinateIndex"].as<int>();
-            rhs.m_materialIndex = node["MaterialIndex"].as<int>();
+            //rhs.m_materialIndex = node["MaterialIndex"].as<int>();
             return true;
         }
     };
+
+	template<>
+	struct convert<Polygon3D::TriangleIndex>
+	{
+		static Node encode(const Polygon3D::TriangleIndex& rhs)
+		{
+			Node node;
+			for (const auto& vertex : rhs.m_vertex)
+			{
+				node["Vertex"].push_back(vertex);
+			}
+			node["MaterialIndex"] = rhs.m_materialIndex;
+			return node;
+		}
+		static bool decode(const Node& node, Polygon3D::TriangleIndex& rhs)
+		{
+			if (node["Vertex"].IsDefined())
+			{
+				if (node["Vertex"].IsSequence())
+				{
+					YAML::const_iterator it = node["Vertex"].begin();
+					rhs.m_vertex[0] = it->as<Polygon3D::VertexIndex>();
+					rhs.m_vertex[1] = it->as<Polygon3D::VertexIndex>();
+					rhs.m_vertex[2] = it->as<Polygon3D::VertexIndex>();
+					//for (YAML::const_iterator it = node["Vertex"].begin(); it != node["Vertex"].end(); ++it) {
+					//	rhs.m_vertex.Add(it->as<Polygon3D::VertexIndex>());
+					//}
+				}
+			}
+			rhs.m_materialIndex = node["MaterialIndex"].as<int>();
+			return true;
+		}
+	};
 
     template<>
     struct convert<Polygon3D> {
         static Node encode(const Polygon3D& rhs) {
             Node node;
-			for (const auto& index : rhs.m_vertexIndex)
+			for (const auto& index : rhs.m_triangle)
 			{
-				node["VertexIndex"].push_back(index);
+				node["Triangle"].push_back(index);
 			}
-            return ;
+            return node;
         }
 
 		static bool decode(const Node& node, Polygon3D& rhs) {
-			if (node["VertexIndex"].IsDefined())
+			if (node["Triangle"].IsDefined())
 			{
-				if (node["VertexIndex"].IsSequence())
+				if (node["Triangle"].IsSequence())
 				{
-					for (YAML::const_iterator it = node["VertexIndex"].begin(); it != node["VertexIndex"].end(); ++it) {
-						rhs.m_vertexIndex.Add(it->as<Polygon3D::VertexIndex>());
+					for (YAML::const_iterator it = node["Triangle"].begin(); it != node["Triangle"].end(); ++it) {
+						rhs.m_triangle.Add(it->as<Polygon3D::VertexIndex>());
 					}
 				}
 			}
