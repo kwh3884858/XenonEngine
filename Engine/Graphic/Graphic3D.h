@@ -71,6 +71,12 @@ namespace XenonEngine
 			InsideZ
 		};
 
+		struct ClipResult
+		{
+			ClippingState m_clippingState = ClippingState::Inside;
+			CrossPlatform::Triangle3D m_additionalGeneratedTriangle;
+		};
+
         struct VertexShaderDataInputFlat
         {
 			CrossPlatform::Triangle3D m_triangle;
@@ -130,7 +136,7 @@ namespace XenonEngine
 		//New
         CullingState RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2)const;
         CullingState RemoveBackFaces(const CrossPlatform::Triangle3D& triangle)const;
-        ClippingState ClippingTest(const CrossPlatform::Triangle3D& triagnle, const Camera3D& camera) const;
+		ClipResult Clip(const CrossPlatform::Triangle3D& triagnle, const Camera3D& camera) const;
 
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE) const;
         void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform) const;

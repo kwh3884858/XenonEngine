@@ -213,7 +213,12 @@ namespace XenonEngine
 				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
 
 				// Clipping near Z-axis triangle
-				ClippingState clipState = ClippingTest(triangle, *majorCamera);
+				Triangle3D generatedTriangle(triangle);
+				if (Clip(triangle, *majorCamera, generatedTriangle))
+				{
+					// Render additional triangle
+
+				}
 
 				// Get shader
 				const Material& material = mesh->GetMaterial(triangle.m_materialIndex);
@@ -410,14 +415,17 @@ namespace XenonEngine
         return CullingState::NotCulled;
     }
 
-	XenonEngine::Graphic3D::ClippingState Graphic3D::ClippingTest(const Triangle3D& triagnle, const Camera3D& camera) const
+	Graphic3D::ClipResult Graphic3D::Clip(const Triangle3D& triangle, const Camera3D& camera) const
 	{
 		float distance = camera.GetViewDistance();
 		PlaneTestState state[3];
-		
+
+		ClipResult clipResult;
+		clipResult.m_clippingState = ClippingState::Inside;
+
 		for (int i = 0; i < 3; i++)
 		{
-			Vector3f center = ConvertFormHomogeneous(triagnle[i].m_vertex);
+			Vector3f center = ConvertFormHomogeneous(triangle[i].m_vertex);
 			float xLimit = 0.5f * camera.GetViewPlane().x * center.z / distance;
 			if (center.x > xLimit)
 			{
@@ -435,12 +443,12 @@ namespace XenonEngine
 		if ((state[0] == PlaneTestState::GreaterThanXMax && state[1] == PlaneTestState::GreaterThanXMax && state[2] == PlaneTestState::GreaterThanXMax) ||
 			(state[0] == PlaneTestState::LessThanXMin && state[1] == PlaneTestState::LessThanXMin && state[2] == PlaneTestState::LessThanXMin))
 		{
-			return ClippingState::Clipped;
+			clipResult.m_clippingState = ClippingState::Clipped;
 		}
 
 		for (int i = 0; i < 3; i++)
 		{
-			Vector3f center = ConvertFormHomogeneous(triagnle[i].m_vertex);
+			Vector3f center = ConvertFormHomogeneous(triangle[i].m_vertex);
 			float yLimit = 0.5f * camera.GetViewPlane().y * center.z / distance;
 			if (center.y > yLimit)
 			{
@@ -458,17 +466,17 @@ namespace XenonEngine
 		if ((state[0] == PlaneTestState::GreaterThanYMax && state[1] == PlaneTestState::GreaterThanYMax && state[2] == PlaneTestState::GreaterThanYMax) ||
 			(state[0] == PlaneTestState::LessThanYMin && state[1] == PlaneTestState::LessThanYMin && state[2] == PlaneTestState::LessThanYMin))
 		{
-			return ClippingState::Clipped;
+			clipResult.m_clippingState = ClippingState::Clipped;
 		}
 
+		Vector<Vertex3D> outOfNearZ;
 		for (int i = 0; i < 3; i++)
 		{
-			int countLessThanZMin = 0;
-			Vector3f center = ConvertFormHomogeneous(triagnle[i].m_vertex);
+			Vector3f center = ConvertFormHomogeneous(triangle[i].m_vertex);
 			if (center.z < camera.GetNearClipZ())
 			{
 				state[i] = PlaneTestState::LessThanZMin;
-				countLessThanZMin++;
+				outOfNearZ.Add(triangle[i]);
 			}
 			else if (center.z > camera.GetFarClipZ())
 			{
@@ -482,9 +490,26 @@ namespace XenonEngine
 		if ((state[0] == PlaneTestState::LessThanZMin && state[1] == PlaneTestState::LessThanZMin && state[2] == PlaneTestState::LessThanZMin) ||
 			(state[0] == PlaneTestState::GreaterThanZMax && state[1] == PlaneTestState::GreaterThanZMax && state[2] == PlaneTestState::GreaterThanZMax))
 		{
-			return ClippingState::Clipped;
+			clipResult.m_clippingState = ClippingState::Clipped;
 		}
-		return ClippingState::Inside;
+		if (state[0] == PlaneTestState::LessThanZMin ||
+			state[1] == PlaneTestState::LessThanZMin ||
+			state[2] == PlaneTestState::LessThanZMin)
+		{
+			clipResult.m_clippingState = ClippingState::NeedToClip;
+			if (outOfNearZ.Count() == 1)
+			{
+
+			}
+			else if (outOfNearZ.Count() == 2)
+			{
+
+			}
+			else
+			{
+				assert(true == false); //out of nearZ vertex number must >0 and <3
+			}
+		}
 	}
 
 	Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
