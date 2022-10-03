@@ -17,7 +17,7 @@ namespace CrossPlatform
     {
     public:
         friend class XenonEngine::FileDatabase;
-        GameObjectWorldMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeWorld); }
+        GameObjectWorldMeta() :IFileMeta(FileType::FileTypeWorld) {}
         virtual ~GameObjectWorldMeta()override = default;
 
 		// Load into memory

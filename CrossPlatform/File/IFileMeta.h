@@ -14,18 +14,20 @@ namespace CrossPlatform
         friend class IFileMeta;
         static const Algorithm::String Root_Drive;
 
-        FileHeader():m_fileType(FileType::FileTypeNone),m_guid() {}
+        FileHeader(FileType fileType):
+			m_fileType(fileType),
+			m_guid() 
+		{}
         FileHeader(const FileHeader& header) :
             m_fileType (header.m_fileType),
             m_filePath(header.m_filePath),
             m_guid(header.m_guid)
-        {
-        }
+        {}
         FileHeader(FileType fileType, const Algorithm::String& filePath, const xg::Guid& guid) :
             m_fileType(fileType), m_filePath(filePath), m_guid(guid) {}
 
 		constexpr FileType GetFileType()const { return m_fileType; }
-        void SetFileType(FileType fileType) { m_fileType = fileType; }
+        //void SetFileType(FileType fileType) { m_fileType = fileType; }
         const Algorithm::String& GetFilePath()const { return m_filePath; }
         Algorithm::String GetVirtualPath() const;
         Algorithm::String GetFileName() const;
@@ -37,7 +39,7 @@ namespace CrossPlatform
 		void GenerateMetadata()const;
 
     private:
-        FileType m_fileType = FileType::FileTypeNone;
+        const FileType m_fileType;
         Algorithm::String m_filePath;
         xg::Guid m_guid;
     };
@@ -62,7 +64,7 @@ namespace CrossPlatform
 		virtual void Save();
 
         // Delete data file from hard drive
-		virtual void Delete() = 0;
+		virtual void Delete();
 
 	protected:
 		FileHeader m_header;

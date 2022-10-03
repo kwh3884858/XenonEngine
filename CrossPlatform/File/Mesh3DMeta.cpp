@@ -48,6 +48,8 @@ namespace CrossPlatform {
 
 	void Mesh3DMeta::Delete()
 	{
+		IFileMeta::Delete();
+
 		for (int i = 0; i < m_mesh->m_polygons.Count(); i++)
 		{
 			xg::Guid polyID = m_mesh->m_polygons[i];
@@ -68,12 +70,6 @@ namespace CrossPlatform {
 		{
 			path modelFile(filePath.CString());
 			bool result = remove(modelFile);
-			assert(result == true);
-		}
-		{
-			String metaFilePath = filePath + ".metadata";
-			path modelMetaFile(metaFilePath.CString());
-			bool result = remove(modelMetaFile);
 			assert(result == true);
 		}
 	}

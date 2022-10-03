@@ -91,6 +91,8 @@ namespace CrossPlatform
 
 	void FolderMeta::Delete()
 	{
+		IFileMeta::Delete();
+
 		for (int i =0 ; i < m_content.Count(); i++)
 		{
 			m_content[i]->Delete();

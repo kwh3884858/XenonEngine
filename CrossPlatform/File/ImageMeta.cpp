@@ -1,6 +1,9 @@
 #include "ImageMeta.h"
 #include "CrossPlatform/Image/Image.h"
+
+#include <fstream>
 #include <filesystem>
+
 namespace CrossPlatform {
 
     using namespace XenonEngine;
@@ -12,8 +15,31 @@ namespace CrossPlatform {
 		Clear();
     }
 
+	void ImageMeta::Load()
+	{
+
+	}
+
+	void ImageMeta::Clear()
+	{
+		delete m_image;
+		m_image = nullptr;
+	}
+
+	void ImageMeta::Save()
+	{
+		IFileMeta::Save();
+
+		ofstream outputStream(GetFileHeader().GetFilePath().CString());
+		YAML::Emitter out(outputStream);
+		out << YAML::Node(*m_mesh);
+		outputStream.close();
+	}
+
 	void ImageMeta::Delete()
 	{
+		IFileMeta::Delete();
+
 		Clear();
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())
@@ -23,12 +49,6 @@ namespace CrossPlatform {
 		{
 			path modelFile(filePath.CString());
 			bool result = remove(modelFile);
-			assert(result == true);
-		}
-		{
-			String metaFilePath = filePath + ".metadata";
-			path modelMetaFile(metaFilePath.CString());
-			bool result = remove(modelMetaFile);
 			assert(result == true);
 		}
 	}
@@ -42,10 +62,5 @@ namespace CrossPlatform {
 		return m_image;
 	}
 
-	void ImageMeta::Clear()
-	{
-		delete m_image;
-		m_image = nullptr;
-	}
 
 }

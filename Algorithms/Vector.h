@@ -84,7 +84,7 @@ namespace Algorithm
     }
 
 	template<typename T>
-	Algorithm::Vector<T>::Vector(Vector&& that)
+	Vector<T>::Vector(Vector&& that)
 	{
 		Initialize(that.Capacity());
 		InternalReplace(that.m_content, that.m_count);

@@ -21,7 +21,18 @@ namespace CrossPlatform
         friend class XenonEngine::FileDatabase;
 		ImageMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeImage); }
         virtual ~ImageMeta()override;
-		void Delete() override;
+
+		// Load into memory
+		virtual void Load() override;
+
+		// Clear from memory
+		virtual void Clear() override;
+
+		// Save to hard drive as a data file
+		virtual void Save() override;
+
+		// Delete data file from hard drive
+		virtual void Delete() override;
 
 		Image* GetImage();
     private:

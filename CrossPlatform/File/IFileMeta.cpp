@@ -12,6 +12,7 @@ namespace CrossPlatform
     using namespace std;
     using namespace XenonEngine;
     using namespace Algorithm;
+	using namespace std::filesystem;
     const Algorithm::String FileHeader::Root_Drive = "X:";
 
     Algorithm::String FileHeader::GetVirtualPath() const
@@ -41,4 +42,14 @@ namespace CrossPlatform
 	{
         m_header.GenerateMetadata();
 	}
+
+	void IFileMeta::Delete()
+	{
+		const String& filePath = GetFileHeader().GetFilePath();
+		String metaFilePath = filePath + ".metadata";
+		path modelMetaFile(metaFilePath.CString());
+		bool result = remove(modelMetaFile);
+		assert(result == true);
+	}
+
 }

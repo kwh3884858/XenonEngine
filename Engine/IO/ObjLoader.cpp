@@ -118,7 +118,6 @@ namespace XenonEngine
 			material->m_diffuseTexture = xg::Guid();
 			material->m_bumpTexture = xg::Guid();
 
-
 			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
 			if (!m_diffuseTextureFileName.Empty())
 			{
