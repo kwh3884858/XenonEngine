@@ -1,10 +1,16 @@
 #include "Mesh3DMeta.h"
+
 #include "CrossPlatform/Polygon/Polygon3D.h"
-#include "Engine/IO/ObjLoader.h"
 #include "CrossPlatform/Converter/Mesh3DYamlConverter.h"
+#include "CrossPlatform/File/Polygon3DMeta.h"
+
+#include "Engine/EngineManager.h"
+#include "Engine/Component/Mesh3D.h"
+#include "Engine/IO/ObjLoader.h"
 
 #include <fstream>
 #include <filesystem>
+
 namespace CrossPlatform {
 
     using namespace XenonEngine;
@@ -42,16 +48,16 @@ namespace CrossPlatform {
 
 	void Mesh3DMeta::Delete()
 	{
-		for (int i = 0; i < m_polygons.Count(); i++)
+		for (int i = 0; i < m_mesh->m_polygons.Count(); i++)
 		{
-			delete m_polygons[i];
-			m_polygons[i] = nullptr;
+			xg::Guid polyID = m_mesh->m_polygons[i];
+			EngineManager::Get().GetFileDatabase().DeleteFile(polyID);
 		}
 
-		for (int i = 0; i < m_materials.Count(); i++)
+		for (int i = 0; i < m_mesh->m_materials.Count(); i++)
 		{
-			delete m_materials[i];
-			m_materials[i] = nullptr;
+			xg::Guid polyID = m_mesh->m_materials[i];
+			EngineManager::Get().GetFileDatabase().DeleteFile(polyID);
 		}
 
 		const String& filePath = GetFileHeader().GetFilePath();
@@ -68,13 +74,6 @@ namespace CrossPlatform {
 			String metaFilePath = filePath + ".metadata";
 			path modelMetaFile(metaFilePath.CString());
 			bool result = remove(modelMetaFile);
-			assert(result == true);
-		}
-		if (m_materials.Count() != 0)
-		{
-			path materialFile(filePath.CString());
-			materialFile.replace_extension("mtl");
-			bool result = remove(materialFile);
 			assert(result == true);
 		}
 	}

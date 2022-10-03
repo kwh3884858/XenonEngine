@@ -7,14 +7,18 @@
 #include <filesystem>
 
 #include "CrossPlatform/File/Mesh3DMeta.h"
+#include "CrossPlatform/File/MaterialMeta.h"
+#include "CrossPlatform/File/Polygon3DMeta.h"
+
+#include "CrossPlatform/Polygon/Polygon3D.h"
+#include "CrossPlatform/Material/Material.h"
 
 #include "Engine/EngineManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION 
 #include "Library/tinyobjloader/tiny_obj_loader.h"
 #include "Engine/Component/Mesh3D.h"
-#include "CrossPlatform/File/MaterialMeta.h"
-#include "CrossPlatform/File/Polygon3DMeta.h"
+
 
 namespace XenonEngine
 {

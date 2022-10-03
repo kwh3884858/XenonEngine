@@ -84,17 +84,17 @@ namespace XenonEngine
         m_root = nullptr;
     }
 
-    FileType FileDatabase::GetFileType(const std::string& ext) const
-    {
-        for (int i = 0; i < m_typePair.Count(); i++)
-        {
-            if (ext == m_typePair[i].m_fileSuffix.CString())
-            {
-                return m_typePair[i].m_fileType;
-            }
-        }
-        return FileType::FileTypeNone;
-    }
+	constexpr CrossPlatform::FileType FileDatabase::GetFileType(const std::string& ext) const
+	{
+		for (int i = 0; i < m_typePair.Count(); i++)
+		{
+			if (ext == m_typePair[i].m_fileSuffix.CString())
+			{
+				return m_typePair[i].m_fileType;
+			}
+		}
+		return FileType::FileTypeNone;
+	}
 
     const CrossPlatform::IFileMeta* FileDatabase::GetFile(const xg::Guid& fileGuid) const
     {
@@ -102,7 +102,12 @@ namespace XenonEngine
         return m_database.at(fileGuid);
     }
 
-    const Algorithm::String& FileDatabase::GetExtension(CrossPlatform::FileType fileType)
+	CrossPlatform::IFileMeta* FileDatabase::GetFile(const xg::Guid& fileGuid)
+	{
+		return const_cast<CrossPlatform::IFileMeta*>(static_cast<const FileDatabase&>(*this).GetFile(fileGuid));
+	}
+
+	const Algorithm::String& FileDatabase::GetExtension(CrossPlatform::FileType fileType)
     {
         for (int i = 0; i < m_typePair.Count(); i++)
         {
@@ -230,6 +235,13 @@ namespace XenonEngine
 		return meta;
     }
 
+	void FileDatabase::DeleteFile(const xg::Guid& fileGuid)
+	{
+		IFileMeta* file = GetFile(fileGuid);
+		const String& virtualPath = file->GetFileHeader().GetVirtualPath();
+		InternalDeleteFile(virtualPath);
+	}
+
 	void FileDatabase::DeleteFile(const Algorithm::String& inPath)
 	{
 		String filePath(inPath);
@@ -237,18 +249,7 @@ namespace XenonEngine
 		{
 			filePath = ConvertToRealPath(filePath);
 		}
-		path originalFile(filePath.CString());
-		FolderMeta* folderMeta = GetFolder(originalFile.parent_path().string().c_str());
-		IFileMeta* fileMeta = folderMeta->GetFile(originalFile.filename().string().c_str());
-		if (fileMeta)
-		{
-			folderMeta->RemoveFile(fileMeta);
-			FileType fileType = GetFileType(originalFile.extension().string());
-			fileMeta->Delete();
-			delete fileMeta;
-			fileMeta = nullptr;
-			
-		}
+		InternalDeleteFile(filePath);
 	}
 
 	IFileMeta* FileDatabase::LoadFile(const Algorithm::String& realPath)
@@ -323,6 +324,26 @@ namespace XenonEngine
 	bool FileDatabase::IsRealPath(const Algorithm::String& filePath) const
 	{
 		return filePath.Find(m_root->GetFileHeader().GetFilePath());
+	}
+
+	void FileDatabase::InternalDeleteFile(const Algorithm::String& filePath)
+	{
+		path originalFile(filePath.CString());
+		FolderMeta* folderMeta = GetFolder(originalFile.parent_path().string().c_str());
+		IFileMeta* fileMeta = folderMeta->GetFile(originalFile.filename().string().c_str());
+		if (fileMeta)
+		{
+			// Database
+			m_database.erase(fileMeta->GetFileHeader().GetGUID());
+			// Folder
+			folderMeta->RemoveFile(fileMeta);
+			// Itself virtual Delete function
+			fileMeta->Delete();
+			// delete it
+			delete fileMeta;
+
+			fileMeta = nullptr;
+		}
 	}
 
 	//void FileDatabase::RecursiveLoadFolder(FolderMeta& parentFolder)

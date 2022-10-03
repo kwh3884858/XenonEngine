@@ -1,8 +1,8 @@
 #pragma once
 #include "CrossPlatform/XenonManager.h"
 #include "Algorithms/String.h"
-#include "CrossPlatform/Polygon/Polygon3D.h"
-#include "CrossPlatform/Material/Material.h"
+//#include "CrossPlatform/Polygon/Polygon3D.h"
+//#include "CrossPlatform/Material/Material.h"
 //#include "CrossPlatform/Polygon/Polygon3D.h"
 //namespace CrossPlatform
 //{

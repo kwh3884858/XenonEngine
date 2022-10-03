@@ -43,7 +43,7 @@ namespace CrossPlatform
 
 				header.SetFilePath(relatedFile.string().c_str());
 				IFileMeta* file = nullptr;
-				const FileType fileType = header.GetFileType();
+				constexpr FileType fileType = header.GetFileType();
 				assert(fileType != FileType::FileTypeNone);
 
 				file = CreateFileMetaFromHeader<fileType>(header);

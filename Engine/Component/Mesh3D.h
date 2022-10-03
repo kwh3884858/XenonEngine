@@ -22,6 +22,7 @@ namespace CrossPlatform {
 	class MaterialMeta;
 	class Vertex3D;
 	class Material;
+	class Mesh3DMeta;
 }
 namespace YAML {
 	template<>
@@ -33,8 +34,9 @@ namespace XenonEngine
 	class Mesh3D final :public IComponent
 	{
 	public:
-		friend class YAML::convert<Mesh3D>;
+		friend struct YAML::convert<Mesh3D>;
 		friend class ObjectLoader;
+		friend class CrossPlatform::Mesh3DMeta;
 
 		static const float PI;
 

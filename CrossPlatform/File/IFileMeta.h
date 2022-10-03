@@ -24,7 +24,7 @@ namespace CrossPlatform
         FileHeader(FileType fileType, const Algorithm::String& filePath, const xg::Guid& guid) :
             m_fileType(fileType), m_filePath(filePath), m_guid(guid) {}
 
-        FileType GetFileType()const { return m_fileType; }
+		constexpr FileType GetFileType()const { return m_fileType; }
         void SetFileType(FileType fileType) { m_fileType = fileType; }
         const Algorithm::String& GetFilePath()const { return m_filePath; }
         Algorithm::String GetVirtualPath() const;

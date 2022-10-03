@@ -55,7 +55,8 @@ namespace XenonEngine
         {
             Inside,     // Inside the view frustum
             Clipped,    // Outside
-            NeedToClip  // Half inside
+            NeedToClip, // Half inside
+			NeedToClipWithAdditionalVertex
         };
 
 		enum PlaneTestState : unsigned char
@@ -132,11 +133,11 @@ namespace XenonEngine
 	private:
         CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const;
 		//Old
-        CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2) const;
+        //CullingState RemoveBackFaces(const MathLab::TVector4f& p0, const MathLab::TVector4f& p1, const MathLab::TVector4f& p2) const;
 		//New
-        CullingState RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2)const;
+        //CullingState RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2)const;
         CullingState RemoveBackFaces(const CrossPlatform::Triangle3D& triangle)const;
-		ClipResult Clip(const CrossPlatform::Triangle3D& triagnle, const Camera3D& camera) const;
+		ClipResult Clip(CrossPlatform::Triangle3D& triagnle, const Camera3D& camera) const;
 
         void DrawLine(const MathLab::Vector3f& start, const MathLab::Vector3f& end, const MathLab::TMatrix4X4f& localToScreenTranform, const CrossPlatform::SColorRGBA& rgba = CrossPlatform::WHITE) const;
         void DrawCoordinateLines(const MathLab::TMatrix4X4f& worldToScreenTranform) const;
@@ -147,6 +148,8 @@ namespace XenonEngine
         MathLab::TMatrix4X4f GetProjectionAndScreenMatrix(const float fov, const MathLab::Vector2i& viewPort) const;
 
         void TransformLocalToCamera(CrossPlatform::Triangle3D& triangle, const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix) const;
+
+		CrossPlatform::Vertex3D Graphic3D::InternalClipZPoint(const CrossPlatform::Vertex3D& outsideVertex, const CrossPlatform::Vertex3D& insideVertex, int clipZ) const;
 
         //ShaderType m_renderType = ShaderType::ShaderType_Gouraud;
         Algorithm::Vector<Camera3D*> m_cameraList;

@@ -24,9 +24,10 @@ namespace XenonEngine
         void Initialize();
         void Shutdown();
 
-        CrossPlatform::FileType GetFileType(const std::string& ext)const;
+        constexpr CrossPlatform::FileType GetFileType(const std::string& ext)const;
         const CrossPlatform::FolderMeta* GetRootFolder()const { assert(m_root != nullptr); return m_root; }
         const CrossPlatform::IFileMeta* GetFile(const xg::Guid& fileGuid) const;
+        CrossPlatform::IFileMeta* GetFile(const xg::Guid& fileGuid);
         const Algorithm::String& GetExtension(CrossPlatform::FileType fileType);
 
         // Virtual Path
@@ -37,6 +38,8 @@ namespace XenonEngine
 
         // For Database
         CrossPlatform::IFileMeta* GenerateMetaFileForFile(const Algorithm::String& realPath);
+		// Delete file from database, folder and itself virtual function "Delete".
+		void DeleteFile(const xg::Guid& fileGuid);
 		void DeleteFile(const Algorithm::String& path);
 
         // For Engine
@@ -51,6 +54,8 @@ namespace XenonEngine
     private:
 		bool IsVirtualPath(const Algorithm::String& filePath)const;
 		bool IsRealPath(const Algorithm::String& filePath)const;
+
+		void InternalDeleteFile(const Algorithm::String& filePath);
         //void RecursiveLoadFolder(CrossPlatform::FolderMeta& folder);
         //void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
 

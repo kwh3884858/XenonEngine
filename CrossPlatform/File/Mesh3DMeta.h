@@ -5,9 +5,11 @@
 //  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
-namespace CrossPlatform {
-
+namespace XenonEngine
+{
 	class Mesh3D;
+}
+namespace CrossPlatform {
     class Mesh3DMeta :public IFileMeta
     {
     public:
@@ -27,6 +29,6 @@ namespace CrossPlatform {
 		virtual void Delete() override;
 
 	private:
-		Mesh3D* m_mesh = nullptr;
+		XenonEngine::Mesh3D* m_mesh = nullptr;
     };
 }

@@ -32,9 +32,9 @@ namespace XenonEngine
 
     bool Graphic3D::VertexShaderFlat(const VertexShaderDataInputFlat& input, VertexShaderDataOutputFlat& output, const TMatrix4X4f& worldToCameraTransform, const TMatrix4X4f& cameraToScreenTranform) const
     {
-        TVector4f homogeneousVertex0 = input.m_triangle[0];
-        TVector4f homogeneousVertex1 = input.m_triangle[1];
-        TVector4f homogeneousVertex2 = input.m_triangle[2];
+        TVector4f homogeneousVertex0 = input.m_triangle[0].m_vertex;
+        TVector4f homogeneousVertex1 = input.m_triangle[1].m_vertex;
+        TVector4f homogeneousVertex2 = input.m_triangle[2].m_vertex;
 
         //Lighting
         SColorRGBA baseColor = input.m_faceColor;
@@ -213,15 +213,15 @@ namespace XenonEngine
 				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
 
 				// Clipping near Z-axis triangle
-				Triangle3D generatedTriangle(triangle);
-				if (Clip(triangle, *majorCamera, generatedTriangle))
+				ClipResult clipResult = Clip(triangle, *majorCamera);
+				if (clipResult.m_clippingState == ClippingState::NeedToClipWithAdditionalVertex)
 				{
+					//TODO
 					// Render additional triangle
-
 				}
 
 				// Get shader
-				const Material& material = mesh->GetMaterial(triangle.m_materialIndex);
+				Material& material = mesh->GetMaterial(triangle.m_materialIndex);
 				ShaderType shaderType = material.GetShaderType();
 				if (shaderType == ShaderType::ShaderType_Wireframe || shaderType == ShaderType::ShaderType_Flat)
 				{
@@ -288,17 +288,14 @@ namespace XenonEngine
 					vertexData.vcolor1 = output.m_vertexColor[1];
 					vertexData.vcolor2 = output.m_vertexColor[2];
 
-					if (polygon->GetNumOFUV() != 0 && materials.Count() != 0)
+					if (triangle.m_materialIndex != -1)
 					{
-						int realIndex = sortingTriangleIndexList[polyIndex].m_index * 3;
-						int matIndex = (*polygon)[realIndex].m_material;
-						Material* mat = materials[matIndex];
 						VertexWithMaterialData data;
 						data.m_data = vertexData;
-						data.m_diffuse = mat->GetDiffuseTexture();
-						data.uv0 = (*polygon)[realIndex].m_uv;
-						data.uv1 = (*polygon)[realIndex + 1].m_uv;
-						data.uv2 = (*polygon)[realIndex + 2].m_uv;
+						data.m_diffuse = material.GetDiffuseTexture();
+						data.uv0 = triangle[0].m_uv;
+						data.uv1 = triangle[1].m_uv;
+						data.uv2 = triangle[2].m_uv;
 						Graphic2D::Get().DrawTriangle(data);
 
 					}
@@ -415,7 +412,7 @@ namespace XenonEngine
         return CullingState::NotCulled;
     }
 
-	Graphic3D::ClipResult Graphic3D::Clip(const Triangle3D& triangle, const Camera3D& camera) const
+	Graphic3D::ClipResult Graphic3D::Clip(Triangle3D& triangle, const Camera3D& camera) const
 	{
 		float distance = camera.GetViewDistance();
 		PlaneTestState state[3];
@@ -496,14 +493,77 @@ namespace XenonEngine
 			state[1] == PlaneTestState::LessThanZMin ||
 			state[2] == PlaneTestState::LessThanZMin)
 		{
-			clipResult.m_clippingState = ClippingState::NeedToClip;
+			float nearZ = camera.GetNearClipZ();
+
 			if (outOfNearZ.Count() == 1)
 			{
+				clipResult.m_clippingState = ClippingState::NeedToClipWithAdditionalVertex;
 
+				Vertex3D outNearZp0;
+				Vertex3D insideZp1;
+				Vertex3D insideZp2;
+				if (state[0] == PlaneTestState::LessThanZMin)
+				{
+					outNearZp0 = triangle[0];
+					insideZp1 = triangle[1];
+					insideZp2 = triangle[2];
+				}
+				else if (state[1] == PlaneTestState::LessThanZMin)
+				{
+					outNearZp0 = triangle[1];
+					insideZp1 = triangle[2];
+					insideZp2 = triangle[0];
+				}
+				else if (state[2] == PlaneTestState::LessThanZMin)
+				{
+					outNearZp0 = triangle[2];
+					insideZp1 = triangle[0];
+					insideZp2 = triangle[1];
+				}
+				else
+				{
+					assert(true == false);
+				}
+				outNearZp0 = InternalClipZPoint(outNearZp0, insideZp1, nearZ);
+
+				triangle[0] = outNearZp0;
+				triangle[1] = insideZp1;
+				triangle[2] = insideZp2;
+				clipResult.m_additionalGeneratedTriangle[0] = InternalClipZPoint(outNearZp0, insideZp2, nearZ);
+				clipResult.m_additionalGeneratedTriangle[1] = outNearZp0;
+				clipResult.m_additionalGeneratedTriangle[2] = insideZp2;
 			}
 			else if (outOfNearZ.Count() == 2)
 			{
+				clipResult.m_clippingState = ClippingState::NeedToClip;
 
+				Vertex3D insideZp0;
+				Vertex3D outNearZp1;
+				Vertex3D outNearZp2;
+				if (state[0] == PlaneTestState::InsideZ)
+				{
+					insideZp0 = triangle[0];
+					outNearZp1 = triangle[1];
+					outNearZp2 = triangle[2];
+				}
+				else if (state[1] == PlaneTestState::InsideZ)
+				{
+					insideZp0 = triangle[1];
+					outNearZp1 = triangle[2];
+					outNearZp2 = triangle[0];
+				}
+				else if (state[2] == PlaneTestState::InsideZ)
+				{
+					insideZp0 = triangle[2];
+					outNearZp1 = triangle[0];
+					outNearZp2 = triangle[1];
+				}
+				else
+				{
+					assert(true == false);
+				}
+				triangle[1] = InternalClipZPoint(outNearZp1, insideZp0, nearZ);
+				triangle[2] = InternalClipZPoint(outNearZp2, insideZp0, nearZ);
 			}
 			else
 			{
@@ -512,37 +572,37 @@ namespace XenonEngine
 		}
 	}
 
-	Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
-    {
-        TVector4f u = p1 - p0;
-        TVector4f v = p2 - p1;
-        TVector4f n = u.Cross(v);
+	//Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
+ //   {
+ //       TVector4f u = p1 - p0;
+ //       TVector4f v = p2 - p1;
+ //       TVector4f n = u.Cross(v);
 
-        if( p0.Dot(n) <= 0)
-        {
-            return CullingState::NotCulled;
-        }
-        else
-        {
-            return CullingState::Culled;
-        }
-    }
+ //       if( p0.Dot(n) <= 0)
+ //       {
+ //           return CullingState::NotCulled;
+ //       }
+ //       else
+ //       {
+ //           return CullingState::Culled;
+ //       }
+ //   }
 
-	XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2) const
-	{
-		TVector4f u = p1.m_vertex - p0.m_vertex;
-		TVector4f v = p2.m_vertex - p1.m_vertex;
-		TVector4f n = u.Cross(v);
+	//XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Vertex3D& p0, const Vertex3D& p1, const Vertex3D& p2) const
+	//{
+	//	TVector4f u = p1.m_vertex - p0.m_vertex;
+	//	TVector4f v = p2.m_vertex - p1.m_vertex;
+	//	TVector4f n = u.Cross(v);
 
-		if (p0.Dot(n) <= 0)
-		{
-			return CullingState::NotCulled;
-		}
-		else
-		{
-			return CullingState::Culled;
-		}
-	}
+	//	if (p0.Dot(n) <= 0)
+	//	{
+	//		return CullingState::NotCulled;
+	//	}
+	//	else
+	//	{
+	//		return CullingState::Culled;
+	//	}
+	//}
 
 	XenonEngine::Graphic3D::CullingState Graphic3D::RemoveBackFaces(const Triangle3D& triangle) const
 	{
@@ -647,15 +707,15 @@ namespace XenonEngine
         });
     }
 
-    bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs)
-    {
-        return (lhs[0][2] + lhs[1][2] + lhs[2][2]) /3 > (rhs[0][2] + rhs[1][2] + rhs[2][2]) / 3;
-    }
+    //bool IsZAxisBigger(const Triangle& lhs, const Triangle& rhs)
+    //{
+    //    return (lhs[0][2] + lhs[1][2] + lhs[2][2]) /3 > (rhs[0][2] + rhs[1][2] + rhs[2][2]) / 3;
+    //}
 
-    bool IsIndexZAxisBigger(const TriangleIndex& lIndex, const TriangleIndex& rIndex)
-    {
-        return lIndex.m_zAixs > rIndex.m_zAixs;
-    }
+    //bool IsIndexZAxisBigger(const TriangleIndex& lIndex, const TriangleIndex& rIndex)
+    //{
+    //    return lIndex.m_zAixs > rIndex.m_zAixs;
+    //}
 
 	void Graphic3D::TransformLocalToCamera(Triangle3D& triangle , const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix)const
 	{
@@ -666,4 +726,28 @@ namespace XenonEngine
 		triangle[2].m_vertex = triangle[2].m_vertex * localToCameraTranform;
 		triangle[2].m_normal = triangle[2].m_normal * worldToCameraRotationMatrix;
 	}
+
+	//TVector4f Graphic3D::InternalClipZPoint(const TVector4f& outsidePoint, const TVector4f& insidePoint, int clipZ) const
+	//{
+	//	TVector4f newPoint(outsidePoint);
+	//	float radio = (clipZ - insidePoint[2]) / (outsidePoint[2] - insidePoint[2]);
+	//	newPoint[0] = radio * (outsidePoint[0] - insidePoint[0]) + insidePoint[0];
+	//	newPoint[1] = radio * (outsidePoint[1] - insidePoint[1]) + insidePoint[1];
+	//	newPoint[2] = clipZ;
+	//	return newPoint;
+	//}
+
+	CrossPlatform::Vertex3D Graphic3D::InternalClipZPoint(const CrossPlatform::Vertex3D& outsideVertex, const CrossPlatform::Vertex3D& insideVertex, int clipZ) const
+	{
+		Vertex3D newVertex(outsideVertex);
+		float radio = (clipZ - insideVertex.m_vertex[2]) / (outsideVertex.m_vertex[2] - insideVertex.m_vertex[2]);
+		newVertex.m_vertex[0] = radio * (outsideVertex.m_vertex[0] - insideVertex.m_vertex[0]) + insideVertex.m_vertex[0];
+		newVertex.m_vertex[1] = radio * (outsideVertex.m_vertex[1] - insideVertex.m_vertex[1]) + insideVertex.m_vertex[1];
+		newVertex.m_vertex[2] = clipZ;
+		newVertex.m_normal[0] = radio * (outsideVertex.m_normal[0] - insideVertex.m_normal[0]) + insideVertex.m_normal[0];
+		newVertex.m_normal[1] = radio * (outsideVertex.m_normal[1] - insideVertex.m_normal[1]) + insideVertex.m_normal[1];
+		newVertex.m_normal[2] = radio * (outsideVertex.m_normal[2] - insideVertex.m_normal[2]) + insideVertex.m_normal[2];
+		return newVertex;
+	}
+
 }
