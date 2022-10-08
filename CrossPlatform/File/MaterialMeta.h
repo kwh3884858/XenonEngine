@@ -12,7 +12,7 @@ namespace CrossPlatform
 	public:
 		friend class XenonEngine::ObjectLoader;
 
-		MaterialMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMaterial); }
+		MaterialMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~MaterialMeta() override = default;
 
 		// Load into memory

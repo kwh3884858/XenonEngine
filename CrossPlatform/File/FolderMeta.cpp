@@ -5,6 +5,7 @@
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 
 #include "Engine/EngineManager.h"
+#include "FileMetaFactory.h"
 
 namespace CrossPlatform
 {
@@ -42,12 +43,10 @@ namespace CrossPlatform
 				}
 
 				header.SetFilePath(relatedFile.string().c_str());
-				IFileMeta* file = nullptr;
-				constexpr FileType fileType = header.GetFileType();
-				assert(fileType != FileType::FileTypeNone);
 
-				file = CreateFileMetaFromHeader<fileType>(header);
-				if (fileType == FileType::FileTypeFolder)
+				IFileMeta* file = FileMetaFactory<IFileMeta>::Instance().GetProduct(header);
+
+				if (file->GetFileHeader().GetFileType() == FileType::FileTypeFolder)
 				{
 					FolderMeta* folder = (FolderMeta*)file;
 					folder->Load();

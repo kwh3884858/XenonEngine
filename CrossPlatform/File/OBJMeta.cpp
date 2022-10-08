@@ -1,5 +1,5 @@
-#include "ImageMeta.h"
-#include "CrossPlatform/Image/Image.h"
+#include "OBJMeta.h"
+#include "Engine/IO/ObjLoader.h"
 #include <filesystem>
 namespace CrossPlatform {
 
@@ -25,8 +25,7 @@ namespace CrossPlatform {
 
 	void OBJMeta::Delete()
 	{
-		delete m_gameobjectWorld;
-		m_gameobjectWorld = nullptr;
+		IFileMeta::Delete();
 
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())
@@ -36,12 +35,6 @@ namespace CrossPlatform {
 		{
 			path modelFile(filePath.CString());
 			bool result = remove(modelFile);
-			assert(result == true);
-		}
-		{
-			String metaFilePath = filePath + ".metadata";
-			path modelMetaFile(metaFilePath.CString());
-			bool result = remove(modelMetaFile);
 			assert(result == true);
 		}
 	}

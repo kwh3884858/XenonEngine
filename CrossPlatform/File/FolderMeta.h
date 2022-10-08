@@ -11,7 +11,7 @@ namespace CrossPlatform
     class FolderMeta :public IFileMeta
     {
     public:
-        FolderMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeFolder); }
+        FolderMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~FolderMeta() override = default;
 
 		// Load into memory

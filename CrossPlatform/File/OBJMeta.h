@@ -11,7 +11,7 @@ namespace CrossPlatform {
 	class OBJMeta :public IFileMeta
 	{
 	public:
-		OBJMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeMesh3D); }
+		OBJMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~OBJMeta() override = default;
 
 		// Load into memory

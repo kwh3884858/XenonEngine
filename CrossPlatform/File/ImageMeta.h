@@ -19,8 +19,8 @@ namespace CrossPlatform
     {
     public:
         friend class XenonEngine::FileDatabase;
-		ImageMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypeImage); }
-        virtual ~ImageMeta()override;
+		ImageMeta(const FileHeader& header) :IFileMeta(header) { }
+		virtual ~ImageMeta()override = default;
 
 		// Load into memory
 		virtual void Load() override;
@@ -36,8 +36,6 @@ namespace CrossPlatform
 
 		Image* GetImage();
     private:
-		void Clear();
 		Image* m_image = nullptr;
     };
-
 }

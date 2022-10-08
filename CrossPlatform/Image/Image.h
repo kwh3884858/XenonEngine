@@ -15,6 +15,7 @@ namespace CrossPlatform
 		Image(const Algorithm::String& fileName);
 		Image(const Image& that);
 		~Image();
+		Image& operator=(Image&& that);
 
 		CrossPlatform::SColorRGBA GetColor(int x, int y)const;
 		CrossPlatform::SColorRGBA GetColor(float x, float y)const;

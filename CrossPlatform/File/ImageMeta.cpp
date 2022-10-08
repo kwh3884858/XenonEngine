@@ -1,5 +1,6 @@
 #include "ImageMeta.h"
 #include "CrossPlatform/Image/Image.h"
+#include "CrossPlatform/Converter/ImageYamlConverter.h"
 
 #include <fstream>
 #include <filesystem>
@@ -10,14 +11,14 @@ namespace CrossPlatform {
 	using namespace Algorithm;
 	using namespace std;
 	using namespace std::filesystem;
-	ImageMeta::~ImageMeta()
-    {
-		Clear();
-    }
 
 	void ImageMeta::Load()
 	{
-
+		if (!m_image)
+		{
+			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+			*m_image = std::move(config.as<Image>());
+		}
 	}
 
 	void ImageMeta::Clear()
@@ -32,7 +33,7 @@ namespace CrossPlatform {
 
 		ofstream outputStream(GetFileHeader().GetFilePath().CString());
 		YAML::Emitter out(outputStream);
-		out << YAML::Node(*m_mesh);
+		out << YAML::Node(*m_image);
 		outputStream.close();
 	}
 
@@ -40,7 +41,6 @@ namespace CrossPlatform {
 	{
 		IFileMeta::Delete();
 
-		Clear();
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())
 		{

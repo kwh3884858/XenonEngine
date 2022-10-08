@@ -13,7 +13,7 @@ namespace CrossPlatform
 	public:
 		friend class XenonEngine::ObjectLoader;
 
-		Polygon3DMeta(const FileHeader& header) :IFileMeta(header) { m_header.SetFileType(FileType::FileTypePolygon); }
+		Polygon3DMeta(const FileHeader& header) :IFileMeta(header) {}
 		virtual ~Polygon3DMeta()override = default;
 
 		// Load into memory

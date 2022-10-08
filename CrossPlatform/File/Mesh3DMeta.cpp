@@ -23,7 +23,7 @@ namespace CrossPlatform {
 		if (!m_mesh)
 		{
 			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-			m_mesh = config.as<Mesh3D>().Copy();
+			m_mesh =(Mesh3D*) config.as<Mesh3D>().Copy();
 		}
 	}
 

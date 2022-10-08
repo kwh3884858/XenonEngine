@@ -24,7 +24,7 @@ namespace XenonEngine
         void Initialize();
         void Shutdown();
 
-        constexpr CrossPlatform::FileType GetFileType(const std::string& ext)const;
+        CrossPlatform::FileType GetFileType(const std::string& ext)const;
         const CrossPlatform::FolderMeta* GetRootFolder()const { assert(m_root != nullptr); return m_root; }
         const CrossPlatform::IFileMeta* GetFile(const xg::Guid& fileGuid) const;
         CrossPlatform::IFileMeta* GetFile(const xg::Guid& fileGuid);

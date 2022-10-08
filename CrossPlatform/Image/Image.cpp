@@ -29,6 +29,17 @@ namespace CrossPlatform
 		m_channel = -1;
 	}
 
+	CrossPlatform::Image& Image::operator=(Image&& that)
+	{
+		m_data = that.m_data;
+		m_width = that.m_width;
+		m_height = that.m_height;
+		m_channel = that.m_channel;
+
+		that.m_data = nullptr;
+		return *this;
+	}
+
 	CrossPlatform::SColorRGBA Image::GetColor(int x, int y) const
 	{
 		assert(m_data != nullptr);

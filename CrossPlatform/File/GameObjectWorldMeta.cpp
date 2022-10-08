@@ -68,8 +68,7 @@ namespace CrossPlatform
 
 	void GameObjectWorldMeta::Delete()
 	{
-		delete m_gameobjectWorld;
-		m_gameobjectWorld = nullptr;
+		IFileMeta::Delete();
 
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())
@@ -79,12 +78,6 @@ namespace CrossPlatform
 		{
 			path worldFile(filePath.CString());
 			bool result = remove(worldFile);
-			assert(result == true);
-		}
-		{
-			String metaFilePath = filePath + ".metadata";
-			path worldMetaFile(metaFilePath.CString());
-			bool result = remove(worldMetaFile);
 			assert(result == true);
 		}
 	}

@@ -45,7 +45,7 @@ namespace XenonEngine
 		Mesh3D(Mesh3D&&);
 		virtual ~Mesh3D()override {}
 		virtual ComponentType GetComponentType() const override { return m_type; };
-		virtual IComponent* Copy(GameObject*const gameObject)const override;
+		virtual IComponent* Copy(GameObject*const gameObject = nullptr)const override;
 
 		virtual bool Start() override { return true; }
 		virtual bool Update() override { return true; }

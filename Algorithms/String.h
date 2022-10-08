@@ -122,9 +122,9 @@ namespace Algorithm
     }
 
 	template<typename T>
-	Algorithm::StringBase<T>::StringBase(StringBase&& that)
+	Algorithm::StringBase<T>::StringBase(StringBase&& that):
+		m_string(std::move(that.m_string))
 	{
-        m_string(std::move(that.m_string));
 	}
 
     template<typename T>

@@ -3,6 +3,7 @@
 #include "Algorithms/String.h"
 #include "MathLab/Vector3.h"
 #include "CrossPlatform/XenonShaderType.h"
+#include "crossguid/guid.hpp"
 
 namespace CrossPlatform
 {

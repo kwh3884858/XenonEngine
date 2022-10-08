@@ -11,26 +11,28 @@
 #include <filesystem>
 #include "yaml-cpp/yaml.h"
 
+#include "CrossPlatform/File/FileMetaRegister.h"
 #include "CrossPlatform/Converter/FileHeaderYamlConverter.h"
 #include "CrossPlatform/File/GameObjectWorldMeta.h"
 #include "CrossPlatform/File/FolderMeta.h"
 #include "CrossPlatform/File/MaterialMeta.h"
 #include "CrossPlatform/File/ImageMeta.h"
+#include "CrossPlatform/File/OBJMeta.h"
 #include "CrossPlatform/File/Polygon3DMeta.h"
 
 #include "Engine/EngineManager.h"
 #include "Engine/GameObjectWorld.h"
-
-namespace CrossPlatform
-{
-	DEFINE_FILE_TYPE(FileType::FileTypeFolder, CrossPlatform::FolderMeta)
-		DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, CrossPlatform::Mesh3DMeta)
-		DEFINE_FILE_TYPE(FileType::FileTypePolygon, CrossPlatform::Polygon3DMeta)
-		DEFINE_FILE_TYPE(FileType::FileTypeMaterial, CrossPlatform::MaterialMeta)
-		DEFINE_FILE_TYPE(FileType::FileTypeWorld, CrossPlatform::GameObjectWorldMeta)
-		DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::ImageMeta)
-        DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::OBJMeta)
-}
+//
+//namespace CrossPlatform
+//{
+//	//DEFINE_FILE_TYPE(FileType::FileTypeFolder, CrossPlatform::FolderMeta)
+//	//	DEFINE_FILE_TYPE(FileType::FileTypeMesh3D, CrossPlatform::Mesh3DMeta)
+//	//	DEFINE_FILE_TYPE(FileType::FileTypePolygon, CrossPlatform::Polygon3DMeta)
+//	//	DEFINE_FILE_TYPE(FileType::FileTypeMaterial, CrossPlatform::MaterialMeta)
+//	//	DEFINE_FILE_TYPE(FileType::FileTypeWorld, CrossPlatform::GameObjectWorldMeta)
+//	//	DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::ImageMeta)
+// //       DEFINE_FILE_TYPE(FileType::FileTypeImage, CrossPlatform::OBJMeta)
+//}
 
 namespace XenonEngine
 {
@@ -53,6 +55,13 @@ namespace XenonEngine
 		m_typePair.Add(DataPair(CrossPlatform::FileTypeObjFormatFile, ".obj"));
 
 		//FolderMeta::Registration();
+		FileMetaRegister<IFileMeta, FolderMeta>folder(FileType::FileTypeFolder);
+		FileMetaRegister<IFileMeta, Mesh3DMeta>mesh3D(FileType::FileTypeMesh3D);
+		FileMetaRegister<IFileMeta, Polygon3DMeta>polygon3D(FileType::FileTypePolygon);
+		FileMetaRegister<IFileMeta, MaterialMeta>material(FileType::FileTypeMaterial);
+		FileMetaRegister<IFileMeta, GameObjectWorldMeta>imageFactory(FileType::FileTypeWorld);
+		FileMetaRegister<IFileMeta, ImageMeta>imageFactory(FileType::FileTypeImage);
+		FileMetaRegister<IFileMeta, OBJMeta>objFormat(FileType::FileTypeObjFormatFile);
 
 
         path projectRoot(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
@@ -84,7 +93,7 @@ namespace XenonEngine
         m_root = nullptr;
     }
 
-	constexpr CrossPlatform::FileType FileDatabase::GetFileType(const std::string& ext) const
+	CrossPlatform::FileType FileDatabase::GetFileType(const std::string& ext) const
 	{
 		for (int i = 0; i < m_typePair.Count(); i++)
 		{
@@ -419,7 +428,7 @@ namespace XenonEngine
         const FileType fileType = GetFileType(stdFilePath.extension().string());
 		xg::Guid guid = xg::newGuid();
         FileHeader header(fileType, realFilePath, guid);
-        IFileMeta* meta = CrossPlatform::CreateFileMetaFromHeader<fileType>(header);
+        IFileMeta* meta = FileMetaFactory<IFileMeta>::Instance().GetProduct(fileType);
 		meta->IFileMeta::Save();
 		AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
 		return meta;
