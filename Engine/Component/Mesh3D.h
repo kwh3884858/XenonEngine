@@ -25,8 +25,8 @@ namespace CrossPlatform {
 	class Mesh3DMeta;
 }
 namespace YAML {
-	template<>
-	struct convert<XenonEngine::Mesh3D>;
+	template<typename T> struct convert;
+	template<> struct convert<XenonEngine::Mesh3D>;
 }
 namespace XenonEngine
 {
@@ -81,18 +81,23 @@ namespace XenonEngine
 		Iterator begin() { return Iterator(this, 0); }
 		Iterator end() { return Iterator(this, TriangleCount()); }
 
-		const CrossPlatform::Material& GetMaterial(int index);
-		//Old
+		CrossPlatform::Material& GetMaterial(int index);
 
-  //      const Algorithm::Vector<xg::Guid>& GetPolygonGuids()const { return m_polygons; }
-		//const Algorithm::Vector<xg::Guid>& GetMaterials()const { return m_materials; }
+		float GetMaxRadius()const { return m_maxRadius; }
+
+		// For GUI editor
+		void SetPolygonGuid(int index, xg::Guid guid) { m_polygons[index] = guid; }
+        const Algorithm::Vector<xg::Guid>& GetPolygonGuids()const { return m_polygons; }
+		Algorithm::Vector<xg::Guid>& GetPolygonGuids() { return const_cast<Algorithm::Vector<xg::Guid>&>(static_cast<const Mesh3D&>(*this).GetPolygonGuids()); }
+		void SetMaterialGuid(int index, xg::Guid guid) { m_materials[index] = guid; }
+		const Algorithm::Vector<xg::Guid>& GetMaterials()const { return m_materials; }
+		Algorithm::Vector<xg::Guid>& GetMaterials() { return const_cast<Algorithm::Vector<xg::Guid>&>(static_cast<const Mesh3D&>(*this).GetMaterials()); }
 
 		//const Algorithm::Vector<const CrossPlatform::Polygon3D*> GetPolygon3Ds()const;
 
   //      void SetModelGuid(const xg::Guid& modelGuid);
 		//void LoadModel();
 		//void RequestReloadModel();
-        float GetMaxRadius()const { return m_maxRadius; }
 
         static ComponentType m_type;
 	private:

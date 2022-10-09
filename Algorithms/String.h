@@ -5,6 +5,7 @@
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
 #include <cstdlib>
+#include <utility>
 #include "Algorithms/Vector.h"
 #include "Algorithms/DeterministicFiniteAutomaton.h"
 #include "Algorithms/AlgorithmMacro.h"

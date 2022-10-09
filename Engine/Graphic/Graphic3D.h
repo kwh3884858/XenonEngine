@@ -13,7 +13,7 @@
 #include "CrossPlatform/SColorRGBA.h"
 #include "Engine/Component/Mesh3D.h"
 #include "CrossPlatform/Image/Image.h"
-#include "Engine/Graphic/RenderList3D.h"
+//#include "Engine/Graphic/RenderList3D.h"
 #include "CrossPlatform/XenonShaderType.h"
 
 namespace CrossPlatform 
@@ -94,7 +94,7 @@ namespace XenonEngine
 
         struct VertexShaderDataInputGouraud
         {
-			CrossPlatform::Triangle3D triangle;
+			CrossPlatform::Triangle3D m_triangle;
 			//CrossPlatform::Triangle3D m_normal;
             CrossPlatform::SColorRGBA m_baseColor[3];
         };
@@ -155,7 +155,7 @@ namespace XenonEngine
         Algorithm::Vector<Camera3D*> m_cameraList;
         Algorithm::Vector<LightComponent*> m_lightList;
 
-		RenderList3D m_renderList;
+		//RenderList3D m_renderList;
 	};
 
 }

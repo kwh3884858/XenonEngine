@@ -96,10 +96,9 @@ namespace XenonEngine
 		}
 
 		//Save to mesh3D
-		std::string meshName = std::filesystem::path::preferred_separator +
-			fileName.CString() +
-			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial).CString();
-		String meshPath = modelFolder + meshName.c_str();
+		String meshPath = modelFolder +
+			fileName +
+			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
 		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(meshPath);
 		
 		Mesh3D* mesh = new Mesh3D();
@@ -135,10 +134,10 @@ namespace XenonEngine
 				assert(m_bumpTexture != nullptr);
 				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
 			}
-			std::string materialFileName = std::filesystem::path::preferred_separator + 
+			String materialPath = modelFolder + std::filesystem::path::preferred_separator +
 				objMaterial.name.c_str() + 
-				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial).CString();
-			String materialPath = modelFolder + materialFileName.c_str();
+				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
+			//String materialPath = modelFolder + materialFileName.c_str();
 			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(materialPath);
 			materialMeta->m_material = material;
 			materialMeta->Save();
@@ -182,13 +181,13 @@ namespace XenonEngine
 				vertexIndex[vindex].m_materialIndex = shapes[s].mesh.material_ids[f];
 			}
 			//Create new polygon3D
-			std::string polygonName = std::filesystem::path::preferred_separator +
+			String polygonPath = modelFolder + std::filesystem::path::preferred_separator +
 				fileName.CString() + s +
 				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypePolygon).CString();
-			String polygonPath = modelFolder + polygonName.c_str();
+			//String polygonPath = modelFolder + polygonName.c_str();
 			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(polygonPath);
 
-			Mesh3D* mesh = new Mesh3D();
+			//Mesh3D* mesh = new Mesh3D();
 			Polygon3D* polygon = new Polygon3D(std::move(vertexIndex));
 
 			polygonMeta->m_polygon = polygon;

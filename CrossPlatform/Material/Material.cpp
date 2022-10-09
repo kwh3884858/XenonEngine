@@ -73,12 +73,12 @@ namespace CrossPlatform
 	//	}
 	//}
 
-	const Algorithm::String& Material::GetDiffuseTextureFileName() const
+	const Algorithm::String Material::GetDiffuseTextureFileName() const
 	{
 		return EngineManager::Get().GetFileDatabase().GetFile(m_diffuseTexture)->GetFileHeader().GetFileName();
 	}
 
-	const Algorithm::String& Material::GetBumpTextureName() const
+	const Algorithm::String Material::GetBumpTextureName() const
 	{
 		return EngineManager::Get().GetFileDatabase().GetFile(m_bumpTexture)->GetFileHeader().GetFileName();
 	}

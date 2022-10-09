@@ -110,7 +110,7 @@ namespace XenonEngine
                 tDirection = tDirection * worldToCameraRotationMatrix;
                 for (int faceIndex = 0; faceIndex < 3; faceIndex++)
                 {
-                    TVector4f faceNormal = input.m_normal[faceIndex];
+                    TVector4f faceNormal = input.m_triangle[faceIndex].m_normal;
                     float face = tDirection.Dot(faceNormal);
                     if (face > 0)
                     {
@@ -127,10 +127,10 @@ namespace XenonEngine
                 lightPoistionHomogeneous = lightPoistionHomogeneous * worldToCameraTransform;
                 for (int faceIndex = 0; faceIndex < 3; faceIndex++)
                 {
-                    TVector4f direction = lightPoistionHomogeneous - input.triangle[faceIndex];
+                    TVector4f direction = lightPoistionHomogeneous - input.m_triangle[faceIndex].m_vertex;
                     float kc = pointLight->GetKc();
                     float kl = pointLight->GetKl();
-                    float face = direction.Normalize().Dot(input.m_normal[faceIndex]);
+                    float face = direction.Normalize().Dot(input.m_triangle[faceIndex].m_normal);
                     if (face > 0)
                     {
                         float attenuation = kc + kl * direction.Magnitude();
@@ -143,7 +143,7 @@ namespace XenonEngine
         }
         for (int i = 0; i < 3; i++)
         {
-            Vector3f screenPosition1 = ConvertFormHomogeneous(input.triangle[i] * cameraToScreenTranform);
+            Vector3f screenPosition1 = ConvertFormHomogeneous(input.m_triangle[i].m_vertex * cameraToScreenTranform);
             output.m_screenPoint[i] = Vector2f(screenPosition1.x, screenPosition1.y);
         }
         return true;
@@ -273,7 +273,7 @@ namespace XenonEngine
 						break;
 					}
 					VertexShaderDataInputGouraud input;
-					input.triangle = triangle;
+					input.m_triangle = triangle;
 					//input.m_normal = normal;
 					input.m_baseColor[0] = CrossPlatform::WHITE;
 					input.m_baseColor[1] = CrossPlatform::WHITE;

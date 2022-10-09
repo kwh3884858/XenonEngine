@@ -2,7 +2,7 @@
 //  MacWindow
 //
 //  Created by whkong on 2021-2-28.
-//  Copyright © 2018 whkong. All rights reserved.
+//  Copyright 2018 whkong. All rights reserved.
 
 #pragma once
 #include "Vector3.h"

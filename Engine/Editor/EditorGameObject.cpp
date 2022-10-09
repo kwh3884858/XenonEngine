@@ -57,46 +57,99 @@ namespace XenonEngine
                 {
 					ContextMenu((IComponent*)component);
 					const Mesh3D* mesh = static_cast<const Mesh3D*>(component);
-                    ImGui::PushID(i);
-                    ImGui::Text("Model GUID: %s", mesh->GetModelGuid().str().c_str());
-                    if (ImGui::BeginDragDropTarget())
-                    {
-                        if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
-                        {
-                            IM_ASSERT(payload->DataSize == 37);
-                            char* payload_n = (char*)payload->Data;
-                            ( (Mesh3D*)mesh )->SetModelGuid(xg::Guid(payload_n));
-							( (Mesh3D*)mesh )->RequestReloadModel();
-                        }
-                        ImGui::EndDragDropTarget();
-                    }
-                    ImGui::PopID();
-
-					const Vector<Material*> materials = mesh->GetMaterials();
-					for (int materialIndex = 0 ; materialIndex < materials.Count(); materialIndex++)
+                    //ImGui::PushID(i);
+					const Algorithm::Vector<xg::Guid>& meshGuids = mesh->GetPolygonGuids();
+					for (int guidIndex = 0; guidIndex < meshGuids.Count(); guidIndex++)
 					{
-						const Material* material = materials[materialIndex];
-						ImGui::Text("Material Name: %s", material->GetName().CString());
-						ImGui::Text("Exponent: %f", material->GetExponent());
-						ImGui::Text("Ambient: "); ImGui::SameLine(); Text(material->GetAmbient());
-						ImGui::Text("Diffuse: "); ImGui::SameLine(); Text(material->GetDiffuse());
-						ImGui::Text("Specular: "); ImGui::SameLine(); Text(material->GetSpecular());
-						ImGui::Text("Emission: "); ImGui::SameLine(); Text(material->GetEmission());
-						if (material->GetDiffuseTextureFileName().Empty())
+						ImGui::Text("Model GUID: %s", meshGuids[guidIndex].str().c_str());
+						ImGui::PushID(meshGuids[guidIndex].str().c_str());
+						if (ImGui::BeginDragDropTarget())
+						{
+							if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
+							{
+								IM_ASSERT(payload->DataSize == 37);
+								char* payload_n = (char*)payload->Data;
+								((Mesh3D*)mesh)->SetPolygonGuid(guidIndex, xg::Guid(payload_n));
+								//TODO: ((Mesh3D*)mesh)->RequestReloadModel();
+							}
+							ImGui::EndDragDropTarget();
+						}
+						ImGui::PopID();
+					}
+					//for (const auto& guid : meshGuids)
+					//{
+					//	ImGui::Text("Model GUID: %s", guid.str().c_str());
+					//	ImGui::PushID(guid.str().c_str());
+					//	if (ImGui::BeginDragDropTarget())
+					//	{
+					//		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
+					//		{
+					//			IM_ASSERT(payload->DataSize == 37);
+					//			char* payload_n = (char*)payload->Data;
+					//			((Mesh3D*)mesh)->SetModelGuid(xg::Guid(payload_n));
+					//			((Mesh3D*)mesh)->RequestReloadModel();
+					//		}
+					//		ImGui::EndDragDropTarget();
+					//	}
+					//	ImGui::PopID();
+					//}
+                    //ImGui::Text("Model GUID: %s", mesh->GetModelGuid().str().c_str());
+       //             if (ImGui::BeginDragDropTarget())
+       //             {
+       //                 if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
+       //                 {
+       //                     IM_ASSERT(payload->DataSize == 37);
+       //                     char* payload_n = (char*)payload->Data;
+       //                     ( (Mesh3D*)mesh )->SetModelGuid(xg::Guid(payload_n));
+							//( (Mesh3D*)mesh )->RequestReloadModel();
+       //                 }
+       //                 ImGui::EndDragDropTarget();
+       //             }
+       //             ImGui::PopID();
+
+					const Algorithm::Vector<xg::Guid>& materialGuids = mesh->GetMaterials();
+					for (int materialIndex = 0 ; materialIndex < materialGuids.Count(); materialIndex++)
+					{
+						const Material& material = const_cast<Mesh3D*>(mesh)->GetMaterial(materialIndex);
+						const ShaderType& renderType = material.GetShaderType();
+						const char* items[] = { "Wireframe", "FlatShdering", "GouraudShdering" };
+						const char* item_current = items[renderType];            // Here our selection is a single pointer stored outside the object.
+						if (ImGui::BeginCombo("combo 1", item_current)) // The second parameter is the label previewed before opening the combo.
+						{
+							for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+							{
+								bool is_selected = (item_current == items[n]);
+								if (ImGui::Selectable(items[n], is_selected))
+								{
+									item_current = items[n];
+									const_cast<Material&>(material).SetShaderType(renderType);
+								}
+								if (is_selected)
+									ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+							}
+							ImGui::EndCombo();
+						}
+						ImGui::Text("Material Name: %s", material.GetName().CString());
+						ImGui::Text("Exponent: %f", material.GetExponent());
+						ImGui::Text("Ambient: "); ImGui::SameLine(); Text(material.GetAmbient());
+						ImGui::Text("Diffuse: "); ImGui::SameLine(); Text(material.GetDiffuse());
+						ImGui::Text("Specular: "); ImGui::SameLine(); Text(material.GetSpecular());
+						ImGui::Text("Emission: "); ImGui::SameLine(); Text(material.GetEmission());
+						if (material.GetDiffuseTextureFileName().Empty())
 						{
 							ImGui::Text("Material Texture Name: %s", "No File");
 						}
 						else
 						{
-							ImGui::Text("Material Texture Name: %s", material->GetDiffuseTextureFileName().CString());
+							ImGui::Text("Material Texture Name: %s", material.GetDiffuseTextureFileName().CString());
 						}
-						if (material->GetBumpTextureName().Empty())
+						if (material.GetBumpTextureName().Empty())
 						{
 							ImGui::Text("Bump Texture Name: %s", "No File");
 						}
 						else
 						{
-							ImGui::Text("Bump Texture Name: %s", material->GetBumpTextureName().CString());
+							ImGui::Text("Bump Texture Name: %s", material.GetBumpTextureName().CString());
 						}
 					}
                     ImGui::Text("Max Radius: %f", mesh->GetMaxRadius());

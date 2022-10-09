@@ -2,7 +2,7 @@
 #include "yaml-cpp/yaml.h"
 #include "GUIDYamlConverter.h"
 #include "Vector3YamlConverter.h"
-
+#include "StringYamlConverter.h"
 #include "CrossPlatform/Material/Material.h"
 
 namespace YAML {

@@ -25,7 +25,7 @@ namespace CrossPlatform {
 	class Polygon3D
 	{
 	public:
-		template<> friend struct YAML::convert<Polygon3D>;
+		friend struct YAML::convert<Polygon3D>;
 
         struct VertexIndex
         {

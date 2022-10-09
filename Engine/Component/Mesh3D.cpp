@@ -148,6 +148,7 @@ namespace XenonEngine
 			}
 		}
 		assert(true == false);  //index is out of array; too big index;
+		return Triangle3D();
 	}
 
 	const CrossPlatform::Polygon3D& Mesh3D::GetPolygon3D(const Guid& guid) 
@@ -176,7 +177,7 @@ namespace XenonEngine
 		return result;
 	}
 
-	const CrossPlatform::Material& Mesh3D::GetMaterial(int index)
+	CrossPlatform::Material& Mesh3D::GetMaterial(int index)
 	{
 		Guid guid = m_materials[index];
 

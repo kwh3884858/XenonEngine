@@ -37,25 +37,6 @@ namespace XenonEngine
             return;
         }
 
-        const Graphic3D::RenderType& renderType = graphic->GetRenderType();
-        const char* items[] = { "Wireframe", "FlatShdering", "GouraudShdering" };
-        const char* item_current = items[renderType];            // Here our selection is a single pointer stored outside the object.
-        if (ImGui::BeginCombo("combo 1", item_current)) // The second parameter is the label previewed before opening the combo.
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(items); n++)
-            {
-                bool is_selected = (item_current == items[n]);
-                if (ImGui::Selectable(items[n], is_selected))
-                {
-                    item_current = items[n];
-                    ((Graphic3D*)graphic)->SetRenderType((Graphic3D::RenderType)n);
-                }
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
-            }
-            ImGui::EndCombo();
-        }
-
         const GameObjectWorldManager* worldManager = syncData->WorldManagerGetter();
         if (!worldManager)
         {

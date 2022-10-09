@@ -18,6 +18,7 @@ namespace CrossPlatform
 		Material(Material&& material);
 
 		ShaderType GetShaderType()const { return m_shaderType; }
+		void SetShaderType(ShaderType shaderType) { m_shaderType = shaderType; }
 
 		const Algorithm::String& GetName()const { return m_name; }
 		const float& GetExponent()const { return m_exponent; }
@@ -25,8 +26,8 @@ namespace CrossPlatform
 		const MathLab::Vector3f& GetDiffuse()const { return m_diffuse; }
 		const MathLab::Vector3f& GetSpecular()const { return m_specular; }
 		const MathLab::Vector3f& GetEmission()const { return m_emission; }
-		const Algorithm::String& GetDiffuseTextureFileName()const;
-		const Algorithm::String& GetBumpTextureName()const;
+		const Algorithm::String GetDiffuseTextureFileName()const;
+		const Algorithm::String GetBumpTextureName()const;
 
 		//void loadTextureData(const Algorithm::String& modelPath);
 		Image* GetDiffuseTexture();

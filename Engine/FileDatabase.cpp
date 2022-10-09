@@ -43,23 +43,23 @@ namespace XenonEngine
 
     void FileDatabase::Initialize()
     {
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeFolder, ""));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeMesh3D, ".xmesh3d"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypePolygon, ".xpolygon"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeMaterial, ".xmaterial"));
+		m_typePair.Add(DataPair(FileType::FileTypeFolder, ""));
+		m_typePair.Add(DataPair(FileType::FileTypeMesh3D, ".xmesh3d"));
+		m_typePair.Add(DataPair(FileType::FileTypePolygon, ".xpolygon"));
+		m_typePair.Add(DataPair(FileType::FileTypeMaterial, ".xmaterial"));
 		//m_typePair.Add(DataPair(CrossPlatform::FileTypeObjMaterial, ".mtl"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeWorld, ".world"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".jpg"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".png"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeImage, ".dds"));
-		m_typePair.Add(DataPair(CrossPlatform::FileTypeObjFormatFile, ".obj"));
+		m_typePair.Add(DataPair(FileType::FileTypeWorld, ".world"));
+		m_typePair.Add(DataPair(FileType::FileTypeImage, ".jpg"));
+		m_typePair.Add(DataPair(FileType::FileTypeImage, ".png"));
+		m_typePair.Add(DataPair(FileType::FileTypeImage, ".dds"));
+		m_typePair.Add(DataPair(FileType::FileTypeObjFormatFile, ".obj"));
 
 		//FolderMeta::Registration();
 		FileMetaRegister<IFileMeta, FolderMeta>folder(FileType::FileTypeFolder);
 		FileMetaRegister<IFileMeta, Mesh3DMeta>mesh3D(FileType::FileTypeMesh3D);
 		FileMetaRegister<IFileMeta, Polygon3DMeta>polygon3D(FileType::FileTypePolygon);
 		FileMetaRegister<IFileMeta, MaterialMeta>material(FileType::FileTypeMaterial);
-		FileMetaRegister<IFileMeta, GameObjectWorldMeta>imageFactory(FileType::FileTypeWorld);
+		FileMetaRegister<IFileMeta, GameObjectWorldMeta>world(FileType::FileTypeWorld);
 		FileMetaRegister<IFileMeta, ImageMeta>imageFactory(FileType::FileTypeImage);
 		FileMetaRegister<IFileMeta, OBJMeta>objFormat(FileType::FileTypeObjFormatFile);
 
@@ -203,7 +203,7 @@ namespace XenonEngine
             if (tmpFolder == nullptr)
             {
                 String realPath = ConvertToRealPath(tmpVirtualPath);
-				tmpFolder = CreateMetaFromFilePath(realPath);
+				tmpFolder = (FolderMeta*)CreateMetaFromFilePath(realPath);
             }
             if (tmpFolder->GetFileHeader().GetFileType() != FileType::FileTypeFolder)
             {

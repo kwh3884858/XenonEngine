@@ -15,6 +15,6 @@ namespace CrossPlatform
 
 	private:
 		IMetaRegister(const IMetaRegister &) = default;
-		const IMetaRegister &operator=(const IMetaRegister &) = default;
+		IMetaRegister& operator=(const IMetaRegister &) = default;
 	};
 }

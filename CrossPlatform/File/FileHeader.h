@@ -11,7 +11,7 @@ namespace CrossPlatform
 		friend class IFileMeta;
 		static const Algorithm::String Root_Drive;
 
-		FileHeader(FileType fileType) :
+		FileHeader(FileType fileType = FileType::FileTypeNone) :
 			m_fileType(fileType),
 			m_guid()
 		{}

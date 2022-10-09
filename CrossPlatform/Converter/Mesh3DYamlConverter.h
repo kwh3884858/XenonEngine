@@ -3,7 +3,7 @@
 
 #include "GUIDYamlConverter.h"
 #include "Vector3YamlConverter.h"
-
+#include "Vector2YamlConverter.h"
 #include "Engine/Component/Mesh3D.h"
 
 namespace YAML {
