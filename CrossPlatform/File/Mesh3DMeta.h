@@ -8,11 +8,14 @@
 namespace XenonEngine
 {
 	class Mesh3D;
+	class ObjectLoader;
 }
 namespace CrossPlatform {
     class Mesh3DMeta :public IFileMeta
     {
     public:
+		friend class XenonEngine::ObjectLoader;
+
         Mesh3DMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~Mesh3DMeta() override = default;
 

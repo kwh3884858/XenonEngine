@@ -96,12 +96,13 @@ namespace XenonEngine
 		}
 
 		//Save to mesh3D
+		Mesh3D* mesh = new Mesh3D();
 		String meshPath = modelFolder +
 			fileName +
 			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
 		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(meshPath);
-		
-		Mesh3D* mesh = new Mesh3D();
+		meshMeta->m_mesh = mesh;
+
 		mesh->m_vertexs = std::move(vertexs);
 		mesh->m_normals = std::move(normals);
 		mesh->m_uv = std::move(uv);
@@ -182,8 +183,8 @@ namespace XenonEngine
 			}
 			//Create new polygon3D
 			String polygonPath = modelFolder + std::filesystem::path::preferred_separator +
-				fileName.CString() + s +
-				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypePolygon).CString();
+				fileName + std::to_string(s).c_str() +
+				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypePolygon);
 			//String polygonPath = modelFolder + polygonName.c_str();
 			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(polygonPath);
 

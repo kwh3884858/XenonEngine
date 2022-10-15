@@ -234,14 +234,15 @@ namespace XenonEngine
 		{
 			assert(true == false);
 		}
-		IFileMeta* meta = nullptr;
+		//IFileMeta* meta = nullptr;
 		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
 		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
 		{
             IFileMeta* meta = CreateMetaFromFilePath(realPath);
 			folder->AddIFile(meta);
+			return meta;
 		}
-		return meta;
+		return nullptr;
     }
 
 	void FileDatabase::DeleteFile(const xg::Guid& fileGuid)

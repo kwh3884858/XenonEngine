@@ -149,7 +149,7 @@ namespace XenonEngine
 
         void TransformLocalToCamera(CrossPlatform::Triangle3D& triangle, const MathLab::TMatrix4X4f& localToCameraTranform, const MathLab::TMatrix4X4f& worldToCameraRotationMatrix) const;
 
-		CrossPlatform::Vertex3D Graphic3D::InternalClipZPoint(const CrossPlatform::Vertex3D& outsideVertex, const CrossPlatform::Vertex3D& insideVertex, int clipZ) const;
+		CrossPlatform::Vertex3D Graphic3D::InternalClipZPoint(const CrossPlatform::Vertex3D& outsideVertex, const CrossPlatform::Vertex3D& insideVertex, float clipZ) const;
 
         //ShaderType m_renderType = ShaderType::ShaderType_Gouraud;
         Algorithm::Vector<Camera3D*> m_cameraList;

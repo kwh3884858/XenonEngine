@@ -183,14 +183,36 @@ namespace XenonEngine
 
 		if (m_cacheMaterials.find(guid) != m_cacheMaterials.end())
 		{
-			return *(m_cacheMaterials.at(guid));
+			return *(const_cast<Material*>(m_cacheMaterials.at(guid)));
 		}
 		else
 		{
 			const MaterialMeta* materialMeta = (MaterialMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
 			const Material* material = materialMeta->GetMaterial();
 			m_cacheMaterials[guid] = material;
-			return *material;
+			return *const_cast<Material*>(material);
+		}
+	}
+
+	void Mesh3D::SetPolygonGuid(int index, xg::Guid guid)
+	{
+		m_polygons[index] = guid;
+		if (m_cachePolygons.find(guid) != m_cachePolygons.end())
+		{
+			const Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
+			const Polygon3D* polygon = polygonMeta->GetPolygon3D();
+			m_cachePolygons[guid] = polygon;
+		}
+	}
+
+	void Mesh3D::SetMaterialGuid(int index, xg::Guid guid)
+	{
+		m_materials[index] = guid;
+		if (m_cacheMaterials.find(guid) != m_cacheMaterials.end())
+		{
+			const MaterialMeta* materialMeta = (MaterialMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
+			const Material* material = materialMeta->GetMaterial();
+			m_cacheMaterials[guid] = material;
 		}
 	}
 

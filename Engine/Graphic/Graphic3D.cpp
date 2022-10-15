@@ -570,6 +570,8 @@ namespace XenonEngine
 				assert(true == false); //out of nearZ vertex number must >0 and <3
 			}
 		}
+
+		return clipResult;
 	}
 
 	//Graphic3D::CullingState Graphic3D::RemoveBackFaces(const TVector4f& p0, const TVector4f& p1, const TVector4f& p2) const
@@ -737,7 +739,7 @@ namespace XenonEngine
 	//	return newPoint;
 	//}
 
-	CrossPlatform::Vertex3D Graphic3D::InternalClipZPoint(const CrossPlatform::Vertex3D& outsideVertex, const CrossPlatform::Vertex3D& insideVertex, int clipZ) const
+	CrossPlatform::Vertex3D Graphic3D::InternalClipZPoint(const CrossPlatform::Vertex3D& outsideVertex, const CrossPlatform::Vertex3D& insideVertex, float clipZ) const
 	{
 		Vertex3D newVertex(outsideVertex);
 		float radio = (clipZ - insideVertex.m_vertex[2]) / (outsideVertex.m_vertex[2] - insideVertex.m_vertex[2]);

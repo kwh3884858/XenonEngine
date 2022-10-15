@@ -86,10 +86,10 @@ namespace XenonEngine
 		float GetMaxRadius()const { return m_maxRadius; }
 
 		// For GUI editor
-		void SetPolygonGuid(int index, xg::Guid guid) { m_polygons[index] = guid; }
+		void SetPolygonGuid(int index, xg::Guid guid);
         const Algorithm::Vector<xg::Guid>& GetPolygonGuids()const { return m_polygons; }
 		Algorithm::Vector<xg::Guid>& GetPolygonGuids() { return const_cast<Algorithm::Vector<xg::Guid>&>(static_cast<const Mesh3D&>(*this).GetPolygonGuids()); }
-		void SetMaterialGuid(int index, xg::Guid guid) { m_materials[index] = guid; }
+		void SetMaterialGuid(int index, xg::Guid guid);
 		const Algorithm::Vector<xg::Guid>& GetMaterials()const { return m_materials; }
 		Algorithm::Vector<xg::Guid>& GetMaterials() { return const_cast<Algorithm::Vector<xg::Guid>&>(static_cast<const Mesh3D&>(*this).GetMaterials()); }
 
