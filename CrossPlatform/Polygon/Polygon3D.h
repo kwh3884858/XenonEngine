@@ -16,7 +16,6 @@ namespace YAML
 	template<typename T> struct convert;
 	template<> struct convert<CrossPlatform::Polygon3D>;
 }
-
 namespace CrossPlatform {
 	//using MathLab::Vector3f;
 	//using MathLab::Vector2f;
@@ -45,6 +44,7 @@ namespace CrossPlatform {
 			int m_materialIndex = -1;
 		};
 
+		Polygon3D() = default;
 		Polygon3D(Algorithm::Vector<TriangleIndex>&& vertexIndex);
 		Polygon3D(const Polygon3D& that);
 		~Polygon3D();

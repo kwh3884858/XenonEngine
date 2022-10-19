@@ -8,7 +8,8 @@ namespace YAML {
     struct convert<Image> {
         static Node encode(const Image& rhs) {
             Node node;
-			node["Data"] = rhs.m_data;
+			//YAML::Node node = YAML::Binary(rhs.m_data, rhs.m_height * rhs.m_width);
+			node["Data"] = YAML::Binary(rhs.m_data, rhs.m_height * rhs.m_width);
 			node["Height"] = rhs.m_height;
 			node["Width"] = rhs.m_width;
 			node["Channel"] = rhs.m_channel;
@@ -21,7 +22,10 @@ namespace YAML {
 			// Need to check
 			// Memory leak possibility
 			YAML::Binary binary = node["Data"].as<YAML::Binary>();
-			rhs.m_data = const_cast<unsigned char*>(binary.data());
+            rhs.m_data = new unsigned char[binary.size()];
+            memcpy(rhs.m_data, binary.data(), binary.size());
+
+			//const_cast<unsigned char*>(binary.data());
             rhs.m_height = node["Height"].as<int>();
             rhs.m_width = node["Width"].as<int>();
             rhs.m_channel = node["Channel"].as<int>();

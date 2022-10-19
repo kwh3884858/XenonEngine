@@ -64,9 +64,9 @@ namespace XenonEngine
 		vertexs.Initialize(numOfVertex);
 		for (size_t i = 0; i < attrib.vertices.size(); i += 3)
 		{
-			vertexs[i / 3].x = attrib.vertices[i + 0];
-			vertexs[i / 3].y = attrib.vertices[i + 1];
-			vertexs[i / 3].z = attrib.vertices[i + 2];
+			vertexs[(int)i / 3].x = attrib.vertices[(int)(i + 0)];
+			vertexs[(int)i / 3].y = attrib.vertices[(int)(i + 1)];
+			vertexs[(int)i / 3].z = attrib.vertices[(int)(i + 2)];
 		}
 
 		int numOfNormal = (int)attrib.normals.size() / 3;
@@ -77,9 +77,9 @@ namespace XenonEngine
 			//normals = new Vector3f[numOfNormal];
 			for (size_t i = 0; i < attrib.normals.size(); i += 3)
 			{
-				normals[i / 3].x = attrib.normals[i + 0];
-				normals[i / 3].y = attrib.normals[i + 1];
-				normals[i / 3].z = attrib.normals[i + 2];
+				normals[(int)i / 3].x = attrib.normals[(int)(i + 0)];
+				normals[(int)i / 3].y = attrib.normals[(int)(i + 1)];
+				normals[(int)i / 3].z = attrib.normals[(int)(i + 2)];
 			}
 		}
 		int numOfTextureCoordinate = (int)attrib.texcoords.size() / 2;
@@ -90,8 +90,8 @@ namespace XenonEngine
 			uv.Initialize(numOfTextureCoordinate);
 			for (size_t i = 0; i < attrib.texcoords.size(); i+= 2)
 			{
-				uv[i / 2].x = attrib.texcoords[i + 0];
-				uv[i / 2].y = attrib.texcoords[i + 1];
+				uv[(int)i / 2].x = attrib.texcoords[(int)(i + 0)];
+				uv[(int)i / 2].y = attrib.texcoords[(int)(i + 1)];
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace XenonEngine
 		// Loop over shapes
 		for (size_t s = 0; s < shapes.size(); s++)
 		{
-			size_t vindex = 0;
+			int vindex = 0;
 			//int numOfMaterial = (int) shapes[s].mesh.material_ids.size();
 			//int* materialIndex = nullptr;
 			//if (numOfMaterial > 0)
