@@ -38,8 +38,8 @@ namespace XenonEngine
         float GetKl()const { return m_kl; }
     private:
         CrossPlatform::SColorRGBA m_color;
-        float m_kc;
-        float m_kl;
+        float m_kc = -1;
+        float m_kl = -1;
         // Point light: color * intensity / kc + kl * distance
     };
 

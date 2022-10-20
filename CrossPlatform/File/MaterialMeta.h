@@ -30,6 +30,6 @@ namespace CrossPlatform
 		const Material* const GetMaterial()const { return m_material; }
 
 	private:
-		Material* m_material;
+		Material* m_material = nullptr;
 	};
 }

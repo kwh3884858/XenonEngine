@@ -13,7 +13,7 @@ namespace XenonEngine
     class Camera3DConfig
     {
     public:
-        float m_fov;
+        float m_fov = -1;
         MathLab::Vector2i m_viewport;
         float m_nearClipZ = 1;
         float m_farClipZ = 1000;

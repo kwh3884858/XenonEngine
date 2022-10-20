@@ -1,11 +1,13 @@
 #pragma once
-#include "CrossPlatform/FileTypeEnum.h"
+//#include "CrossPlatform/FileTypeEnum.h"
 #include "CrossPlatform/File/FileHeader.h"
+//#include "IFileMeta.h"
 #include <map>
+#include "IMetaRegister.h"
 namespace CrossPlatform
 {
-	template <class IFileMetaType>
-	class IMetaRegister;
+	//template <class IFileMetaType>
+	//class IMetaRegister;
 
 	template <class IFileMetaType>
 	class FileMetaFactory
@@ -24,4 +26,30 @@ namespace CrossPlatform
 
 		std::map<FileType, IMetaRegister<IFileMetaType> *> m_ProductRegistry;
 	};
+
+	template <class IFileMetaType>
+	FileMetaFactory<IFileMetaType>& FileMetaFactory<IFileMetaType>::Instance()
+	{
+		static FileMetaFactory<IFileMetaType> instance;
+		return instance;
+	}
+
+	template <class IFileMetaType>
+	void CrossPlatform::FileMetaFactory<IFileMetaType>::RegisterProduct(IMetaRegister<IFileMetaType>* registrar, FileType fileType)
+	{
+		m_ProductRegistry[fileType] = registrar;
+	}
+
+	template <class IFileMetaType>
+	IFileMetaType* CrossPlatform::FileMetaFactory<IFileMetaType>::GetProduct(const FileHeader& header)
+	{
+		FileType fileType = header.GetFileType();
+		if (m_ProductRegistry.find(fileType) != m_ProductRegistry.end())
+		{
+			return m_ProductRegistry[fileType]->CreateProduct(header);
+		}
+		std::cout << "No meta file found for " << (int) fileType << std::endl;
+		return nullptr;
+	}
+
 }
