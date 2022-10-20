@@ -85,7 +85,7 @@ namespace YAML {
 				if (node["Triangle"].IsSequence())
 				{
 					for (YAML::const_iterator it = node["Triangle"].begin(); it != node["Triangle"].end(); ++it) {
-						rhs.m_triangle.Add(it->as<Polygon3D::VertexIndex>());
+						rhs.m_triangle.Add(it->as<Polygon3D::TriangleIndex>());
 					}
 				}
 			}
