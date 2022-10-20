@@ -7,13 +7,12 @@ namespace CrossPlatform
 	class IFileMeta
 	{
 	public:
-		using FactoryByPath = IFileMeta * (*)(const Algorithm::String&);
-		using ReaderByHeader = IFileMeta * (*)(const FileHeader&);
+		//using FactoryByPath = IFileMeta * (*)(const Algorithm::String&);
+		//using ReaderByHeader = IFileMeta * (*)(const FileHeader&);
 		IFileMeta(const FileHeader& header) : m_header(header) { }
 		virtual ~IFileMeta() = default;
 		const FileHeader& GetFileHeader()const { return m_header; }
 		FileHeader& GetFileHeader() { return const_cast<FileHeader&>(static_cast<const IFileMeta&>(*this).GetFileHeader()); }
-
 	public:
 		// Load into memory
 		virtual void Load() = 0;
