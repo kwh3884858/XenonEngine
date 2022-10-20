@@ -80,7 +80,9 @@ namespace XenonEngine
 		}
         else
         {
-            LoadFile(projectDataRoot.string().c_str());
+			FolderMeta* root = new FolderMeta( FileHeader(FileType::FileTypeFolder, projectDataRoot.string().c_str(), xg::Guid()) );
+			m_root = root;
+            //LoadFile(projectDataRoot.string().c_str());
         }
 
         m_root->Load();
