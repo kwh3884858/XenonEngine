@@ -43,6 +43,10 @@ IF (WIN32)
         TARGET ${PROJECT_NAME} 
         POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/Library/Font-Awesome/webfonts/fa-regular-400.ttf" "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
+    # add_custom_command(
+    #     TARGET ${PROJECT_NAME} 
+    #     POST_BUILD
+    #     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/Data/EngineConfig.yaml" "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>")
 
 target_compile_options(${PROJECT_NAME} PRIVATE "$<$<CONFIG:DEBUG>:${FLAGS}>" "$<$<CONFIG:RELEASE>:${FLAGS}>")
 

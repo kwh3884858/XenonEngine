@@ -55,13 +55,13 @@ namespace XenonEngine
 		m_typePair.Add(DataPair(FileType::FileTypeObjFormatFile, ".obj"));
 
 		//FolderMeta::Registration();
-		FileMetaRegister<IFileMeta, FolderMeta>folder(FileType::FileTypeFolder);
-		FileMetaRegister<IFileMeta, Mesh3DMeta>mesh3D(FileType::FileTypeMesh3D);
-		FileMetaRegister<IFileMeta, Polygon3DMeta>polygon3D(FileType::FileTypePolygon);
-		FileMetaRegister<IFileMeta, MaterialMeta>material(FileType::FileTypeMaterial);
-		FileMetaRegister<IFileMeta, GameObjectWorldMeta>world(FileType::FileTypeWorld);
-		FileMetaRegister<IFileMeta, ImageMeta>imageFactory(FileType::FileTypeImage);
-		FileMetaRegister<IFileMeta, OBJMeta>objFormat(FileType::FileTypeObjFormatFile);
+		static FileMetaRegister<IFileMeta, FolderMeta>folder(FileType::FileTypeFolder);
+		static FileMetaRegister<IFileMeta, Mesh3DMeta>mesh3D(FileType::FileTypeMesh3D);
+		static FileMetaRegister<IFileMeta, Polygon3DMeta>polygon3D(FileType::FileTypePolygon);
+		static FileMetaRegister<IFileMeta, MaterialMeta>material(FileType::FileTypeMaterial);
+		static FileMetaRegister<IFileMeta, GameObjectWorldMeta>world(FileType::FileTypeWorld);
+		static FileMetaRegister<IFileMeta, ImageMeta>imageFactory(FileType::FileTypeImage);
+		static FileMetaRegister<IFileMeta, OBJMeta>objFormat(FileType::FileTypeObjFormatFile);
 
 
         path projectRoot(CrossPlatform::Database::Get().engineConfig.m_projectPath.CString());
@@ -71,7 +71,9 @@ namespace XenonEngine
             create_directory(projectRoot);
         }
 
-		path projectDataRoot = projectRoot.append("Data");
+		path projectDataRoot(projectRoot);
+		projectDataRoot += path::preferred_separator;
+		projectDataRoot = projectRoot.append("Data");
 		if (!exists(projectDataRoot))
 		{
 			create_directory(projectDataRoot);
@@ -431,7 +433,7 @@ namespace XenonEngine
         const FileType fileType = GetFileType(stdFilePath.extension().string());
 		xg::Guid guid = xg::newGuid();
         FileHeader header(fileType, realFilePath, guid);
-        IFileMeta* meta = FileMetaFactory<IFileMeta>::Instance().GetProduct(fileType);
+        IFileMeta* meta = FileMetaFactory<IFileMeta>::Instance().GetProduct(header);
 		meta->IFileMeta::Save();
 		AddFileToDatabase(meta->GetFileHeader().GetGUID(), meta);
 		return meta;

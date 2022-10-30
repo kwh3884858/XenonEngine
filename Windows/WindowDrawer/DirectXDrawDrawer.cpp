@@ -200,6 +200,7 @@ namespace WindowDrawer {
         {
             PostMessage(m_config->m_hwnd, WM_CLOSE, 0, 0);
             m_windowClosed = true;
+            return false;
         }
 
         WindowSurface::DirectXDrawSurface* const directXDrawSurface = static_cast<WindowSurface::DirectXDrawSurface* const>(drawerSurface);
