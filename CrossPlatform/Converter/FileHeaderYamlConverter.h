@@ -23,11 +23,8 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, FileHeader& rhs) {
-            if (!node.IsSequence())
-                return false;
-
-            rhs.SetFileType(node[0].as<CrossPlatform::FileType>());
-            rhs.SetGUID(node[1].as<xg::Guid>());
+			rhs.SetFileType(node["FileType"].as<CrossPlatform::FileType>());
+			rhs.SetGUID(node["GUID"].as<xg::Guid>());
             return true;
         }
     };
