@@ -295,11 +295,11 @@ namespace Algorithm
     template<typename T>
     const T* Vector<T>::End()const
     {
-        if (m_count == 0)
-        {
-            return nullptr;
-        }
-        return &(m_content[m_count - 1]);
+        //if (m_count == 0)
+        //{
+        //    return nullptr;
+        //}
+        return &(m_content[m_count /*- 1*/]);
     }
 
     template<typename T>
