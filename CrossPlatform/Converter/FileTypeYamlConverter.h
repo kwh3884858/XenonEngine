@@ -18,7 +18,7 @@ namespace YAML {
         static bool decode(const Node& node, FileType& rhs) {
 			if (!node.IsScalar())
 				return false;
-            if (Algorithm::StringToType(CrossPlatform::FileTypeString, node.Scalar().c_str(), rhs))
+            if (!Algorithm::StringToType(CrossPlatform::FileTypeString, node.Scalar().c_str(), rhs))
                 return false;
 			return true;
 
