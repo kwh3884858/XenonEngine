@@ -126,6 +126,7 @@ namespace Algorithm
 	Algorithm::StringBase<T>::StringBase(StringBase&& that):
 		m_string(std::move(that.m_string))
 	{
+        CStringlize();
 	}
 
     template<typename T>
