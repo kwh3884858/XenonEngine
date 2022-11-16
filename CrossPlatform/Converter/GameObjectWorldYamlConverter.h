@@ -20,10 +20,15 @@ namespace YAML {
         }
 
         static bool decode(const Node& node, GameObjectWorld& rhs) {
-			if (node["WorldObjects"].IsDefined())
+			if (node["Name"].IsDefined())
 			{
 				rhs.SetWorldName(node["Name"].as<Algorithm::String>());
 			}
+            else
+            {
+                return false;
+            }
+
             if (node["WorldObjects"].IsDefined())
             {
                 if (node["WorldObjects"].IsSequence())
@@ -31,6 +36,10 @@ namespace YAML {
                     for (YAML::const_iterator it = node["WorldObjects"].begin(); it != node["WorldObjects"].end(); ++it) {
                         rhs.AddGameObject(std::move(it->as<GameObject>()));
                     }
+                }
+                else
+                {
+                    return false;
                 }
             }
             return true;
