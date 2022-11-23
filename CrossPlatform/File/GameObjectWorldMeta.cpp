@@ -37,7 +37,8 @@ namespace CrossPlatform
 		if (m_gameobjectWorld != currentWorld)
 		{
 			Clear();
-			currentWorld->SetWorldName(GetFileHeader().GetFileName());
+			//Remove ".world"
+			currentWorld->SetWorldName(GetFileHeader().GetFileNameWithoutSuffix());
 			m_gameobjectWorld = currentWorld;
 		}
 
@@ -51,13 +52,6 @@ namespace CrossPlatform
 			return;
 		}
 
-		//String metaFilePath = path + ".metadata";
-		//{
-		//	ofstream outputStream(metaFilePath.CString());
-		//	YAML::Emitter out(outputStream);
-		//	out << YAML::Node(GetFileHeader());
-		//	outputStream.close();
-		//}
 		{
 			ofstream outputStream(path.CString());
 			YAML::Emitter out(outputStream);

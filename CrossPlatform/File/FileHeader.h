@@ -28,6 +28,7 @@ namespace CrossPlatform
 		const Algorithm::String& GetFilePath()const { return m_filePath; }
 		Algorithm::String GetVirtualPath() const;
 		Algorithm::String GetFileName() const;
+		Algorithm::String GetFileNameWithoutSuffix() const;
 		void SetFilePath(Algorithm::String filePath) { m_filePath = filePath; }
 		const xg::Guid& GetGUID()const { return m_guid; }
 		void SetGUID(xg::Guid guid) { m_guid = guid; }

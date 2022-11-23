@@ -24,12 +24,20 @@ namespace CrossPlatform
 
     Algorithm::String FileHeader::GetFileName() const
     {
-        int delimiterIndex =m_filePath.LastIndexOf(std::filesystem::path::preferred_separator);
-        assert(delimiterIndex >= 0);
-        return m_filePath.Substring(delimiterIndex +1, m_filePath.Count());
+        int separatorIndex = m_filePath.LastIndexOf(std::filesystem::path::preferred_separator);
+        assert(separatorIndex >= 0);
+        return m_filePath.Substring(separatorIndex +1, m_filePath.Count());
     }
 
-    void FileHeader::GenerateMetadata() const
+	Algorithm::String FileHeader::GetFileNameWithoutSuffix() const
+	{
+        Algorithm::String filename = GetFileName();
+        int dotIndex = filename.LastIndexOf('.');
+        assert(dotIndex >= 0);
+		return filename.Substring(0, dotIndex);
+	}
+
+	void FileHeader::GenerateMetadata() const
     {
         String metaPath = GetFilePath() + ".metadata";
         ofstream outputStream(metaPath.CString());
