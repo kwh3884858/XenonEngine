@@ -70,7 +70,9 @@ namespace CrossPlatform
 				FolderMeta* fileFolder = (FolderMeta*)file;
 				fileFolder->Clear();
 			}
+			EngineManager::Get().GetFileDatabase().RemoveFileFromDatabse(file->GetFileHeader().GetGUID());
 			file->Clear();
+			RemoveFile(file);
 			delete file;
 			file = nullptr;
 		}

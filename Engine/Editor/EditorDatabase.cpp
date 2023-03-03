@@ -33,12 +33,18 @@ namespace XenonEngine
 #include <ShellAPI.h>
 #endif
 
-	void EditorDatabase::ShowInExplorer(const Algorithm::String& virtualPath) const
+	void EditorDatabase::ExecuteShell(const Algorithm::String& virtualPath) const
 	{
         String absolutedPath = m_fileDatabase->ConvertToRealPath(virtualPath);
 #ifdef _WIN32
-        ShellExecuteA(nullptr, "open", absolutedPath.CString(), nullptr, nullptr, SW_SHOWDEFAULT);
+        HINSTANCE result = ShellExecuteA(nullptr, "open", absolutedPath.CString(), nullptr, nullptr, SW_SHOWDEFAULT);
+        assert(result > (HINSTANCE)HINSTANCE_ERROR);
 #endif
+	}
+
+	void EditorDatabase::RequestRefreshContent()
+	{
+        return m_fileDatabase->RefreshContent();
 	}
 
 }

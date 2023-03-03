@@ -92,10 +92,24 @@ namespace XenonEngine
 
     void FileDatabase::Shutdown()
     {
-        m_root->Clear();
-        delete m_root;
-        m_root = nullptr;
+		assert(m_root != nullptr);
+		if (m_root)
+		{
+			m_root->Clear();
+			delete m_root;
+			m_root = nullptr;
+		}
     }
+
+	void FileDatabase::RefreshContent()
+	{
+		assert(m_root != nullptr);
+		if (m_root)
+		{
+			m_root->Clear();
+			m_root->Load();
+		}
+	}
 
 	CrossPlatform::FileType FileDatabase::GetFileType(const std::string& ext) const
 	{

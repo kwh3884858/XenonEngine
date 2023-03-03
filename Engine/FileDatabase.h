@@ -24,6 +24,8 @@ namespace XenonEngine
         void Initialize();
         void Shutdown();
 
+        void RefreshContent();
+
         CrossPlatform::FileType GetFileType(const std::string& ext)const;
         const CrossPlatform::FolderMeta* GetRootFolder()const { assert(m_root != nullptr); return m_root; }
         const CrossPlatform::IFileMeta* GetFile(const xg::Guid& fileGuid) const;
@@ -49,6 +51,7 @@ namespace XenonEngine
 		Algorithm::String ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder);
 
         void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file) { m_database[guid] = file; }
+        void RemoveFileFromDatabse(const xg::Guid& guid) { m_database.erase(guid); }
 		IFileMeta* CreateMetaFromFilePath(const Algorithm::String& realFilePath);
 
     private:
