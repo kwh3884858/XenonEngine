@@ -40,18 +40,18 @@ namespace XenonEngine
 
     void GameObjectWorldManager::Update()
     {
+		if (m_waitForAddedWorld != m_world)
+		{
+			RemoveGameWorld();
+			m_world = m_waitForAddedWorld;
+			m_world->Start();
+		}
+
         if (!m_world)
         {
             return;
         }
 		m_world->Update();
-
-        if (m_waitForAddedWorld != m_world)
-        {
-            RemoveGameWorld();
-			m_world = m_waitForAddedWorld;
-			m_world->Start();
-        }
     }
 
     XenonEngine::GameObjectWorld*const GameObjectWorldManager::CreateGameWorld(const Algorithm::String& worldName)
