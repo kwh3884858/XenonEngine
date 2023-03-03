@@ -29,6 +29,7 @@ namespace XenonEngine
 		void RemoveGameWorld();
     private:
         GameObjectWorld* m_world = nullptr;
+        GameObjectWorld* m_waitForAddedWorld = nullptr;
     };
 
 }
