@@ -126,7 +126,7 @@ namespace Gameplay {
     }
 
 
-    void GameplayMain()
+    void GameplayUpdate()
     {
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))

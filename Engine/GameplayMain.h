@@ -8,7 +8,7 @@
 namespace CrossPlatform { class Polygon2D; }
 namespace Gameplay {
     void GameplayInitialize();
-    void GameplayMain();
+    void GameplayUpdate();
     void GameplayShutdown();
 
     void Donut();

@@ -238,7 +238,7 @@ void MainWindow::Run()
             m_directXDrawSurface->lock();
             m_zBuffer->lock();
             m_directInput->Update();
-            Gameplay::GameplayMain();
+            Gameplay::GameplayUpdate();
             m_directXDrawSurface->Unlock();
             m_zBuffer->Unlock();
 

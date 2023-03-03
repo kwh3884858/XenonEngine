@@ -42,7 +42,7 @@ namespace XenonEngine
         {
             return;
         }
-        GameObjectWorld*const world = worldManager->GetCurrentWorld();
+        GameObjectWorld* const world = worldManager->GetCurrentWorld();
         Algorithm::String worldName = world->GetWorldName();
 
         // World Name
