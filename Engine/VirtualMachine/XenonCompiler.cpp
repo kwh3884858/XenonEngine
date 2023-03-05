@@ -75,9 +75,12 @@ namespace XenonEngine
 		String executableFilePath = applicationPath.Substring(0, pos);
 		executableFilePath.Append("Main.xex");
 		StreamingVector<char>* streamedFile = FileManager::Get().ReadStreamFile(executableFilePath);
-		m_xvm->LoadScript(streamedFile);
-		bool result = m_xvm->RunScript();
-		assert(result == true);
+        if (streamedFile && streamedFile->Count() != 0)
+        {
+			m_xvm->LoadScript(streamedFile);
+			bool result = m_xvm->RunScript();
+			assert(result == true);
+        }
 	}
 
 }

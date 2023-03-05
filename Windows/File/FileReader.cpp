@@ -82,10 +82,10 @@ namespace File
         }
         else
         {
-            assert(true == false);
+            //assert(true == false);
             fins.close();
-            printf("FIle Cannot Open!");
-            std::cerr << "Error: " << strerror(errno);
+            printf("File Cannot Open!\n");
+            std::cerr << "Error: " << strerror(errno) << std::endl;
             return nullptr;
         }
 
