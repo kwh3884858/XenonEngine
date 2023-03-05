@@ -61,7 +61,7 @@ namespace CrossPlatform
 
 	void FolderMeta::Clear()
 	{
-		for (int i = 0; i < GetFileCount(); i++)
+		for (int i = GetFileCount() - 1; i >= 0 ; i--)
 		{
 			IFileMeta* file = GetFile(i);
 			FileType type = file->GetFileHeader().GetFileType();
