@@ -117,8 +117,8 @@ namespace WindowDrawer {
             //(T=51,L=8,R=-8,B=-8)
             windowsOffsetRect = RectMinus(drawerRect, realwindowsRect);
 
-           int X = (GetSystemMetrics(SM_CXSCREEN) - m_config->resolutionX) / 2;
-           int Y = (GetSystemMetrics(SM_CYSCREEN) - m_config->resolutionY) / 2;
+            int X = (GetSystemMetrics(SM_CXSCREEN) - m_config->resolutionX) / 2;
+            int Y = (GetSystemMetrics(SM_CYSCREEN) - m_config->resolutionY) / 2;
             MoveWindow(m_config->m_hwnd, X, Y, realwindowsRect.right - realwindowsRect.left, realwindowsRect.bottom - realwindowsRect.top, false);
 
 

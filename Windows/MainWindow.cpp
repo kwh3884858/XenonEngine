@@ -210,6 +210,8 @@ void MainWindow::Run()
     //Game Init
     Gameplay::GameplayInitialize();
 
+    bool isGotMessage = false;
+
     ZeroMemory(&msg, sizeof(MSG));
     if (mStatusCode == BaseWindow::StatusCode::InitiailizationFailed)
     {
@@ -217,12 +219,20 @@ void MainWindow::Run()
     }
     while (!done)
     {
-        // Handle the windows messages.
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if (m_active)
+			isGotMessage = PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE);
+		else
+            isGotMessage = GetMessage(&msg, NULL, 0U, 0U);
+        if (isGotMessage)
         {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
         }
+        // Handle the windows messages.
+        //if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        //{
+
+        //}
 
         // If windows signals to end the application then exit out.
         if (msg.message == WM_QUIT)
@@ -234,42 +244,51 @@ void MainWindow::Run()
         if (timeInterval > m_timeInterval)
         {
             m_timer->Update();
-
-            m_directXDrawSurface->lock();
-            m_zBuffer->lock();
-            m_directInput->Update();
             Gameplay::GameplayUpdate();
-            m_directXDrawSurface->Unlock();
-            m_zBuffer->Unlock();
 
-            if (m_windowDrawer->GetType() == CrossPlatform::DrawerType::DirectX_Draw_Drawer)
-            {
 
-                HDC workingDC;
-                DirectXDrawSurface* directXDrawSurface = static_cast<DirectXDrawSurface*>(m_directXDrawSurface);
-                HRESULT result = directXDrawSurface->GetDirectRawSurface()->GetDC(&workingDC);
-                assert(result == DD_OK);
+			/*bool result = */
+			if (m_active)
+			{
+				m_directXDrawSurface->lock();
+				m_zBuffer->lock();
 
-                static TCHAR debugTextBuffer2[80];
-                static unsigned long int paintAmount = 0;
-                paintAmount++;
-                _stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
-                TextOut(workingDC, 0, 10, debugTextBuffer2, (int) _tcslen(debugTextBuffer2));
-                SetTextColor(workingDC, colorRed);
+				m_directInput->Update();
 
-                long secondPerFrame = timeInterval / 1000;
-                TCHAR debugTimeInterval[80];
-                _stprintf_s(debugTimeInterval, 80, _T("Time per frame: %ld s"), secondPerFrame);
-                TextOut(workingDC, 0, 30, debugTimeInterval, (int)_tcslen(debugTimeInterval));
+				if (m_windowDrawer->GetType() == CrossPlatform::DrawerType::DirectX_Draw_Drawer)
+				{
 
-                double fps = 1000.0f / timeInterval;
-                TCHAR debugTextBuffer[80];
-                _stprintf_s(debugTextBuffer, 80, _T("FPS: %f"), fps);
-                TextOut(workingDC, 0, 50, debugTextBuffer, (int) _tcslen(debugTextBuffer));
+					HDC workingDC;
+					DirectXDrawSurface* directXDrawSurface = static_cast<DirectXDrawSurface*>(m_directXDrawSurface);
+					HRESULT result = directXDrawSurface->GetDirectRawSurface()->GetDC(&workingDC);
+					assert(result == DD_OK);
 
-                directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
-            }
-            /*bool result = */m_windowDrawer->Draw(m_directXDrawSurface);
+					static TCHAR debugTextBuffer2[80];
+					static unsigned long int paintAmount = 0;
+					paintAmount++;
+					_stprintf_s(debugTextBuffer2, 80, _T("WM Paint Amout: %d"), paintAmount);
+					TextOut(workingDC, 0, 10, debugTextBuffer2, (int)_tcslen(debugTextBuffer2));
+					SetTextColor(workingDC, colorRed);
+
+					long secondPerFrame = timeInterval / 1000;
+					TCHAR debugTimeInterval[80];
+					_stprintf_s(debugTimeInterval, 80, _T("Time per frame: %ld s"), secondPerFrame);
+					TextOut(workingDC, 0, 30, debugTimeInterval, (int)_tcslen(debugTimeInterval));
+
+					double fps = 1000.0f / timeInterval;
+					TCHAR debugTextBuffer[80];
+					_stprintf_s(debugTextBuffer, 80, _T("FPS: %f"), fps);
+					TextOut(workingDC, 0, 50, debugTextBuffer, (int)_tcslen(debugTextBuffer));
+
+					directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
+				}
+
+				m_zBuffer->Unlock();
+				m_directXDrawSurface->Unlock();
+
+				m_windowDrawer->Draw(m_directXDrawSurface);
+			}
+
         }
     }
     Gameplay::GameplayShutdown();
@@ -303,6 +322,14 @@ LRESULT MainWindow::HandMessage(UINT uMSG, WPARAM wParam, LPARAM lParam)
         default:
             break;
         }
+
+	case WM_SIZE:
+		// Check to see if we are losing our window...
+		if (SIZE_MAXHIDE == wParam || SIZE_MINIMIZED == wParam)
+			m_active = false;
+		else
+            m_active = true;
+		break;
 
     //case WM_PAINT:
     //{
