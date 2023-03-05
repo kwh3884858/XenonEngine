@@ -43,6 +43,10 @@ namespace XenonEngine
             return;
         }
         GameObjectWorld* const world = worldManager->GetCurrentWorld();
+        if (!world)
+        {
+            return;
+        }
         Algorithm::String worldName = world->GetWorldName();
 
         // World Name

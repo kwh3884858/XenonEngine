@@ -63,7 +63,7 @@ namespace XenonEngine
 
     GameObjectWorld*const GameObjectWorldManager::GetCurrentWorld() const
     {
-        assert(m_world != nullptr);
+        //assert(m_world != nullptr);
         return m_world;
     }
 
