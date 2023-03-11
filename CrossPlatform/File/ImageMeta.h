@@ -23,7 +23,9 @@ namespace CrossPlatform
 		virtual ~ImageMeta()override = default;
 
 		// Load into memory
-		virtual void Load() override;
+		virtual void Add() override;
+
+		virtual void* Instantiate() override;
 
 		// Clear from memory
 		virtual void Clear() override;

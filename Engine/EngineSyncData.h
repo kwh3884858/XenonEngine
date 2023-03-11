@@ -10,12 +10,12 @@ namespace XenonEngine
     class EngineSyncData
     {
     public:
-        void WorldManagerSetter(const GameObjectWorldManager* world) {
+        void WorldManagerSetter(GameObjectWorldManager* world) {
             std::lock_guard<std::mutex> lck(m_mutex);
             m_worldManager = world;
         }
 
-        const GameObjectWorldManager* WorldManagerGetter()const
+        GameObjectWorldManager* WorldManagerGetter()const
         {
             std::lock_guard<std::mutex> lck(m_mutex);
             return m_worldManager;
@@ -45,7 +45,7 @@ namespace XenonEngine
 
     private:
         mutable std::mutex m_mutex;
-        const GameObjectWorldManager* m_worldManager = nullptr;
+        GameObjectWorldManager* m_worldManager = nullptr;
 
         mutable std::mutex m_graphic3DMutex;
         const Graphic3D* m_graphic3D = nullptr;

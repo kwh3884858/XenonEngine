@@ -37,7 +37,7 @@ namespace XenonEngine
             return;
         }
 
-        const GameObjectWorldManager* worldManager = syncData->WorldManagerGetter();
+        GameObjectWorldManager* const worldManager = syncData->WorldManagerGetter();
         if (!worldManager)
         {
             return;
@@ -97,7 +97,8 @@ namespace XenonEngine
         {
             if (m_loadDialog.IsOk())
             {
-                database->LoadFile(m_loadDialog.GetFilePathName().c_str());
+                GameObjectWorld* world = (GameObjectWorld*)database->LoadFile(m_loadDialog.GetFilePathName().c_str());
+                worldManager->SetCurrentWorld(world);
             }
             m_loadDialog.Close();
         }

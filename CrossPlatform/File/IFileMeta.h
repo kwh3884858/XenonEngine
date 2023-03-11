@@ -14,8 +14,11 @@ namespace CrossPlatform
 		const FileHeader& GetFileHeader()const { return m_header; }
 		FileHeader& GetFileHeader() { return const_cast<FileHeader&>(static_cast<const IFileMeta&>(*this).GetFileHeader()); }
 	public:
-		// Load into memory
-		virtual void Load() = 0;
+		// Add into content browser. create meta for file
+		virtual void Add() = 0;
+
+		// Instantiate a new instance
+		virtual void* Instantiate() = 0;
 
 		// Clear from memory
 		virtual void Clear() = 0;

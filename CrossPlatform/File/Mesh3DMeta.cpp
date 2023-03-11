@@ -27,6 +27,16 @@ namespace CrossPlatform {
 		}
 	}
 
+	void Mesh3DMeta::Add()
+	{
+
+	}
+
+	void* Mesh3DMeta::Instantiate()
+	{
+
+	}
+
 	void Mesh3DMeta::Clear()
 	{
 		if (m_mesh)

@@ -12,13 +12,20 @@ namespace CrossPlatform {
 	using namespace std;
 	using namespace std::filesystem;
 
-	void ImageMeta::Load()
+	void ImageMeta::Add()
 	{
+		m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
+		assert(m_data != nullptr);
 		if (!m_image)
 		{
-			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-			*m_image = std::move(config.as<Image>());
+
 		}
+	}
+
+	void* ImageMeta::Instantiate()
+	{
+		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+		return new Image(std::move(config.as<Image>()));
 	}
 
 	void ImageMeta::Clear()

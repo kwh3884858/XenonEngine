@@ -280,7 +280,7 @@ namespace XenonEngine
 		InternalDeleteFile(filePath);
 	}
 
-	IFileMeta* FileDatabase::LoadFile(const Algorithm::String& realPath)
+	void* FileDatabase::LoadFile(const Algorithm::String& realPath)
     {
         String filePath(realPath);
         if (IsVirtualPath(filePath))
@@ -301,8 +301,8 @@ namespace XenonEngine
 			return nullptr;
 		}
 
-		file->Load();
-		return file;
+		return file->Instantiate();
+		//return file;
     }
 
     void FileDatabase::SaveFile(const Algorithm::String& realPath)

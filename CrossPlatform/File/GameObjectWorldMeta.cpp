@@ -12,42 +12,29 @@ namespace CrossPlatform
     using namespace std;
 	using namespace std::filesystem;
 
-	void GameObjectWorldMeta::Load()
+	void* GameObjectWorldMeta::Instantiate()
 	{
-		if (!m_gameobjectWorld)
-		{
-			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-			m_gameobjectWorld = new GameObjectWorld(std::move(config.as<GameObjectWorld>()));
-		}
-
-		EngineManager::Get().GetWorldManager().SetCurrentWorld(m_gameobjectWorld);
+		// TODO: Save meta GUID into instance.
+		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+		GameObjectWorld* gameobjectWorld = new GameObjectWorld(std::move(config.as<GameObjectWorld>()));
+		return gameobjectWorld;
 	}
 
 	void GameObjectWorldMeta::Clear()
 	{
-		delete m_gameobjectWorld;
-		m_gameobjectWorld = nullptr;
+		//delete m_gameobjectWorld;
+		//m_gameobjectWorld = nullptr;
 	}
 
 	void GameObjectWorldMeta::Save()
 	{
 		IFileMeta::Save();
-		GameObjectWorld* currentWorld = EngineManager::Get().GetWorldManager().GetCurrentWorld();
+		GameObjectWorld* const currentWorld = EngineManager::Get().GetWorldManager().GetCurrentWorld();
 		// Save As
-		if (m_gameobjectWorld != currentWorld)
-		{
-			Clear();
-			//Remove ".world"
-			currentWorld->SetWorldName(GetFileHeader().GetFileNameWithoutSuffix());
-			m_gameobjectWorld = currentWorld;
-		}
+		currentWorld->SetWorldName(GetFileHeader().GetFileNameWithoutSuffix());
 
 		const String& path = GetFileHeader().GetFilePath();
 		if (path.Empty())
-		{
-			return;
-		}
-		if (!m_gameobjectWorld)
 		{
 			return;
 		}
@@ -55,7 +42,7 @@ namespace CrossPlatform
 		{
 			ofstream outputStream(path.CString());
 			YAML::Emitter out(outputStream);
-			out << YAML::Node(*m_gameobjectWorld);
+			out << YAML::Node(*currentWorld);
 			outputStream.close();
 		}
 	}

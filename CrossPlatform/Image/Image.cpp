@@ -7,17 +7,27 @@
 namespace CrossPlatform
 {
 	using namespace MathLab;
-	Image::Image(const Algorithm::String& fileName)
-	{
-		m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
-		assert(m_data != nullptr);
-	}
+	//Image::Image(const Algorithm::String& fileName)
+	//{
+	//	m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
+	//	assert(m_data != nullptr);
+	//}
 
 	Image::Image(const Image& that)
 	{
 		int size = that.m_height*m_width*m_channel;
 		m_data = new unsigned char[size];
 		memcpy(m_data, that.m_data, size);
+	}
+
+	Image::Image(Image&& that)
+	{
+		m_data = that.m_data;
+		m_width = that.m_width;
+		m_height = that.m_height;
+		m_channel = that.m_channel;
+
+		that.m_data = nullptr;
 	}
 
 	Image::~Image()
@@ -31,6 +41,7 @@ namespace CrossPlatform
 
 	CrossPlatform::Image& Image::operator=(Image&& that)
 	{
+		if (&that == this) return *this;
 		m_data = that.m_data;
 		m_width = that.m_width;
 		m_height = that.m_height;

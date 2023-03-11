@@ -13,8 +13,9 @@ namespace CrossPlatform
 	{
 	public:
 		Image() = default;
-		Image(const Algorithm::String& fileName);
+		//Image(const Algorithm::String& fileName);
 		Image(const Image& that);
+		Image(Image&& that);
 		~Image();
 		Image& operator=(Image&& that);
 

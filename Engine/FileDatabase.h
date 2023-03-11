@@ -45,7 +45,7 @@ namespace XenonEngine
 		void DeleteFile(const Algorithm::String& path);
 
         // For Engine
-		CrossPlatform::IFileMeta* LoadFile(const Algorithm::String& realPath);
+		void* LoadFile(const Algorithm::String& realPath);
         void SaveFile(const Algorithm::String& realPath);
 
 		Algorithm::String ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder);
