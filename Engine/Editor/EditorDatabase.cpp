@@ -33,7 +33,7 @@ namespace XenonEngine
 #include <ShellAPI.h>
 #endif
 
-	void EditorDatabase::ExecuteShell(const Algorithm::String& virtualPath) const
+	void EditorDatabase::ShowInExplorer(const Algorithm::String& virtualPath) const
 	{
         String absolutedPath = m_fileDatabase->ConvertToRealPath(virtualPath);
 #ifdef _WIN32
