@@ -27,14 +27,15 @@ namespace CrossPlatform {
 		}
 	}
 
-	void Mesh3DMeta::Add()
+	//void Mesh3DMeta::Add()
+	//{
+
+	//}
+
+	Mesh3D* Mesh3DMeta::Instantiate()
 	{
-
-	}
-
-	void* Mesh3DMeta::Instantiate()
-	{
-
+		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
+		return new Mesh3D(std::move(config.as<Mesh3D>()));
 	}
 
 	void Mesh3DMeta::Clear()

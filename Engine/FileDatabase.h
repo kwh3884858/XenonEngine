@@ -34,7 +34,7 @@ namespace XenonEngine
 
         // Virtual Path
         CrossPlatform::FolderMeta* GetFolder(const Algorithm::String& virtualPath) const;
-        CrossPlatform::FolderMeta* CreateFolder(const Algorithm::String& virtualPath);
+        CrossPlatform::FolderMeta* GetOrCreateFolder(const Algorithm::String& virtualPath);
         Algorithm::String ConvertToVirtualPath(const Algorithm::String& virtualPath)const;
         Algorithm::String ConvertToRealPath(const Algorithm::String& realPath)const;
 

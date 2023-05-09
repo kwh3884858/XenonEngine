@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <filesystem>
+#include "Library/stb/stb_image.h"
 
 namespace CrossPlatform {
 
@@ -12,17 +13,17 @@ namespace CrossPlatform {
 	using namespace std;
 	using namespace std::filesystem;
 
-	void ImageMeta::Add()
-	{
-		m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
-		assert(m_data != nullptr);
-		if (!m_image)
-		{
+	//void ImageMeta::Add()
+	//{
+		//m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
+		//assert(m_data != nullptr);
+		//if (!m_image)
+		//{
 
-		}
-	}
+		//}
+	//}
 
-	void* ImageMeta::Instantiate()
+	Image* ImageMeta::Instantiate()
 	{
 		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
 		return new Image(std::move(config.as<Image>()));
@@ -30,18 +31,14 @@ namespace CrossPlatform {
 
 	void ImageMeta::Clear()
 	{
-		delete m_image;
-		m_image = nullptr;
+		//delete m_image;
+		//m_image = nullptr;
 	}
 
 	void ImageMeta::Save()
 	{
 		IFileMeta::Save();
-
-		ofstream outputStream(GetFileHeader().GetFilePath().CString());
-		YAML::Emitter out(outputStream);
-		out << YAML::Node(*m_image);
-		outputStream.close();
+		ImportImageFileIntoFolderAsNativeVersion();
 	}
 
 	void ImageMeta::Delete()
@@ -60,14 +57,30 @@ namespace CrossPlatform {
 		}
 	}
 
-	CrossPlatform::Image* ImageMeta::GetImage() 
+	void ImageMeta::ImportImageFileIntoFolderAsNativeVersion() const
 	{
-		if (!m_image)
+		int width, height, channel;
+		unsigned char* const data = stbi_load(GetFileHeader().GetFilePath().CString(), &width, &height, &channel, 0);
+		assert(data != nullptr);
+		if (!data)
 		{
-			m_image = new Image(GetFileHeader().GetFilePath());
+			Image importedImage(data, height, width, channel);
+
+			ofstream outputStream(GetFileHeader().GetFilePath().CString());
+			YAML::Emitter out(outputStream);
+			out << YAML::Node(importedImage);
+			outputStream.close();
 		}
-		return m_image;
 	}
+
+	//CrossPlatform::Image* ImageMeta::GetImage()
+	//{
+	//	if (!m_image)
+	//	{
+	//		m_image = new Image(GetFileHeader().GetFilePath());
+	//	}
+	//	return m_image;
+	//}
 
 
 }

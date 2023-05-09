@@ -12,6 +12,14 @@ namespace CrossPlatform
 	//	m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
 	//	assert(m_data != nullptr);
 	//}
+	Image::Image(unsigned char* const data, int height, int width, int channel) :
+		m_data(data),
+		m_height(height),
+		m_width(width),
+		m_channel(channel)
+	{
+
+	}
 
 	Image::Image(const Image& that)
 	{

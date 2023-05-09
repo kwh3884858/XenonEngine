@@ -1,4 +1,5 @@
 #pragma once
+#include "CrossPlatform/XenonObject.h"
 #include "CrossPlatform/File/FileHeader.h"
 #include <map>
 
@@ -14,11 +15,17 @@ namespace CrossPlatform
 		const FileHeader& GetFileHeader()const { return m_header; }
 		FileHeader& GetFileHeader() { return const_cast<FileHeader&>(static_cast<const IFileMeta&>(*this).GetFileHeader()); }
 	public:
-		// Add into content browser. create meta for file
-		virtual void Add() = 0;
+		// If a file have not a related meta: It is a new file, create a meta for it, import the data and put them into folder.
+		// if a file have a related meta: it is a processed file, dont do anything just notice content brower that we found a file.
 
+		// Trigger after created meta file
+		virtual void OnAdd() = 0;
+
+		// For every founded file, put it into game world should call this function.
+		// It will return a instance pointer.
+		// And due to it will return a instance, so it doesn`t need to contain any data/data pointer in meta file.
 		// Instantiate a new instance
-		virtual void* Instantiate() = 0;
+		virtual XenonObject* Instantiate() = 0;
 
 		// Clear from memory
 		virtual void Clear() = 0;

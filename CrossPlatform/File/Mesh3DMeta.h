@@ -11,7 +11,7 @@ namespace XenonEngine
 	class ObjectLoader;
 }
 namespace CrossPlatform {
-    class Mesh3DMeta :public IFileMeta
+    class Mesh3DMeta :public IFileMeta<Mesh3D>
     {
     public:
 		friend class XenonEngine::ObjectLoader;
@@ -20,10 +20,10 @@ namespace CrossPlatform {
 		virtual ~Mesh3DMeta() override = default;
 
 		// Add into content browser. create meta for file
-		virtual void Add() = 0;
+		//virtual void Add() override;
 
 		// Instantiate a new instance
-		virtual void* Instantiate() = 0;
+		virtual XenonEngine::Mesh3D* Instantiate()override;
 
 		// Clear from memory
 		virtual void Clear() override;
@@ -35,6 +35,6 @@ namespace CrossPlatform {
 		virtual void Delete() override;
 
 	private:
-		XenonEngine::Mesh3D* m_mesh = nullptr;
+		//XenonEngine::Mesh3D* m_mesh = nullptr;
     };
 }

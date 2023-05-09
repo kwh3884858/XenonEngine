@@ -17,7 +17,8 @@ namespace CrossPlatform
 		virtual ~Polygon3DMeta()override = default;
 
 		virtual void Add() override;
-		virtual void* Instantiate() override;
+
+		virtual Polygon3D* Instantiate() override;
 
 		// Clear from memory
 		virtual void Clear() override;
@@ -28,7 +29,7 @@ namespace CrossPlatform
 		// Delete data file from hard drive
 		virtual void Delete() override;
 
-		const Polygon3D* const GetPolygon3D()const { return m_polygon; }
+		//const Polygon3D* const GetPolygon3D()const { return m_polygon; }
 		//Polygon3D* const GetPolygon3D() { return m_polygon; }
 	private:
 		//Polygon3D* m_polygon = nullptr;

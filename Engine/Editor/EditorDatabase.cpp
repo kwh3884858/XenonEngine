@@ -15,7 +15,7 @@ namespace XenonEngine
 
     CrossPlatform::FolderMeta* EditorDatabase::CreateFolder(const Algorithm::String& virtualPath)
     {
-        return const_cast<FileDatabase*>(m_fileDatabase)->CreateFolder(virtualPath);
+        return const_cast<FileDatabase*>(m_fileDatabase)->GetOrCreateFolder(virtualPath);
     }
 
     Algorithm::String EditorDatabase::ConvertToRealPath(const Algorithm::String& virtualPath) const

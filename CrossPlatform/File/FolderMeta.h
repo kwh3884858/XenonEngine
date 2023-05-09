@@ -14,11 +14,11 @@ namespace CrossPlatform
         FolderMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~FolderMeta() override = default;
 
-		// Load into memory
-		virtual void Load() override;
+		// Add into content browser. create meta for file
+		virtual void OnAdd() override;
 
-		// Clear from memory
-		virtual void Clear() override;
+		// Instantiate a new instance
+		virtual void* Instantiate()override;
 
 		// Save to hard drive as a data file
 		virtual void Save() override;

@@ -6,6 +6,7 @@
 
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+
 namespace XenonEngine
 {
     class FileDatabase;
@@ -13,7 +14,7 @@ namespace XenonEngine
 }
 
 namespace CrossPlatform
-{    
+{
 	class Image;
     class ImageMeta :public IFileMeta
     {
@@ -23,9 +24,8 @@ namespace CrossPlatform
 		virtual ~ImageMeta()override = default;
 
 		// Load into memory
-		virtual void Add() override;
-
-		virtual void* Instantiate() override;
+		//virtual void Add() override;
+		Image* Instantiate() override;
 
 		// Clear from memory
 		virtual void Clear() override;
@@ -36,8 +36,9 @@ namespace CrossPlatform
 		// Delete data file from hard drive
 		virtual void Delete() override;
 
-		Image* GetImage();
+		//Image* GetImage();
     private:
-		Image* m_image = nullptr;
+		void ImportImageFileIntoFolderAsNativeVersion() const;
+		//Image* m_image = nullptr;
     };
 }

@@ -12,7 +12,7 @@ namespace CrossPlatform
 
 	}
 
-	void* Polygon3DMeta::Instantiate()
+	Polygon3D* Polygon3DMeta::Instantiate()
 	{
 		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
 		return new Polygon3D(std::move(config.as<Polygon3D>()));

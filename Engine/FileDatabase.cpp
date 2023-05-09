@@ -191,7 +191,7 @@ namespace XenonEngine
     //    return GetFolderByVirtualPath(virtualPath);
     //}
 
-    CrossPlatform::FolderMeta* FileDatabase::CreateFolder(const Algorithm::String& inPath)
+    CrossPlatform::FolderMeta* FileDatabase::GetOrCreateFolder(const Algorithm::String& inPath)
     {
 		String virtualPath(inPath);
 		if (!IsVirtualPath(virtualPath))
@@ -253,7 +253,7 @@ namespace XenonEngine
 			assert(true == false);
 		}
 		//IFileMeta* meta = nullptr;
-		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+		FolderMeta* folder = GetOrCreateFolder(originalFile.parent_path().string().c_str());
 		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
 		{
             IFileMeta* meta = CreateMetaFromFilePath(realPath);
@@ -313,7 +313,7 @@ namespace XenonEngine
             filePath = ConvertToRealPath(filePath);
         }
         path originalFile(filePath.CString());
-		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+		FolderMeta* folder = GetOrCreateFolder(originalFile.parent_path().string().c_str());
 		String fileName(originalFile.filename().string().c_str());
 		IFileMeta* file = folder->GetFile(fileName);
 		if (!file)

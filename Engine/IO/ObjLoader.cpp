@@ -101,7 +101,7 @@ namespace XenonEngine
 			fileName +
 			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
 		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(meshPath);
-		meshMeta->m_mesh = mesh;
+		//meshMeta->m_mesh = mesh;
 
 		mesh->m_vertexs = std::move(vertexs);
 		mesh->m_normals = std::move(normals);
@@ -191,7 +191,7 @@ namespace XenonEngine
 			//Mesh3D* mesh = new Mesh3D();
 			Polygon3D* polygon = new Polygon3D(std::move(vertexIndex));
 
-			polygonMeta->m_polygon = polygon;
+			//polygonMeta->m_polygon = polygon;
 			polygonMeta->Save();
 
 			mesh->m_polygons.Add(polygonMeta->GetFileHeader().GetGUID());
