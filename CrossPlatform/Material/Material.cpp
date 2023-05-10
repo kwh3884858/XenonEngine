@@ -75,12 +75,20 @@ namespace CrossPlatform
 
 	const Algorithm::String Material::GetDiffuseTextureFileName() const
 	{
-		return EngineManager::Get().GetFileDatabase().GetFile(m_diffuseTexture)->GetFileHeader().GetFileName();
+		if (m_diffuseTexture.isValid())
+		{
+			return EngineManager::Get().GetFileDatabase().GetFile(m_diffuseTexture)->GetFileHeader().GetFileName();
+		}
+		return "No Diffuse Texture";
 	}
 
 	const Algorithm::String Material::GetBumpTextureName() const
 	{
-		return EngineManager::Get().GetFileDatabase().GetFile(m_bumpTexture)->GetFileHeader().GetFileName();
+		if (m_bumpTexture.isValid())
+		{
+			return EngineManager::Get().GetFileDatabase().GetFile(m_bumpTexture)->GetFileHeader().GetFileName();
+		}
+		return "No Bump Texture";
 	}
 
 	CrossPlatform::Image* Material::GetDiffuseTexture()

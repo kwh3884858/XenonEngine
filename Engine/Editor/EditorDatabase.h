@@ -3,6 +3,7 @@
 #include "CrossPlatform/File/IFileMeta.h"
 
 #include <cassert>
+#include "crossguid/guid.hpp"
 
 namespace CrossPlatform
 {
@@ -24,6 +25,8 @@ namespace XenonEngine
 		void Delete(const Algorithm::String& virtualPath);
         void ShowInExplorer(const Algorithm::String& virtualPath)const;
         void RequestRefreshContent();
+
+		CrossPlatform::IFileMeta* GetFileMeta(xg::Guid guid) const;
     private:
          XenonEngine::FileDatabase* m_fileDatabase = nullptr;
 	};

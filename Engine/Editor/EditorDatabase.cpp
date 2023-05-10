@@ -47,4 +47,9 @@ namespace XenonEngine
         return m_fileDatabase->RefreshContent();
 	}
 
+	CrossPlatform::IFileMeta* EditorDatabase::GetFileMeta(xg::Guid guid) const
+	{
+		return m_fileDatabase->GetFile(guid);
+	}
+
 }

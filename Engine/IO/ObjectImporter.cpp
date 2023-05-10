@@ -62,6 +62,7 @@ namespace XenonEngine
 		int numOfVertex = (int)attrib.vertices.size() / 3;
 		Vector<Vector3f> vertexs;
 		vertexs.Initialize(numOfVertex);
+		vertexs.Resize(numOfVertex);
 		for (size_t i = 0; i < attrib.vertices.size(); i += 3)
 		{
 			vertexs[(int)i / 3].x = attrib.vertices[(int)(i + 0)];
@@ -72,6 +73,7 @@ namespace XenonEngine
 		int numOfNormal = (int)attrib.normals.size() / 3;
 		Vector<Vector3f> normals;
 		normals.Initialize(numOfNormal);
+		normals.Resize(numOfNormal);
 		if (numOfNormal > 0)
 		{
 			//normals = new Vector3f[numOfNormal];
@@ -88,6 +90,7 @@ namespace XenonEngine
 		if (numOfTextureCoordinate > 0)
 		{
 			uv.Initialize(numOfTextureCoordinate);
+			uv.Resize(numOfTextureCoordinate);
 			for (size_t i = 0; i < attrib.texcoords.size(); i+= 2)
 			{
 				uv[(int)i / 2].x = attrib.texcoords[(int)(i + 0)];
@@ -138,8 +141,10 @@ namespace XenonEngine
 			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(materialPath);
 			//materialMeta->m_material = material;
 			materialMeta->Save(material);
-
 			mesh->m_materials.Add(materialMeta->GetFileHeader().GetGUID());
+
+			delete material;
+			material = nullptr;
 		}
 
 		// Loop over shapes
@@ -154,8 +159,9 @@ namespace XenonEngine
 			//}
 			// Loop over faces(polygon)
 			Vector<Polygon3D::TriangleIndex> vertexIndex;
-			int numOfIndex = (int)shapes[s].mesh.indices.size();
+			int numOfIndex = (int)shapes[s].mesh.indices.size() / 3;
 			vertexIndex.Initialize(numOfIndex);
+			vertexIndex.Resize(numOfIndex);
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 			{
@@ -173,9 +179,9 @@ namespace XenonEngine
 						vertexIndex[vindex].m_vertex[v].m_textureCoordinateIndex = idx.texcoord_index;
 					}
 				}
+				vertexIndex[vindex].m_materialIndex = shapes[s].mesh.material_ids[f];
 				index_offset += fv;
 				vindex++;
-				vertexIndex[vindex].m_materialIndex = shapes[s].mesh.material_ids[f];
 			}
 			//Create new polygon3D
 			String polygonPath = modelFolder + std::filesystem::path::preferred_separator +
@@ -189,15 +195,16 @@ namespace XenonEngine
 
 			//polygonMeta->m_polygon = polygon;
 			polygonMeta->Save(polygon);
+			mesh->m_polygons.Add(polygonMeta->GetFileHeader().GetGUID());
+
 			delete polygon;
 			polygon = nullptr;
-			mesh->m_polygons.Add(polygonMeta->GetFileHeader().GetGUID());
 		}
 		
 		String meshPath = 
 			modelFolder +
 			fileName +
-			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
+			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMesh3D);
 		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(meshPath);
 		meshMeta->Save(mesh);
 		delete mesh;
