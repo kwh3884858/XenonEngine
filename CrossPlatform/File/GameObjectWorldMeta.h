@@ -23,7 +23,7 @@ namespace CrossPlatform
         virtual ~GameObjectWorldMeta()override = default;
 
 		// Load into memory
-		virtual XenonEngine::GameObjectWorld* Instantiate() override;
+		virtual XenonEngine::GameObjectWorld* Instantiate() const override;
 
 		// Clear from memory
 		virtual void Clear() override;

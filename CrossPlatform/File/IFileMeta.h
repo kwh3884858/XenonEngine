@@ -28,7 +28,7 @@ namespace CrossPlatform
 		// It will return a instance pointer.
 		// And due to it will return a instance, so it doesn`t need to contain any data/data pointer in meta file.
 		// Instantiate a new instance
-		virtual XenonObject* Instantiate() = 0;
+		virtual XenonObject* Instantiate() const = 0;
 
 		// Clear from memory
 		virtual void Clear() = 0;

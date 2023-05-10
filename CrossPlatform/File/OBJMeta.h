@@ -15,7 +15,7 @@ namespace CrossPlatform {
 		virtual ~OBJMeta() override = default;
 
 		virtual void OnImport() override;
-		virtual XenonObject* Instantiate() override { return nullptr; }
+		virtual XenonObject* Instantiate() const override { return nullptr; }
 		virtual void Clear() {}
 
 		// Save to hard drive as a data file

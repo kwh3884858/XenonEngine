@@ -17,6 +17,7 @@ namespace XenonEngine
 	using namespace xg;
 
 	Mesh3D::Mesh3D(Mesh3D&& that):
+		IComponent(that.m_gameobject),
 		m_polygons(that.m_polygons),
 		m_vertexs(that.m_vertexs),
 		m_uv(that.m_uv),
@@ -26,6 +27,20 @@ namespace XenonEngine
 		m_maxRadius(that.m_maxRadius),
 		m_requestToReload(that.m_requestToReload)
 	{
+	}
+
+	Mesh3D::~Mesh3D()
+	{
+		for(auto cache : m_cachePolygons)
+		{
+			delete cache.second;
+			cache.second = nullptr;
+		}
+		for (auto cache : m_cacheMaterials)
+		{
+			delete cache.second;
+			cache.second = nullptr;
+		}
 	}
 
 	IComponent* Mesh3D::Copy(GameObject* const gameObject) const
@@ -200,7 +215,7 @@ namespace XenonEngine
 		else
 		{
 			const MaterialMeta* materialMeta = (MaterialMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
-			const Material* material = materialMeta->GetMaterial();
+			const Material* material = materialMeta->Instantiate();
 			m_cacheMaterials[guid] = material;
 			return *const_cast<Material*>(material);
 		}
@@ -212,7 +227,7 @@ namespace XenonEngine
 		if (m_cachePolygons.find(guid) != m_cachePolygons.end())
 		{
 			const Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
-			const Polygon3D* polygon = polygonMeta->GetPolygon3D();
+			const Polygon3D* polygon = polygonMeta->Instantiate();
 			m_cachePolygons[guid] = polygon;
 		}
 	}
@@ -223,7 +238,7 @@ namespace XenonEngine
 		if (m_cacheMaterials.find(guid) != m_cacheMaterials.end())
 		{
 			const MaterialMeta* materialMeta = (MaterialMeta*)EngineManager::Get().GetFileDatabase().GetFile(guid);
-			const Material* material = materialMeta->GetMaterial();
+			const Material* material = materialMeta->Instantiate();
 			m_cacheMaterials[guid] = material;
 		}
 	}

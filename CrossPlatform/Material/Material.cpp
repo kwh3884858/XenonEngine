@@ -88,7 +88,7 @@ namespace CrossPlatform
 		if (m_diffuseTexture.isValid())
 		{
 			ImageMeta* imageMeta = (ImageMeta*)EngineManager::Get().GetFileDatabase().GetFile(m_diffuseTexture);
-			return imageMeta->GetImage();
+			return imageMeta->Instantiate();
 		}
 		else
 		{
@@ -101,7 +101,7 @@ namespace CrossPlatform
 		if (m_bumpTexture.isValid())
 		{
 			ImageMeta* imageMeta = (ImageMeta*)EngineManager::Get().GetFileDatabase().GetFile(m_bumpTexture);
-			return imageMeta->GetImage();
+			return imageMeta->Instantiate();
 		}
 		else
 		{

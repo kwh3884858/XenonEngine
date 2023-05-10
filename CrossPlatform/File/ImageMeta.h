@@ -26,7 +26,7 @@ namespace CrossPlatform
 
 		// Load into memory
 		//virtual void Add() override;
-		virtual Image* Instantiate() override;
+		virtual Image* Instantiate() const override;
 
 		// Clear from memory
 		virtual void Clear() override;

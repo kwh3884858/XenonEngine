@@ -17,7 +17,7 @@ namespace CrossPlatform
 		virtual void OnLoad() override;
 
 		// For folder, is it impossible to generate a related instance.
-		virtual XenonObject* Instantiate()override { assert(true == false); return nullptr; }
+		virtual XenonObject* Instantiate() const override { assert(true == false); return nullptr; }
 
 		virtual void Clear() override;
 

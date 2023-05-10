@@ -16,8 +16,8 @@ namespace CrossPlatform
 
 	//}
 
-	Polygon3D* Polygon3DMeta::Instantiate()
-	{
+	YAML::Polygon3D* Polygon3DMeta::Instantiate() const 
+{
 		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
 		return new Polygon3D(std::move(config.as<Polygon3D>()));
 	}
@@ -33,13 +33,13 @@ namespace CrossPlatform
 
 	//}
 
-	void Polygon3DMeta::Save(const Polygon3D* polygon)
+	void Polygon3DMeta::Save(const XenonObject* polygon)
 	{
 		IFileMeta::Save();
 		assert(polygon != nullptr);
 		ofstream outputStream(GetFileHeader().GetFilePath().CString());
 		YAML::Emitter out(outputStream);
-		out << YAML::Node(*polygon);
+		out << YAML::Node(*(Polygon3D*)polygon);
 		outputStream.close();
 	}
 

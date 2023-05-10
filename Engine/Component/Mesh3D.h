@@ -31,7 +31,7 @@ namespace YAML {
 namespace XenonEngine
 {
 	class ObjectImporter;
-	class Mesh3D final :public IComponent 
+	class Mesh3D final : public IComponent 
 	{
 	public:
 		friend struct YAML::convert<Mesh3D>;
@@ -43,7 +43,7 @@ namespace XenonEngine
 		Mesh3D(GameObject* gameobject = nullptr) :
 			IComponent(gameobject) {}
 		Mesh3D(Mesh3D&&);
-		virtual ~Mesh3D()override {}
+		virtual ~Mesh3D()override;
 		virtual ComponentType GetComponentType() const override { return m_type; };
 		virtual IComponent* Copy(GameObject*const gameObject = nullptr)const override;
 

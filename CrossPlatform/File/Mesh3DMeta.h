@@ -25,13 +25,13 @@ namespace CrossPlatform {
 		//virtual void Add() override;
 
 		// Instantiate a new instance
-		virtual XenonEngine::Mesh3D* Instantiate()override;
+		virtual XenonEngine::Mesh3D* Instantiate() const override;
 
 		// Clear from memory
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save(const XenonEngine::Mesh3D* data = nullptr) override;
+		virtual void Save(const XenonObject* data = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

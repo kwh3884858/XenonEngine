@@ -97,8 +97,8 @@ namespace XenonEngine
         {
             if (m_loadDialog.IsOk())
             {
-                GameObjectWorld* world = (GameObjectWorld*)database->LoadFile(m_loadDialog.GetFilePathName().c_str());
-                worldManager->SetCurrentWorld(world);
+                GameObjectWorld* newWorld = (GameObjectWorld*)database->LoadFile(m_loadDialog.GetFilePathName().c_str());
+                worldManager->SetCurrentWorld(newWorld);
             }
             m_loadDialog.Close();
         }

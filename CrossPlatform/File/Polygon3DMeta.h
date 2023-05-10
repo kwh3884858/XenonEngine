@@ -19,13 +19,13 @@ namespace CrossPlatform
 
 		//virtual void Add() override;
 
-		virtual Polygon3D* Instantiate() override;
+		virtual Polygon3D* Instantiate() const override;
 
 		// Clear from memory
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save(const Polygon3D* polygon) override;
+		virtual void Save(const XenonObject* polygon) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

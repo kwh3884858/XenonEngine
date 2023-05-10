@@ -8,7 +8,7 @@ namespace XenonEngine
 namespace CrossPlatform
 {
 	//class Material;
-	class MaterialMeta :public IFileMeta
+	class MaterialMeta : public IFileMeta
 	{
 	public:
 		friend class XenonEngine::ObjectImporter;
@@ -17,13 +17,13 @@ namespace CrossPlatform
 		virtual ~MaterialMeta() override = default;
 
 		// Load into memory
-		virtual Material* Instantiate() override;
+		virtual Material* Instantiate() const override;
 
 		// Clear from memory
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save(const Material* material = nullptr) override;
+		virtual void Save(const XenonObject* material = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

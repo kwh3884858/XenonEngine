@@ -23,7 +23,7 @@ namespace CrossPlatform {
 		//}
 	//}
 
-	Image* ImageMeta::Instantiate()
+	Image* ImageMeta::Instantiate() const
 	{
 		return ImportImageFileIntoFolderAsNativeVersion();
 	}

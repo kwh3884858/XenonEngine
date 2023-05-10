@@ -20,7 +20,7 @@ namespace CrossPlatform
 	//	}
 	//}
 
-	CrossPlatform::Material* MaterialMeta::Instantiate()
+	CrossPlatform::Material* MaterialMeta::Instantiate() const
 	{
 		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
 		return new Material(std::move(config.as<Material>()));
@@ -45,13 +45,13 @@ namespace CrossPlatform
 	//	outputStream.close();
 	//}
 
-	void MaterialMeta::Save(const Material* material)
+	void MaterialMeta::Save(const XenonObject* material)
 	{
 		IFileMeta::Save();
 
 		ofstream outputStream(GetFileHeader().GetFilePath().CString());
 		YAML::Emitter out(outputStream);
-		out << YAML::Node(*material);
+		out << YAML::Node(*(Material*)material);
 		outputStream.close();
 	}
 

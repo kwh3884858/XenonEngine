@@ -32,7 +32,7 @@ namespace CrossPlatform {
 
 	//}
 
-	Mesh3D* Mesh3DMeta::Instantiate()
+	Mesh3D* Mesh3DMeta::Instantiate() const
 	{
 		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
 		return new Mesh3D(std::move(config.as<Mesh3D>()));
@@ -47,13 +47,13 @@ namespace CrossPlatform {
 		//}
 	}
 
-	void Mesh3DMeta::Save(const XenonEngine::Mesh3D* data)
+	void Mesh3DMeta::Save(const XenonObject* data)
 	{
 		IFileMeta::Save();
 		assert(data != nullptr);
 		ofstream outputStream(GetFileHeader().GetFilePath().CString());
 		YAML::Emitter out(outputStream);
-		out << YAML::Node(*data);
+		out << YAML::Node(*(Mesh3D*)data);
 		outputStream.close();
 	}
 

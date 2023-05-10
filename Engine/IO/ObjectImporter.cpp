@@ -118,7 +118,7 @@ namespace XenonEngine
 			if (!m_diffuseTextureFileName.Empty())
 			{
 				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileNameToFullPath(m_diffuseTextureFileName, modelFolder);
-				ImageMeta* m_diffuseTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(diffuseTextureFileName);
+				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(diffuseTextureFileName);
 				assert(m_diffuseTexture != nullptr);
 				material->m_diffuseTexture = m_diffuseTexture->GetFileHeader().GetGUID();
 			}
@@ -127,7 +127,7 @@ namespace XenonEngine
 			if (!m_bumpTextureFileName.Empty())
 			{
 				String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileNameToFullPath(m_bumpTextureFileName, modelFolder);
-				ImageMeta* m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(bumpTextureFileName);
+				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(bumpTextureFileName);
 				assert(m_bumpTexture != nullptr);
 				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
 			}
