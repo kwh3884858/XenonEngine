@@ -61,17 +61,17 @@ namespace CrossPlatform {
 	{
 		IFileMeta::Delete();
 
-		for (int i = 0; i < m_mesh->m_polygons.Count(); i++)
-		{
-			xg::Guid polyID = m_mesh->m_polygons[i];
-			EngineManager::Get().GetFileDatabase().DeleteFile(polyID);
-		}
+		//for (int i = 0; i < m_mesh->m_polygons.Count(); i++)
+		//{
+		//	xg::Guid polyID = m_mesh->m_polygons[i];
+		//	EngineManager::Get().GetFileDatabase().DeleteFile(polyID);
+		//}
 
-		for (int i = 0; i < m_mesh->m_materials.Count(); i++)
-		{
-			xg::Guid polyID = m_mesh->m_materials[i];
-			EngineManager::Get().GetFileDatabase().DeleteFile(polyID);
-		}
+		//for (int i = 0; i < m_mesh->m_materials.Count(); i++)
+		//{
+		//	xg::Guid polyID = m_mesh->m_materials[i];
+		//	EngineManager::Get().GetFileDatabase().DeleteFile(polyID);
+		//}
 
 		const String& filePath = GetFileHeader().GetFilePath();
 		if (filePath.Empty())

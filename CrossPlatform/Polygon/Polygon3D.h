@@ -5,6 +5,7 @@
 //#include "crossguid/guid.hpp"
 #include "Algorithms/Vector.h"
 //#include "CrossPlatform/Polygon/Triangle3D.h"
+#include "CrossPlatform/XenonObject.h"
 
 namespace CrossPlatform 
 {
@@ -21,7 +22,7 @@ namespace CrossPlatform {
 	//using MathLab::Vector2f;
 	//using CrossPlatform::SColorRGBA;
 
-	class Polygon3D
+	class Polygon3D : public XenonObject
 	{
 	public:
 		friend struct YAML::convert<Polygon3D>;

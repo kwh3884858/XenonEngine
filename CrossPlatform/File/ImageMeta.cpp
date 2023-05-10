@@ -34,7 +34,7 @@ namespace CrossPlatform {
 		//m_image = nullptr;
 	}
 
-	void ImageMeta::Save(const XenonObject* data /*= nullptr*/)
+	void ImageMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
 		IFileMeta::Save();
 		//ImportImageFileIntoFolderAsNativeVersion();
@@ -50,8 +50,8 @@ namespace CrossPlatform {
 			return;
 		}
 		{
-			path modelFile(filePath.CString());
-			bool result = remove(modelFile);
+			path imageFile(filePath.CString());
+			bool result = remove(imageFile);
 			assert(result == true);
 		}
 	}

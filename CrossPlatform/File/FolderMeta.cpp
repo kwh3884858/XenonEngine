@@ -78,7 +78,7 @@ namespace CrossPlatform
 		}
 	}
 
-	void FolderMeta::Save(const XenonObject* data /*= nullptr*/)
+	void FolderMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
 		IFileMeta::Save();
 

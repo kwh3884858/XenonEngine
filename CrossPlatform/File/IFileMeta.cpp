@@ -14,7 +14,7 @@ namespace CrossPlatform
 	using namespace Algorithm;
 	using namespace std::filesystem;
 
-	void IFileMeta::Save(const XenonObject* data /*= nullptr*/)
+	void IFileMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
         m_header.GenerateMetadata();
 	}

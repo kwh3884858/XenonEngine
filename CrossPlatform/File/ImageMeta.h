@@ -6,6 +6,7 @@
 
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+#include "CrossPlatform/Image/Image.h"
 
 namespace XenonEngine
 {
@@ -15,7 +16,7 @@ namespace XenonEngine
 
 namespace CrossPlatform
 {
-	class Image;
+	//class Image;
     class ImageMeta :public IFileMeta
     {
     public:

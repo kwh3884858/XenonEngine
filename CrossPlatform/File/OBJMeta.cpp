@@ -14,7 +14,7 @@ namespace CrossPlatform {
 		assert(result == true);
 	}
 
-	void OBJMeta::Save(const XenonObject* data /*= nullptr*/)
+	void OBJMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
 		IFileMeta::Save();
 	}

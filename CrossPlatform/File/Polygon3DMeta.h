@@ -1,5 +1,6 @@
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+#include "CrossPlatform/Polygon/Polygon3D.h"
 namespace XenonEngine
 {
 	class ObjectImporter;
@@ -7,7 +8,7 @@ namespace XenonEngine
 
 namespace CrossPlatform
 {
-	class Polygon3D;
+	//class Polygon3D;
 	class Polygon3DMeta :public IFileMeta
 	{
 	public:

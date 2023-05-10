@@ -26,7 +26,7 @@ namespace CrossPlatform
 		//m_gameobjectWorld = nullptr;
 	}
 
-	void GameObjectWorldMeta::Save(const XenonObject* data /*= nullptr*/)
+	void GameObjectWorldMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
 		IFileMeta::Save();
 		GameObjectWorld* const currentWorld = EngineManager::Get().GetWorldManager().GetCurrentWorld();

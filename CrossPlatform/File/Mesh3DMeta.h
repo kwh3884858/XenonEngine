@@ -5,9 +5,11 @@
 //  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+#include "Engine/Component/Mesh3D.h"
+
 namespace XenonEngine
 {
-	class Mesh3D;
+	//class Mesh3D;
 	class ObjectImporter;
 }
 namespace CrossPlatform {
@@ -29,7 +31,7 @@ namespace CrossPlatform {
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save(const XenonEngine::Mesh3D* data) override;
+		virtual void Save(const XenonEngine::Mesh3D* data = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

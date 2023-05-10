@@ -31,7 +31,7 @@ namespace YAML {
 namespace XenonEngine
 {
 	class ObjectImporter;
-	class Mesh3D final :public IComponent
+	class Mesh3D final :public IComponent 
 	{
 	public:
 		friend struct YAML::convert<Mesh3D>;

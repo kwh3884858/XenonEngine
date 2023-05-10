@@ -5,10 +5,12 @@
 //  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+#include "Engine/GameObjectWorld.h"
+
 namespace XenonEngine
 {
     class FileDatabase;
-    class GameObjectWorld;
+    //class GameObjectWorld;
 }
 
 namespace CrossPlatform

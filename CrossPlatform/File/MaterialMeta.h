@@ -1,12 +1,13 @@
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+#include "CrossPlatform/Material/Material.h"
 namespace XenonEngine
 {
 	class ObjectImporter;
 }
 namespace CrossPlatform
 {
-	class Material;
+	//class Material;
 	class MaterialMeta :public IFileMeta
 	{
 	public:
@@ -22,7 +23,7 @@ namespace CrossPlatform
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save(const Material* material) override;
+		virtual void Save(const Material* material = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;
