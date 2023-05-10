@@ -48,18 +48,20 @@ namespace XenonEngine
 		void* LoadFile(const Algorithm::String& realPath);
         void SaveFile(const Algorithm::String& realPath);
 
-		Algorithm::String ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder);
+		Algorithm::String ProcessFileNameToFullPath(const Algorithm::String& fileName, const Algorithm::String& currentFolder);
 
         void AddFileToDatabase(const xg::Guid& guid, CrossPlatform::IFileMeta* file) { m_database[guid] = file; }
         void RemoveFileFromDatabse(const xg::Guid& guid) { m_database.erase(guid); }
-		IFileMeta* CreateMetaFromFilePath(const Algorithm::String& realFilePath);
 
     private:
 		bool IsVirtualPath(const Algorithm::String& filePath)const;
 		bool IsRealPath(const Algorithm::String& filePath)const;
 
 		void InternalDeleteFile(const Algorithm::String& filePath);
-        //void RecursiveLoadFolder(CrossPlatform::FolderMeta& folder);
+        
+		IFileMeta* CreateMetaFromFilePath(const Algorithm::String& realFilePath);
+
+		//void RecursiveLoadFolder(CrossPlatform::FolderMeta& folder);
         //void RecursionClearFolder(CrossPlatform::FolderMeta& folder);
 
         //IFileMeta* GenerateMetaFile(const Algorithm::String& filePaht);

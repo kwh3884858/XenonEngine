@@ -12,7 +12,7 @@ namespace CrossPlatform
     using namespace std;
 	using namespace std::filesystem;
 
-	void* GameObjectWorldMeta::Instantiate()
+	XenonEngine::GameObjectWorld* GameObjectWorldMeta::Instantiate()
 	{
 		// TODO: Save meta GUID into instance.
 		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
@@ -26,7 +26,7 @@ namespace CrossPlatform
 		//m_gameobjectWorld = nullptr;
 	}
 
-	void GameObjectWorldMeta::Save()
+	void GameObjectWorldMeta::Save(const XenonObject* data /*= nullptr*/)
 	{
 		IFileMeta::Save();
 		GameObjectWorld* const currentWorld = EngineManager::Get().GetWorldManager().GetCurrentWorld();

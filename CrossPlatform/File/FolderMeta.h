@@ -14,14 +14,15 @@ namespace CrossPlatform
         FolderMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~FolderMeta() override = default;
 
-		// Add into content browser. create meta for file
-		virtual void OnAdd() override;
+		virtual void OnLoad() override;
 
-		// Instantiate a new instance
-		virtual void* Instantiate()override;
+		// For folder, is it impossible to generate a related instance.
+		virtual XenonObject* Instantiate()override { assert(true == false); return nullptr; }
+
+		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save() override;
+		virtual void Save(const XenonObject* data = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

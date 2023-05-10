@@ -30,12 +30,12 @@ namespace YAML {
 }
 namespace XenonEngine
 {
-	class ObjectLoader;
+	class ObjectImporter;
 	class Mesh3D final :public IComponent
 	{
 	public:
 		friend struct YAML::convert<Mesh3D>;
-		friend class ObjectLoader;
+		friend class ObjectImporter;
 		friend class CrossPlatform::Mesh3DMeta;
 
 		static const float PI;

@@ -21,13 +21,13 @@ namespace CrossPlatform
         virtual ~GameObjectWorldMeta()override = default;
 
 		// Load into memory
-		virtual void* Instantiate() override;
+		virtual XenonEngine::GameObjectWorld* Instantiate() override;
 
 		// Clear from memory
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save() override;
+		virtual void Save(const XenonObject* data = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

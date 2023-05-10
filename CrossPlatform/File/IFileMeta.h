@@ -18,8 +18,11 @@ namespace CrossPlatform
 		// If a file have not a related meta: It is a new file, create a meta for it, import the data and put them into folder.
 		// if a file have a related meta: it is a processed file, dont do anything just notice content brower that we found a file.
 
-		// Trigger after created meta file
-		virtual void OnAdd() = 0;
+		// Trigger after load meta file into content browser
+		virtual void OnLoad() {}
+
+		// Trigger after import into engine folder
+		virtual void OnImport() {}
 
 		// For every founded file, put it into game world should call this function.
 		// It will return a instance pointer.
@@ -31,7 +34,7 @@ namespace CrossPlatform
 		virtual void Clear() = 0;
 
 		// Save to hard drive as a data file
-		virtual void Save();
+		virtual void Save(const XenonObject* data = nullptr);
 
 		// Delete data file from hard drive
 		virtual void Delete();

@@ -14,16 +14,14 @@ namespace CrossPlatform {
 		OBJMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~OBJMeta() override = default;
 
-		// Load into memory
-		virtual void Load() override;
-
-		// Clear from memory
-		virtual void Clear() override;
+		virtual void OnImport() override;
+		virtual XenonObject* Instantiate() override { return nullptr; }
+		virtual void Clear() {}
 
 		// Save to hard drive as a data file
-		virtual void Save() override;
+		virtual void Save(const XenonObject* data = nullptr);
 
 		// Delete data file from hard drive
-		virtual void Delete() override;
+		virtual void Delete();
 	};
 }

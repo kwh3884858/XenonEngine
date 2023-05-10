@@ -1,4 +1,4 @@
-#include "ObjLoader.h"
+#include "ObjectImporter.h"
 
 #include "MathLab/Vector3.h"
 #include "MathLab/Vector2.h"
@@ -27,7 +27,7 @@ namespace XenonEngine
 	using namespace MathLab;
 	//using namespace std;
 
-	bool ObjectLoader::LoadObj(const Algorithm::String& path) const
+	bool ObjectImporter::ImportObj(const Algorithm::String& path) const
 	{
 		// Path constant
 		int delimiterIndex = path.LastIndexOf(std::filesystem::path::preferred_separator);
@@ -97,10 +97,6 @@ namespace XenonEngine
 
 		//Save to mesh3D
 		Mesh3D* mesh = new Mesh3D();
-		String meshPath = modelFolder +
-			fileName +
-			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
-		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(meshPath);
 		//meshMeta->m_mesh = mesh;
 
 		mesh->m_vertexs = std::move(vertexs);
@@ -121,8 +117,8 @@ namespace XenonEngine
 			String m_diffuseTextureFileName = objMaterial.diffuse_texname.c_str();
 			if (!m_diffuseTextureFileName.Empty())
 			{
-				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_diffuseTextureFileName, modelFolder);
-				IFileMeta* m_diffuseTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(diffuseTextureFileName);
+				String diffuseTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileNameToFullPath(m_diffuseTextureFileName, modelFolder);
+				ImageMeta* m_diffuseTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(diffuseTextureFileName);
 				assert(m_diffuseTexture != nullptr);
 				material->m_diffuseTexture = m_diffuseTexture->GetFileHeader().GetGUID();
 			}
@@ -130,8 +126,8 @@ namespace XenonEngine
 			String m_bumpTextureFileName = objMaterial.bump_texname.c_str();
 			if (!m_bumpTextureFileName.Empty())
 			{
-				String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileName(m_bumpTextureFileName, modelFolder);
-				IFileMeta* m_bumpTexture = EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(bumpTextureFileName);
+				String bumpTextureFileName = EngineManager::Get().GetFileDatabase().ProcessFileNameToFullPath(m_bumpTextureFileName, modelFolder);
+				ImageMeta* m_bumpTexture = (ImageMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(bumpTextureFileName);
 				assert(m_bumpTexture != nullptr);
 				material->m_bumpTexture = m_bumpTexture->GetFileHeader().GetGUID();
 			}
@@ -139,9 +135,9 @@ namespace XenonEngine
 				objMaterial.name.c_str() + 
 				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
 			//String materialPath = modelFolder + materialFileName.c_str();
-			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(materialPath);
-			materialMeta->m_material = material;
-			materialMeta->Save();
+			MaterialMeta* materialMeta =(MaterialMeta*) EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(materialPath);
+			//materialMeta->m_material = material;
+			materialMeta->Save(material);
 
 			mesh->m_materials.Add(materialMeta->GetFileHeader().GetGUID());
 		}
@@ -186,16 +182,26 @@ namespace XenonEngine
 				fileName + std::to_string(s).c_str() +
 				EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypePolygon);
 			//String polygonPath = modelFolder + polygonName.c_str();
-			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().CreateMetaFromFilePath(polygonPath);
+			Polygon3DMeta* polygonMeta = (Polygon3DMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(polygonPath);
 
 			//Mesh3D* mesh = new Mesh3D();
 			Polygon3D* polygon = new Polygon3D(std::move(vertexIndex));
 
 			//polygonMeta->m_polygon = polygon;
-			polygonMeta->Save();
-
+			polygonMeta->Save(polygon);
+			delete polygon;
+			polygon = nullptr;
 			mesh->m_polygons.Add(polygonMeta->GetFileHeader().GetGUID());
 		}
+		
+		String meshPath = 
+			modelFolder +
+			fileName +
+			EngineManager::Get().GetFileDatabase().GetExtension(FileType::FileTypeMaterial);
+		Mesh3DMeta* meshMeta = (Mesh3DMeta*)EngineManager::Get().GetFileDatabase().GenerateMetaFileForFile(meshPath);
+		meshMeta->Save(mesh);
+		delete mesh;
+		mesh = nullptr;
 
 		return true;
 	}

@@ -1,5 +1,5 @@
 #include "OBJMeta.h"
-#include "Engine/IO/ObjLoader.h"
+#include "Engine/IO/ObjectImporter.h"
 #include <filesystem>
 namespace CrossPlatform {
 
@@ -8,17 +8,13 @@ namespace CrossPlatform {
 	using namespace std;
 	using namespace std::filesystem;
 
-	void OBJMeta::Load()
+	void OBJMeta::OnImport()
 	{
-		bool result = ObjectLoader::Get().LoadObj(m_header.GetFilePath());
+		bool result = ObjectImporter::Get().ImportObj(m_header.GetFilePath());
 		assert(result == true);
 	}
 
-	void OBJMeta::Clear()
-	{
-	}
-
-	void OBJMeta::Save()
+	void OBJMeta::Save(const XenonObject* data /*= nullptr*/)
 	{
 		IFileMeta::Save();
 	}

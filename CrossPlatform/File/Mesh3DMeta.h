@@ -8,13 +8,13 @@
 namespace XenonEngine
 {
 	class Mesh3D;
-	class ObjectLoader;
+	class ObjectImporter;
 }
 namespace CrossPlatform {
-    class Mesh3DMeta :public IFileMeta<Mesh3D>
+    class Mesh3DMeta :public IFileMeta
     {
     public:
-		friend class XenonEngine::ObjectLoader;
+		friend class XenonEngine::ObjectImporter;
 
         Mesh3DMeta(const FileHeader& header) :IFileMeta(header) { }
 		virtual ~Mesh3DMeta() override = default;
@@ -29,7 +29,7 @@ namespace CrossPlatform {
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save() override;
+		virtual void Save(const XenonEngine::Mesh3D* data) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;

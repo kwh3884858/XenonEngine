@@ -87,7 +87,7 @@ namespace XenonEngine
             //LoadFile(projectDataRoot.string().c_str());
         }
 
-        m_root->Load();
+        m_root->OnLoad();
     }
 
     void FileDatabase::Shutdown()
@@ -107,7 +107,7 @@ namespace XenonEngine
 		if (m_root)
 		{
 			m_root->Clear();
-			m_root->Load();
+			m_root->OnLoad();
 		}
 	}
 
@@ -323,7 +323,7 @@ namespace XenonEngine
 		file->Save();
     }
 
-	Algorithm::String FileDatabase::ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder)
+	Algorithm::String FileDatabase::ProcessFileNameToFullPath(const Algorithm::String& fileName, const Algorithm::String& currentFolder)
 	{
 		if (IsVirtualPath(fileName))
 		{

@@ -1,6 +1,6 @@
 #include "CameraObject3D.h"
 
-#include "Engine/IO/ObjLoader.h"
+#include "Engine/IO/ObjectImporter.h"
 
 #include "Engine/Component/Transform3D.h"
 #include "Engine/Component/Camera3D.h"

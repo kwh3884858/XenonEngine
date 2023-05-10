@@ -57,10 +57,10 @@ namespace XenonEngine
             m_contentBrowser.Close();
         }
 
-        if (ImGui::Button(ICON_FA_ANGRY " Add new file"))
+        if (ImGui::Button(ICON_FA_ANGRY " Import new file"))
         {
             const char *newFileFilters = "Model (*.obj){.obj},Image files (*.png *.gif *.jpg *.jpeg){.png,.gif,.jpg,.jpeg},World (*.world){.world},All (.*){.*}";
-            m_fileImporter.OpenDialog("ChooseFile", ICON_FA_AMBULANCE "Add file", newFileFilters, (database->GetRootFolder()->GetFileHeader().GetFilePath()+"\\.").CString());
+            m_fileImporter.OpenDialog("ChooseFile", ICON_FA_AMBULANCE "Import file", newFileFilters, (database->GetRootFolder()->GetFileHeader().GetFilePath()+"\\.").CString());
         }
         // display and action if ok
         if (m_fileImporter.Display("ChooseFile", ImGuiWindowFlags_NoCollapse, minSize, maxSize))
@@ -73,8 +73,9 @@ namespace XenonEngine
                 if (m_fileImporter.GetUserDatas())
                     userDatas = std::string((const char*)m_fileImporter.GetUserDatas());
                 auto selection = m_fileImporter.GetSelection(); // multiselection
-                database->GenerateMetaFileForFile(filePathName.c_str());
+                IFileMeta* meta = database->GenerateMetaFileForFile(filePathName.c_str());
                 // action
+				meta->OnImport();
             }
             // close
             m_fileImporter.Close();

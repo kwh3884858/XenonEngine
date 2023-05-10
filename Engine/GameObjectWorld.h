@@ -1,6 +1,8 @@
 #pragma once
 #include "Algorithms/String.h"
 #include "Algorithms/Vector.h"
+#include "CrossPlatform/XenonObject.h"
+
 namespace XenonPhysics
 {
     class Physics2D;
@@ -8,7 +10,7 @@ namespace XenonPhysics
 namespace XenonEngine
 {
     class GameObject;
-    class GameObjectWorld
+    class GameObjectWorld : public CrossPlatform::XenonObject
     {
     public:
         GameObjectWorld(const Algorithm::String& worldName = "Untitled");

@@ -15,13 +15,13 @@ namespace CrossPlatform
 namespace XenonEngine
 {
 	class Mesh3D;
-	class ObjectLoader : public CrossPlatform::XenonManager<ObjectLoader>
+	class ObjectImporter : public CrossPlatform::XenonManager<ObjectImporter>
 	{
 	public:
 		virtual bool Initialize() override { return true; }
         virtual bool Shutdown() override { return true; }
 
-		bool LoadObj(const Algorithm::String& path) const;
+		bool ImportObj(const Algorithm::String& path) const;
 	private:
 
 	};

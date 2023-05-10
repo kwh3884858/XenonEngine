@@ -25,8 +25,7 @@ namespace CrossPlatform {
 
 	Image* ImageMeta::Instantiate()
 	{
-		YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-		return new Image(std::move(config.as<Image>()));
+		return ImportImageFileIntoFolderAsNativeVersion();
 	}
 
 	void ImageMeta::Clear()
@@ -35,10 +34,10 @@ namespace CrossPlatform {
 		//m_image = nullptr;
 	}
 
-	void ImageMeta::Save()
+	void ImageMeta::Save(const XenonObject* data /*= nullptr*/)
 	{
 		IFileMeta::Save();
-		ImportImageFileIntoFolderAsNativeVersion();
+		//ImportImageFileIntoFolderAsNativeVersion();
 	}
 
 	void ImageMeta::Delete()
@@ -57,20 +56,13 @@ namespace CrossPlatform {
 		}
 	}
 
-	void ImageMeta::ImportImageFileIntoFolderAsNativeVersion() const
+	Image* ImageMeta::ImportImageFileIntoFolderAsNativeVersion() const
 	{
 		int width, height, channel;
 		unsigned char* const data = stbi_load(GetFileHeader().GetFilePath().CString(), &width, &height, &channel, 0);
 		assert(data != nullptr);
-		if (!data)
-		{
-			Image importedImage(data, height, width, channel);
 
-			ofstream outputStream(GetFileHeader().GetFilePath().CString());
-			YAML::Emitter out(outputStream);
-			out << YAML::Node(importedImage);
-			outputStream.close();
-		}
+		return new Image(data, height, width, channel);
 	}
 
 	//CrossPlatform::Image* ImageMeta::GetImage()

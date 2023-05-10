@@ -48,7 +48,7 @@ namespace CrossPlatform
 		{
 			return m_ProductRegistry[fileType]->CreateProduct(header);
 		}
-		assert(true == false, "Check Type!");
+		assert(true == false); // "Check Type!"
 		std::cout << "No meta file found for " << (int) fileType << std::endl;
 		return nullptr;
 	}

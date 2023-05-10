@@ -25,20 +25,20 @@ namespace CrossPlatform
 
 		// Load into memory
 		//virtual void Add() override;
-		Image* Instantiate() override;
+		virtual Image* Instantiate() override;
 
 		// Clear from memory
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save() override;
+		virtual void Save(const XenonObject* data = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;
 
 		//Image* GetImage();
     private:
-		void ImportImageFileIntoFolderAsNativeVersion() const;
+		Image* ImportImageFileIntoFolderAsNativeVersion() const;
 		//Image* m_image = nullptr;
     };
 }

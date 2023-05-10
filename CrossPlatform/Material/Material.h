@@ -4,12 +4,13 @@
 #include "MathLab/Vector3.h"
 #include "CrossPlatform/XenonShaderType.h"
 #include "crossguid/guid.hpp"
+#include "CrossPlatform/XenonObject.h"
 
 namespace CrossPlatform
 {
 	class ImageMeta;
 	class Image;
-    class Material
+    class Material : public XenonObject
     {
     public:
 		Material() = default;

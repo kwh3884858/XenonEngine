@@ -1,4 +1,6 @@
 #include <filesystem>
+#include <fstream>
+
 #include "Polygon3DMeta.h"
 #include "CrossPlatform/Polygon/Polygon3D.h"
 #include "CrossPlatform/Converter/Polygon3DYamlConverter.h"
@@ -6,11 +8,13 @@
 namespace CrossPlatform
 {
 	using namespace Algorithm;
+	using namespace std;
+	using namespace std::filesystem;
 
-	void Polygon3DMeta::Add()
-	{
+	//void Polygon3DMeta::Add()
+	//{
 
-	}
+	//}
 
 	Polygon3D* Polygon3DMeta::Instantiate()
 	{
@@ -24,9 +28,19 @@ namespace CrossPlatform
 		//m_polygon = nullptr;
 	}
 
-	void Polygon3DMeta::Save()
-	{
+	//void Polygon3DMeta::Save()
+	//{
 
+	//}
+
+	void Polygon3DMeta::Save(const Polygon3D* polygon)
+	{
+		IFileMeta::Save();
+		assert(polygon != nullptr);
+		ofstream outputStream(GetFileHeader().GetFilePath().CString());
+		YAML::Emitter out(outputStream);
+		out << YAML::Node(*polygon);
+		outputStream.close();
 	}
 
 	void Polygon3DMeta::Delete()
