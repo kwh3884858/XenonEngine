@@ -34,7 +34,7 @@ namespace CrossPlatform
 		Image* GetDiffuseTexture();
 		Image* GetBumpTexture();
 	public:
-		ShaderType m_shaderType = ShaderType::ShaderType_Gouraud;
+		ShaderType m_shaderType = ShaderType::ShaderType_Wireframe;
 
 		Algorithm::String m_name;
         float m_exponent = 0.0f;                        //Ns

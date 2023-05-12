@@ -67,9 +67,14 @@ namespace XenonEngine
 			Iterator& operator++() { m_index++; return *this; }
 			Iterator operator++(int) { Iterator retval = *this; ++(*this); return retval; }
 			Iterator& operator+=(int value) { m_index += value; return *this; }
-			Iterator operator+(int value) { Iterator retval = *this; (*this)+=value; return retval; }
+			Iterator operator+(int value) { Iterator retval = *this; retval += value; return retval; }
 			bool operator==(Iterator other) const { return m_index == other.m_index; }
 			bool operator!=(Iterator other) const { return !(*this == other); }
+			bool operator<(Iterator other) const { return  m_index < other.m_index; }
+			bool operator>(Iterator other) const { return  m_index > other.m_index; }
+			bool operator>=(Iterator other) const { return !(*this < other);  }
+			bool operator<=(Iterator other) const { return !(*this > other);  }
+
 			CrossPlatform::Triangle3D operator*() { return (*m_mesh)[m_index]; }
 			// iterator traits
 			using difference_type = CrossPlatform::Vertex3D;
@@ -110,11 +115,12 @@ namespace XenonEngine
 		Algorithm::Vector<MathLab::Vector2f> m_uv;
 		Algorithm::Vector<xg::Guid> m_materials;
 
+		float m_maxRadius = 0.0f;
+		bool m_requestToReload = false;
+
 		//Cache
 		std::map<xg::Guid, const CrossPlatform::Polygon3D*> m_cachePolygons;
 		std::map<xg::Guid, const CrossPlatform::Material*> m_cacheMaterials;
-        float m_maxRadius = 0.0f;
 
-		bool m_requestToReload = false;
 	};
 }

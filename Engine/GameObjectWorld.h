@@ -24,6 +24,7 @@ namespace XenonEngine
         void SetWorldName(const Algorithm::String& name) { m_worldName = name; }
 
 		const Algorithm::Vector<GameObject*>& GetRenderList() const { return m_renderList; }
+		void AddObjectRenderList(GameObject* gameobject){ m_renderList.Add(gameobject); }
 
         void AddGameObject(GameObject* const gameobject);
         void AddGameObject(GameObject&& gameobject);

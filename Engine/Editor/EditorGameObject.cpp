@@ -26,24 +26,6 @@ namespace XenonEngine
             const IComponent* component = data->GetComponentByIndex(i);
             ComponentType type = component->GetComponentType();
 
-			ImGui::PushID(data->GetName().CString());
-			// Set new mesh
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
-				{
-					IM_ASSERT(payload->DataSize == 37);
-					char* payload_n = (char*)payload->Data;
-					IFileMeta* meta = EditorDatabase::Get().GetFileMeta(xg::Guid(payload_n));
-					Mesh3D* mesh = ((Mesh3DMeta*)meta)->Instantiate();
-					((GameObject*)data)->AddComponent<Mesh3D>(mesh);
-					//((Mesh3D*)mesh)->SetModelGuid();
-					//((Mesh3D*)mesh)->RequestReloadModel();
-				}
-				ImGui::EndDragDropTarget();
-			}
-			ImGui::PopID();
-
             if (type == ComponentType::ComponentType_Transform3D)
             {
                 if (ImGui::TreeNode((void*)(intptr_t)i, "%d Transform3D", i))

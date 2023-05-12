@@ -20,6 +20,7 @@ namespace XenonEngine
 		IComponent(that.m_gameobject),
 		m_polygons(that.m_polygons),
 		m_vertexs(that.m_vertexs),
+		m_normals(that.m_normals),
 		m_uv(that.m_uv),
 		m_materials(that.m_materials),
 		m_cachePolygons(that.m_cachePolygons),
@@ -47,9 +48,12 @@ namespace XenonEngine
 	{
 		Mesh3D* that = new Mesh3D(gameObject);
 		that->m_polygons = m_polygons;
+		that->m_vertexs = m_vertexs;
 		that->m_materials = m_materials;
+		that->m_normals = m_normals;
 		that->m_uv = m_uv;
-        that->m_maxRadius = m_maxRadius;
+		that->m_maxRadius = m_maxRadius;
+		that->m_requestToReload = m_requestToReload;
 		return that;
 	}
 

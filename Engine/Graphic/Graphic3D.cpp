@@ -161,6 +161,11 @@ namespace XenonEngine
 		{
 			return;
 		}
+		TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
+		TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
+		TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
+		DrawCoordinateLines(worldToScreenTranform);
+
 		const Algorithm::Vector<GameObject*>& renderList = world->GetRenderList();
 		for (int i = 0; i < renderList.Count(); i++)
 		{
@@ -174,16 +179,12 @@ namespace XenonEngine
 
 			// World coordinate, Culling
 			TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
-			TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
 			TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
 			TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
 			TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
-			TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
-			TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
 			TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
 			TMatrix4X4f localToCameraTranform = localToWorldTransform * worldToCameraTransform;
 
-			DrawCoordinateLines(worldToScreenTranform);
 
 			CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
 			if (state == CullingState::Culled)
@@ -196,21 +197,23 @@ namespace XenonEngine
 			//m_renderList.AddMesh3D();
 
 			// Per Triangle Stage
-			for (auto iter = mesh->begin(); iter + 2 != mesh->end(); iter += 3)
+			for (auto iter = mesh->begin(); iter + 2 < mesh->end(); iter += 3)
 			{
 				Triangle3D triangle(*iter);
 				//triangle[0] = *iter;
 				//triangle[1] = *(iter + 1);
 				//triangle[2] = *(iter + 2);
+
+
+				// [Vertex] Transform Local into Camera
+				// [Normal] Transform World into Camera
+				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
+
 				CullingState removeBackFacesState = RemoveBackFaces(triangle);
 				if (removeBackFacesState == CullingState::Culled)
 				{
 					continue;
 				}
-
-				// [Vertex] Transform Local into Camera
-				// [Normal] Transform World into Camera
-				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
 
 				// Clipping near Z-axis triangle
 				ClipResult clipResult = Clip(triangle, *majorCamera);
@@ -489,7 +492,7 @@ namespace XenonEngine
 		{
 			clipResult.m_clippingState = ClippingState::Clipped;
 		}
-		if (state[0] == PlaneTestState::LessThanZMin ||
+		else if (state[0] == PlaneTestState::LessThanZMin ||
 			state[1] == PlaneTestState::LessThanZMin ||
 			state[2] == PlaneTestState::LessThanZMin)
 		{
