@@ -25,7 +25,7 @@ namespace XenonEngine
 
 		ImGui::Text("Remove Back Face: %s", graph3D->IsRemoveBackFaces() ? "True" : "False");
 		ImGui::SameLine();
-		if (ImGui::Button(ICON_FA_ANCHOR " Toggle Remove Back Faces"))
+		if (ImGui::Button(ICON_FA_ARROW_CIRCLE_LEFT " Toggle Remove Back Faces"))
 		{
 			graph3D->ToggleRemoveBackFaces();
 		}

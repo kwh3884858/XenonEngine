@@ -7,7 +7,7 @@ enum ShaderType : unsigned char
     ShaderType_Wireframe,
 };
 
-const Algorithm::TypeString<ShaderType> FileTypeString[] = {
+const Algorithm::TypeString<ShaderType> ShaderTypeString[] = {
 	{"Gouraud", ShaderType::ShaderType_Gouraud},
 	{"Flat", ShaderType::ShaderType_Flat},
 	{"Wireframe", ShaderType::ShaderType_Wireframe}

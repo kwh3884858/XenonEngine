@@ -9,9 +9,11 @@
 #include "Engine/Component/Camera3D.h"
 #include "CrossPlatform/Material/Material.h"
 #include "CrossPlatform/File/IFileMeta.h"
+#include "CrossPlatform/XenonShaderType.h"
 
 #include "EditorDatabase.h"
 #include "CrossPlatform/File/Mesh3DMeta.h"
+//#include "Algorithms/TypeString.h"
 
 
 namespace XenonEngine
@@ -117,21 +119,23 @@ namespace XenonEngine
 					for (int materialIndex = 0 ; materialIndex < materialGuids.Count(); materialIndex++)
 					{
 						const Material& material = const_cast<Mesh3D*>(mesh)->GetMaterial(materialIndex);
-						const ShaderType& renderType = material.GetShaderType();
-						const char* items[] = { "Wireframe", "FlatShdering", "GouraudShdering" };
-						const char* item_current = items[renderType];            // Here our selection is a single pointer stored outside the object.
+						const ShaderType& shaderType = material.GetShaderType();
+						//const char* items[] = { "Wireframe", "FlatShdering", "GouraudShdering" };
+						const char* item_current = Algorithm::EnumToString(ShaderTypeString, shaderType);           // Here our selection is a single pointer stored outside the object.
+						Algorithm::TypeStringHelper shaderStringHeler = Algorithm::CreateSortedEnumStringArray(ShaderTypeString);
 						if (ImGui::BeginCombo("combo 1", item_current)) // The second parameter is the label previewed before opening the combo.
 						{
-							for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+							for (auto iter = shaderStringHeler.begin(); iter != shaderStringHeler.end(); ++iter)
 							{
-								bool is_selected = (item_current == items[n]);
-								if (ImGui::Selectable(items[n], is_selected))
+								bool is_selected = shaderType == (*iter).m_typeVal;
+								if (ImGui::Selectable((*iter).m_string, is_selected))
 								{
-									item_current = items[n];
-									const_cast<Material&>(material).SetShaderType(renderType);
+									item_current = (*iter).m_string;
+									const_cast<Material&>(material).SetShaderType((*iter).m_typeVal);
 								}
 								if (is_selected)
 									ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+
 							}
 							ImGui::EndCombo();
 						}

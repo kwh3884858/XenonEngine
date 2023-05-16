@@ -198,7 +198,7 @@ namespace XenonEngine
 			//m_renderList.AddMesh3D();
 
 			// Per Triangle Stage
-			for (auto iter = mesh->begin(); iter + 2 < mesh->end(); iter += 3)
+			for (auto iter = mesh->begin(); iter != mesh->end(); iter++)
 			{
 				Triangle3D triangle(*iter);
 				//triangle[0] = *iter;
