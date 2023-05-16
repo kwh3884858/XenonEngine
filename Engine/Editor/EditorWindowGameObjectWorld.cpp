@@ -20,6 +20,7 @@
 #include "Engine/Component/Camera3D.h"
 #include "CrossPlatform/Database.h"
 #include "Engine/Component/Camera3DController.h"
+#include "CrossPlatform/File/Mesh3DMeta.h"
 //#include "CrossPlatform/FileTypeEnum.h"
 
 namespace XenonEngine
@@ -37,7 +38,7 @@ namespace XenonEngine
             return;
         }
 
-        const GameObjectWorldManager* worldManager = syncData->WorldManagerGetter();
+        GameObjectWorldManager* const worldManager = syncData->WorldManagerGetter();
         if (!worldManager)
         {
             return;
@@ -97,7 +98,8 @@ namespace XenonEngine
         {
             if (m_loadDialog.IsOk())
             {
-                database->LoadFile(m_loadDialog.GetFilePathName().c_str());
+                GameObjectWorld* newWorld = (GameObjectWorld*)database->LoadFile(m_loadDialog.GetFilePathName().c_str());
+                worldManager->SetCurrentWorld(newWorld);
             }
             m_loadDialog.Close();
         }
@@ -123,6 +125,25 @@ namespace XenonEngine
                 const GameObject* go = objectList[i];
                 if (ImGui::TreeNode((void*)(intptr_t)i, go->GetName().CString()))
                 {
+					// Drag and Drop
+					ImGui::PushID(go->GetName().CString());
+					// Set new mesh
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("FILE_GUID"))
+						{
+							IM_ASSERT(payload->DataSize == 37);
+							char* payload_n = (char*)payload->Data;
+							IFileMeta* meta = EditorDatabase::Get().GetFileMeta(xg::Guid(payload_n));
+							Mesh3D* mesh = ((Mesh3DMeta*)meta)->Instantiate();
+							((GameObject*)go)->AddComponent<Mesh3D>(mesh);
+							world->AddObjectRenderList((GameObject*)go);
+						}
+						ImGui::EndDragDropTarget();
+					}
+					ImGui::PopID();
+
+
                     ContextMenu(world, (GameObject*)go);
                     editorGameobject.Update(go);
                     ImGui::TreePop();

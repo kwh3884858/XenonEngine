@@ -56,8 +56,8 @@ namespace YAML {
 				{
 					YAML::const_iterator it = node["Vertex"].begin();
 					rhs.m_vertex[0] = it->as<Polygon3D::VertexIndex>();
-					rhs.m_vertex[1] = it->as<Polygon3D::VertexIndex>();
-					rhs.m_vertex[2] = it->as<Polygon3D::VertexIndex>();
+					rhs.m_vertex[1] = (++it)->as<Polygon3D::VertexIndex>();
+					rhs.m_vertex[2] = (++it)->as<Polygon3D::VertexIndex>();
 					//for (YAML::const_iterator it = node["Vertex"].begin(); it != node["Vertex"].end(); ++it) {
 					//	rhs.m_vertex.Add(it->as<Polygon3D::VertexIndex>());
 					//}

@@ -130,6 +130,10 @@ namespace XenonEngine
         //const RenderType& GetRenderType()const { return m_renderType; }
 
         void Update()const;
+
+		//Debug Control
+		void ToggleRemoveBackFaces() { m_isRemoveBackFacesDebug = !m_isRemoveBackFacesDebug; }
+		bool IsRemoveBackFaces()const { return m_isRemoveBackFacesDebug; }
 	private:
         CullingState Culling(const Mesh3D& mesh, const MathLab::TMatrix4X4f& localToCameraTranform, const Camera3D& camera) const;
 		//Old
@@ -156,6 +160,10 @@ namespace XenonEngine
         Algorithm::Vector<LightComponent*> m_lightList;
 
 		//RenderList3D m_renderList;
+
+		//Debug Control
+		bool m_isRemoveBackFacesDebug = true;
+
 	};
 
 }

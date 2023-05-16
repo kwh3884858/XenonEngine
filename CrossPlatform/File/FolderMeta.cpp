@@ -14,7 +14,7 @@ namespace CrossPlatform
     using namespace Algorithm;
 	using namespace XenonEngine;
 
-	void FolderMeta::Load()
+	void FolderMeta::OnLoad()
 	{
 		directory_iterator dataRoot(GetFileHeader().GetFilePath().CString());
 		for (auto& it : dataRoot)
@@ -49,7 +49,7 @@ namespace CrossPlatform
 				if (file->GetFileHeader().GetFileType() == FileType::FileTypeFolder)
 				{
 					FolderMeta* folder = (FolderMeta*)file;
-					folder->Load();
+					folder->OnLoad();
 				}
 				assert(file != nullptr);
 
@@ -78,7 +78,7 @@ namespace CrossPlatform
 		}
 	}
 
-	void FolderMeta::Save()
+	void FolderMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
 		IFileMeta::Save();
 

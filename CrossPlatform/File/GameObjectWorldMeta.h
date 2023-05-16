@@ -5,15 +5,17 @@
 //  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 #include "CrossPlatform/File/IFileMeta.h"
+#include "Engine/GameObjectWorld.h"
+
 namespace XenonEngine
 {
     class FileDatabase;
-    class GameObjectWorld;
+    //class GameObjectWorld;
 }
 
 namespace CrossPlatform
 {    
-    class GameObjectWorldMeta :public IFileMeta
+    class GameObjectWorldMeta : public IFileMeta
     {
     public:
         friend class XenonEngine::FileDatabase;
@@ -21,13 +23,13 @@ namespace CrossPlatform
         virtual ~GameObjectWorldMeta()override = default;
 
 		// Load into memory
-		virtual void Load() override;
+		virtual XenonEngine::GameObjectWorld* Instantiate() const override;
 
 		// Clear from memory
 		virtual void Clear() override;
 
 		// Save to hard drive as a data file
-		virtual void Save() override;
+		virtual void Save(const XenonObject* data = nullptr) override;
 
 		// Delete data file from hard drive
 		virtual void Delete() override;
@@ -36,7 +38,7 @@ namespace CrossPlatform
     protected:
     private:
 		//XenonEngine::GameObjectWorld* GetGameObjectWorld();
-        XenonEngine::GameObjectWorld* m_gameobjectWorld = nullptr;
+        //XenonEngine::GameObjectWorld* m_gameobjectWorld = nullptr;
     };
 
 }

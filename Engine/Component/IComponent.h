@@ -4,11 +4,14 @@
 //  Created by whkong on 2021-5-3.
 //  Copyright (c) 2018 whkong. All rights reserved.
 #pragma once
+
+#include "CrossPlatform/XenonObject.h"
+
 namespace XenonEngine
 {
     class GameObject;
 
-    class IComponent
+    class IComponent : public CrossPlatform::XenonObject
     {
     public:
         enum IComponentType :int
@@ -35,7 +38,7 @@ namespace XenonEngine
             m_gameobject(gameobject)
         {
         }
-        virtual ~IComponent() = default;;
+        virtual ~IComponent() override = default;
 
         virtual IComponentType GetComponentType() const = 0;
 

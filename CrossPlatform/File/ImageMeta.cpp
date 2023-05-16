@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <filesystem>
+#include "Library/stb/stb_image.h"
 
 namespace CrossPlatform {
 
@@ -12,29 +13,31 @@ namespace CrossPlatform {
 	using namespace std;
 	using namespace std::filesystem;
 
-	void ImageMeta::Load()
+	//void ImageMeta::Add()
+	//{
+		//m_data = stbi_load(fileName.CString(), &m_width, &m_height, &m_channel, 0);
+		//assert(m_data != nullptr);
+		//if (!m_image)
+		//{
+
+		//}
+	//}
+
+	Image* ImageMeta::Instantiate() const
 	{
-		if (!m_image)
-		{
-			YAML::Node config = YAML::LoadFile(m_header.GetFilePath().CString());
-			*m_image = std::move(config.as<Image>());
-		}
+		return ImportImageFileIntoFolderAsNativeVersion();
 	}
 
 	void ImageMeta::Clear()
 	{
-		delete m_image;
-		m_image = nullptr;
+		//delete m_image;
+		//m_image = nullptr;
 	}
 
-	void ImageMeta::Save()
+	void ImageMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
 	{
 		IFileMeta::Save();
-
-		ofstream outputStream(GetFileHeader().GetFilePath().CString());
-		YAML::Emitter out(outputStream);
-		out << YAML::Node(*m_image);
-		outputStream.close();
+		//ImportImageFileIntoFolderAsNativeVersion();
 	}
 
 	void ImageMeta::Delete()
@@ -47,20 +50,29 @@ namespace CrossPlatform {
 			return;
 		}
 		{
-			path modelFile(filePath.CString());
-			bool result = remove(modelFile);
+			path imageFile(filePath.CString());
+			bool result = remove(imageFile);
 			assert(result == true);
 		}
 	}
 
-	CrossPlatform::Image* ImageMeta::GetImage() 
+	Image* ImageMeta::ImportImageFileIntoFolderAsNativeVersion() const
 	{
-		if (!m_image)
-		{
-			m_image = new Image(GetFileHeader().GetFilePath());
-		}
-		return m_image;
+		int width, height, channel;
+		unsigned char* const data = stbi_load(GetFileHeader().GetFilePath().CString(), &width, &height, &channel, 0);
+		assert(data != nullptr);
+
+		return new Image(data, height, width, channel);
 	}
+
+	//CrossPlatform::Image* ImageMeta::GetImage()
+	//{
+	//	if (!m_image)
+	//	{
+	//		m_image = new Image(GetFileHeader().GetFilePath());
+	//	}
+	//	return m_image;
+	//}
 
 
 }

@@ -244,8 +244,6 @@ void MainWindow::Run()
         if (timeInterval > m_timeInterval)
         {
             m_timer->Update();
-            Gameplay::GameplayUpdate();
-
 
 			/*bool result = */
 			if (m_active)
@@ -282,6 +280,8 @@ void MainWindow::Run()
 
 					directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
 				}
+
+				Gameplay::GameplayUpdate();
 
 				m_zBuffer->Unlock();
 				m_directXDrawSurface->Unlock();

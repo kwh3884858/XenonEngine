@@ -10,6 +10,7 @@
 
 #include "Engine/Editor/EditorWindowGameObjectWorld.h"
 #include "Engine/Editor/EditorWindowFileDatabase.h"
+#include "Engine/Editor/EditorWindowEngineDebug.h"
 #include "Library/IconFontCppHeaders/IconsFontAwesome5.h"
 
 #pragma comment(lib, "d3d11")
@@ -92,11 +93,14 @@ int ImGUIMain()
     bool show_another_window = false;
     static XenonEngine::EditorWindowGameObjectWorld editorWorld;
     static XenonEngine::EditorWindowFileDatabase fileDatabase;
+    static XenonEngine::EditorWindowEngineDebug engineDebug;
     bool* show_xenon_window = editorWorld.GetHandle();
 	editorWorld.OpenWindow();
     bool* show_file_database = fileDatabase.GetHandle();
 	fileDatabase.OpenWindow();
     fileDatabase.Initialize();
+	bool* show_engine_debug = engineDebug.GetHandle();
+	engineDebug.OpenWindow();
 
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -141,6 +145,7 @@ int ImGUIMain()
             ImGui::Checkbox("Another Window", &show_another_window);
             ImGui::Checkbox("Xenon Editor", show_xenon_window);
             ImGui::Checkbox("File Browser", show_file_database);
+            ImGui::Checkbox("File Browser", show_engine_debug);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
             ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
@@ -173,6 +178,11 @@ int ImGUIMain()
         {
             fileDatabase.Update(XenonEngine::pGlobalSyncData);
         }
+
+		if (show_engine_debug)
+		{
+			engineDebug.Update(XenonEngine::pGlobalSyncData);
+		}
         // Rendering
         ImGui::Render();
         const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };

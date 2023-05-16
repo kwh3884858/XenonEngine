@@ -87,7 +87,7 @@ namespace XenonEngine
             //LoadFile(projectDataRoot.string().c_str());
         }
 
-        m_root->Load();
+        m_root->OnLoad();
     }
 
     void FileDatabase::Shutdown()
@@ -107,7 +107,7 @@ namespace XenonEngine
 		if (m_root)
 		{
 			m_root->Clear();
-			m_root->Load();
+			m_root->OnLoad();
 		}
 	}
 
@@ -191,7 +191,7 @@ namespace XenonEngine
     //    return GetFolderByVirtualPath(virtualPath);
     //}
 
-    CrossPlatform::FolderMeta* FileDatabase::CreateFolder(const Algorithm::String& inPath)
+    CrossPlatform::FolderMeta* FileDatabase::GetOrCreateFolder(const Algorithm::String& inPath)
     {
 		String virtualPath(inPath);
 		if (!IsVirtualPath(virtualPath))
@@ -252,15 +252,14 @@ namespace XenonEngine
 		{
 			assert(true == false);
 		}
-		//IFileMeta* meta = nullptr;
-		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
-		if (folder->GetFile(originalFile.filename().string().c_str()) == nullptr)
+		FolderMeta* folder = GetOrCreateFolder(originalFile.parent_path().string().c_str());
+		IFileMeta* meta = folder->GetFile(originalFile.filename().string().c_str());
+		if (meta == nullptr)
 		{
-            IFileMeta* meta = CreateMetaFromFilePath(realPath);
-			folder->AddIFile(meta);
-			return meta;
+            meta = CreateMetaFromFilePath(realPath);
 		}
-		return nullptr;
+		folder->AddIFile(meta);
+		return meta;
     }
 
 	void FileDatabase::DeleteFile(const xg::Guid& fileGuid)
@@ -280,7 +279,7 @@ namespace XenonEngine
 		InternalDeleteFile(filePath);
 	}
 
-	IFileMeta* FileDatabase::LoadFile(const Algorithm::String& realPath)
+	void* FileDatabase::LoadFile(const Algorithm::String& realPath)
     {
         String filePath(realPath);
         if (IsVirtualPath(filePath))
@@ -301,8 +300,8 @@ namespace XenonEngine
 			return nullptr;
 		}
 
-		file->Load();
-		return file;
+		return file->Instantiate();
+		//return file;
     }
 
     void FileDatabase::SaveFile(const Algorithm::String& realPath)
@@ -313,7 +312,7 @@ namespace XenonEngine
             filePath = ConvertToRealPath(filePath);
         }
         path originalFile(filePath.CString());
-		FolderMeta* folder = CreateFolder(originalFile.parent_path().string().c_str());
+		FolderMeta* folder = GetOrCreateFolder(originalFile.parent_path().string().c_str());
 		String fileName(originalFile.filename().string().c_str());
 		IFileMeta* file = folder->GetFile(fileName);
 		if (!file)
@@ -323,7 +322,7 @@ namespace XenonEngine
 		file->Save();
     }
 
-	Algorithm::String FileDatabase::ProcessFileName(const Algorithm::String& fileName, const Algorithm::String& currentFolder)
+	Algorithm::String FileDatabase::ProcessFileNameToFullPath(const Algorithm::String& fileName, const Algorithm::String& currentFolder)
 	{
 		if (IsVirtualPath(fileName))
 		{

@@ -4,12 +4,13 @@
 #include "MathLab/Vector3.h"
 #include "CrossPlatform/XenonShaderType.h"
 #include "crossguid/guid.hpp"
+#include "CrossPlatform/XenonObject.h"
 
 namespace CrossPlatform
 {
 	class ImageMeta;
 	class Image;
-    class Material
+    class Material : public XenonObject
     {
     public:
 		Material() = default;
@@ -33,7 +34,7 @@ namespace CrossPlatform
 		Image* GetDiffuseTexture();
 		Image* GetBumpTexture();
 	public:
-		ShaderType m_shaderType = ShaderType::ShaderType_Gouraud;
+		ShaderType m_shaderType = ShaderType::ShaderType_Wireframe;
 
 		Algorithm::String m_name;
         float m_exponent = 0.0f;                        //Ns

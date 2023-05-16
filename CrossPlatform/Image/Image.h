@@ -5,16 +5,18 @@
 //  Copyright (c) 2021 whkong. All rights reserved.
 #pragma once
 
+#include "CrossPlatform/XenonObject.h"
 #include "CrossPlatform/SColorRGBA.h"
 #include "Algorithms/String.h"
 namespace CrossPlatform
 {
-	class Image
+	class Image : public XenonObject
 	{
 	public:
 		Image() = default;
-		Image(const Algorithm::String& fileName);
+		Image(unsigned char* const data, int height, int width, int channel);
 		Image(const Image& that);
+		Image(Image&& that);
 		~Image();
 		Image& operator=(Image&& that);
 

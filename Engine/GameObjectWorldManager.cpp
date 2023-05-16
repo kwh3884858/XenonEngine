@@ -69,7 +69,6 @@ namespace XenonEngine
 
     void GameObjectWorldManager::SetCurrentWorld(GameObjectWorld* world)
     {
-		RemoveGameWorld();
         m_waitForAddedWorld = world;
     }
 
