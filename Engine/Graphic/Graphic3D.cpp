@@ -162,9 +162,14 @@ namespace XenonEngine
 			return;
 		}
 		TMatrix4X4f worldToCameraTransform = majorCamera->GetCameraTransformInverseMatrix();
+		TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
+
 		TMatrix4X4f cameraToScreenTranform = GetProjectionAndScreenMatrix(majorCamera->GetFov(), majorCamera->GetViewport());
 		TMatrix4X4f worldToScreenTranform = worldToCameraTransform * cameraToScreenTranform;
 		DrawCoordinateLines(worldToScreenTranform);
+
+		TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
+		TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
 
 		const Algorithm::Vector<GameObject*>& renderList = world->GetRenderList();
 		for (int i = 0; i < renderList.Count(); i++)
@@ -179,12 +184,8 @@ namespace XenonEngine
 
 			// World coordinate, Culling
 			TMatrix4X4f localToWorldTransform = transform->GetLocalToWorldTransformMatrix();
-			TMatrix4X4f worldToCameraRotationMatrix = MathLab::GetRotationFromTransformMatrix(worldToCameraTransform);
-			TMatrix4X4f cameraToProjectionTransfrom = GetProjectionMatrix(majorCamera->GetViewDistance(), majorCamera->GetAspectRatio());
-			TMatrix4X4f projectionToScreenTransfrom = GetScreenMatrix(majorCamera->GetViewport());
 			TMatrix4X4f localToScreenTranform = localToWorldTransform * worldToScreenTranform;
 			TMatrix4X4f localToCameraTranform = localToWorldTransform * worldToCameraTransform;
-
 
 			CullingState state = Culling(*mesh, localToCameraTranform, *majorCamera);
 			if (state == CullingState::Culled)
@@ -209,10 +210,14 @@ namespace XenonEngine
 				// [Normal] Transform World into Camera
 				TransformLocalToCamera(triangle, localToCameraTranform, worldToCameraRotationMatrix);
 
-				CullingState removeBackFacesState = RemoveBackFaces(triangle);
-				if (removeBackFacesState == CullingState::Culled)
+				// Remove Back Faces
+				if (m_isRemoveBackFacesDebug)
 				{
-					continue;
+					CullingState removeBackFacesState = RemoveBackFaces(triangle);
+					if (removeBackFacesState == CullingState::Culled)
+					{
+						continue;
+					}
 				}
 
 				// Clipping near Z-axis triangle
