@@ -57,5 +57,6 @@ namespace CrossPlatform
     const SColorRGBA INDIAN_RED(205, 92, 92, 255);
     const SColorRGBA YELLOW(255, 255, 0, 255);
     const SColorRGBA BLACK(0, 0, 0, 255);
-
+    const SColorRGBA MAGENTA(255, 0, 255, 255);
+	
 }

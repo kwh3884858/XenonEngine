@@ -769,8 +769,12 @@ namespace XenonEngine
 				Vector2f strightLineUVIndex = lUVIndex;
 				for (; xStart <= xEnd; xStart++)
 				{
-					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
+					SColorRGBA color = CrossPlatform::MAGENTA;
+					if (data.m_diffuse)
+					{
+						SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+						color = strightLineIndex.ToColor() * samplingColor;
+					}
 					DrawPixel(xStart, yBottom, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
@@ -834,8 +838,12 @@ namespace XenonEngine
 				}
 				for (float i = left.x; i <= right.x; i++)
 				{
-					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
+					SColorRGBA color = CrossPlatform::MAGENTA;
+					if (data.m_diffuse)
+					{
+						SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+						color = strightLineIndex.ToColor() * samplingColor;
+					}
 					DrawPixel((int)i, yBottom, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
@@ -1108,8 +1116,12 @@ namespace XenonEngine
 				Vector2f strightLineUVIndex = lUVIndex;
 				for (; xStart <= xEnd; xStart++)
 				{
-					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
+					SColorRGBA color = CrossPlatform::MAGENTA;
+					if (data.m_diffuse)
+					{
+						SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+						color = strightLineIndex.ToColor() * samplingColor;
+					}
 					DrawPixel(xStart, yTop, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
@@ -1173,8 +1185,12 @@ namespace XenonEngine
 				}
 				for (float i = left.x; i <= right.x; i++)
 				{
-					SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
-					SColorRGBA color = strightLineIndex.ToColor() * samplingColor;
+					SColorRGBA color = CrossPlatform::MAGENTA;
+					if (data.m_diffuse)
+					{
+						SColorRGBA samplingColor = data.m_diffuse->GetColor(strightLineUVIndex.x, strightLineUVIndex.y);
+						color = strightLineIndex.ToColor() * samplingColor;
+					}
 					DrawPixel((int)i, yTop, color);
 					strightLineIndex += strightLineDelta;
 					strightLineUVIndex += strightLineUVDelta;
