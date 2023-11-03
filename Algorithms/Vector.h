@@ -2,7 +2,7 @@
 #define SAINTMATHEMATICS_VECOTR_H
 
 //class Iterator;
-#include <cstring>
+//#include <cstring>
 #include <cassert>
 
 namespace Algorithm
