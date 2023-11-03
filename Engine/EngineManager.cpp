@@ -9,6 +9,7 @@ namespace XenonEngine
 
     bool EngineManager::Initialize()
     {
+		m_xenonEngineEditor.Initialize();
         m_worldManager.Initialize();
         m_fileDatabase.Initialize();
         (*pGlobalSyncData).Graphic3DSetter(&(Graphic3D::Get()));
@@ -23,6 +24,8 @@ namespace XenonEngine
 
         m_fileDatabase.Shutdown();
         m_worldManager.Shutdown();
+		m_xenonEngineEditor.Shutdown();
+
         return true;
     }
 
@@ -33,9 +36,11 @@ namespace XenonEngine
 
     void EngineManager::Update()
     {
+		// Editor Part
+		m_xenonEngineEditor.Update();
+
         m_worldManager.Update();
         (*pGlobalSyncData).WorldManagerSetter(&m_worldManager);
-
     }
 
 }
