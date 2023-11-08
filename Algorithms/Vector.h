@@ -30,6 +30,7 @@ namespace Algorithm
 
 		int IndexOf(T element)const;
 		int Count()const;
+		bool Empty() const;
 		int Capacity()const;
 
         bool IsExist(const T& element)const;
@@ -216,6 +217,12 @@ namespace Algorithm
 	inline int Vector<T>::Count()const
 	{
 		return m_count;
+	}
+
+	template<typename T>
+	bool Algorithm::Vector<T>::Empty() const
+	{
+		return Count() == 0;
 	}
 
 	template<typename T>

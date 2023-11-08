@@ -57,15 +57,15 @@ namespace Algorithm
 		inline T* custom() { return dynamic_cast<T*>((T*)custom_); }
 
 	private:
-		FSMState* getState(int eState);
-		FSMState* getState(const String& stateName);
+		FSMState* GetState(int eState);
+		FSMState* GetState(const String& stateName);
 
 		int eNextState_;
 		int eLastState_;
 		unsigned int actionIdx_;
 		FSMState* m_fsmState;
 		void* custom_;
-		Vector<FSMState*> vectState_;
+		Vector<FSMState*> m_vectorStates;
 		friend class FSMState;
 
 		class OpenFSMPool
