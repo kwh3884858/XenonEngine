@@ -162,10 +162,10 @@ namespace XenonEngine
 		}
 	}
 
-	void GameObjectWorld::Update()
-    {
+	void GameObjectWorld::Update(long timeInterval)
+{
         ClearMarkForDelete();
-        m_physics2D->FixedUpdate();
+        m_physics2D->FixedUpdate(timeInterval);
 		for (int i = 0; i < m_worldObjects.Count(); i++)
 		{
 			m_worldObjects[i]->GameObjectUpdate();

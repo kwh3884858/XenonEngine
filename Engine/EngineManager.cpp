@@ -34,12 +34,12 @@ namespace XenonEngine
 
     }
 
-    void EngineManager::Update()
-    {
+    void EngineManager::Update(long timeInterval)
+{
 		// Editor Part
 		m_xenonEngineEditor.Update();
 
-        m_worldManager.Update();
+        m_worldManager.Update(timeInterval);
         (*pGlobalSyncData).WorldManagerSetter(&m_worldManager);
     }
 

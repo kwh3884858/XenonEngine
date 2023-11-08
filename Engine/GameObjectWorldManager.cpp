@@ -38,8 +38,8 @@ namespace XenonEngine
         assert(m_world == nullptr);
     }
 
-    void GameObjectWorldManager::Update()
-    {
+    void GameObjectWorldManager::Update(long timeInterval)
+{
 		if (m_waitForAddedWorld != m_world)
 		{
 			RemoveGameWorld();
@@ -51,7 +51,7 @@ namespace XenonEngine
         {
             return;
         }
-		m_world->Update();
+		m_world->Update(timeInterval);
     }
 
     XenonEngine::GameObjectWorld*const GameObjectWorldManager::CreateGameWorld(const Algorithm::String& worldName)

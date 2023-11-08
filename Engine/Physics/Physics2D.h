@@ -52,7 +52,7 @@ namespace XenonPhysics
         Physics2D();
         ~Physics2D();
 
-        bool FixedUpdate();
+        bool FixedUpdate(long timeInterval);
         bool AddGameObject(GameObject* const gameobject);
         bool RemoveGameObject(GameObject* const gameobject);
     private:

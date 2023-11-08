@@ -126,8 +126,8 @@ namespace Gameplay {
     }
 
 
-    void GameplayUpdate()
-    {
+    void GameplayUpdate(long timeInterval)
+{
         if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
             InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_C))
         {
@@ -168,7 +168,7 @@ namespace Gameplay {
 
         //Graphic2D::Get().DrawLine(Vector2i(0, 90), Vector2i(800, 90), CrossPlatform::YELLOW);
         //Graphic2D::Get().DrawLine(Vector2i(0, 110), Vector2i(800, 110), CrossPlatform::YELLOW);
-        EngineManager::Get().Update();
+        EngineManager::Get().Update(timeInterval);
     }
 
     void GameplayShutdown()

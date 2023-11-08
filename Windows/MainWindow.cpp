@@ -241,6 +241,13 @@ void MainWindow::Run()
         }
 
         long timeInterval = m_timer->GetTimeMilliSecond();
+        // Input
+		m_directInput->Update();
+
+        // Editor
+		Gameplay::GameplayUpdate(timeInterval);
+
+        // Graphic, 60fps
         if (timeInterval > m_timeInterval)
         {
             m_timer->Update();
@@ -251,7 +258,6 @@ void MainWindow::Run()
 				m_directXDrawSurface->lock();
 				m_zBuffer->lock();
 
-				m_directInput->Update();
 
 				if (m_windowDrawer->GetType() == CrossPlatform::DrawerType::DirectX_Draw_Drawer)
 				{
@@ -280,9 +286,6 @@ void MainWindow::Run()
 
 					directXDrawSurface->GetDirectRawSurface()->ReleaseDC(workingDC);
 				}
-
-				Gameplay::GameplayUpdate();
-
 				m_zBuffer->Unlock();
 				m_directXDrawSurface->Unlock();
 

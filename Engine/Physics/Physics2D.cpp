@@ -34,9 +34,9 @@ namespace XenonPhysics
     {
     }
 
-    bool Physics2D::FixedUpdate()
-    {
-        float deltaTime = TIMESTEP;
+    bool Physics2D::FixedUpdate(long timeInterval)
+{
+        float deltaTime = timeInterval;
 
         //CollisionInfo collisionInfo;
 
@@ -63,7 +63,6 @@ namespace XenonPhysics
         for (int i = 0; i < m_dynamicRigidbodys.Count() - 1; i++) {
             for (int j = i + 1; j < m_dynamicRigidbodys.Count(); j++)
             {
-                deltaTime = TIMESTEP;
                 while (tryAgain && deltaTime > MINDELTATIME)
                 {
                     tryAgain = false;
@@ -128,7 +127,6 @@ namespace XenonPhysics
         {
             for (int j = 0; j < m_dynamicRigidbodys.Count(); j++)
             {
-                deltaTime = TIMESTEP;
                 while (tryAgain && deltaTime > MINDELTATIME)
                 {
                     tryAgain = false;
@@ -188,7 +186,6 @@ namespace XenonPhysics
         {
             for (int colliderIndex = 0; colliderIndex < m_colliders.Count(); colliderIndex++)
             {
-                deltaTime = TIMESTEP;
                 CollisionInfo collisionInfo;
                 while (tryAgain && deltaTime > MINDELTATIME)
                 {

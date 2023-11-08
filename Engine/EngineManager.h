@@ -18,7 +18,7 @@ namespace XenonEngine
         virtual bool Shutdown() override;
         virtual ~EngineManager() override;
 
-        void Update();
+        void Update(long timeInterval);
 
         GameObjectWorldManager& GetWorldManager() { return m_worldManager; }
         FileDatabase& GetFileDatabase() { return m_fileDatabase; }

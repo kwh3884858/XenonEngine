@@ -22,7 +22,7 @@ namespace XenonEngine
         bool Shutdown() ;
         ~GameObjectWorldManager() ;
 
-        void Update();
+        void Update(long timeInterval);
         GameObjectWorld*const CreateGameWorld(const Algorithm::String& worldName);
         GameObjectWorld*const GetCurrentWorld() const;
 		void SetCurrentWorld(GameObjectWorld* world);

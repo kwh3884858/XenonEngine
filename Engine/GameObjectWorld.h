@@ -35,7 +35,7 @@ namespace XenonEngine
         const Algorithm::Vector<GameObject*>& GetWorldObjects()const { return m_worldObjects; }
         
         void Start();
-        void Update();
+        void Update(long timeInterval);
         void Destroy();
     private:
 		GameObjectWorld(const GameObjectWorld& that);
