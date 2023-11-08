@@ -305,7 +305,7 @@ namespace Algorithm
         std::map<String, FSMState*>::iterator iter = m_mapNameState.find(stateName);
         if (iter != m_mapNameState.end())
         {
-            printf("OpenFSMPool::registerState stateName [%s] is exist!\n", stateName.c_str());
+            printf("OpenFSMPool::registerState stateName [%s] is exist!\n", stateName.CString());
             assert(false);
             return false;
         }
@@ -314,19 +314,7 @@ namespace Algorithm
             eState = -uid_++;
         }
         FSMState* state = new FSMState(eState, stateName);
-        OpenFSMAction* action = 0;
-        for (int i = 0; i < vectActionName.Count(); ++i)
-        {
-            action = m_FSMPool.getAction(vectActionName[i]);
-            if (!action)
-            {
-                delete state;
-                printf("OpenFSMPool::registerState actionName [%s] is not exist!\n", vectActionName[i].c_str());
-                assert(false);
-                return false;
-            }
-            state->vectAction_.Add(action);
-        }
+
         assert(state->m_enumState != 0);
         m_mapNameState[stateName] = state;
         return true;
@@ -334,22 +322,22 @@ namespace Algorithm
 
     bool FiniteStateMachine::OpenFSMPool::registerRelation(const String& stateName, Vector<String>& vectStateName)
     {
-        if (vectStateName.empty())
+        if (vectStateName.Empty())
         {
-            printf("OpenFSMPool::registerRelation[%s] vectStateName is empty!\n", stateName.c_str());
+            printf("OpenFSMPool::registerRelation[%s] vectStateName is empty!\n", stateName.CString());
             assert(false);
             return false;
         }
         FSMState* focusState = getState(stateName);
         if (!focusState)
         {
-            printf("OpenFSMPool::registerRelation[%s] state is not exist!\n", stateName.c_str());
+            printf("OpenFSMPool::registerRelation[%s] state is not exist!\n", stateName.CString());
             assert(false);
             return false;
         }
-        if (!focusState->m_vectRelationState.empty())
+        if (!focusState->m_vectRelationState.Empty())
         {
-            printf("OpenFSMPool::registerRelation[%s] state had relation!\n", stateName.c_str());
+            printf("OpenFSMPool::registerRelation[%s] state had relation!\n", stateName.CString());
             assert(false);
             return false;
         }
@@ -360,7 +348,7 @@ namespace Algorithm
             state = getState(vectStateName[i]);
             if (!state)
             {
-                printf("OpenFSMPool::registerRelation stateName [%s] is not exist!\n", vectStateName[i].c_str());
+                printf("OpenFSMPool::registerRelation stateName [%s] is not exist!\n", vectStateName[i].CString());
                 assert(false);
                 return false;
             }
@@ -368,16 +356,6 @@ namespace Algorithm
         }
         focusState->m_vectRelationState = vectState;
         return true;
-    }
-
-    OpenFSMAction* FiniteStateMachine::OpenFSMPool::getAction(const String& actionName)
-    {
-        std::map<String, OpenFSMAction*>::iterator iter = mapNameAction_.find(actionName);
-        if (iter != mapNameAction_.end())
-        {
-            return iter->second;
-        }
-        return 0;
     }
 
     FSMState* FiniteStateMachine::OpenFSMPool::getState(const String& stateName)

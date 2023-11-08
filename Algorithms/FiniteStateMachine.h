@@ -87,11 +87,6 @@ namespace Algorithm
 		static OpenFSMPool m_FSMPool;
 
 	public:
-		template <class T>
-		static void RegisterAction(const String& actionName)
-		{
-			m_FSMPool.registerAction<T>(actionName);
-		}
 		static bool RegisterState(const String& stateName, Vector<String>& vectActionName, int enumState = -1)
 		{
 			return m_FSMPool.registerState(stateName, vectActionName, enumState);
