@@ -47,23 +47,11 @@ namespace Algorithm
 
     }
 
-    void FSMState::NextAction(FiniteStateMachine& fsm) const
-    {
-		if (!m_vectRelationState.Empty())
-		{
-			fsm.NextState(m_vectRelationState[0]->m_enumState);
-			return;
-		}
-		assert(false);
-		return;
-    }
-
-
     //OpenFSM
     FiniteStateMachine::OpenFSMPool FiniteStateMachine::m_FSMPool;
     FiniteStateMachine::FiniteStateMachine()
-        :eNextState_(0)
-        , eLastState_(0)
+        :m_enumNextState(0)
+        , m_enumLastState(0)
         , m_fsmState(0)
     {
     }
@@ -77,7 +65,7 @@ namespace Algorithm
         if (m_fsmState)
         {
             m_fsmState->Exit(*this);
-            eLastState_ = m_fsmState->m_enumState;
+            m_enumLastState = m_fsmState->m_enumState;
         }
         m_fsmState = GetState(eState);
         if (!m_fsmState)
@@ -93,7 +81,7 @@ namespace Algorithm
         if (m_fsmState)
         {
             m_fsmState->Exit(*this);
-            eLastState_ = m_fsmState->m_enumState;
+            m_enumLastState = m_fsmState->m_enumState;
         }
         m_fsmState = GetState(stateName);
         if (!m_fsmState)
@@ -112,7 +100,7 @@ namespace Algorithm
             return false;
         }
         assert(state->m_enumState == eState);
-        eNextState_ = eState;
+        m_enumNextState = eState;
         return true;
     }
 
@@ -124,35 +112,21 @@ namespace Algorithm
             return false;
         }
         assert(state->m_stateName == stateName);
-        eNextState_ = state->m_enumState;
+        m_enumNextState = state->m_enumState;
         return true;
-    }
-
-    void FiniteStateMachine::NextAction()
-    {
-        if (!m_fsmState)
-        {
-            if (m_vectorStates.Empty())
-            {
-                return;
-            }
-            NextState(m_vectorStates[0]->m_enumState);
-            return;
-        }
-        m_fsmState->NextAction(*this);
     }
 
     void FiniteStateMachine::Update()
     {
-        eNextState_ = 0;
+        m_enumNextState = 0;
         if (m_fsmState)
         {
             m_fsmState->Update(*this);
         }
-        while (eNextState_ != 0)
+        while (m_enumNextState != 0)
         {
-            int state = eNextState_;
-            eNextState_ = 0;
+            int state = m_enumNextState;
+            m_enumNextState = 0;
             EnterState(state);
             if (m_fsmState)
             {
@@ -300,7 +274,7 @@ namespace Algorithm
         return true;
     }
 
-    bool FiniteStateMachine::OpenFSMPool::registerState(const String& stateName, Vector<String>& vectActionName, int eState)
+    bool FiniteStateMachine::OpenFSMPool::registerState(const String& stateName, int eState)
     {
         std::map<String, FSMState*>::iterator iter = m_mapNameState.find(stateName);
         if (iter != m_mapNameState.end())

@@ -17,7 +17,6 @@ namespace Algorithm
 		virtual void Update(FiniteStateMachine& fsm) const;
 		virtual void Exit(FiniteStateMachine& fsm) const;
 	protected:
-		void NextAction(FiniteStateMachine& fsm) const;
 		int m_enumState;
 		String m_stateName;
 		Vector<FSMState*> m_vectRelationState;
@@ -35,15 +34,14 @@ namespace Algorithm
 
 		bool NextState(int eState);
 		bool NextState(const String& stateName);
-		void NextAction();
 
 		bool SetStates(Vector<String>& vectStateName);
 		bool SetStates(const std::initializer_list<String>& list);  
 		bool SetStates(Vector<int>& vectStateId);
 		bool SetStates(const std::initializer_list<int>& list);
 
-		inline int focusEState() { return m_fsmState ? m_fsmState->m_enumState : 0; }
-		inline const String& focusStateName()
+		inline int FocusStateEnum() const { return m_fsmState ? m_fsmState->m_enumState : -1; }
+		inline const String& FocusStateName()
 		{
 			static String empty;
 			return m_fsmState ? m_fsmState->m_stateName : empty;
@@ -60,9 +58,8 @@ namespace Algorithm
 		FSMState* GetState(int eState);
 		FSMState* GetState(const String& stateName);
 
-		int eNextState_;
-		int eLastState_;
-		unsigned int actionIdx_;
+		int m_enumNextState;
+		int m_enumLastState;
 		FSMState* m_fsmState;
 		void* custom_;
 		Vector<FSMState*> m_vectorStates;
@@ -75,7 +72,7 @@ namespace Algorithm
 			~OpenFSMPool();
 
 			bool registerState(FSMState* state);
-			bool registerState(const String& stateName, Vector<String>& vectActionName, int enumState = -1);
+			bool registerState(const String& stateName, int enumState = -1);
 			bool registerRelation(const String& stateName, Vector<String>& vectStateName);
 
 			FSMState* getState(int state);
@@ -87,9 +84,13 @@ namespace Algorithm
 		static OpenFSMPool m_FSMPool;
 
 	public:
-		static bool RegisterState(const String& stateName, Vector<String>& vectActionName, int enumState = -1)
+		static bool RegisterState(FSMState* state)
 		{
-			return m_FSMPool.registerState(stateName, vectActionName, enumState);
+			return m_FSMPool.registerState(state);
+		}
+		static bool RegisterState(const String& stateName, int enumState = -1)
+		{
+			return m_FSMPool.registerState(stateName, enumState);
 		}
 		static bool RegisterRelation(const String& stateName, Vector<String>& vectStateName)
 		{
