@@ -13,9 +13,9 @@ namespace Algorithm
 		FSMState(int state, const String& stateName);
 		virtual ~FSMState();
 
-		virtual void Enter(FiniteStateMachine& fsm) const;
-		virtual void Update(FiniteStateMachine& fsm) const;
-		virtual void Exit(FiniteStateMachine& fsm) const;
+		virtual void Enter(FiniteStateMachine& fsm);
+		virtual void Update(FiniteStateMachine& fsm);
+		virtual void Exit(FiniteStateMachine& fsm);
 	protected:
 		int m_enumState;
 		String m_stateName;

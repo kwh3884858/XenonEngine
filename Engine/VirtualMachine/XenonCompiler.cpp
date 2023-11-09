@@ -51,21 +51,19 @@ namespace XenonEngine
         delete m_xvm;
     }
 
-    void XenonCompiler::Recompile()
-    {
-        String applicationPath = FileManager::Get().GetApplicationPath();
-        int pos = applicationPath.IndexOf("XenonEngine.exe");
+	void XenonCompiler::Compile()
+	{
+		String applicationPath = FileManager::Get().GetApplicationPath();
+		int pos = applicationPath.IndexOf("XenonEngine.exe");
 
-        String assemblerPath = applicationPath.Substring(0, pos);
-        assemblerPath.Append("Main.xea");
-        XenonFile*  assemblerFile = FileManager::Get().ReadFile(assemblerPath);
-        m_xsam->Compiler(assemblerFile);
-        m_xsam->BuildXEX(assemblerFile);
-        delete assemblerFile;
-        assemblerFile = nullptr;
-
-		RunScript();
-    }
+		String assemblerPath = applicationPath.Substring(0, pos);
+		assemblerPath.Append("Main.xea");
+		XenonFile* assemblerFile = FileManager::Get().ReadFile(assemblerPath);
+		m_xsam->Compiler(assemblerFile);
+		m_xsam->BuildXEX(assemblerFile);
+		delete assemblerFile;
+		assemblerFile = nullptr;
+	}
 
 	void XenonCompiler::RunScript()
 	{

@@ -17,7 +17,7 @@ namespace XenonEngine {
 
         void Initialize();
         void Shutdown();
-        void Recompile();
+        void Compile();
 		void RunScript();
     private:
         XenonScriptAssemblerMachine* m_xsam;

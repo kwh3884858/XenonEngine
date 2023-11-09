@@ -13,18 +13,20 @@ namespace XenonEngine
 	class EditorModeState : FSMState
 	{
 	public:
-		virtual void Enter(FiniteStateMachine& fsm) const override;
-		virtual void Update(FiniteStateMachine& fsm) const override;
-		virtual void Exit(FiniteStateMachine& fsm) const override;
+		virtual void Enter(FiniteStateMachine& fsm)  override;
+		virtual void Update(FiniteStateMachine& fsm) override;
+		virtual void Exit(FiniteStateMachine& fsm) override;
 	};
 
 	class RuntimeModeState : FSMState
 	{
 
 	public:
-		virtual void Enter(FiniteStateMachine& fsm) const override;
-		virtual void Update(FiniteStateMachine& fsm) const override;
-		virtual void Exit(FiniteStateMachine& fsm) const override;
+		virtual void Enter(FiniteStateMachine& fsm)  override;
+		virtual void Update(FiniteStateMachine& fsm) override;
+		virtual void Exit(FiniteStateMachine& fsm) override;
+	private:
+		XenonCompiler* compiler = nullptr;
 	};
 
 	class XenonEngineEditor

@@ -26,12 +26,12 @@ namespace Algorithm
     {
     }
 
-    void FSMState::Enter(FiniteStateMachine& fsm) const
+    void FSMState::Enter(FiniteStateMachine& fsm)
     {
 
     }
 
-    void FSMState::Update(FiniteStateMachine& fsm) const
+    void FSMState::Update(FiniteStateMachine& fsm)
     {
 		if (!m_vectRelationState.Empty())
 		{
@@ -42,7 +42,7 @@ namespace Algorithm
 		return;
     }
 
-    void FSMState::Exit(FiniteStateMachine& fsm) const
+    void FSMState::Exit(FiniteStateMachine& fsm)
     {
 
     }

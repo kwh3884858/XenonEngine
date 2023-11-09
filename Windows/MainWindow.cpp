@@ -1,14 +1,14 @@
 #include "MainWindow.h"
 #include "DebugTool/DebugConsole.h"
 
-//#include "CrossPlatform/SColorRGBA.h"
-
 #include "CrossPlatform/Database.h"
 
 #include "Windows/WindowDrawer/WindowDGIDrawer.h"
 #include "Windows/WindowDrawer/DirectXDrawDrawer.h"
 #include "Windows/Surface/DirectXDrawSurface.h"
 #include "Windows/Surface/DrawerSurface.h"
+#include "Windows/File/FileReader.h"
+#include "Windows/Input/DirectXInput.h"
 
 #include "Timer/StoryTimer.h"
 
@@ -17,18 +17,10 @@
 #include <assert.h>
 
 #include "Engine/Graphic/Graphic2D.h"
-#include "Engine/GameplayMain.h"
-
 #include "Engine/FileManager/FileManager.h"
-#include "Windows/File/FileReader.h"
-
-#include "Engine/IO/InputSystem.h"
-#include "Windows/Input/DirectXInput.h"
-
 #include "Engine/Timer/XenonTimer.h"
-
-//
-//using MathLab::Vector3f;
+#include "Engine/EngineManager.h"
+#include "Engine/IO/InputSystem.h"
 
 using WindowDrawer::WindowDGIDrawer;
 using WindowDrawer::WindowDGIDrawerConfig;
@@ -42,6 +34,8 @@ using WindowSurface::DirectXDrawSurface;
 
 using CrossPlatform::Database;
 using CrossPlatform::ITimer;
+
+using XenonEngine::EngineManager;
 
 MainWindow::MainWindow(HINSTANCE hInstance) : BaseWindow(hInstance)
 , m_debugConsole(nullptr)
@@ -208,7 +202,7 @@ void MainWindow::Run()
     SetBkMode(hdc, OPAQUE);
 
     //Game Init
-    Gameplay::GameplayInitialize();
+    EngineManager::Get().Initialize();
 
     bool isGotMessage = false;
 
@@ -245,7 +239,7 @@ void MainWindow::Run()
 		m_directInput->Update();
 
         // Editor
-		Gameplay::GameplayUpdate(timeInterval);
+        EngineManager::Get().Update(timeInterval);
 
         // Graphic, 60fps
         if (timeInterval > m_timeInterval)
@@ -294,7 +288,7 @@ void MainWindow::Run()
 
         }
     }
-    Gameplay::GameplayShutdown();
+    EngineManager::Get().Shutdown();
     return;
 }
 

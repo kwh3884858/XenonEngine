@@ -2,17 +2,18 @@
 //#include "CrossPlatform/File/FolderMeta.h"
 #include "CrossPlatform/XenonKey.h"
 #include "IO/InputSystem.h"
+#include "Engine/VirtualMachine/XenonCompiler.h"
 
 namespace XenonEngine
 {
 	using namespace Algorithm;
 
 
-	void EditorModeState::Enter(FiniteStateMachine& fsm) const
+	void EditorModeState::Enter(FiniteStateMachine& fsm)
 	{
 	}
 
-	void EditorModeState::Update(FiniteStateMachine& fsm) const
+	void EditorModeState::Update(FiniteStateMachine& fsm)
 	{
 		if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
 			InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_P))
@@ -21,25 +22,30 @@ namespace XenonEngine
 		}
 	}
 
-	void EditorModeState::Exit(FiniteStateMachine& fsm) const
+	void EditorModeState::Exit(FiniteStateMachine& fsm)
 	{
 	}
 
-	void RuntimeModeState::Enter(FiniteStateMachine& fsm) const
+	void RuntimeModeState::Enter(FiniteStateMachine& fsm)
 	{
+		compiler = new XenonCompiler;
+		compiler->Initialize();
 	}
 
-	void RuntimeModeState::Update(FiniteStateMachine& fsm) const
+	void RuntimeModeState::Update(FiniteStateMachine& fsm)
 	{
 		if (InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_LCONTROL) &&
 			InputSystem::Get().GetKeyDown(CrossPlatform::XenonKey_P))
 		{
 			fsm.NextState(EditorStatus::EditorMode);
 		}
+
+		compiler->RunScript();
 	}
 
-	void RuntimeModeState::Exit(FiniteStateMachine& fsm) const
+	void RuntimeModeState::Exit(FiniteStateMachine& fsm)
 	{
+		delete compiler;
 	}
 
 
