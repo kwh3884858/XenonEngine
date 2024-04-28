@@ -536,7 +536,7 @@ namespace Algorithm
     template<typename T>
     void Algorithm::StringBase<T>::Resize(int length)
     {
-        m_string.Resize(length);
+        m_string.ResetCount(length);
         CStringlize();
     }
 
