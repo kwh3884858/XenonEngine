@@ -22,7 +22,6 @@ namespace Algorithm
 		Vector<FSMState*> m_vectRelationState;
 	};
 
-
 	class FiniteStateMachine
 	{
 	public:
@@ -71,14 +70,13 @@ namespace Algorithm
 			OpenFSMPool();
 			~OpenFSMPool();
 
-			bool registerState(FSMState* state);
-			bool registerState(const String& stateName, int enumState = -1);
-			bool registerRelation(const String& stateName, Vector<String>& vectStateName);
+			bool RegisterState(FSMState* state);
+			bool RegisterState(const String& stateName, int enumState);
+			bool RegisterRelation(const String& stateName, Vector<String>& vectStateName);
 
-			FSMState* getState(int state);
-			FSMState* getState(const String& stateName);
+			FSMState* GetState(int state);
+			FSMState* GetState(const String& stateName);
 		private:
-			int uid_;
 			std::map<String, FSMState*> m_mapNameState;
 		};
 		static OpenFSMPool m_FSMPool;
@@ -86,15 +84,15 @@ namespace Algorithm
 	public:
 		static bool RegisterState(FSMState* state)
 		{
-			return m_FSMPool.registerState(state);
+			return m_FSMPool.RegisterState(state);
 		}
-		static bool RegisterState(const String& stateName, int enumState = -1)
+		static bool RegisterState(const String& stateName, int enumState)
 		{
-			return m_FSMPool.registerState(stateName, enumState);
+			return m_FSMPool.RegisterState(stateName, enumState);
 		}
 		static bool RegisterRelation(const String& stateName, Vector<String>& vectStateName)
 		{
-			return m_FSMPool.registerRelation(stateName, vectStateName);
+			return m_FSMPool.RegisterRelation(stateName, vectStateName);
 		}
 	};
 }

@@ -38,7 +38,7 @@ namespace Algorithm
 			fsm.NextState(m_vectRelationState[0]->m_enumState);
 			return;
 		}
-		assert(false);
+		//assert(false);
 		return;
     }
 
@@ -141,14 +141,14 @@ namespace Algorithm
         FSMState* state = 0;
         for (int i = 0; i < vectStateName.Count(); ++i)
         {
-            state = m_FSMPool.getState(vectStateName[i]);
+            state = m_FSMPool.GetState(vectStateName[i]);
             if (!state)
             {
                 m_vectorStates.Clear();
                 assert(false);
                 return false;
             }
-            assert(state->m_enumState != 0);
+            assert(state->m_enumState >= 0);
             m_vectorStates.Add(state);
         }
         return true;
@@ -161,14 +161,14 @@ namespace Algorithm
         std::initializer_list<String>::const_iterator iter = list.begin();
         for (; iter != list.end(); iter++)
         {
-            state = m_FSMPool.getState(*iter);
+            state = m_FSMPool.GetState(*iter);
             if (!state)
             {
                 m_vectorStates.Clear();
                 assert(false);
                 return false;
             }
-            assert(state->m_enumState != 0);
+            assert(state->m_enumState >= 0);
             m_vectorStates.Add(state);
         }
         return true;
@@ -180,14 +180,14 @@ namespace Algorithm
         FSMState* state = 0;
 		for (int i = 0; i < vectStateId.Count(); ++i)
         {
-            state = m_FSMPool.getState(vectStateId[i]);
+            state = m_FSMPool.GetState(vectStateId[i]);
             if (!state)
             {
                 m_vectorStates.Clear();
                 assert(false);
                 return false;
             }
-            assert(state->m_enumState != 0);
+            assert(state->m_enumState >= 0);
             m_vectorStates.Add(state);
         }
         return true;
@@ -200,7 +200,7 @@ namespace Algorithm
         std::initializer_list<int>::const_iterator iter = list.begin();
         for (; iter != list.end(); iter++)
         {
-            state = m_FSMPool.getState(*iter);
+            state = m_FSMPool.GetState(*iter);
             if (!state)
             {
                 m_vectorStates.Clear();
@@ -236,7 +236,6 @@ namespace Algorithm
 
     //OpenFSMPool
     FiniteStateMachine::OpenFSMPool::OpenFSMPool()
-        :uid_(1)
     {
     }
 
@@ -250,7 +249,7 @@ namespace Algorithm
         m_mapNameState.clear();
     }
 
-    bool FiniteStateMachine::OpenFSMPool::registerState(FSMState* state)
+    bool FiniteStateMachine::OpenFSMPool::RegisterState(FSMState* state)
     {
         if (!state)
         {
@@ -265,16 +264,13 @@ namespace Algorithm
             assert(false);
             return false;
         }
-        if (state->m_enumState <= 0)
-        {
-            state->m_enumState = -uid_++;
-        }
-        assert(state->m_enumState != 0);
+
+        assert(state->m_enumState >= 0);
         m_mapNameState[stateName] = state;
         return true;
     }
 
-    bool FiniteStateMachine::OpenFSMPool::registerState(const String& stateName, int eState)
+    bool FiniteStateMachine::OpenFSMPool::RegisterState(const String& stateName, int eState)
     {
         std::map<String, FSMState*>::iterator iter = m_mapNameState.find(stateName);
         if (iter != m_mapNameState.end())
@@ -283,18 +279,15 @@ namespace Algorithm
             assert(false);
             return false;
         }
-        if (eState <= 0)
-        {
-            eState = -uid_++;
-        }
+
         FSMState* state = new FSMState(eState, stateName);
 
-        assert(state->m_enumState != 0);
+        assert(state->m_enumState >= 0);
         m_mapNameState[stateName] = state;
         return true;
     }
 
-    bool FiniteStateMachine::OpenFSMPool::registerRelation(const String& stateName, Vector<String>& vectStateName)
+    bool FiniteStateMachine::OpenFSMPool::RegisterRelation(const String& stateName, Vector<String>& vectStateName)
     {
         if (vectStateName.Empty())
         {
@@ -302,7 +295,7 @@ namespace Algorithm
             assert(false);
             return false;
         }
-        FSMState* focusState = getState(stateName);
+        FSMState* focusState = GetState(stateName);
         if (!focusState)
         {
             printf("OpenFSMPool::registerRelation[%s] state is not exist!\n", stateName.CString());
@@ -319,7 +312,7 @@ namespace Algorithm
         FSMState* state = 0;
         for (int i = 0; i < vectStateName.Count(); ++i)
         {
-            state = getState(vectStateName[i]);
+            state = GetState(vectStateName[i]);
             if (!state)
             {
                 printf("OpenFSMPool::registerRelation stateName [%s] is not exist!\n", vectStateName[i].CString());
@@ -332,7 +325,7 @@ namespace Algorithm
         return true;
     }
 
-    FSMState* FiniteStateMachine::OpenFSMPool::getState(const String& stateName)
+    FSMState* FiniteStateMachine::OpenFSMPool::GetState(const String& stateName)
     {
         std::map<String, FSMState*>::iterator iter = m_mapNameState.find(stateName);
         if (iter != m_mapNameState.end())
@@ -342,7 +335,7 @@ namespace Algorithm
         return 0;
     }
 
-    FSMState* FiniteStateMachine::OpenFSMPool::getState(int eState)
+    FSMState* FiniteStateMachine::OpenFSMPool::GetState(int eState)
     {
         FSMState* state = 0;
         std::map<String, FSMState*>::iterator iter = m_mapNameState.begin();

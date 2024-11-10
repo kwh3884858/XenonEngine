@@ -103,14 +103,14 @@ namespace XenonEngine
             }
         }
 
-		if (isFlip)
-		{
-			DrawPixel(startPos.y, startPos.x, rgba);
-		}
-		else
-		{
-			DrawPixel(startPos.x, startPos.y, rgba);
-		}
+		//if (isFlip)
+		//{
+		//	DrawPixel(startPos.y, startPos.x, rgba);
+		//}
+		//else
+		//{
+		//	DrawPixel(startPos.x, startPos.y, rgba);
+		//}
     }
 
     void Graphic2D::DrawLine(const Vector2f& lhs, const Vector2f&rhs, const SColorRGBA& rgba /*= CrossPlatform::WHITE*/) const
