@@ -67,14 +67,12 @@ namespace CrossPlatform
 		}
 		{
 			std::filesystem::path meterialFile(filePath.CString());
-			bool result = remove(meterialFile);
-			assert(result == true);
+			assert(remove(meterialFile) == true);
 		}
 		{
 			String metaFilePath = filePath + ".metadata";
 			std::filesystem::path modelMetaFile(metaFilePath.CString());
-			bool result = remove(modelMetaFile);
-			assert(result == true);
+			assert(remove(modelMetaFile) == true);
 		}
 	}
 

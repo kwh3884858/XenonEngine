@@ -52,14 +52,12 @@ namespace CrossPlatform
 		}
 		{
 			std::filesystem::path polygonFile(filePath.CString());
-			bool result = remove(polygonFile);
-			assert(result == true);
+			assert(remove(polygonFile) == true);
 		}
 		{
 			String metaFilePath = filePath + ".metadata";
 			std::filesystem::path polygonMetaFile(metaFilePath.CString());
-			bool result = remove(polygonMetaFile);
-			assert(result == true);
+			assert(remove(polygonMetaFile) == true);
 		}
 	}
 

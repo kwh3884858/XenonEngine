@@ -45,8 +45,7 @@ namespace WindowSurface {
         memset(&m_directDrawSurfaceDescription, 0, sizeof(m_directDrawSurfaceDescription));
         m_directDrawSurfaceDescription.dwSize = sizeof(m_directDrawSurfaceDescription);
 
-        HRESULT result = surface->Lock(nullptr, &m_directDrawSurfaceDescription, DDLOCK_WAIT | DDLOCK_SURFACEMEMORYPTR, nullptr);
-        assert(result == DD_OK);
+        assert(surface->Lock(nullptr, &m_directDrawSurfaceDescription, DDLOCK_WAIT | DDLOCK_SURFACEMEMORYPTR, nullptr) == DD_OK);
 
         UINT* backBuffer = (UINT*)m_directDrawSurfaceDescription.lpSurface;
 
@@ -93,8 +92,7 @@ namespace WindowSurface {
 
     void DirectXDrawSurface::Unlock()
     {
-        HRESULT result = surface->Unlock(nullptr);
-        assert(result == DD_OK);
+        assert(surface->Unlock(nullptr) == DD_OK);
     }
 
 }

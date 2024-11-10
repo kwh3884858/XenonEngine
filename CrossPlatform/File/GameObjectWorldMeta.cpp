@@ -58,8 +58,7 @@ namespace CrossPlatform
 		}
 		{
 			path worldFile(filePath.CString());
-			bool result = remove(worldFile);
-			assert(result == true);
+			assert(remove(worldFile) == true);
 		}
 	}
 }

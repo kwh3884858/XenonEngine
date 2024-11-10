@@ -37,8 +37,7 @@ namespace XenonEngine
 	{
         String absolutedPath = m_fileDatabase->ConvertToRealPath(virtualPath);
 #ifdef _WIN32
-        HINSTANCE result = ShellExecuteA(nullptr, "open", absolutedPath.CString(), nullptr, nullptr, SW_SHOWDEFAULT);
-        assert(result > (HINSTANCE)HINSTANCE_ERROR);
+        assert(ShellExecuteA(nullptr, "open", absolutedPath.CString(), nullptr, nullptr, SW_SHOWDEFAULT) > (HINSTANCE)HINSTANCE_ERROR);
 #endif
 	}
 

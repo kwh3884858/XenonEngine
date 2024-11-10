@@ -80,8 +80,7 @@ namespace CrossPlatform {
 		}
 		{
 			path modelFile(filePath.CString());
-			bool result = remove(modelFile);
-			assert(result == true);
+			assert(remove(modelFile) == true);
 		}
 	}
 

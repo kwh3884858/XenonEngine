@@ -51,8 +51,7 @@ namespace CrossPlatform {
 		}
 		{
 			path imageFile(filePath.CString());
-			bool result = remove(imageFile);
-			assert(result == true);
+			assert(remove(imageFile) == true);
 		}
 	}
 

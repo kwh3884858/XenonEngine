@@ -124,8 +124,7 @@ void MainWindow::Initialize()
         config->m_isFullScreen = Database::Get().engineConfig.m_isFullScreen;
 
         m_windowDrawer->SetDrawerConfig(config);
-        bool result = m_windowDrawer->Initialize();
-        assert(result == true);
+        assert(m_windowDrawer->Initialize() == true);
 
         DirectXDrawDrawer* const directDrawer = static_cast<DirectXDrawDrawer*> (m_windowDrawer);
         LPDIRECTDRAW7 lpdd = directDrawer->GetDirectRaw();
@@ -256,10 +255,9 @@ void MainWindow::Run()
 				if (m_windowDrawer->GetType() == CrossPlatform::DrawerType::DirectX_Draw_Drawer)
 				{
 
-					HDC workingDC;
+					HDC workingDC = nullptr;
 					DirectXDrawSurface* directXDrawSurface = static_cast<DirectXDrawSurface*>(m_directXDrawSurface);
-					HRESULT result = directXDrawSurface->GetDirectRawSurface()->GetDC(&workingDC);
-					assert(result == DD_OK);
+					assert(directXDrawSurface->GetDirectRawSurface()->GetDC(&workingDC) == DD_OK);
 
 					static TCHAR debugTextBuffer2[80];
 					static unsigned long int paintAmount = 0;

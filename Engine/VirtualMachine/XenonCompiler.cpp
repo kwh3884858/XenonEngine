@@ -76,8 +76,7 @@ namespace XenonEngine
         if (streamedFile && streamedFile->Count() != 0)
         {
 			m_xvm->LoadScript(streamedFile);
-			bool result = m_xvm->RunScript();
-			assert(result == true);
+			assert(m_xvm->RunScript() == true);
         }
 	}
 

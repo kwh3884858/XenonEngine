@@ -106,9 +106,7 @@ namespace WindowDrawer {
             ddPixelFormat.dwSize = sizeof(ddPixelFormat);
 
             lpddsprimary->GetPixelFormat(&ddPixelFormat);
-            int pixelFormat = ddPixelFormat.dwRGBBitCount;
-
-            assert(pixelFormat == 32);
+            assert(ddPixelFormat.dwRGBBitCount == 32);
             
             // Window size, realwindowsRect will bigger than drawerRect
             RECT drawerRect = { 0, 0, (long)m_config->resolutionX, (long)m_config->resolutionY };

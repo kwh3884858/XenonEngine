@@ -10,8 +10,7 @@ namespace CrossPlatform {
 
 	void OBJMeta::OnImport()
 	{
-		bool result = ObjectImporter::Get().ImportObj(m_header.GetFilePath());
-		assert(result == true);
+		assert(ObjectImporter::Get().ImportObj(m_header.GetFilePath() == true));
 	}
 
 	void OBJMeta::Save(const XenonObject* /*data*/ /*= nullptr*/)
@@ -30,8 +29,7 @@ namespace CrossPlatform {
 		}
 		{
 			path modelFile(filePath.CString());
-			bool result = remove(modelFile);
-			assert(result == true);
+			assert(remove(modelFile) == true);
 		}
 	}
 

@@ -24,8 +24,7 @@ namespace CrossPlatform
 		const String& filePath = GetFileHeader().GetFilePath();
 		String metaFilePath = filePath + ".metadata";
 		path modelMetaFile(metaFilePath.CString());
-		bool result = remove(modelMetaFile);
-		assert(result == true);
+		assert(remove(modelMetaFile) == true);
 	}
 
 }
