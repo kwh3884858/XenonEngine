@@ -43,8 +43,8 @@ namespace Algorithm
 		void AddRearNode(const T& valeu);
 		T RemoveRearNode();
 	private:
-		Node* m_front = nullptr;
-		Node* m_rear = nullptr;
+		Node<T>* m_front = nullptr;
+		Node<T>* m_rear = nullptr;
 	};
 
 	template<typename T>
@@ -69,9 +69,9 @@ namespace Algorithm
 	template<typename T>
 	void Algorithm::LinkedList<T>::Destory()
 	{
-		for (Node* current = m_front; current != nullptr; )
+		for (Node<T>* current = m_front; current != nullptr; )
 		{
-			Node* next = current->m_next;
+			Node<T>* next = current->m_next;
 			delete current;
 			current = next;
 		}
@@ -80,7 +80,7 @@ namespace Algorithm
 	template<typename T>
 	void Algorithm::LinkedList<T>::AddFrontNode(const T& value)
 	{
-		Node* newFront = new Node(value);
+		Node<T>* newFront = new Node<T>(value);
 		newFront->m_next = m_front;
 		if (m_front)
 		{
@@ -92,19 +92,22 @@ namespace Algorithm
 	template<typename T>
 	T Algorithm::LinkedList<T>::RemoveFrontNode()
 	{
-		Node* newFront = m_front->m_next;
+		Node<T>* newFront = m_front->m_next;
+		T returnValue = m_front->m_value;
 		if (newFront)
 		{
 			newFront->m_previous = nullptr;
 		}
 		delete m_front;
 		m_front = newFront;
+
+		return returnValue;
 	}
 
 	template<typename T>
-	void Algorithm::LinkedList<T>::AddRearNode(const T& valeu)
+	void Algorithm::LinkedList<T>::AddRearNode(const T& value)
 	{
-		Node* newRear = new Node(value);
+		Node<T>* newRear = new Node<T>(value);
 		newRear->m_previous = m_rear;
 		if (m_rear)
 		{
@@ -134,7 +137,7 @@ namespace Algorithm
 		bool IsEmpty() const;
 
 	private:
-		LinkedList m_linkedList;
+		LinkedList<T> m_linkedList;
 	};
 
 	template<typename T>

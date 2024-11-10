@@ -1,6 +1,10 @@
 #pragma once
 
 #include "Algorithms/FiniteStateMachine.h"
+#include "VirtualMachine/XenonCompiler.h"
+
+using Algorithm::FSMState;
+using Algorithm::FiniteStateMachine;
 
 namespace XenonEngine
 {
@@ -39,6 +43,6 @@ namespace XenonEngine
 		bool IsEditorMode() const;
 	protected:
 	private:
-		Algorithm::FiniteStateMachine m_editorStateMachine;
+		FiniteStateMachine m_editorStateMachine;
 	};
 }

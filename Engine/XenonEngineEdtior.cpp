@@ -9,7 +9,7 @@ namespace XenonEngine
 	using namespace Algorithm;
 
 
-	void EditorModeState::Enter(FiniteStateMachine& fsm)
+	void EditorModeState::Enter(FiniteStateMachine& /*fsm*/)
 	{
 	}
 
@@ -22,11 +22,11 @@ namespace XenonEngine
 		}
 	}
 
-	void EditorModeState::Exit(FiniteStateMachine& fsm)
+	void EditorModeState::Exit(FiniteStateMachine& /*fsm*/)
 	{
 	}
 
-	void RuntimeModeState::Enter(FiniteStateMachine& fsm)
+	void RuntimeModeState::Enter(FiniteStateMachine& /*fsm*/)
 	{
 		compiler = new XenonCompiler;
 		compiler->Initialize();
@@ -43,7 +43,7 @@ namespace XenonEngine
 		compiler->RunScript();
 	}
 
-	void RuntimeModeState::Exit(FiniteStateMachine& fsm)
+	void RuntimeModeState::Exit(FiniteStateMachine& /*fsm*/)
 	{
 		delete compiler;
 	}

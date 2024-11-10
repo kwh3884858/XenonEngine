@@ -28,7 +28,7 @@ namespace Algorithm
 
     void FSMState::Enter(FiniteStateMachine& fsm)
     {
-
+        fsm;
     }
 
     void FSMState::Update(FiniteStateMachine& fsm)
@@ -44,7 +44,7 @@ namespace Algorithm
 
     void FSMState::Exit(FiniteStateMachine& fsm)
     {
-
+        fsm;
     }
 
     //OpenFSM

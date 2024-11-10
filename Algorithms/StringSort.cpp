@@ -34,7 +34,7 @@ namespace Algorithm
 			}
 			for (int i = 1; i < TOTAL_LENGTH; i++)
 			{
-				// Avaliable value from 1 is empty and 2 ~ 257 => 0 is empty index, 1 ~ 256 become character index
+				// Available value from 1 is empty and 2 ~ 257 => 0 is empty index, 1 ~ 256 become character index
 				msdCharacterArray[i] += msdCharacterArray[i - 1]; 
 			}
 			for (int i = low; i <= high; i++)

@@ -102,7 +102,7 @@ namespace Algorithm
 			else if (!IsMarked(adjacentedVertexIndex))
 			{
 				m_edgeTo[adjacentedVertexIndex] = startVertex;
-				DirectedGraphDFS(graph, adjacentedVertexIndex);
+				DirectedGraphDFS(graph, adjacentedVertexIndex, outCircle);
 			}
 			else if (m_onStack[adjacentedVertexIndex])
 			{

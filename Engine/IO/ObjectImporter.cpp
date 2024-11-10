@@ -62,7 +62,7 @@ namespace XenonEngine
 		int numOfVertex = (int)attrib.vertices.size() / 3;
 		Vector<Vector3f> vertexs;
 		vertexs.Initialize(numOfVertex);
-		vertexs.Resize(numOfVertex);
+		vertexs.ResetCount(numOfVertex);
 		for (size_t i = 0; i < attrib.vertices.size(); i += 3)
 		{
 			vertexs[(int)i / 3].x = attrib.vertices[(int)(i + 0)];
@@ -73,7 +73,7 @@ namespace XenonEngine
 		int numOfNormal = (int)attrib.normals.size() / 3;
 		Vector<Vector3f> normals;
 		normals.Initialize(numOfNormal);
-		normals.Resize(numOfNormal);
+		normals.ResetCount(numOfNormal);
 		if (numOfNormal > 0)
 		{
 			//normals = new Vector3f[numOfNormal];
@@ -90,7 +90,7 @@ namespace XenonEngine
 		if (numOfTextureCoordinate > 0)
 		{
 			uv.Initialize(numOfTextureCoordinate);
-			uv.Resize(numOfTextureCoordinate);
+			uv.ResetCount(numOfTextureCoordinate);
 			for (size_t i = 0; i < attrib.texcoords.size(); i+= 2)
 			{
 				uv[(int)i / 2].x = attrib.texcoords[(int)(i + 0)];
@@ -161,7 +161,7 @@ namespace XenonEngine
 			Vector<Polygon3D::TriangleIndex> vertexIndex;
 			int numOfIndex = (int)shapes[s].mesh.indices.size() / 3;
 			vertexIndex.Initialize(numOfIndex);
-			vertexIndex.Resize(numOfIndex);
+			vertexIndex.ResetCount(numOfIndex);
 			size_t index_offset = 0;
 			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
 			{

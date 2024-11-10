@@ -49,6 +49,10 @@ namespace Algorithm
         StringBase<T>& operator=(const T* rhs);
         bool operator==(const StringBase<T>& rhs)const;
         bool operator!=(const StringBase<T>& rhs)const;
+        bool operator<(const StringBase<T>& rhs)const;
+        bool operator<=(const StringBase<T>& rhs)const;
+        bool operator>(const StringBase<T>& rhs)const;
+        bool operator>=(const StringBase<T>& rhs)const;
         StringBase<T> operator+(const StringBase<T> text)const;
 
         void Add(T value);
@@ -212,6 +216,51 @@ namespace Algorithm
     {
         return !((*this) == rhs);
     }
+
+	template<typename T>
+	bool Algorithm::StringBase<T>::operator<(const StringBase<T>& rhs) const
+	{
+		if (Count() < rhs.Count())
+		{
+			return true;
+		}
+		for (int i = 0; i < Count(); i++)
+		{
+			if (m_string[i] < rhs[i])
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	template<typename T>
+	bool Algorithm::StringBase<T>::operator<=(const StringBase<T>& rhs) const
+	{
+		if (Count() <= rhs.Count())
+		{
+			return true;
+		}
+		for (int i = 0; i < Count(); i++)
+		{
+			if (m_string[i] <= rhs[i])
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<typename T>
+	bool Algorithm::StringBase<T>::operator>(const StringBase<T>& rhs) const
+	{
+        return !((*this) <= rhs);
+	}
+
+	template<typename T>
+	bool Algorithm::StringBase<T>::operator>=(const StringBase<T>& rhs) const
+	{
+		return !((*this) < rhs);
+	}
 
     template<typename T>
     Algorithm::StringBase<T> Algorithm::StringBase<T>::operator+(const StringBase<T> text) const

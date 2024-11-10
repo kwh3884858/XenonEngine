@@ -35,8 +35,8 @@ namespace XenonPhysics
     }
 
     bool Physics2D::FixedUpdate(long timeInterval)
-{
-        float deltaTime = timeInterval;
+    {
+        float deltaTime = (float)timeInterval;
 
         //CollisionInfo collisionInfo;
 
