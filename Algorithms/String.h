@@ -17,10 +17,12 @@ namespace Algorithm
 
     typedef StringBase<char> String;
 
-    template<typename T>
-    bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
-	template<typename T>
-	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs);
+    template<typename T> bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
+	template<typename T> bool operator<(const StringBase<T>& lhs, const StringBase<T>& rhs);
+	template<typename T> bool operator<=(const StringBase<T>& lhs, const StringBase<T>& rhs);
+	template<typename T> bool operator>(const StringBase<T>& lhs, const StringBase<T>& rhs);
+	template<typename T> bool operator>=(const StringBase<T>& lhs, const StringBase<T>& rhs);
+	template<typename T> bool Swap(StringBase<T>& lhs, StringBase<T>& rhs);
     //template<typename T>
     //StringBase<T> operator+(const StringBase<T> lhs, const StringBase<T> rhs);
 
@@ -31,8 +33,8 @@ namespace Algorithm
         static const int INVALID_VALUE;
         static const StringBase<char> INVALID_STRING;
 
-        template<typename T>
-        friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
+        //template<typename T>
+        //friend bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs);
         StringBase();
         StringBase(const StringBase& value);
         StringBase(const T* value, int size);
@@ -220,34 +222,40 @@ namespace Algorithm
 	template<typename T>
 	bool Algorithm::StringBase<T>::operator<(const StringBase<T>& rhs) const
 	{
+		if (this == &rhs)
+		{
+			return false;
+		}
+
 		if (Count() < rhs.Count())
 		{
 			return true;
 		}
-		for (int i = 0; i < Count(); i++)
+        else if (Count() > rhs.Count())
 		{
-			if (m_string[i] < rhs[i])
-			{
-				return true;
-			}
+            return false;
 		}
-		return false;
+        else
+        {
+			for (int i = 0; i < Count(); i++)
+			{
+				if (m_string[i] < rhs[i])
+				{
+					return true;
+				}
+                else if (m_string[i] > rhs[i])
+                {
+                    return false;
+                }
+			}
+		    return false;
+        }
+
 	}
 	template<typename T>
 	bool Algorithm::StringBase<T>::operator<=(const StringBase<T>& rhs) const
 	{
-		if (Count() <= rhs.Count())
-		{
-			return true;
-		}
-		for (int i = 0; i < Count(); i++)
-		{
-			if (m_string[i] <= rhs[i])
-			{
-				return true;
-			}
-		}
-		return false;
+        return (*this) < rhs || (*this) == rhs;
 	}
 
 	template<typename T>
@@ -347,34 +355,6 @@ namespace Algorithm
     //{
     //    return lhs + rhs;
     //}
-
-    template<typename T>
-    bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs)
-    {
-        if (lhs.Count() != rhs.Count())
-        {
-            return false;
-        }
-        for (int i = 0; i < lhs.Count(); i++)
-        {
-            if (lhs[i] != rhs[i])
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-	template<typename T>
-	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs)
-	{
-		StringBase tmp(lhs);
-		lhs = rhs;
-		rhs = tmp;
-        lhs.CStringlize();
-        rhs.CStringlize();
-		return true;
-	}
 
 
     template<typename T>
@@ -598,4 +578,44 @@ namespace Algorithm
         m_string[m_string.Count()] = '\0';
     }
 
+	template<typename T>
+	bool operator==(const StringBase<T>& lhs, const StringBase<T>& rhs)
+	{
+		return lhs.operator==(rhs);
+	}
+
+	template<typename T>
+	bool operator<(const StringBase<T>& lhs, const StringBase<T>& rhs)
+	{
+		return lhs.operator<(rhs);
+	}
+
+	template<typename T>
+	bool operator<=(const StringBase<T>& lhs, const StringBase<T>& rhs)
+	{
+		return lhs.operator<=(rhs);
+	}
+
+	template<typename T>
+	bool operator>(const StringBase<T>& lhs, const StringBase<T>& rhs)
+	{
+		return lhs.operator>(rhs);
+	}
+
+	template<typename T>
+	bool operator>=(const StringBase<T>& lhs, const StringBase<T>& rhs)
+	{
+		return lhs.operator>=(rhs);
+	}
+
+	template<typename T>
+	bool Swap(StringBase<T>& lhs, StringBase<T>& rhs)
+	{
+		StringBase tmp(lhs);
+		lhs = rhs;
+		rhs = tmp;
+		lhs.CStringlize();
+		rhs.CStringlize();
+		return true;
+	}
 }
