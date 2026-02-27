@@ -206,7 +206,7 @@ namespace XenonEngine
 
 	bool EditorGameObject::DragFloat3(const char* label, MathLab::Vector3f& v, float v_speed /*= 1.0f*/, float v_min /*= 0.0f*/, float v_max /*= 0.0f*/, const char* format /*= "%.3f"*/, float power /*= 1.0f*/)
     {
-        return ImGui::DragScalarN(label, ImGuiDataType_Float, &v, 3, v_speed, &v_min, &v_max, format, power);
+        return ImGui::DragScalarN(label, ImGuiDataType_Float, &v, 3, v_speed, &v_min, &v_max, format, (ImGuiSliderFlags)power);
     }
 
     bool EditorGameObject::ColorEdit4(const char* label, MathLab::Vector4f& col)

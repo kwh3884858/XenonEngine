@@ -401,3 +401,4 @@ build/
 *.pbxuser
 *.perspective
 *.perspectivev3
+/.claude

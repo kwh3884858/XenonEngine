@@ -87,7 +87,7 @@ int ImGUIMain()
     ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
     ImGui::GetIO().Fonts->AddFontFromFileTTF(FONT_ICON_FILE_NAME_FAR, 15.0f, &icons_config, icons_ranges);
 	// For docking
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     // Our state
     bool show_demo_window = false;
     bool show_another_window = false;

@@ -607,7 +607,7 @@ namespace XenonPhysics
         return info;
     }
 
-    Physics2D::CollisionInfo Physics2D::CheckForCollisionBoxAndBoxByCollider(BoxCollider2D* boxCollider1, BoxCollider2D* boxCollider2, Vector2f boxVelocity1, Vector2f boxVelocity2) const
+    Physics2D::CollisionInfo Physics2D::CheckForCollisionBoxAndBoxByCollider(BoxCollider2D* boxCollider1, BoxCollider2D* boxCollider2, Vector2f /*boxVelocity1*/, Vector2f /*boxVelocity2*/) const
     {
         CollisionInfo info;
         info.m_collisionType = CollisionType::NoCollision;
